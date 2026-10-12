@@ -1,0 +1,24 @@
+1 tok 428 starts '第1項觀察顯示，月球玄武岩的鐵含量在區域1中達到1' ends '觀察顯示，月球玄武岩的鐵含量在區域1' ends_sentence False
+2 tok 497 starts '顯示，月球玄武岩的鐵含量在區域13中達到46個單位' ends '的鐵含量在區域28中達到91個單位。' ends_sentence True
+3 tok 468 starts '第28項觀察顯示，月球玄武岩的鐵含量在區域28中達' ends '鐵含量在區域42中達到133個單位。' ends_sentence True
+4 tok 470 starts '第42項觀察顯示，月球玄武岩的鐵含量在區域42中達' ends '鐵含量在區域56中達到175個單位。' ends_sentence True
+5 tok 416 starts '第56項觀察顯示，月球玄武岩的鐵含量在區域56中達' ends '達到211個單位。第69項觀察顯示，' ends_sentence False
+6 tok 438 starts '第68項觀察顯示，月球玄武岩的鐵含量在區域68中達' ends '鐵含量在區域81中達到250個單位。' ends_sentence True
+7 tok 430 starts '第81項觀察顯示，月球玄武岩的鐵含量在區域81中達' ends '顯示，月球玄武岩的鐵含量在區域94中' ends_sentence False
+8 tok 470 starts '第94項觀察顯示，月球玄武岩的鐵含量在區域94中達' ends '含量在區域108中達到331個單位。' ends_sentence True
+9 tok 470 starts '第108項觀察顯示，月球玄武岩的鐵含量在區域108' ends '含量在區域122中達到373個單位。' ends_sentence True
+10 tok 470 starts '第122項觀察顯示，月球玄武岩的鐵含量在區域122' ends '含量在區域136中達到415個單位。' ends_sentence True
+11 tok 470 starts '第136項觀察顯示，月球玄武岩的鐵含量在區域136' ends '含量在區域150中達到457個單位。' ends_sentence True
+12 tok 359 starts '第150項觀察顯示，月球玄武岩的鐵含量在區域150' ends '個單位。短段落：結論是玄武岩很穩定。' ends_sentence True
+overlap chars 48 tokens 49 ratio vs chunk 0.114 overlap starts at sentence start False '顯示，月球玄武岩的鐵含量'
+overlap chars 32 tokens 31 ratio vs chunk 0.062 overlap starts at sentence start True '第28項觀察顯示，月球玄'
+overlap chars 33 tokens 31 ratio vs chunk 0.066 overlap starts at sentence start True '第42項觀察顯示，月球玄'
+overlap chars 33 tokens 31 ratio vs chunk 0.066 overlap starts at sentence start True '第56項觀察顯示，月球玄'
+overlap chars 42 tokens 40 ratio vs chunk 0.096 overlap starts at sentence start True '第68項觀察顯示，月球玄'
+overlap chars 33 tokens 31 ratio vs chunk 0.071 overlap starts at sentence start True '第81項觀察顯示，月球玄'
+overlap chars 24 tokens 24 ratio vs chunk 0.056 overlap starts at sentence start True '第94項觀察顯示，月球玄'
+overlap chars 35 tokens 31 ratio vs chunk 0.066 overlap starts at sentence start True '第108項觀察顯示，月球'
+overlap chars 35 tokens 31 ratio vs chunk 0.066 overlap starts at sentence start True '第122項觀察顯示，月球'
+overlap chars 35 tokens 31 ratio vs chunk 0.066 overlap starts at sentence start True '第136項觀察顯示，月球'
+overlap chars 35 tokens 31 ratio vs chunk 0.066 overlap starts at sentence start True '第150項觀察顯示，月球'
+last chunk has short para: True

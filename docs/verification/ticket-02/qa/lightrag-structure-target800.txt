@@ -1,0 +1,62 @@
+['ReadyEvent:']
+SECTIONS 28
+section-1 p1-1 app=False virt=False paras=4 chunks=1 | LIGHTRAG: SIMPLE AND FAST RETRIEVAL-AUGMENTED GENERATION
+section-2 p1-1 app=False virt=False paras=1 chunks=1 | ABSTRACT
+section-3 p1-2 app=False virt=False paras=8 chunks=2 | 1 INTRODUCTION
+section-4 p2-3 app=False virt=False paras=15 chunks=1 | 2 RETRIEVAL-AUGMENTED GENERATION
+section-5 p3-3 app=False virt=False paras=0 chunks=0 | 3 THE LIGHTRAG ARCHITECTURE
+section-6 p3-4 app=False virt=False paras=9 chunks=2 | 3.1 GRAPH-BASED TEXT INDEXING
+section-7 p4-5 app=False virt=False paras=8 chunks=1 | 3.2 DUAL-LEVEL RETRIEVAL PARADIGM
+section-8 p5-5 app=False virt=False paras=2 chunks=1 | 3.3 RETRIEVAL-AUGMENTED ANSWER GENERATION
+section-9 p5-5 app=False virt=False paras=3 chunks=1 | 3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK
+section-10 p5-5 app=False virt=False paras=1 chunks=1 | 4 EVALUATION
+section-11 p5-6 app=False virt=False paras=14 chunks=2 | 4.1 EXPERIMENTAL SETTINGS
+section-12 p6-7 app=False virt=False paras=14 chunks=2 | 4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)
+section-13 p7-8 app=False virt=False paras=14 chunks=2 | 4.3 ABLATION STUDIES (RQ2)
+section-14 p8-9 app=False virt=False paras=8 chunks=2 | 4.4 CASE STUDY (RQ3)
+section-15 p9-10 app=False virt=False paras=7 chunks=1 | 4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)
+section-16 p10-10 app=False virt=False paras=0 chunks=0 | 5 RELATED WORK
+section-17 p10-10 app=False virt=False paras=2 chunks=1 | 5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS
+section-18 p10-10 app=False virt=False paras=1 chunks=1 | 5.2 LARGE LANGUAGE MODEL FOR GRAPHS
+section-19 p10-10 app=False virt=False paras=1 chunks=1 | 6 CONCLUSION
+section-20 p13-13 app=True virt=False paras=1 chunks=1 | 7 APPENDIX
+section-21 p13-13 app=True virt=False paras=4 chunks=1 | Appendix — 7.1 EXPERIMENTAL DATA DETAILS
+section-22 p13-14 app=True virt=False paras=3 chunks=1 | Appendix — 7.2 CASE EXAMPLE OF RETRIEVAL-AUGMENTED GENERATION IN LIGHTRAG
+section-23 p14-14 app=True virt=False paras=0 chunks=0 | Appendix — 7.3 OVERVIEW OF THE PROMPTS USED IN LIGHTRAG
+section-24 p14-14 app=True virt=False paras=2 chunks=1 | Appendix — 7.3.1 PROMPTS FOR GRAPH GENERATION
+section-25 p14-14 app=True virt=False paras=2 chunks=1 | Appendix — 7.3.2 PROMPTS FOR QUERY GENERATION
+section-26 p15-15 app=True virt=False paras=2 chunks=1 | Appendix — 7.3.3 PROMPTS FOR KEYWORD EXTRACTION
+section-27 p15-16 app=True virt=False paras=11 chunks=1 | Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION
+section-28 p16-16 app=True virt=False paras=1 chunks=1 | Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG
+CHUNKS 31
+cc7b870557344bb5aa13a6f89a78b859:chunk-1 section-1 tok=  70 p1-1  | 'Zirui Guo1,2, Lianghao Xia2, Yanhua Yu1,∗, Tu Ao1, Chao Huang2∗\n\nBeiji'
+cc7b870557344bb5aa13a6f89a78b859:chunk-2 section-2 tok= 249 p1-1  | 'Retrieval-Augmented Generation (RAG) systems enhance large language mo'
+cc7b870557344bb5aa13a6f89a78b859:chunk-3 section-3 tok= 626 p1-2  | 'Retrieval-Augmented Generation (RAG) systems have been developed to en'
+cc7b870557344bb5aa13a6f89a78b859:chunk-4 section-3 tok= 412 p2-2  | 'In response to the outlined challenges, we propose LightRAG, a model t'
+cc7b870557344bb5aa13a6f89a78b859:chunk-5 section-4 tok= 501 p2-3  | 'Retrieval-Augmented Generation (RAG) integrates user queries with a co'
+cc7b870557344bb5aa13a6f89a78b859:chunk-6 section-6 tok= 799 p3-4  | 'Graph-Enhanced Entity and Relationship Extraction. Our LightRAG enhanc'
+cc7b870557344bb5aa13a6f89a78b859:chunk-7 section-6 tok= 151 p4-4  | 'Two key objectives guide our approach to fast adaptation for the incre'
+cc7b870557344bb5aa13a6f89a78b859:chunk-8 section-7 tok= 535 p4-5  | 'To retrieve relevant information from both specific document chunks an'
+cc7b870557344bb5aa13a6f89a78b859:chunk-9 section-8 tok= 154 p5-5  | 'Utilization of Retrieved Information. Utilizing the retrieved informat'
+cc7b870557344bb5aa13a6f89a78b859:chunk-10 section-9 tok= 230 p5-5  | 'In this section, we analyze the complexity of our proposed LightRAG fr'
+cc7b870557344bb5aa13a6f89a78b859:chunk-11 section-10 tok= 119 p5-5  | 'We conduct empirical evaluations on benchmark data to assess the effec'
+cc7b870557344bb5aa13a6f89a78b859:chunk-12 section-11 tok= 729 p5-6  | 'Evaluation Datasets. To conduct a comprehensive analysis of LightRAG, '
+cc7b870557344bb5aa13a6f89a78b859:chunk-13 section-11 tok= 373 p6-6  | 'Implementation and Evaluation Details. In our experiments, we utilize '
+cc7b870557344bb5aa13a6f89a78b859:chunk-14 section-12 tok= 765 p6-7  | 'We compare LightRAG against each baseline across various evaluation di'
+cc7b870557344bb5aa13a6f89a78b859:chunk-15 section-12 tok= 475 p7-7  | 'The Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora W'
+cc7b870557344bb5aa13a6f89a78b859:chunk-16 section-13 tok= 683 p7-8  | 'We also conduct ablation studies to evaluate the impact of our dual-le'
+cc7b870557344bb5aa13a6f89a78b859:chunk-17 section-13 tok= 521 p8-8  | 'Comprehensiveness\n24.8%\n75.2%\n39.2%\n60.8%\n16.4%\n83.6%\n44.4%\n55.6%\nDive'
+cc7b870557344bb5aa13a6f89a78b859:chunk-18 section-14 tok= 718 p8-9  | 'To provide a clear comparison between baseline methods and our LightRA'
+cc7b870557344bb5aa13a6f89a78b859:chunk-19 section-14 tok= 330 p9-9  | 'Diversity: "Winner": "Answer 2 (LightRAG)",\n"Explanation": "Answer 2 n'
+cc7b870557344bb5aa13a6f89a78b859:chunk-20 section-15 tok= 610 p9-10  | 'Figure 2: Comparison of Cost in Terms of To-\nkens and API Calls for Gr'
+cc7b870557344bb5aa13a6f89a78b859:chunk-21 section-17 tok= 286 p10-10  | 'Retrieval-Augmented Generation (RAG) systems enhance LLM inputs by ret'
+cc7b870557344bb5aa13a6f89a78b859:chunk-22 section-18 tok= 257 p10-10  | 'Graphs are a powerful framework for representing complex relationships'
+cc7b870557344bb5aa13a6f89a78b859:chunk-23 section-19 tok= 149 p10-10  | 'This work introduces an advancement in Retrieval-Augmented Generation '
+cc7b870557344bb5aa13a6f89a78b859:chunk-24 section-20 tok= 100 p13-13  | 'In this section, we elaborate on the methodologies and experimental se'
+cc7b870557344bb5aa13a6f89a78b859:chunk-25 section-21 tok= 151 p13-13  | 'Table 4: Statistical information of the datasets.\n\nStatistics\nAgricult'
+cc7b870557344bb5aa13a6f89a78b859:chunk-26 section-22 tok= 120 p13-14  | 'Figure 3: A retrieval and generation example.\n\nIn Figure 3, we illustr'
+cc7b870557344bb5aa13a6f89a78b859:chunk-27 section-24 tok= 106 p14-14  | 'Figure 4: Prompts for Graph Generation\n\nThe graph construction prompt '
+cc7b870557344bb5aa13a6f89a78b859:chunk-28 section-25 tok= 120 p14-14  | 'Figure 5: Prompts for Query Generation\n\nIn Figure 5, the query generat'
+cc7b870557344bb5aa13a6f89a78b859:chunk-29 section-26 tok=  94 p15-15  | 'Figure 6: Prompts for Keyword Extraction\n\nIn Figure 6, the prompt desc'
+cc7b870557344bb5aa13a6f89a78b859:chunk-30 section-27 tok= 771 p15-16  | 'Figure 7: Prompts for RAG Evaluation\n\nThe evaluation prompt is illustr'
+cc7b870557344bb5aa13a6f89a78b859:chunk-31 section-28 tok= 176 p16-16  | 'To further illustrate LightRAG’s superiority over baseline models in t'

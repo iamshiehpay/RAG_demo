@@ -1,0 +1,9 @@
+pieces 498 498 overlap words 22 first overlap word internationalization210 whole-word start: True
+pieces 498 498 overlap words 22 first overlap word internationalization420 whole-word start: True
+pieces 498 498 overlap words 22 first overlap word internationalization630 whole-word start: True
+pieces 498 497 overlap words 22 first overlap word internationalization840 whole-word start: True
+pieces 497 497 overlap words 15 first overlap word w1034 whole-word start: True
+pieces 497 499 overlap words 15 first overlap word w1177 whole-word start: True
+pieces 499 497 overlap words 15 first overlap word w1321 whole-word start: True
+pieces 497 114 overlap words 15 first overlap word w1464 whole-word start: True
+mixed pieces 15 ['！', '。', '！', '。', '！', '。', '！', '。', '！', '。', '！', '。', '！', '。', '。'] ['實驗0完成了', '是的！Sam', '數值為40。', '是的！Sam', '數值為81。', '是的！Sam', '數值為122', '是的！Sam', '數值為163', '是的！Sam', '數值為204', '是的！Sam', '數值為245', '是的！Sam', '數值為286']
