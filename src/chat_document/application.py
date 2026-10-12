@@ -27,7 +27,7 @@ from .index import Index
 from .llm_gateway import BudgetExceeded, LLMFailure, LLMGateway
 from .models import Chunk, ConversationTurn, Document, LLMCallTrace
 from .pdf_parser import DocumentError, parse_pdf
-from .policy import QUESTION_TOKEN_LIMIT
+from .policy import HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
 from .router import Router
 from .settings import RetrievalSettings
 from .tokens import count_tokens
@@ -106,14 +106,18 @@ class Application:
                 question, self.history if history is None else history, calls
             )
             yield plan
-            retrieved = await self.context_packer.retrieve(index, plan)
+            # Until #05, Global uses the Synthesis path while the visible plan stays Global.
+            context_plan = (
+                plan.model_copy(update={"question_type": "Synthesis"})
+                if plan.question_type == "Global"
+                else plan
+            )
+            retrieved = await self.context_packer.retrieve(index, context_plan)
             yield RetrievalEvent(chunks=retrieved)
             chunks = sorted((item.chunk for item in retrieved), key=lambda chunk: chunk.order)
             citations = citation_map(chunks)
             yield CitationMapEvent(citations=citations)
-            context = await self.context_packer.pack(
-                plan.standalone_question, chunks, citations, calls
-            )
+            context = await self.context_packer.pack(context_plan, chunks, citations, calls)
             answer = ""
             async for event in self.answer_generator.generate(
                 plan.standalone_question, chunks, citations, context=context
@@ -125,9 +129,10 @@ class Application:
                     calls.extend(event.calls)
             if not answer.strip():
                 raise LLMFailure("LLM returned an empty answer. Please retry.")
-            self.history = (self.history + [ConversationTurn(question=question, answer=answer)])[
-                -2:
-            ]
+            if history is None:
+                self.history = (
+                    self.history + [ConversationTurn(question=question, answer=answer)]
+                )[-HISTORY_ROUND_LIMIT:]
             yield FinalEvent(answer=answer, citations=cited_sources(answer, citations))
             if calls:
                 yield TraceEvent(calls=calls)

@@ -40,6 +40,10 @@ class LLMFailure(ValueError):
     pass
 
 
+class LLMTruncated(LLMFailure):
+    pass
+
+
 class LLMGateway:
     def __init__(self, adapter: LLMAdapter, context_budget: int = CONTEXT_BUDGET):
         self.adapter = adapter
@@ -99,4 +103,7 @@ class LLMGateway:
             raise
         yield trace(terminal.done_reason)
         if terminal.done_reason == "length":
-            raise LLMFailure("Answer was truncated. Please retry.")
+            label = {"answer": "Answer", "fact_extraction": "Fact extraction"}.get(
+                call_type, call_type.replace("_", " ").capitalize()
+            )
+            raise LLMTruncated(f"{label} was truncated. Please retry.")

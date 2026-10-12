@@ -53,6 +53,7 @@ export type LLMCallTrace = {
   thinking: string;
   latency_ms: number;
   done_reason: string;
+  discarded_fact_lines: number;
 };
 
 export type PlanEvent = {

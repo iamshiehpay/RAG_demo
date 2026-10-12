@@ -5,10 +5,10 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from .events import DeltaEvent, PlanEvent, TraceEvent
-from .llm_gateway import LLMGateway
+from .llm_gateway import LLMGateway, LLMTruncated
 from .models import ConversationTurn, LLMCallTrace
-from .policy import QUESTION_TOKEN_LIMIT
-from .tokens import TOKENIZER, count_tokens, encode
+from .policy import HISTORY_ROUND_LIMIT, HISTORY_ROUND_TOKEN_LIMIT, SUB_QUERY_LIMIT
+from .tokens import TOKENIZER, encode
 
 SYSTEM_PROMPT = """Plan how to answer a question about ONE uploaded Document.
 Question Type:
@@ -31,9 +31,9 @@ class RouterPlan(BaseModel):
 
 def history_messages(history: list[ConversationTurn]) -> list[dict[str, str]]:
     messages = []
-    for turn in history[-2:]:
-        question = encode(turn.question)[:500]
-        answer = encode(turn.answer)[: 500 - len(question)]
+    for turn in history[-HISTORY_ROUND_LIMIT:]:
+        question = encode(turn.question)[:HISTORY_ROUND_TOKEN_LIMIT]
+        answer = encode(turn.answer)[: HISTORY_ROUND_TOKEN_LIMIT - len(question)]
         messages.extend(
             [
                 {"role": "user", "content": TOKENIZER.decode(question).rstrip("\ufffd")},
@@ -51,32 +51,28 @@ class Router:
         self, question: str, history: list[ConversationTurn], calls: list[LLMCallTrace]
     ) -> PlanEvent:
         text = ""
-        async for event in self.gateway.generate(
-            "router",
-            [{"role": "system", "content": SYSTEM_PROMPT}]
-            + history_messages(history)
-            + [{"role": "user", "content": question}],
-            format=RouterPlan.model_json_schema(),
-        ):
-            if isinstance(event, DeltaEvent):
-                text += event.text
-            elif isinstance(event, TraceEvent):
-                calls.extend(event.calls)
+        try:
+            async for event in self.gateway.generate(
+                "router",
+                [{"role": "system", "content": SYSTEM_PROMPT}]
+                + history_messages(history)
+                + [{"role": "user", "content": question}],
+                format=RouterPlan.model_json_schema(),
+            ):
+                if isinstance(event, DeltaEvent):
+                    text += event.text
+                elif isinstance(event, TraceEvent):
+                    calls.extend(event.calls)
+        except LLMTruncated:
+            return PlanEvent(question_type="Lookup", standalone_question=question, sub_queries=[])
         try:
             plan = RouterPlan.model_validate_json(text)
-            if (
-                not plan.standalone_question.strip()
-                or count_tokens(plan.standalone_question) > QUESTION_TOKEN_LIMIT
-            ):
-                raise ValueError("Invalid Standalone Question")
-            if plan.question_type == "Synthesis":
-                if not 2 <= len(plan.sub_queries) <= 5 or any(
-                    not query.strip() or count_tokens(query) > QUESTION_TOKEN_LIMIT
-                    for query in plan.sub_queries
-                ):
-                    raise ValueError("Invalid Sub-queries")
-            elif plan.sub_queries:
-                raise ValueError("Sub-queries apply only to Synthesis")
+            plan.standalone_question = plan.standalone_question.strip() or question
+            plan.sub_queries = (
+                [query.strip() for query in plan.sub_queries if query.strip()][:SUB_QUERY_LIMIT]
+                if plan.question_type == "Synthesis"
+                else []
+            )
             return PlanEvent(**plan.model_dump())
         except (ValidationError, ValueError):
             return PlanEvent(question_type="Lookup", standalone_question=question, sub_queries=[])

@@ -45,3 +45,11 @@
 ## 2026-10-12：#06 的拒絕事件與前端串流終止
 
 - **AI 寫錯，瀏覽器驗收抓到：** 新增 `rejected` 事件後，後端的「問題超過 1,000 tokens、LLM 呼叫為 0」測試已通過，但 AI 漏改前端 SSE reader 的 terminal 清單。瀏覽器收到拒絕原因後，又被 `Stream ended before completion` 蓋掉。修正 reader，把 `rejected` 視為正常終止；重新 build 並再次在瀏覽器送出超長問題，確認保留原因、提示縮短問題、不顯示重試同一問題的按鈕。教訓：事件模型與生成型別一致，還不能保證串流消費端正確處理新的終止事件。
+
+## 2026-10-12：#06 獨立審查後的修正
+
+- **審查抓到 Router 的過度驗證：** AI 把「Synthesis 應產生 2–5 個 Sub-query」當成硬驗證，連一個 Sub-query 的合法 JSON 都退回 Lookup，並丟掉追問的 Standalone Question。先用 0／1／8 個 Sub-query 與非 Synthesis 帶 Sub-query 的五組測試重現，再改成保留改寫、正規化計畫；只有解析／型別失敗或截斷才走 fallback。
+- **AI 忽略已知 Citation 輸出形式：** 分批抽取只認 `[C#]`，沒有沿用早已實測的 `[C1, C3]`、`【C3†L1-L4】` 正規化。回歸測試先失敗，再用 CitationText 處理，保留可追溯事實、丟掉標題／無引用行並在每次呼叫的 Trace 計數。無事實的 sentinel 不再附上 Citation，也不被當成證據。
+- **AI 的測試假設不符合真正輸出額度：** 原遞迴合併測試每批腳本超過 3,500 tokens，超出 `num_predict=1000`，所以不能證明真實遞迴路徑。修正 ScriptedLLM，連 thinking 也納入輸出上限；改用較大合成 Document、多批低於 1,000 tokens 的結果，總量仍超過 6K，確認再次合併能保留原始 Citation。
+- **審查補上 Question Type 和歷史的隔離：** AI 原本把批次抽取套用到 Lookup，也讓 eval 的顯式歷史污染 session。修正成 Lookup 依排名選擇放得下的完整 Chunk；只在 Synthesis 原始上下文超過 6K 時抽取。顯式傳入歷史不修改 session。Global 的過渡路徑仍是 Synthesis，等 #05 接上 Summary Tree。
+- **驗收腳本也有固定數量的假設：** Trace 的瀏覽器腳本先假定 top-k=30 一定只有兩批，但 Sub-query 的聯集多帶出一些 Chunk，實際是三批，腳本因此耗盡。測試依 request 類型逐批供應回應後，UI 順利完成，Trace 顯示三批丟棄行數 2、1、1。這是 fixture 修正，正式程式不需要更動。

@@ -62,3 +62,4 @@ class LLMCallTrace(BaseModel):
     thinking: str
     latency_ms: float
     done_reason: str
+    discarded_fact_lines: int = 0

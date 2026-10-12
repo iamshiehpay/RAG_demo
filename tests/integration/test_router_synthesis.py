@@ -89,8 +89,12 @@ async def test_router_history_keeps_only_two_rounds_each_at_most_500_tokens():
 async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_order():
     from pathlib import Path
 
+    from chat_document.settings import RetrievalSettings
+
     llm = ScriptedLLM(
         [
+            router_script("Lookup", "Compare LightRAG with GraphRAG."),
+            "Baseline [C1].",
             router_script(
                 "Synthesis",
                 "Compare LightRAG with GraphRAG.",
@@ -102,11 +106,14 @@ async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_orde
             "Cost and incremental updates [C1].",
         ]
     )
-    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    app = Application(OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(lookup_top_k=3))
     assert [
         e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
     ][-1].type == "ready"
-    events = [e async for e in app.ask("Compare LightRAG with GraphRAG.")]
+    baseline = [e async for e in app.ask("Compare LightRAG with GraphRAG.", history=[])]
+    assert len(baseline[1].chunks) == 3
+    assert not any("610" in item.chunk.text for item in baseline[1].chunks)
+    events = [e async for e in app.ask("Compare LightRAG with GraphRAG.", history=[])]
     plan, retrieval = events[:2]
     assert plan.question_type == "Synthesis" and len(plan.sub_queries) == 2
     chunks = [item.chunk for item in retrieval.chunks]
@@ -175,39 +182,67 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
 
 
 async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
-    from pathlib import Path
+    import re
+
+    import pymupdf
 
     from chat_document.settings import RetrievalSettings
+    from chat_document.tokens import count_tokens
 
-    # Script deliberately expands extraction output to force the recursive merging branch.
-    first = "cost " * 3500 + "[C1]"
-    second = "update " * 3500 + "[C20]"
-    llm = ScriptedLLM(
-        [
-            router_script(
-                "Synthesis", "Compare costs and incremental updates.", ["cost", "update"]
-            ),
-            first,
-            second,
-            "Compressed cost [C1].",
-            "Compressed update [C20].",
-            "Combined answer [C1][C20].",
-        ]
-    )
+    from .fixtures import paragraph_pdf
+
+    class ExtractionScript(ScriptedLLM):
+        def __init__(self):
+            super().__init__([])
+            self.first_pass_facts = []
+
+        async def stream(self, request):
+            if request.format is not None:
+                script = router_script("Synthesis", "Compare costs and incremental updates.", [])
+            elif request.num_predict == 1000:
+                evidence = request.messages[-1]["content"].split("Evidence:\n", 1)[1]
+                ids = list(dict.fromkeys(re.findall(r"\[C\d+\]", evidence)))
+                if "retrieval cost incremental updates." in evidence:
+                    script = "cost " * 900 + ids[0]
+                    self.first_pass_facts.append(script)
+                else:
+                    script = "Compressed cost " + "".join(ids)
+            else:
+                script = "Combined answer [C1]."
+            assert count_tokens(script) <= request.num_predict
+            self.scripts.append(script)
+            async for frame in super().stream(request):
+                yield frame
+
+    # Enough raw evidence for >6 first-pass batches. Each result stays below 1,000 tokens,
+    # yet their total exceeds 6,000 and requires a real second reduction pass.
+    with (
+        pymupdf.open(
+            stream=paragraph_pdf("retrieval cost incremental updates. " * 1800), filetype="pdf"
+        ) as source,
+        pymupdf.open() as document,
+    ):
+        for _ in range(7):
+            document.insert_pdf(source)
+        content = document.tobytes()
+    llm = ExtractionScript()
     app = Application(
-        OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(synthesis_top_k=30)
+        OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(synthesis_top_k=1000)
     )
-    assert [
-        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
-    ][-1].type == "ready"
+    assert [e async for e in app.upload_document(content, "long.pdf")][-1].type == "ready"
     events = [e async for e in app.ask("Compare costs and incremental updates.")]
-    assert any(e.type == "final" for e in events)
-    assert [c.call_type for c in events[-1].calls].count("fact_extraction") == 4
+    assert any(e.type == "final" for e in events), [
+        e.model_dump() for e in events if e.type == "error"
+    ]
+    assert count_tokens("\n\n".join(llm.first_pass_facts)) > 6000
+    extraction = [c for c in events[-1].calls if c.call_type == "fact_extraction"]
+    assert len(extraction) > len(llm.first_pass_facts)
+    assert all(c.eval_count <= 1000 and c.done_reason == "stop" for c in extraction)
     final = next(e for e in events if e.type == "final")
-    assert {c.id for c in final.citations} == {"C1", "C20"}
-    assert "Compressed cost [C1]." in llm.calls[-1].messages[-1]["content"]
-    for call in llm.calls:
-        assert call.estimated_prompt_tokens + call.num_predict <= 10000
+    assert final.citations[0].id == "C1"
+    assert app.source(final.citations[0].source_id).text
+    assert "Compressed cost [C1]" in llm.calls[-1].messages[-1]["content"]
+    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
 
 
 async def test_configurable_top_k_counts_and_global_temporarily_uses_synthesis():
@@ -313,7 +348,7 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
         [
             router_script("Synthesis", "Compare costs.", ["cost", "update"]),
             "An uncited extracted fact.",
-            "Must not run",
+            "No supported relevant fact found",
         ]
     )
     app = Application(
@@ -326,5 +361,10 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
     assert not any(e.type == "final" for e in events)
     assert not any(e.type == "delta" for e in events)  # Extraction text is not answer text.
     assert "Citation IDs" in next(e.message for e in events if e.type == "error")
-    assert [c.call_type for c in events[-1].calls] == ["router", "fact_extraction"]
-    assert len(llm.calls) == 2
+    assert [c.call_type for c in events[-1].calls] == [
+        "router",
+        "fact_extraction",
+        "fact_extraction",
+    ]
+    assert len(llm.calls) == 3
+    assert all(c.discarded_fact_lines == 1 for c in events[-1].calls[1:])

@@ -25,6 +25,8 @@ export function Trace({ calls, chunks, plan }: {
         <div><dt>eval_count</dt><dd>{call.eval_count ?? 'Not reported'}</dd></div>
         <div><dt>Latency</dt><dd>{(call.latency_ms / 1000).toFixed(2)} s</dd></div>
         <div><dt>done_reason</dt><dd>{call.done_reason}</dd></div>
+        {call.discarded_fact_lines > 0 && <div><dt>Discarded extraction lines</dt>
+          <dd>{call.discarded_fact_lines}</dd></div>}
       </dl>
       {call.thinking && <details><summary>Model thinking</summary><pre>{call.thinking}</pre></details>}
     </section>)}

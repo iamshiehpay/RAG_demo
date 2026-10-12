@@ -40,7 +40,13 @@ def test_upload_http_emits_ready_and_serves_committed_frontend():
 def test_ask_http_sse_order_and_citation_source():
     llm = ScriptedLLM(
         [
-            "not JSON",
+            json.dumps(
+                dict(
+                    question_type="Synthesis",
+                    standalone_question="What does the Document say?",
+                    sub_queries=["hello", "Document"],
+                )
+            ),
             [
                 LLMFrame(content="The Document says "),
                 LLMFrame(content="hello. [C1]"),
@@ -60,9 +66,26 @@ def test_ask_http_sse_order_and_citation_source():
             "final",
             "trace",
         ]
+        assert result[0] == dict(
+            type="plan",
+            question_type="Synthesis",
+            standalone_question="What does the Document say?",
+            sub_queries=["hello", "Document"],
+        )
         assert result[3]["text"] + result[4]["text"] == result[5]["answer"]
         citation = result[5]["citations"][0]
         source = client.get("/api/sources/" + citation["source_id"])
         assert source.status_code == 200
         assert source.json()["text"] == "hello Document"
         assert source.json()["page_start"] == citation["page_start"] == 1
+
+
+def test_rejected_http_sse_is_terminal_without_final_or_model_call():
+    llm = ScriptedLLM([])
+    with TestClient(create_app(Application(OllamaEmbedder(), LLMGateway(llm)))) as client:
+        events(client.post("/api/documents", files={"document": ("sample.pdf", text_pdf())}))
+        result = events(client.post("/api/ask", json={"question": "question " * 1001}))
+        assert [event["type"] for event in result] == ["rejected"]
+        assert result[0]["token_limit"] == 1000 and result[0]["question_tokens"] > 1000
+        assert result[0]["code"] == "question_too_long"
+        assert llm.calls == []
