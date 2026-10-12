@@ -21,6 +21,10 @@ metric, values, comparison baseline and direction. A number under another varian
 For matched=true, copy a contiguous verbatim excerpt of the answer as evidence, including
 qualifiers and negation. Never paraphrase or invent evidence, and never omit negation.
 An excerpt may span adjacent sentences/rows to preserve numeric context.
+Preserve ALL Citation markers, Markdown, punctuation and whitespace inside the excerpt.
+If target=answer_property, the criterion describes the answer itself (language or fixed reply).
+Evaluate that property directly; the answer need not claim to be Chinese or describe itself.
+For a satisfied property, return matched=true, asserted=true, and quote supporting answer text.
 For matched=false, return asserted=false and evidence="". Do not infer missing facts."""
 
 
@@ -47,7 +51,14 @@ async def check_fact(answer: str, fact: GoldenFact, gateway: LLMGateway) -> Fact
         {
             "role": "user",
             "content": json.dumps(
-                {"method": fact.method, "claim": fact.requirement, "answer": answer},
+                {
+                    "method": fact.method,
+                    "target": "answer_property"
+                    if fact.answer_property or fact.exact_answer is not None
+                    else "claim",
+                    "claim": fact.requirement,
+                    "answer": answer,
+                },
                 ensure_ascii=False,
             ),
         },

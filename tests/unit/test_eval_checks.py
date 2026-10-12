@@ -110,3 +110,31 @@ async def test_fixed_refusal_does_not_accept_extra_invented_content():
     fact = GoldenFact("absent", "judge", "No unsupported content", exact_answer="文件中未提及")
     assert not (await check_fact("文件中未提及。但可能是 90%。", fact, LLMGateway(llm))).passed
     assert llm.calls == []
+
+
+async def test_judge_evaluates_answer_properties_without_requiring_self_description():
+    from chat_document.llm_adapter import LLMFrame
+
+    class PropertyJudge:
+        async def stream(self, request):
+            payload = json.loads(request.messages[-1]["content"])
+            satisfied = payload.get("target") == "answer_property"
+            yield LLMFrame(
+                content=json.dumps(
+                    {
+                        "matched": satisfied,
+                        "asserted": satisfied,
+                        "evidence": payload["answer"] if satisfied else "",
+                    }
+                )
+            )
+            yield LLMFrame(done=True, prompt_eval_count=100, eval_count=30, done_reason="stop")
+
+    fact = GoldenFact("fixed", "judge", "Only the fixed refusal.", exact_answer="文件中未提及")
+    assert (await check_fact("文件中未提及", fact, LLMGateway(PropertyJudge()))).passed
+    from eval.golden_facts import LIGHTRAG_CASES
+
+    language_fact = next(c for c in LIGHTRAG_CASES if c.id == "ZH_COST").facts[0]
+    assert (
+        await check_fact("LightRAG 的成本較低。", language_fact, LLMGateway(PropertyJudge()))
+    ).passed

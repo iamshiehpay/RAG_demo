@@ -169,10 +169,12 @@ LIGHTRAG_CASES = (
         "ZH_COST",
         "LightRAG 和 GraphRAG 的檢索成本差異是什麼？",
         (
-            semantic(
+            GoldenFact(
                 "chinese_answer",
+                "judge",
                 "Answer is in Chinese (English proper nouns, units and Citations may "
                 "remain), not primarily English.",
+                answer_property=True,
             ),
             COST,
             semantic(

@@ -41,7 +41,9 @@ or answer generation.
 hyphens (including U+2011), whitespace, full-width characters and percent spacing.
 Numbers always use a semantic judge and numeric evidence anchors; normalizing
 percentages is tested separately so numeric substring checks remain forbidden.
-Judge calls use the production Gateway's `judge` policy. Each matching claim must
+Judge calls use the production Gateway's `judge` policy. Requirements about the
+answer itself (language or fixed reply) are evaluated as answer properties, not
+claims the answer must explicitly make about itself. Each matching claim must
 include a nonempty, contiguous, verbatim answer excerpt. Numeric excerpts must
 contain the required variant, dataset, metric and values, while the judge checks
 assignment and comparison direction. Forbidden claims count only when asserted;
@@ -60,3 +62,8 @@ To add another Document's Golden Facts (#10), create `EvaluationCase` definition
 and call `run_evaluation(application, gateway, document_path, cases, repeats=N)`,
 then `write_report(report, path)`. The application and judge must share the
 `RecordingGateway` so the report accounts for all calls.
+
+`lookup-skeleton-initial.md` preserves an initial checker-prompt defect (correct
+Chinese/fixed-reply properties were mistaken for self-asserted factual claims).
+`lookup-skeleton-baseline.md` supersedes it after the checker regression fix.
+`lookup-q3-n3.md` records three real Q3 runs at the original harness checkpoint.

@@ -12,6 +12,7 @@ class GoldenFact:
     # Every alternative group must occur in the verbatim evidence for numeric facts.
     evidence_terms: tuple[tuple[str, ...], ...] = ()
     exact_answer: str | None = None
+    answer_property: bool = False
 
     def __post_init__(self):
         if self.method not in {"contains", "judge", "forbidden"}:
