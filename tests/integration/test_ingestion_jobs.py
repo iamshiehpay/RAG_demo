@@ -9,7 +9,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 
-from .fixtures import text_pdf
+from .fixtures import paragraph_pdf, structured_pdf, text_pdf
 
 
 class RecordingEmbedder(OllamaEmbedder):
@@ -42,7 +42,7 @@ async def test_upload_returns_job_before_embedding_and_progress_replays_to_ready
     assert llm.calls == []
     embedder.release.set()
     result = [event async for event in app.upload_events(job_id)]
-    assert [event.stage for event in result if event.type == "stage"] == [
+    assert list(dict.fromkeys(event.stage for event in result if event.type == "stage")) == [
         "parsing",
         "chunking",
         "embedding",
@@ -85,7 +85,7 @@ async def test_pipeline_version_and_content_changes_reprocess_the_document(tmp_p
         )
         result = [event async for event in app.upload_document(uploaded, "sample.pdf")]
         assert result[-1].type == "ready"
-        assert [event.stage for event in result if event.type == "stage"] == [
+        assert list(dict.fromkeys(event.stage for event in result if event.type == "stage")) == [
             "parsing",
             "chunking",
             "embedding",
@@ -93,6 +93,69 @@ async def test_pipeline_version_and_content_changes_reprocess_the_document(tmp_p
         ]
     assert len(embedder.calls) == 3
     assert llm.calls == []
+
+
+async def test_effective_chunk_target_invalidates_cache_and_preserves_section_metadata(tmp_path):
+    from chat_document.settings import RetrievalSettings
+
+    content = structured_pdf()
+    cache = ProcessingCache(tmp_path)
+    first = Application(
+        RecordingEmbedder(),
+        LLMGateway(ScriptedLLM([])),
+        cache=cache,
+        settings=RetrievalSettings(chunk_token_target=35),
+    )
+    assert [e async for e in first.upload_document(content, "sample.pdf")][-1].type == "ready"
+    second = Application(
+        RecordingEmbedder(),
+        LLMGateway(ScriptedLLM([])),
+        cache=cache,
+        settings=RetrievalSettings(chunk_token_target=35),
+        chunk_token_target=500,
+    )
+    assert [e async for e in second.upload_document(content, "sample.pdf")][-1].type == "ready"
+    assert len(second.embedder.calls) == 1
+    assert len(first.document.chunks) != len(second.document.chunks)
+    replay = [e async for e in first.upload_document(content, "renamed.pdf")]
+    assert [e.type for e in replay] == ["ready"]
+    assert first.document.sections[-1].is_appendix
+    assert first.document.sections[0].paragraph_pages
+
+
+async def test_legacy_pipeline_cache_is_not_reused(tmp_path):
+    content = text_pdf()
+    legacy = Application(
+        RecordingEmbedder(),
+        LLMGateway(ScriptedLLM([])),
+        cache=ProcessingCache(tmp_path, pipeline_version="ingest-v1"),
+    )
+    assert [e async for e in legacy.upload_document(content, "sample.pdf")][-1].type == "ready"
+    current = Application(
+        RecordingEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    assert [e async for e in current.upload_document(content, "sample.pdf")][-1].type == "ready"
+    assert len(current.embedder.calls) == 1
+
+
+async def test_embedding_progress_reports_each_batch_and_reaches_all_chunks():
+    embedder = RecordingEmbedder()
+    app = Application(embedder, LLMGateway(ScriptedLLM([])), chunk_token_target=35)
+    content = paragraph_pdf(
+        " ".join(f"Sentence {i} describes Document evidence." for i in range(100))
+    )
+    result = [e async for e in app.upload_document(content, "batches.pdf")]
+    assert result[-1].type == "ready"
+    progress = [e for e in result if e.type == "stage" and e.stage == "embedding"]
+    counts = [e.completed for e in progress]
+    total = result[-1].chunk_count
+    assert counts[0] == 0 and counts[-1] == total
+    assert any(0 < completed < total for completed in counts)
+    assert counts == sorted(set(counts))
+    assert all(e.total == total for e in progress)
+    assert len(embedder.calls) > 1
+    assert sum(len(call) for call in embedder.calls) == total
+    assert app.index.vectors.shape[0] == total
 
 
 async def test_failed_replacement_preserves_document_index_and_history_until_success(tmp_path):
@@ -166,7 +229,7 @@ async def test_answers_are_never_cached_even_for_a_cached_document(tmp_path):
     assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == entries_before
 
 
-async def test_cache_publication_failure_keeps_current_document_and_removes_partial_entry(
+async def test_cache_write_failure_does_not_block_ready_and_removes_partial_entry(
     tmp_path, monkeypatch
 ):
     import os
@@ -178,18 +241,59 @@ async def test_cache_publication_failure_keeps_current_document_and_removes_part
     assert [e async for e in app.upload_document(content, "original.pdf")][-1].type == "ready"
     original = app.document
     entries_before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+    replacement = text_pdf("Replacement")
 
     def fail_replace(*args):
         raise OSError("disk full")
 
     with monkeypatch.context() as fault:
         fault.setattr(os, "replace", fail_replace)
-        result = [e async for e in app.upload_document(text_pdf("Replacement"), "new.pdf")]
-    assert result[-1].type == "error"
-    assert app.document == original
+        result = [e async for e in app.upload_document(replacement, "new.pdf")]
+    assert result[-1].type == "ready"
+    assert app.document != original and app.document.name == "new.pdf"
     assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == entries_before
-    recovered = [e async for e in app.upload_document(text_pdf("Replacement"), "new.pdf")]
+    recovered = [e async for e in app.upload_document(replacement, "new.pdf")]
     assert recovered[-1].type == "ready"
+    assert len(app.embedder.calls) == 3
+
+
+@pytest.mark.parametrize("reason", ["invalid vectors", "zero vector"])
+async def test_invalid_embedding_is_reported_as_embedding_failed(reason, tmp_path):
+    class InvalidEmbedder(OllamaEmbedder):
+        async def embed(self, texts):
+            raise ValueError(f"Embedder returned {reason}.")
+
+    app = Application(
+        InvalidEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    result = [e async for e in app.upload_document(text_pdf(), "sample.pdf")]
+    assert result[-1].code == "embedding_failed"
+    assert reason in result[-1].message
+    assert "ready" not in [e.type for e in result]
+    assert list(tmp_path.iterdir()) == []
+
+
+async def test_failure_after_one_embedding_batch_leaves_no_partial_cache(tmp_path):
+    class FailingSecondBatch(RecordingEmbedder):
+        async def embed(self, texts):
+            if self.calls:
+                raise httpx.ConnectError("connection interrupted after first batch")
+            return await super().embed(texts)
+
+    app = Application(
+        FailingSecondBatch(),
+        LLMGateway(ScriptedLLM([])),
+        cache=ProcessingCache(tmp_path),
+        chunk_token_target=35,
+    )
+    content = paragraph_pdf(
+        " ".join(f"Sentence {i} describes Document evidence." for i in range(100))
+    )
+    result = [e async for e in app.upload_document(content, "batches.pdf")]
+    progress = [e for e in result if e.type == "stage" and e.stage == "embedding"]
+    assert 0 < progress[-1].completed < progress[-1].total
+    assert result[-1].code == "embedding_failed"
+    assert app.document is None and list(tmp_path.iterdir()) == []
 
 
 async def test_unreadable_cache_reprocesses_instead_of_publishing_an_invalid_document(tmp_path):

@@ -37,7 +37,7 @@ def test_upload_http_emits_ready_or_error_and_serves_committed_frontend():
         create_app(Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([]))))
     ) as client:
         result = upload(client)
-        assert [event["type"] for event in result] == ["stage"] * 4 + ["ready"]
+        assert [event["type"] for event in result] == ["stage"] * 5 + ["ready"]
         assert result[-1]["chunk_count"] == 1
         failed = upload(client, text_pdf(""))
         assert [event["type"] for event in failed] == ["stage", "error"]
@@ -52,14 +52,25 @@ def test_upload_http_emits_ready_or_error_and_serves_committed_frontend():
         assert missing.json()["detail"] == "Source not found."
 
 
-def test_default_app_reads_chunk_size_from_environment(monkeypatch):
+def test_default_app_reads_chunk_size_from_environment_and_anchors_cache(monkeypatch, tmp_path):
     # The real factory/Embedder path is exercised; upload does not call the cloud LLM.
     monkeypatch.setenv("CHUNK_TOKEN_TARGET", "35")
     monkeypatch.setenv("LOOKUP_TOP_K", "1")
+    monkeypatch.chdir(tmp_path)
+    content = structured_pdf()
     with TestClient(create_app()) as client:
-        result = upload(client, structured_pdf())
+        result = upload(client, content)
         assert result[-1]["type"] == "ready"
         assert result[-1]["chunk_count"] == 5
+    from hashlib import sha256
+    from pathlib import Path
+
+    assert not (tmp_path / ".cache").exists()
+    cache_directory = Path(__file__).resolve().parents[2] / ".cache"
+    assert any(
+        json.loads(entry.read_text())["content_hash"] == sha256(content).hexdigest()
+        for entry in cache_directory.glob("*.json")
+    )
 
 
 def test_ask_http_sse_order_and_citation_source():

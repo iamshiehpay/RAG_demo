@@ -12,12 +12,31 @@ from pydantic import BaseModel, ValidationError
 
 from .models import Document
 
-PIPELINE_VERSION = "ingest-v1"
+PIPELINE_SOURCES = (
+    "pdf_parser.py",
+    "chunker.py",
+    "models.py",
+    "cache.py",
+    "tokens.py",
+    "policy.py",
+)
+
+
+def _pipeline_version() -> str:
+    """Invalidate records when parsing, Chunking, token rules or their format changes."""
+    fingerprint = hashlib.sha256()
+    for name in PIPELINE_SOURCES:
+        fingerprint.update(name.encode())
+        fingerprint.update(Path(__file__).with_name(name).read_bytes())
+    return f"ingest-v2-{fingerprint.hexdigest()}"
+
+
+PIPELINE_VERSION = _pipeline_version()
 logger = logging.getLogger(__name__)
 
 
 class CacheRecord(BaseModel):
-    """Document serialization also preserves future Summary Tree fields after a version bump."""
+    """Document serialization preserves new fields; source identity invalidates prior formats."""
 
     content_hash: str
     pipeline_version: str

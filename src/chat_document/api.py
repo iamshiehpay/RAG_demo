@@ -19,7 +19,9 @@ from .llm_adapter import OllamaLLM
 from .llm_gateway import LLMGateway
 from .settings import RetrievalSettings
 
-DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+ROOT = Path(__file__).resolve().parents[2]
+DIST = ROOT / "frontend" / "dist"
+CACHE_DIRECTORY = ROOT / ".cache"
 
 
 class AskRequest(BaseModel):
@@ -51,7 +53,7 @@ def create_app(application: Application | None = None) -> FastAPI:
             OllamaEmbedder(base_url),
             LLMGateway(OllamaLLM(base_url)),
             settings=RetrievalSettings.from_env(),
-            cache=ProcessingCache(Path(".cache")),
+            cache=ProcessingCache(CACHE_DIRECTORY),
         )
 
     @asynccontextmanager

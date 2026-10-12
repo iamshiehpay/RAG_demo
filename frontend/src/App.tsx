@@ -13,6 +13,10 @@ interface Turn {
   thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; retrying: boolean;
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
+async function responseMessage(response: Response, fallback: string) {
+  const payload = await response.json().catch(() => null) as { detail?: unknown } | null;
+  return typeof payload?.detail === 'string' ? payload.detail : fallback;
+}
 
 export function App() {
   const [document, setDocument] = useState<ReadyEvent | null>(null);
@@ -34,7 +38,8 @@ export function App() {
     let eventsUrl = '';
     try {
       const response = await fetch('/api/documents', { method: 'POST', body: form });
-      if (!response.ok) throw new Error(`Upload failed (${response.status}). Please retry.`);
+      if (!response.ok) throw new Error(await responseMessage(response,
+        `Upload failed (${response.status}). Please retry.`));
       const accepted = await response.json() as { job_id: string; events_url: string };
       eventsUrl = accepted.events_url;
       setUploadEventsUrl(eventsUrl);
@@ -46,7 +51,12 @@ export function App() {
   }
 
   async function followUpload(eventsUrl: string) {
-    await consumeEvents(await fetch(eventsUrl), event => {
+    const response = await fetch(eventsUrl);
+    if (!response.ok) {
+      setUploading(false); setUploadEventsUrl(''); setUploadStage(null);
+      throw new Error(`${await responseMessage(response, 'Upload progress is unavailable.')} Choose the PDF again.`);
+    }
+    await consumeEvents(response, event => {
       if (event.type === 'stage') setUploadStage(event);
       else if (event.type === 'ready') {
         setDocument(event); setTurns([]); setSource(null); setQuestion(''); setError('');

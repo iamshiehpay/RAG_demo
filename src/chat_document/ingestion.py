@@ -6,7 +6,7 @@ from collections.abc import AsyncIterator
 from .events import Event
 
 
-class UploadBusy(ValueError):
+class UploadBusy(Exception):
     """Only one Document operation can replace the active Document at a time."""
 
 

@@ -34,7 +34,7 @@ from .ingestion import IngestionJob, UploadBusy
 from .llm_gateway import BudgetExceeded, LLMFailure, LLMGateway
 from .models import Chunk, ConversationTurn, Document, LLMCallTrace
 from .pdf_parser import DocumentError, parse_pdf
-from .policy import HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
+from .policy import EMBEDDING_BATCH_CHUNKS, HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
 from .router import Router
 from .settings import RetrievalSettings
 from .tokens import count_tokens
@@ -84,6 +84,14 @@ class Application:
     def upload_events(self, job_id: str) -> AsyncIterator[Event]:
         return self._jobs[job_id].subscribe()
 
+    def _publish_document(self, document: Document, index: Index) -> ReadyEvent:
+        self.document = document
+        self.index = index
+        self.history = []
+        return ReadyEvent(
+            document_id=document.id, name=document.name, chunk_count=len(document.chunks)
+        )
+
     async def close(self):
         job_id = self._active_upload
         if self._upload_task and not self._upload_task.done():
@@ -129,21 +137,21 @@ class Application:
     async def _process_document(self, content: bytes, name: str) -> AsyncIterator[Event]:
         stage = "parsing"
         try:
-            config = {"embedding_model": getattr(self.embedder, "model", "bge-m3")}
+            config = {
+                "embedding_model": getattr(self.embedder, "model", "bge-m3"),
+                "chunk_token_target": self.chunk_token_target,
+            }
             cached = (
                 await asyncio.to_thread(self.cache.load, content, config) if self.cache else None
             )
             if cached:
-                self.document = cached.document.model_copy(update={"name": name})
-                self.index = Index(
-                    self.document.chunks,
+                document = cached.document.model_copy(update={"name": name})
+                index = Index(
+                    document.chunks,
                     np.asarray(cached.embeddings, dtype=np.float32),
                     self.embedder,
                 )
-                self.history = []
-                yield ReadyEvent(
-                    document_id=self.document.id, name=name, chunk_count=len(self.document.chunks)
-                )
+                yield self._publish_document(document, index)
                 return
             yield StageEvent(stage="parsing", completed=0, total=1)
             sections = await asyncio.to_thread(
@@ -157,26 +165,45 @@ class Application:
             )
             stage = "embedding"
             yield StageEvent(stage="embedding", completed=0, total=len(chunks))
-            index = await Index.build(chunks, self.embedder)
+            vectors = []
+            completed = 0
+            for start in range(0, len(chunks), EMBEDDING_BATCH_CHUNKS):
+                batch = chunks[start : start + EMBEDDING_BATCH_CHUNKS]
+                vectors.append(await self.embedder.embed([chunk.context for chunk in batch]))
+                completed += len(batch)
+                yield StageEvent(stage="embedding", completed=completed, total=len(chunks))
+            index = Index(chunks, np.concatenate(vectors), self.embedder)
             document = Document(id=document_id, name=name, sections=sections, chunks=chunks)
             if self.cache:
-                stage = "cache"
-                await asyncio.to_thread(self.cache.store, content, config, document, index.vectors)
-            self.document = document
-            self.index = index
-            self.history = []
+                try:
+                    await asyncio.to_thread(
+                        self.cache.store, content, config, document, index.vectors
+                    )
+                except Exception:
+                    logger.warning(
+                        "Ingestion cache write failed; Document remains ready.", exc_info=True
+                    )
+            ready = self._publish_document(document, index)
             yield StageEvent(stage="complete", completed=1, total=1)
-            yield ReadyEvent(document_id=document_id, name=name, chunk_count=len(chunks))
+            yield ready
         except DocumentError as exc:
             yield ErrorEvent(code="invalid_document", message=str(exc))
         except httpx.HTTPError as exc:
+            message = (
+                "Embedding failed. Check that the local Ollama daemon is running and "
+                f"bge-m3 is installed, then retry. Details: {exc}"
+                if stage == "embedding"
+                else f"Document {stage} failed: {exc}"
+            )
             yield ErrorEvent(
                 code=f"{stage}_failed",
-                message=f"{stage.capitalize()} failed. Check that the local Ollama daemon is "
-                f"running and bge-m3 is installed, then retry. Details: {exc}",
+                message=message,
             )
         except ValueError as exc:
-            yield ErrorEvent(code="ingestion_failed", message=f"Document processing failed: {exc}")
+            yield ErrorEvent(
+                code="embedding_failed" if stage == "embedding" else "ingestion_failed",
+                message=f"Document {stage} failed: {exc}",
+            )
         except Exception:
             logger.exception("Unexpected Document processing failure")
             yield ErrorEvent(
