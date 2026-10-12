@@ -14,7 +14,7 @@ All new regressions exercise `Application.upload_document` with generated, text-
 
 Existing English sentence, decimal/abbreviation, whole-word overlap and sentence-less CJK tests remain covered. The latter still permits character splitting when no sentence boundary fits. Section/page metadata, paragraph boundaries, upload events and Application configuration/seams are unchanged.
 
-## Verification
+## Verification before #04 integration
 
 - `uv run pytest tests/integration/test_ingestion.py -q`: **35 passed**, 11.28 s.
 - Earlier focused English/Chinese/oversized-character tests: **13 passed** before line normalization; normalization-focused checks: **5 passed**. Final complete suite covers all of them together.
@@ -36,3 +36,14 @@ No frontend/event change or browser/backend process was needed for this fix. No 
 - `tests/integration/test_ingestion.py:418`: 160-sentence wrapped-Chinese boundary/source-coverage regression; `:444`: numeric wrap and Latin spacing regression; `:462`: short-sentence overlap regression.
 
 Awaiting independent review. Repaired-PDF acceptance, source panel page-range formatting, title-token accounting and #10 figure/frame edge cases remain the agreed notes/deferrals.
+
+## Rebase onto integrated #04
+
+Per HCOM #4584, the review request above is superseded by a candidate on `4eee3d20ebd09838cf450458b99bed058edc21f9`. Rebased implementation: `c538e66`; source/evidence checkpoint before this addendum: `830af11`. Only the AI log conflicted, and both #04 and #02 entries were preserved. Application, cache, events and frontend code are byte-identical to this integrated main.
+
+- Full `uv run pytest -q`: **195 passed, 2 deselected**, 212.02 s; six existing dependency warnings.
+- Ruff check/format: PASS, 64 files; event parity and `git diff --check`: PASS.
+- Original QA Chinese PDF through background ingestion with a temporary real processing cache: first upload makes 2 native bge-m3 batches; a fresh Application reload emits only ready, makes 0 embedding calls, restores identical Sections/Chunks and updates the filename. The replay still contains 11 sentence-ending Chunks, maximum 498 tokens, all 160 numeric facts. [Recorded replay checks](qa-pa02-cache-replay.json).
+- #04's source-derived identity includes parser/chunker, so the changed source invalidates old records on restart; no cache code/version override was added. The temporary verification cache was removed and both Applications closed.
+
+Final integrated head is supplied in the superseding review request. No server/browser process or new live LLM evaluation was needed.
