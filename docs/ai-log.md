@@ -211,3 +211,7 @@ After table text was removed from prose, the §4.5 cost and GraphRAG update para
 ## 2026-10-13 — #03 Table reconstruction did not by itself solve Q3
 
 The first clean N=3 live run at fef26f5 preserved typed Table 2 Citations and comparison-baseline explanations in 3/3 answers, but both numeric exceptions scored 0/3 and one answer asserted every ablation was worse. The model omitted full-model rows and sometimes used a Comprehensiveness value as Overall despite correctly labelled source rows. A richer table and baseline wording alone were insufficient; the report is retained honestly at `eval/reports/table-reconstruction-q3-n3.md`. Some ablation-meaning Judge failures were also non-verbatim multi-excerpt evidence, so those failures are distinguished from the missing numeric claims.
+
+## 2026-10-13 — #03 generic table-reading correction authorized
+
+Levi #4532 authorized one follow-up measurement and a held-out non-Golden-Fact table question. The correction adds generic instructions to identify/include the supplied reference/full-system row, compare the same metric and dataset/column, and mention cells contradicting the trend. Source table text repeats the dataset/metric on each numeric pair and identifies a source-derived unmodified named row when other rows use shortened '-' variant labels. Added rules contain no model names or Golden Fact numbers and are not restricted to an ablation question. The previous failed report remains intact.

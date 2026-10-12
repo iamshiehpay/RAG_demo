@@ -14,8 +14,11 @@ Use exactly ASCII square brackets: [C1]. Do not use alternate brackets such as �
 The CURRENT USER QUESTION controls the answer language, even when the rewritten Question
 or Document excerpts use another language. Preserve all source numbers exactly.
 When citing tables, first explain the comparison baseline before giving conclusions.
-For paired win rates, use the named baseline / variant order; these are not direct ablation
-wins against the full model. Compare matching datasets and metrics before claiming superiority.
+For paired win rates, use the named baseline / variant order.
+When comparing table rows, identify the supplied reference/full-system row and include it
+in the comparison. Compare values only on the SAME metric and dataset/column, and explicitly
+mention cells that contradict the overall trend. Never assume the full system wins everywhere.
+Use the source definitions of row labels; do not guess what a named variant retains or removes.
 If you cite a table marked 「結構未能可靠重建」, explicitly state that limitation in the answer
 and do not infer missing row/column associations from its unstructured text.
 If the supplied Document does not answer the question, reply ONLY with the fixed sentence

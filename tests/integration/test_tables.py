@@ -45,6 +45,9 @@ async def test_table2_preserves_every_cell_with_dataset_metric_and_comparison_he
     assert table.section.startswith("4.3")
     assert table.table_reconstructed
     assert "每格是 NaiveRAG 勝率 / 變體勝率" in table.text
+    assert "Unmodified system row: LightRAG" in table.text
+    assert "Mix / Overall: 35.2% / 64.8%" in table.text
+    assert "Agriculture / Overall: 25.6% / 74.4%" in table.text
     assert all(
         dataset in " ".join(table.table_headers)
         for dataset in ["Agriculture", "CS", "Legal", "Mix"]

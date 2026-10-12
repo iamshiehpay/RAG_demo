@@ -64,13 +64,30 @@ def _paired_grid(rows):
         )
     if not output:
         return None
-    meaning = (
-        "每格是 NaiveRAG 勝率 / 變體勝率 (NaiveRAG win rate / variant win rate, %). "
-        "These are separate comparisons against NaiveRAG, not direct wins against full LightRAG."
-        if all(row[0].startswith("NaiveRAG /") for row in output)
-        else "Each cell is baseline win rate / LightRAG win rate (%); "
-        "the Comparison column names the baseline."
-    )
+    comparisons = list(dict.fromkeys(row[0] for row in output))
+    baselines = {comparison.split(" / ")[0] for comparison in comparisons}
+    if len(baselines) == 1:
+        baseline = next(iter(baselines))
+        meaning = (
+            f"每格是 {baseline} 勝率 / 變體勝率 "
+            f"({baseline} win rate / variant win rate, %). "
+            "These are separate comparisons against the named baseline, "
+            "not direct wins against the full system."
+        )
+        systems = [comparison.split(" / ")[1] for comparison in comparisons]
+        # Explicit shortened variant labels refer back to the one unmodified named row.
+        named = [system for system in systems if not system.startswith("-")]
+        if len(named) == 1 and any(system.startswith("-") for system in systems):
+            meaning += (
+                f" Unmodified system row: {named[0]} "
+                "(the named row without a '-' variant label). "
+                "Include that row when comparing systems on the same metric and dataset."
+            )
+    else:
+        meaning = (
+            "Each cell is baseline win rate / candidate win rate (%); "
+            "the Comparison column names both systems in that order."
+        )
     headers = [
         "Comparison",
         "Metric",
@@ -154,13 +171,19 @@ def table_text(table: Table, rows: list[list[str]] | None = None) -> str:
     prefix = f"{table.caption}\n{table.meaning}".strip()
     if not table.reconstructed:
         return f"{prefix}\n{LIMITATION}\n{table.raw_text}"
-    return "\n".join(
-        [
-            prefix,
-            " | ".join(table.headers),
-            *[" | ".join(row) for row in (table.rows if rows is None else rows)],
-        ]
-    )
+    rendered_rows = []
+    for row in table.rows if rows is None else rows:
+        if table.headers[:2] == ["Comparison", "Metric"]:
+            # Repeat dataset and metric at every numeric pair, so values remain unambiguous
+            # even when a reader quotes only one cell instead of the complete row.
+            values = [
+                f"{header.split(' (')[0]} / {row[1]}: {value}"
+                for header, value in zip(table.headers[2:], row[2:], strict=True)
+            ]
+            rendered_rows.append(" | ".join([row[0], row[1], *values]))
+        else:
+            rendered_rows.append(" | ".join(row))
+    return "\n".join([prefix, " | ".join(table.headers), *rendered_rows])
 
 
 def split_table(table: Table) -> list[tuple[str, list[list[str]]]]:
