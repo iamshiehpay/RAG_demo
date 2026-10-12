@@ -133,3 +133,10 @@
 - The #01 oversized-paragraph overlap could start inside `encyclopediawordnumber103`, yielding `opediawordnumber103`. `test_long_paragraph_overlap_starts_on_a_complete_word` reproduced it (1 failed); overlap now snaps to a nearby sentence or complete Latin word, and sentence-less CJK keeps Unicode character boundaries.
 - During that fix, the AI incorrectly passed start/end positions to module-level `re.finditer`; application tests caught processing errors. Compiled-pattern `finditer` corrected the calls; the five paragraph/overlap regressions passed.
 - The configurable-size fixture initially clipped single-line text at the page edge, failing to create enough tokens to exercise packing. Text boxes now retain the complete fixture text, and the 35/60-token packing tests verify whole paragraphs and precise page ranges.
+
+## 2026-10-13 — #02 integration with #06
+
+- Rebased #02 from cf49802 onto main b005721 as requested. Preserved both keyword-only Application settings, Router/history behavior, and both tickets' AI log entries. The default HTTP factory now reads `CHUNK_TOKEN_TARGET` alongside RetrievalSettings.
+- Real Section packing changed the extraction corpus from exactly two batches to three. The #06 scripted fixtures exhausted their queues, causing unrelated ingestion/answer errors; the old C20 assumption was also tied to Chunk ordering. Fixtures now respond to every extraction batch and choose Citation IDs from its supplied evidence. Assertions still require multiple batches, original-source provenance, valid final Citations, filtering, and Context Budget compliance.
+- Q2 coverage now additionally requires Synthesis retrieval to strictly expand and preserve baseline evidence, while retaining the cost/incremental/community, deduplication, Document order, and prompt-source checks. It no longer requires a particular numeric fact to be absent from a changing top-three embedding result.
+- The #02 heading-free ask fixture now includes the scripted Router response required by #06; the tested parser/chunker and local bge-m3 remain real.

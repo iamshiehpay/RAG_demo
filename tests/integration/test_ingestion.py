@@ -9,6 +9,7 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
 from .fixtures import heading_free_pdf, paragraph_pdf, scanned_pdf, structured_pdf, text_pdf
+from .test_router_synthesis import router_script
 
 
 @pytest.mark.parametrize(
@@ -90,7 +91,12 @@ async def test_relative_headings_preserve_paragraphs_section_boundaries_and_page
 
 
 async def test_heading_free_document_uses_bounded_virtual_sections_and_can_be_asked():
-    llm = ScriptedLLM(["The Document contains ordinary body text. [C1]"])
+    llm = ScriptedLLM(
+        [
+            router_script(question="What text does the Document contain?"),
+            "The Document contains ordinary body text. [C1]",
+        ]
+    )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     events = [e async for e in app.upload_document(heading_free_pdf(), "plain.pdf")]
     assert events[-1].type == "ready"
@@ -129,7 +135,15 @@ async def test_long_paragraph_overlap_starts_on_a_complete_word():
 
 @pytest.mark.parametrize("target", [35, 60])
 async def test_configured_chunk_size_packs_whole_paragraphs_without_overlap(target):
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=target)
+    from chat_document.settings import RetrievalSettings
+
+    llm = ScriptedLLM([router_script(question="Introduction"), "Evidence [C1]."])
+    app = Application(
+        OllamaEmbedder(),
+        LLMGateway(llm),
+        chunk_token_target=target,
+        settings=RetrievalSettings(lookup_top_k=1),
+    )
     events = [e async for e in app.upload_document(structured_pdf(), "structure.pdf")]
     assert events[-1].type == "ready"
     document = app.document
@@ -143,6 +157,9 @@ async def test_configured_chunk_size_packs_whole_paragraphs_without_overlap(targ
             assert contained
             assert chunk.page_start == min(section.paragraph_pages[i][0] for i in contained)
             assert chunk.page_end == max(section.paragraph_pages[i][1] for i in contained)
+    answer = [e async for e in app.ask("Introduction")]
+    assert len(next(e for e in answer if e.type == "retrieval").chunks) == 1
+    assert any(e.type == "final" for e in answer)
 
 
 @pytest.mark.parametrize("cjk", [False, True], ids=["english", "chinese"])

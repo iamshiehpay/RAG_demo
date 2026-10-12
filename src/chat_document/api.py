@@ -14,6 +14,7 @@ from .embedder import OllamaEmbedder
 from .events import Event
 from .llm_adapter import OllamaLLM
 from .llm_gateway import LLMGateway
+from .policy import CHUNK_TOKEN_TARGET
 from .settings import RetrievalSettings
 
 DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
@@ -48,6 +49,7 @@ def create_app(application: Application | None = None) -> FastAPI:
             OllamaEmbedder(base_url),
             LLMGateway(OllamaLLM(base_url)),
             settings=RetrievalSettings.from_env(),
+            chunk_token_target=int(os.environ.get("CHUNK_TOKEN_TARGET", CHUNK_TOKEN_TARGET)),
         )
     app = FastAPI(title="Chat with Document")
 
