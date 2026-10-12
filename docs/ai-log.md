@@ -162,3 +162,7 @@
 
 - **整合方向由人確認：** 第四次獨立審查批准 #02，要求 rebase 到含 #07 的 `79c82a8`；編號步驟圖內標籤與頁框內無編號標題的邊界案例移交 #10，不在 #02 擴充。
 - **衝突要保留兩邊的契約：** Citation 旁註包住 #07 的 structured UnverifiedSpan renderer，保留 Unicode code-point 位移、暫定樣式、C/S inline 引用；Gateway 同時保留 low retry 的 effective think 與腳本辨識用的 call_type。抽取失敗測試用真正 Section 的可變批次數，並維持 trace → error 的終止次序。AI log 去除 rebase 產生的重複區塊，保留 #06／#07／#08／#02 內容並依日期排列；前端 dist 由合併後 source 重建。
+
+## 2026-10-13：#04 背景上傳的關閉時序
+
+- **AI 漏掉尚未開始執行的 Task：** 第一版只在 ingestion worker 捕捉 CancelledError；若剛拿到 job id 就關閉 Application，Task 還沒執行到 try 區塊，close() 會直接拋出取消例外，progress 也沒有終止事件。先以 Application.start_upload → close → upload_events 的公開操作測試重現失敗，再讓 close() 等待取消並補送唯一的 ingestion_cancelled error；已進入 embedding 的取消案例也維持通過，不留下半成品快取。

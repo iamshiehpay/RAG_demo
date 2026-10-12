@@ -3,6 +3,7 @@
 import asyncio
 import logging
 from collections.abc import AsyncIterator
+from contextlib import suppress
 from uuid import uuid4
 
 import httpx
@@ -84,9 +85,20 @@ class Application:
         return self._jobs[job_id].subscribe()
 
     async def close(self):
+        job_id = self._active_upload
         if self._upload_task and not self._upload_task.done():
             self._upload_task.cancel()
-            await self._upload_task
+            with suppress(asyncio.CancelledError):
+                await self._upload_task
+        # A Task cancelled before its first execution cannot run the worker's cleanup.
+        if job_id is not None and not self._jobs[job_id].finished:
+            await self._jobs[job_id].publish(
+                ErrorEvent(
+                    code="ingestion_cancelled", message="Document processing stopped. Retry."
+                )
+            )
+        if self._active_upload == job_id:
+            self._active_upload = None
 
     async def upload_document(self, content: bytes, name: str) -> AsyncIterator[Event]:
         """Application seam for callers that want to await a complete upload."""

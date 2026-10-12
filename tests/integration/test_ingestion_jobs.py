@@ -164,3 +164,80 @@ async def test_answers_are_never_cached_even_for_a_cached_document(tmp_path):
     assert next(e.answer for e in first if e.type == "final") == "Unique first answer. [C1]"
     assert next(e.answer for e in second if e.type == "final") == "Unique second. [C1]"
     assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == entries_before
+
+
+async def test_cache_publication_failure_keeps_current_document_and_removes_partial_entry(
+    tmp_path, monkeypatch
+):
+    import os
+
+    app = Application(
+        RecordingEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    content = text_pdf()
+    assert [e async for e in app.upload_document(content, "original.pdf")][-1].type == "ready"
+    original = app.document
+    entries_before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+
+    def fail_replace(*args):
+        raise OSError("disk full")
+
+    with monkeypatch.context() as fault:
+        fault.setattr(os, "replace", fail_replace)
+        result = [e async for e in app.upload_document(text_pdf("Replacement"), "new.pdf")]
+    assert result[-1].type == "error"
+    assert app.document == original
+    assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == entries_before
+    recovered = [e async for e in app.upload_document(text_pdf("Replacement"), "new.pdf")]
+    assert recovered[-1].type == "ready"
+
+
+async def test_unreadable_cache_reprocesses_instead_of_publishing_an_invalid_document(tmp_path):
+    app = Application(
+        RecordingEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    content = text_pdf()
+    assert [e async for e in app.upload_document(content, "sample.pdf")][-1].type == "ready"
+    next(tmp_path.glob("*.json")).write_text('{"document":')
+    result = [e async for e in app.upload_document(content, "sample.pdf")]
+    assert result[-1].type == "ready"
+    assert len(app.embedder.calls) == 2
+
+
+async def test_shutdown_ends_pending_upload_with_error_and_no_cache(tmp_path):
+    embedder = RecordingEmbedder(hold=True)
+    app = Application(embedder, LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path))
+    job_id = app.start_upload(text_pdf(), "sample.pdf")
+    await asyncio.wait_for(embedder.entered.wait(), timeout=5)
+    await app.close()
+    result = [e async for e in app.upload_events(job_id)]
+    assert result[-1].code == "ingestion_cancelled"
+    assert app.document is None
+    assert list(tmp_path.iterdir()) == []
+
+
+async def test_shutdown_before_worker_starts_still_terminates_progress(tmp_path):
+    app = Application(
+        RecordingEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    job_id = app.start_upload(text_pdf(), "sample.pdf")
+    await app.close()
+    result = [e async for e in app.upload_events(job_id)]
+    assert [e.type for e in result] == ["error"]
+    assert result[-1].code == "ingestion_cancelled"
+    assert list(tmp_path.iterdir()) == []
+
+
+async def test_upload_cannot_replace_document_during_an_active_ask():
+    app = Application(RecordingEmbedder(), LLMGateway(ScriptedLLM(["not JSON"])))
+    assert [e async for e in app.upload_document(text_pdf(), "original.pdf")][-1].type == "ready"
+    original = app.document
+    answer = app.ask("What does this say?")
+    assert (await anext(answer)).type == "plan"
+    rejected = [e async for e in app.upload_document(text_pdf("Replacement"), "new.pdf")]
+    assert [e.type for e in rejected] == ["error"]
+    assert rejected[0].code == "document_busy" and app.document == original
+    await answer.aclose()
+    assert [e async for e in app.upload_document(text_pdf("Replacement"), "new.pdf")][
+        -1
+    ].type == "ready"
