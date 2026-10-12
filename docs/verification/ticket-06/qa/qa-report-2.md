@@ -63,3 +63,29 @@ Gap 5 (rejection event) PASS. Gap 8 (configurable top-k) PASS (verified in repor
 ## Cleanup
 
 Browser session qa06b closed, uvicorn on 8202 stopped, ports 8202-8209 free. Other agents' processes untouched.
+
+## Final spot-check (main 5799106, fix for the Simplified-answer finding)
+
+Real browser (session qa06c), port 8202, LightRAG uploaded; `uv run pytest -q`: 76 passed, 1 deselected (`r3-pytest.txt`).
+
+| Check | Result | Evidence |
+|---|---|---|
+| Q2, then "那它的成本呢？" | PASS | Standalone "LightRAG 與 GraphRAG 的成本比較是什麼？", Synthesis, plan source router. The answer is in Traditional characters (檢索階段, 產生, 個, 呼叫, 增量更新) with no Simplified forms (`r3-followup-trad.json`, `r3-01-followup-trad.png`). Report-2 FAIL 2b is resolved. |
+| Simplified question "这篇论文的主要贡献是什么？" | PASS | The answer stays Simplified (贡献, 检索, 图, 个) (`r3-simplified.json`, `r3-02-simplified.png`). Observation, not a failure: the router's Standalone Question converted this to Traditional ("這篇論文的主要貢獻是什麼？"); the answer script still followed the user's question. |
+| English question | PASS | English Standalone Question and English answer (`r3-english.json`, `r3-03-english.png`). |
+
+### Final per-AC verdict (#06)
+
+| Item | Verdict |
+|---|---|
+| AC1 plan event and Trace (Type, Standalone Question, Sub-queries, plan source) | PASS |
+| AC2 malformed JSON gives Lookup (fallback labelled) | PASS |
+| AC3 >1,000 tokens rejected, 0 LLM calls, input restored | PASS |
+| AC4 history 2 rounds, 500 tokens each, referent resolved | PASS |
+| AC5 Q2 Sub-queries cover cost and incremental update | PASS scripted; live Q2 retrieval coverage is deferred to #11 (the Traditional follow-up did retrieve the 610 and incremental passages) |
+| AC6 forced overflow gives batch extraction, valid Citations | PASS (deterministic) |
+| AC7 router 12-case eval | PASS via live smoke (12/12 canonical, 8/8 held-out); #08 eval report pending (NOT_EXECUTED) |
+| Gap 5 explicit rejection event | PASS |
+| Gap 8 configurable top-k | PASS |
+
+Cleanup: browser closed, uvicorn on 8202 stopped, ports 8202-8209 free.
