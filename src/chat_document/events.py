@@ -1,0 +1,89 @@
+"""Single source of truth for upload/ask events (generate frontend types from this)."""
+
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, Field, TypeAdapter
+
+from .models import Citation, LLMCallTrace, RetrievedChunk
+
+
+class StageEvent(BaseModel):
+    type: Literal["stage"] = "stage"
+    stage: Literal["parsing", "chunking", "embedding"]
+    completed: int
+    total: int
+
+
+class ReadyEvent(BaseModel):
+    type: Literal["ready"] = "ready"
+    document_id: str
+    name: str
+    chunk_count: int
+    document_summary: str | None = None
+
+
+class PlanEvent(BaseModel):
+    type: Literal["plan"] = "plan"
+    question_type: Literal["Global", "Synthesis", "Lookup"]
+    standalone_question: str
+    sub_queries: list[str]
+
+
+class RetrievalEvent(BaseModel):
+    type: Literal["retrieval"] = "retrieval"
+    chunks: list[RetrievedChunk]
+
+
+class CitationMapEvent(BaseModel):
+    type: Literal["citation_map"] = "citation_map"
+    citations: list[Citation]
+
+
+class ThinkingEvent(BaseModel):
+    type: Literal["thinking"] = "thinking"
+    text: str
+
+
+class DeltaEvent(BaseModel):
+    type: Literal["delta"] = "delta"
+    text: str
+
+
+class RetryEvent(BaseModel):
+    type: Literal["retry"] = "retry"
+    reason: str
+
+
+class FinalEvent(BaseModel):
+    type: Literal["final"] = "final"
+    answer: str
+    citations: list[Citation]
+    unverified: list[str] = Field(default_factory=list)
+
+
+class TraceEvent(BaseModel):
+    type: Literal["trace"] = "trace"
+    calls: list[LLMCallTrace]
+
+
+class ErrorEvent(BaseModel):
+    type: Literal["error"] = "error"
+    code: str
+    message: str
+
+
+Event = Annotated[
+    StageEvent
+    | ReadyEvent
+    | PlanEvent
+    | RetrievalEvent
+    | CitationMapEvent
+    | ThinkingEvent
+    | DeltaEvent
+    | RetryEvent
+    | FinalEvent
+    | TraceEvent
+    | ErrorEvent,
+    Field(discriminator="type"),
+]
+EVENT_ADAPTER = TypeAdapter(Event)
