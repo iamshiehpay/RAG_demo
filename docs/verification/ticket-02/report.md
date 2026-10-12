@@ -1,3 +1,5 @@
+> Historical first-review evidence at 41aabfa, before #2626 findings. Parser counts, repair policy and paths below describe that candidate. See [review fixes](review-fixes.md) for current verification.
+
 # Ticket #02 verification
 
 Base: `b005721` (main, including #06). Branch: `lat/02-structure-aware-chunking`.
