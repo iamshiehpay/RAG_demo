@@ -1,12 +1,16 @@
 """Public seams: upload Document and ask. HTTP and tests consume the same events."""
 
+import asyncio
 import logging
 from collections.abc import AsyncIterator
+from contextlib import suppress
 from uuid import uuid4
 
 import httpx
+import numpy as np
 
 from .answer_generator import AnswerGenerator
+from .cache import ProcessingCache
 from .chunker import chunk_sections
 from .citation import citation_map, validate_citations
 from .context_packer import ContextPacker
@@ -26,10 +30,11 @@ from .events import (
     TraceEvent,
 )
 from .index import Index
+from .ingestion import IngestionJob, UploadBusy
 from .llm_gateway import BudgetExceeded, LLMFailure, LLMGateway
 from .models import Chunk, ConversationTurn, Document, LLMCallTrace
 from .pdf_parser import DocumentError, parse_pdf
-from .policy import HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
+from .policy import EMBEDDING_BATCH_CHUNKS, HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
 from .router import Router
 from .settings import RetrievalSettings
 from .tokens import count_tokens
@@ -45,6 +50,7 @@ class Application:
         *,
         settings: RetrievalSettings | None = None,
         chunk_token_target: int | None = None,
+        cache: ProcessingCache | None = None,
     ):
         settings = settings or RetrievalSettings()
         if chunk_token_target is not None:
@@ -53,32 +59,151 @@ class Application:
             )
         self.chunk_token_target = settings.chunk_token_target
         self.embedder = embedder
+        self.cache = cache
         self.answer_generator = AnswerGenerator(gateway)
         self.router = Router(gateway)
         self.context_packer = ContextPacker(gateway, settings)
         self.document: Document | None = None
         self.index: Index | None = None
         self.history: list[ConversationTurn] = []
+        self._jobs: dict[str, IngestionJob] = {}
+        self._active_upload: str | None = None
+        self._upload_task: asyncio.Task | None = None
+        self._asking = 0
+
+    def start_upload(self, content: bytes, name: str) -> str:
+        if self._active_upload is not None or self._asking:
+            raise UploadBusy("A Document operation is in progress. Please wait and retry.")
+        job_id = uuid4().hex
+        job = IngestionJob()
+        self._jobs[job_id] = job
+        self._active_upload = job_id
+        self._upload_task = asyncio.create_task(self._run_upload(job_id, job, content, name))
+        return job_id
+
+    def upload_events(self, job_id: str) -> AsyncIterator[Event]:
+        return self._jobs[job_id].subscribe()
+
+    def _publish_document(self, document: Document, index: Index) -> ReadyEvent:
+        self.document = document
+        self.index = index
+        self.history = []
+        return ReadyEvent(
+            document_id=document.id, name=document.name, chunk_count=len(document.chunks)
+        )
+
+    async def close(self):
+        job_id = self._active_upload
+        if self._upload_task and not self._upload_task.done():
+            self._upload_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await self._upload_task
+        # A Task cancelled before its first execution cannot run the worker's cleanup.
+        if job_id is not None and not self._jobs[job_id].finished:
+            await self._jobs[job_id].publish(
+                ErrorEvent(
+                    code="ingestion_cancelled", message="Document processing stopped. Retry."
+                )
+            )
+        if self._active_upload == job_id:
+            self._active_upload = None
 
     async def upload_document(self, content: bytes, name: str) -> AsyncIterator[Event]:
-        self.document = None
-        self.index = None
-        self.history = []
+        """Application seam for callers that want to await a complete upload."""
         try:
+            job_id = self.start_upload(content, name)
+        except UploadBusy as exc:
+            yield ErrorEvent(code="document_busy", message=str(exc))
+            return
+        async for event in self.upload_events(job_id):
+            yield event
+
+    async def _run_upload(self, job_id: str, job: IngestionJob, content: bytes, name: str):
+        try:
+            async for event in self._process_document(content, name):
+                if event.type in {"ready", "error"}:
+                    self._active_upload = None
+                await job.publish(event)
+        except asyncio.CancelledError:
+            await job.publish(
+                ErrorEvent(
+                    code="ingestion_cancelled", message="Document processing stopped. Retry."
+                )
+            )
+        finally:
+            if self._active_upload == job_id:
+                self._active_upload = None
+
+    async def _process_document(self, content: bytes, name: str) -> AsyncIterator[Event]:
+        stage = "parsing"
+        try:
+            config = {
+                "embedding_model": getattr(self.embedder, "model", "bge-m3"),
+                "chunk_token_target": self.chunk_token_target,
+            }
+            cached = (
+                await asyncio.to_thread(self.cache.load, content, config) if self.cache else None
+            )
+            if cached:
+                document = cached.document.model_copy(update={"name": name})
+                index = Index(
+                    document.chunks,
+                    np.asarray(cached.embeddings, dtype=np.float32),
+                    self.embedder,
+                )
+                yield self._publish_document(document, index)
+                return
             yield StageEvent(stage="parsing", completed=0, total=1)
-            sections = parse_pdf(content, chunk_token_target=self.chunk_token_target)
+            sections = await asyncio.to_thread(
+                parse_pdf, content, chunk_token_target=self.chunk_token_target
+            )
+            stage = "chunking"
             yield StageEvent(stage="chunking", completed=0, total=1)
             document_id = uuid4().hex
-            chunks = chunk_sections(sections, document_id, target=self.chunk_token_target)
+            chunks = await asyncio.to_thread(
+                chunk_sections, sections, document_id, target=self.chunk_token_target
+            )
+            stage = "embedding"
             yield StageEvent(stage="embedding", completed=0, total=len(chunks))
-            index = await Index.build(chunks, self.embedder)
-            self.document = Document(id=document_id, name=name, sections=sections, chunks=chunks)
-            self.index = index
-            yield ReadyEvent(document_id=document_id, name=name, chunk_count=len(chunks))
+            vectors = []
+            completed = 0
+            for start in range(0, len(chunks), EMBEDDING_BATCH_CHUNKS):
+                batch = chunks[start : start + EMBEDDING_BATCH_CHUNKS]
+                vectors.append(await self.embedder.embed([chunk.context for chunk in batch]))
+                completed += len(batch)
+                yield StageEvent(stage="embedding", completed=completed, total=len(chunks))
+            index = Index(chunks, np.concatenate(vectors), self.embedder)
+            document = Document(id=document_id, name=name, sections=sections, chunks=chunks)
+            if self.cache:
+                try:
+                    await asyncio.to_thread(
+                        self.cache.store, content, config, document, index.vectors
+                    )
+                except Exception:
+                    logger.warning(
+                        "Ingestion cache write failed; Document remains ready.", exc_info=True
+                    )
+            ready = self._publish_document(document, index)
+            yield StageEvent(stage="complete", completed=1, total=1)
+            yield ready
         except DocumentError as exc:
             yield ErrorEvent(code="invalid_document", message=str(exc))
-        except (httpx.HTTPError, ValueError) as exc:
-            yield ErrorEvent(code="ingestion_failed", message=f"Document processing failed: {exc}")
+        except httpx.HTTPError as exc:
+            message = (
+                "Embedding failed. Check that the local Ollama daemon is running and "
+                f"bge-m3 is installed, then retry. Details: {exc}"
+                if stage == "embedding"
+                else f"Document {stage} failed: {exc}"
+            )
+            yield ErrorEvent(
+                code=f"{stage}_failed",
+                message=message,
+            )
+        except ValueError as exc:
+            yield ErrorEvent(
+                code="embedding_failed" if stage == "embedding" else "ingestion_failed",
+                message=f"Document {stage} failed: {exc}",
+            )
         except Exception:
             logger.exception("Unexpected Document processing failure")
             yield ErrorEvent(
@@ -98,11 +223,13 @@ class Application:
     ) -> AsyncIterator[Event]:
         calls: list[LLMCallTrace] = []
         stage = "router"
+        self._asking += 1
         try:
             index = self.index
-            if index is None:
+            if self._active_upload is not None or index is None:
                 yield ErrorEvent(
-                    code="document_not_ready", message="Upload a Document before asking."
+                    code="document_not_ready",
+                    message="Wait until Document processing is complete before asking.",
                 )
                 return
             if not question.strip():
@@ -195,3 +322,5 @@ class Application:
             yield ErrorEvent(
                 code="answer_failed", message="Unexpected answer failure. Please retry."
             )
+        finally:
+            self._asking -= 1

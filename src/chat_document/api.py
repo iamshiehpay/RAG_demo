@@ -2,6 +2,7 @@
 
 import os
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, UploadFile
@@ -10,13 +11,17 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .application import Application
+from .cache import ProcessingCache
 from .embedder import OllamaEmbedder
 from .events import Event
+from .ingestion import UploadBusy
 from .llm_adapter import OllamaLLM
 from .llm_gateway import LLMGateway
 from .settings import RetrievalSettings
 
-DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+ROOT = Path(__file__).resolve().parents[2]
+DIST = ROOT / "frontend" / "dist"
+CACHE_DIRECTORY = ROOT / ".cache"
 
 
 class AskRequest(BaseModel):
@@ -48,13 +53,33 @@ def create_app(application: Application | None = None) -> FastAPI:
             OllamaEmbedder(base_url),
             LLMGateway(OllamaLLM(base_url)),
             settings=RetrievalSettings.from_env(),
+            cache=ProcessingCache(CACHE_DIRECTORY),
         )
-    app = FastAPI(title="Chat with Document")
 
-    @app.post("/api/documents")
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        try:
+            yield
+        finally:
+            await application.close()
+
+    app = FastAPI(title="Chat with Document", lifespan=lifespan)
+
+    @app.post("/api/documents", status_code=202)
     async def upload_document(document: UploadFile):
         content = await document.read()
-        return sse(application.upload_document(content, document.filename or "Document.pdf"))
+        try:
+            job_id = application.start_upload(content, document.filename or "Document.pdf")
+        except UploadBusy as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"job_id": job_id, "events_url": f"/api/documents/{job_id}/events"}
+
+    @app.get("/api/documents/{job_id}/events")
+    async def upload_events(job_id: str):
+        try:
+            return sse(application.upload_events(job_id))
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="Upload job not found.") from exc
 
     @app.post("/api/ask")
     async def ask(request: AskRequest):

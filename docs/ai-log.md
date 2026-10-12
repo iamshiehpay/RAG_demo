@@ -162,3 +162,16 @@
 
 - **整合方向由人確認：** 第四次獨立審查批准 #02，要求 rebase 到含 #07 的 `79c82a8`；編號步驟圖內標籤與頁框內無編號標題的邊界案例移交 #10，不在 #02 擴充。
 - **衝突要保留兩邊的契約：** Citation 旁註包住 #07 的 structured UnverifiedSpan renderer，保留 Unicode code-point 位移、暫定樣式、C/S inline 引用；Gateway 同時保留 low retry 的 effective think 與腳本辨識用的 call_type。抽取失敗測試用真正 Section 的可變批次數，並維持 trace → error 的終止次序。AI log 去除 rebase 產生的重複區塊，保留 #06／#07／#08／#02 內容並依日期排列；前端 dist 由合併後 source 重建。
+
+## 2026-10-13：#04 背景上傳的關閉時序
+
+- **AI 漏掉尚未開始執行的 Task：** 第一版只在 ingestion worker 捕捉 CancelledError；若剛拿到 job id 就關閉 Application，Task 還沒執行到 try 區塊，close() 會直接拋出取消例外，progress 也沒有終止事件。先以 Application.start_upload → close → upload_events 的公開操作測試重現失敗，再讓 close() 等待取消並補送唯一的 ingestion_cancelled error；已進入 embedding 的取消案例也維持通過，不留下半成品快取。
+
+## 2026-10-13：#04 審查與 #02 整合
+
+- **Reviewer 抓到 AI 的快取身分漏了調參設定：** 原本只記內容 hash、ingest-v1 與 embedding_model；#02 的 Section 新欄位有預設值，舊資料仍可能驗證通過，調 Chunk 大小也會吃到舊結果。先以 effective chunk_token_target 改變及 legacy pipeline 的兩個 Application 測試重現，再把有效設定加入 key，並用 parser／chunker／models／cache format／token／policy 原始碼的 digest 產生 ingest-v2 身分。新 Section metadata 的快取往返與失敗替換保留狀態也重新驗證。
+- **Reviewer 修正 AI 把快取失敗當成文件失敗：** 第一版已完成 parsing、Chunking、embedding，卻因快取寫入失敗丟掉可用 Document；測試也鎖住了這個行為。依審查先改成會失敗的 ready 驗收，再把 cache write 改為記 warning 並繼續發布；atomic replace 的 temp cleanup 及既有快取保留仍受測試保護。
+- **進度與錯誤也補上可觀察的界線：** 真實 bge-m3 的進度測試先重現只停在 0/N，再改成每批 8 個 Chunk 並逐批發 n/N；invalid／zero-vector 的 ValueError 測試先重現 generic ingestion_failed，修成 embedding_failed。404 reconnect 解除上傳 pending，409 顯示後端 detail；快取目錄固定到 repo root。
+- **Rebase 保留兩邊的意圖：** #02 與 #04 都新增 test_ingestion.py；將 #04 工作測試移到 test_ingestion_jobs.py，完整保留 #02 測試、設定驗證和 parser/chunker 呼叫，同時保留 #04 背景處理與 swap-on-success。由源碼重新產生 event types 與 dist，沒有手合併 build 產物。
+
+- **瀏覽器 QA 編排也曾漏等背景命令：** 一次 exec_command 回傳 session_id 後，AI 提前執行下一個快取比較，導致 before 檔案尚未建立及額外的 409。改為等外部 ingestion 的 ready、命令完成與 UI ready 後才比較；正式證據使用完整 before/after call counts，並另外以新 server 的零呼叫 cache hit 確認，不把等待腳本的錯誤當成產品失敗。

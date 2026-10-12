@@ -9,7 +9,7 @@ from .models import Citation, FallbackReason, LLMCallTrace, RetrievedChunk, Unve
 
 class StageEvent(BaseModel):
     type: Literal["stage"] = "stage"
-    stage: Literal["parsing", "chunking", "embedding"]
+    stage: Literal["parsing", "chunking", "embedding", "complete"]
     completed: int
     total: int
 
