@@ -160,3 +160,16 @@ async def test_fixed_reply_judge_receives_the_exact_expected_sentence():
 
     fact = GoldenFact("refusal", "judge", "Only the fixed refusal.", exact_answer="文件中未提及")
     assert (await check_fact("文件中未提及", fact, LLMGateway(ExpectedReplyJudge()))).passed
+
+
+async def test_exact_refusal_cannot_assert_a_forbidden_claim():
+    fact = GoldenFact("invented_limit", "forbidden", "The document reports privacy violations.")
+    llm = ScriptedLLM(
+        [
+            json.dumps(
+                {"matched": True, "asserted": True, "evidence": "Not mentioned in the document."}
+            )
+        ]
+    )
+    assert (await check_fact("Not mentioned in the document.", fact, LLMGateway(llm))).passed
+    assert llm.calls == []

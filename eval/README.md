@@ -72,3 +72,8 @@ that the judge also needed the explicit expected fixed sentence. The final basel
 supplies it; `refusal-checker-probe.md` verifies all three refusals with the real LLM.
 The N=3 report includes one truncated Judge call, marked as a failed fact; this is
 not an answer-generation success claim.
+`lookup-skeleton-refusal-intermediate.md` exposed a real Judge falsely treating an
+exact fixed refusal as an asserted forbidden claim. The checker now recognizes
+only the two exact D01 refusals as containing no factual assertion; answers with
+extra content still go through the judge. This bypass is covered by a deliberately
+wrong scripted judge regression, and actual call counts remain explicit.

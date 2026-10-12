@@ -25,7 +25,7 @@ Preserve ALL Citation markers, Markdown, punctuation and whitespace inside the e
 If target=answer_property, the criterion describes the answer itself (language or fixed reply).
 Evaluate that property directly; the answer need not claim to be Chinese or describe itself.
 For a satisfied property, return matched=true, asserted=true, and quote supporting answer text.
-If expected_answer is provided, evaluate whether the entire answer equals that fixed sentence.
+If expected_answer is a string, evaluate whether the entire answer equals that fixed sentence.
 An exact fixed refusal IS a satisfied property even though it states no Document facts.
 For matched=false, return asserted=false and evidence="". Do not infer missing facts."""
 
@@ -45,6 +45,12 @@ async def check_fact(answer: str, fact: GoldenFact, gateway: LLMGateway) -> Fact
     if fact.method == "contains":
         passed = normalize(fact.requirement) in normalize(answer)
         return result(passed, "Term found" if passed else "Term missing")
+    # An exact D01 refusal has no factual assertion; a judge cannot invent one.
+    if fact.method == "forbidden" and answer.strip() in {
+        "文件中未提及",
+        "Not mentioned in the document.",
+    }:
+        return result(True, "Exact fixed refusal contains no asserted forbidden claim")
     if fact.exact_answer is not None and answer.strip() != fact.exact_answer:
         return result(False, "Answer differs from the fixed reply or adds unsupported content")
 
