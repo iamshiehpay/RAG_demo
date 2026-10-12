@@ -22,7 +22,7 @@ _LINE_WRAP_WIDTH_RATIO = 0.9
 _CJK_CHARACTERS = r"\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af\U00020000-\U000323af"
 _CJK_TEXT = re.compile(f"[{_CJK_CHARACTERS}]")
 _CJK_LINE_WRAP = re.compile(rf"(?<=[{_CJK_CHARACTERS}\d])\n(?=[{_CJK_CHARACTERS}\d])")
-_NUMERIC_LINE = re.compile(r"[\d.,%+\-−]+")
+_NUMERIC_LINE = re.compile(r"[\d\s.,%+\-−]+")
 
 
 class DocumentError(ValueError):

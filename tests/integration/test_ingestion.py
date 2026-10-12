@@ -464,7 +464,12 @@ async def test_cjk_line_wraps_keep_numbers_intact_and_preserve_latin_spacing():
 
 
 @pytest.mark.parametrize(
-    "text", ["區域 數值\n1.2\n3.4\n2023\n2024", "數值\n" + "\n".join(["2023", "2024"] * 4)]
+    "text",
+    [
+        "區域 數值\n1.2\n3.4\n2023\n2024",
+        "數值\n" + "\n".join(["2023", "2024"] * 4),
+        "區域 數值\n1 234\n2 345",
+    ],
 )
 async def test_stacked_numeric_values_in_a_cjk_block_keep_their_separators(text):
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
