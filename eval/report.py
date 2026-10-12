@@ -52,6 +52,11 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
         "",
         f"Result: {report.status}",
         "",
+        "Router classification requires plan_source=router. Fallback plans fail "
+        "with status FALLBACK, even when their Question Type matches. "
+        "Follow-up checks require a changed Standalone Question resolving the case referents; "
+        "accepting a history argument is not a pass condition.",
+        "",
     ]
     for key, value in report.metadata.items():
         lines.extend([f"{cell(key)}: {cell(value)}", ""])
@@ -81,6 +86,10 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
                 f"Question: {cell(run.question)}",
                 "",
                 f"Question Type: {run.question_type}; expected: {run.expected_question_type}",
+                "",
+                f"Plan source: {cell(run.plan_source)}",
+                "",
+                f"Fallback reason: {cell(run.fallback_reason)}",
                 "",
                 f"Standalone Question: {cell(run.standalone_question)}",
                 "",

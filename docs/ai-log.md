@@ -100,3 +100,5 @@
 - **第二次審查抓到 numeric anchor 修正引入的假陰性：** 單字邊界讓正確的 `LightRAG‑Low`／`LightRAG‑Origin` 無法匹配 `-Low`／`-Origin`。先用完整變體名的兩個數字 fact 重現失敗，再接受獨立、連字號和空白前綴寫法，同時保留完整版不能匹配變體的反向測試。`60%` 與 `60.0%` 的回歸也先失敗再通過。Citation 檢查在 Table Chunk kind／label 可用時優先要求它；沒有該 metadata 時保留明示的 p.8／Table 2 fallback。
 
 - **整合測試抓到舊 fixture 的呼叫次序假設：** #08 rebase 到含 #06 的 main 後，四個應用測試仍只供應 answer／Judge 腳本；真實 Router 先取走腳本，導致耗盡、錯誤的 Citation 和時間斷言。先跑完整測試重現，再為每次 ask 加入 Router JSON，將 Trace／呼叫數與時間驗證納入 Router。新增 canonical 12-case 對應及两個追問的應用層測試，確認 role/content 轉成 ConversationTurn 後實際進入 Router request，獨立題目傳空歷史且不污染 session。
+
+- **第三次審查抓到評估把 fallback 當成 Router 成功：** 整合報告的 Lookup「通過」沒有驗證計畫來源，追問未改寫也因 ask 接受 history 就通過。先用 scripted PlanEvent 重現 fallback Lookup 的假陽性，再要求 plan_source=router，fallback 以 FALLBACK 記錄且分類失敗。與 #06 agent 約定 plan_source／fallback_reason 介面，兩個追問以 canonical case metadata 檢查 Standalone Question 改變及明確的 referent／檢索成本或比較；不再用參數被接受作為品質判準。舊報告標示 superseded。

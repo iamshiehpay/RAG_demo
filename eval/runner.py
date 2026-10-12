@@ -20,7 +20,7 @@ from chat_document.events import (
 from chat_document.llm_gateway import LLMGateway
 from chat_document.models import Chunk, LLMCallTrace
 
-from .checks import check_fact, normalize
+from .checks import check_fact, has_term, normalize
 from .models import EvaluationCase, FactResult
 
 
@@ -48,6 +48,8 @@ class QuestionRun:
     answer: str = ""
     question_type: str | None = None
     expected_question_type: str | None = None
+    plan_source: str | None = None
+    fallback_reason: str | None = None
     standalone_question: str = ""
     sub_queries: list[str] = field(default_factory=list)
     facts: list[FactResult] = field(default_factory=list)
@@ -205,6 +207,8 @@ async def run_evaluation(
                     for event in events:
                         if isinstance(event, PlanEvent):
                             run.question_type = event.question_type
+                            run.plan_source = getattr(event, "plan_source", None)
+                            run.fallback_reason = getattr(event, "fallback_reason", None)
                             run.standalone_question = event.standalone_question
                             run.sub_queries = event.sub_queries
                         elif isinstance(event, FinalEvent):
@@ -232,19 +236,35 @@ async def run_evaluation(
                         FactResult(
                             "question_type",
                             "events",
-                            run.question_type == case.expected_question_type,
-                            f"Expected {case.expected_question_type}; actual {run.question_type}",
+                            run.plan_source == "router"
+                            and run.question_type == case.expected_question_type,
+                            f"Expected {case.expected_question_type}; actual {run.question_type}; "
+                            f"plan_source={run.plan_source}; fallback_reason={run.fallback_reason}",
+                            fallback=run.plan_source == "fallback",
                         )
                     )
                 if case.history:
+                    standalone = normalize(run.standalone_question)
+                    rewritten = bool(standalone) and standalone != normalize(case.question)
+                    missing_terms = [
+                        alternatives
+                        for alternatives in case.standalone_terms
+                        if not any(has_term(standalone, term) for term in alternatives)
+                    ]
                     run.facts.append(
                         FactResult(
-                            "history_supported",
+                            "standalone_rewrite",
                             "events",
-                            history_supported,
-                            "Explicit history supported"
-                            if history_supported
-                            else "Lookup-only baseline has no history input",
+                            run.plan_source == "router"
+                            and rewritten
+                            and bool(case.standalone_terms)
+                            and not missing_terms,
+                            f"Changed question={rewritten}; "
+                            f"missing referents/context={missing_terms}; "
+                            f"criteria supplied={bool(case.standalone_terms)}; "
+                            f"plan_source={run.plan_source}",
+                            run.standalone_question,
+                            fallback=run.plan_source == "fallback",
                         )
                     )
                 for fact in case.facts:

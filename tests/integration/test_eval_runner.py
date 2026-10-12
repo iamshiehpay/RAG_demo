@@ -161,13 +161,21 @@ async def test_canonical_router_cases_convert_history_and_isolate_independent_qu
     ] == CASES
     selected = (cases[10], cases[11], cases[7])
     scripts = []
-    for case in selected:
+    for case, standalone in zip(
+        selected,
+        (
+            "LightRAG 的檢索成本是多少？",
+            "LightRAG 跟 GraphRAG 的比較是什麼？",
+            selected[2].question,
+        ),
+        strict=True,
+    ):
         scripts.extend(
             [
                 json.dumps(
                     {
                         "question_type": case.expected_question_type,
-                        "standalone_question": "LightRAG retrieval cost?",
+                        "standalone_question": standalone,
                         "sub_queries": [],
                     }
                 ),

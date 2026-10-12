@@ -273,11 +273,15 @@ LIGHTRAG_CASES = (
 
 
 def router_cases() -> tuple[EvaluationCase, ...]:
-    from chat_document.router_regression import CASES
+    from chat_document.router_regression import CASES, FOLLOW_UP_STANDALONE_TERMS
 
     return tuple(
         EvaluationCase(
-            f"ROUTER_{index:02}", question, expected_question_type=expected, history=tuple(history)
+            f"ROUTER_{index:02}",
+            question,
+            expected_question_type=expected,
+            history=tuple(history),
+            standalone_terms=FOLLOW_UP_STANDALONE_TERMS.get(index, ()),
         )
         for index, (history, question, expected) in enumerate(CASES, 1)
     )

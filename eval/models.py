@@ -40,10 +40,15 @@ class FactResult:
     reason: str
     evidence: str = ""
     harness_bug: bool = False
+    fallback: bool = False
 
     @property
     def status(self) -> str:
-        return "HARNESS_BUG" if self.harness_bug else "PASS" if self.passed else "FAIL"
+        if self.harness_bug:
+            return "HARNESS_BUG"
+        if self.fallback:
+            return "FALLBACK"
+        return "PASS" if self.passed else "FAIL"
 
 
 @dataclass(frozen=True)
@@ -56,3 +61,4 @@ class EvaluationCase:
     minimum_citation_sections: int = 0
     required_citation_page: int | None = None
     required_citation_term: str | None = None
+    standalone_terms: tuple[tuple[str, ...], ...] = ()

@@ -36,3 +36,32 @@ CASES: list[tuple[list[tuple[str, str]], str, str]] = [
         "Synthesis",
     ),
 ]
+
+# One-based CASES indexes. All groups must occur in a changed Standalone
+# Question; terms within each group are alternatives. These are evaluation
+# expectations, separate from the Router's implementation.
+FOLLOW_UP_STANDALONE_TERMS: dict[int, tuple[tuple[str, ...], ...]] = {
+    11: (("LightRAG",), ("retrieval cost", "retrieval costs", "cost of retrieval", "成本")),
+    12: (
+        ("LightRAG",),
+        ("GraphRAG",),
+        (
+            "compare",
+            "comparison",
+            "compared",
+            "versus",
+            "vs",
+            "differ",
+            "difference",
+            "differences",
+            "比較",
+            "比较",
+            "對比",
+            "对比",
+            "差異",
+            "差异",
+            "相比",
+            "比",
+        ),
+    ),
+}

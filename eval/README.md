@@ -25,8 +25,8 @@ Options: `--eval-document PATH`, `--eval-report PATH`, `--eval-label NAME`,
 report still says FAIL. It does not certify answer quality.
 
 ```sh
-uv run pytest -m eval -s --eval-record-only --eval-label router-integrated \
-  --eval-report eval/reports/router-integrated-baseline.md
+uv run pytest -m eval -s --eval-record-only --eval-label router-provenance \
+  --eval-report eval/reports/router-provenance-baseline.md
 ```
 
 The integrated harness uses #06's canonical `router_regression.CASES` directly,
@@ -35,6 +35,14 @@ history for independent questions. Evaluation history does not change session
 history. Global currently follows #06's transitional Synthesis context path until
 #05 provides Summary Tree support. Git provenance falls back to `unknown` for zip
 delivery. Historical Lookup-only reports describe the earlier #01 application.
+
+Classification passes only for `PlanEvent.plan_source="router"` and the expected
+Question Type. A fallback Lookup never earns a classification pass; its fact row
+shows `FALLBACK`, and each run records `fallback_reason`. Missing provenance fails
+closed. Follow-up checks replace the old “history accepted” check: the Standalone
+Question must differ from the input and resolve the canonical referents/context.
+`router_regression.FOLLOW_UP_STANDALONE_TERMS` defines case 11's LightRAG retrieval
+cost and case 12's LightRAG/GraphRAG comparison. Report headers state this policy.
 
 `GoldenFact` rejects numeric `contains` definitions. Term matching normalizes
 Unicode hyphens, whitespace, full-width characters and percent spacing. Judge
@@ -73,9 +81,9 @@ and Judge so all calls are accounted for.
 
 ## Report provenance
 
-`router-integrated-baseline.md` is the current baseline for Q1–Q3 and the 12
-canonical Router cases, collected after review request #1560 and integration
-onto main `79aac57` from committed source with clean provenance. Every earlier
+`router-provenance-baseline.md` is the current baseline for Q1–Q3 and the 12
+canonical Router cases, collected after review request #1785 and integration
+of #06's provenance/parser fix from committed source with clean provenance. Every earlier
 report below is **superseded** and preserved only as measurement/history evidence:
 
 | Report | Why superseded |
@@ -85,5 +93,6 @@ report below is **superseded** and preserved only as measurement/history evidenc
 | lookup-skeleton-refusal-intermediate.md | Judge falsely treated an exact refusal as a forbidden assertion. |
 | lookup-skeleton-prereview.md | Pre-review whitespace check, overly broad Table 1 fact and other findings. |
 | lookup-skeleton-baseline.md | Clean post-#1370 Lookup-only measurement; predates compound-variant fix and #06 integration. |
+| router-integrated-baseline.md | Pre-provenance #06 measurement incorrectly credited fallback Lookup and only checked history acceptance. |
 | lookup-q3-n3.md | N=3 evidence at the original harness checkpoint; includes one failed truncated Judge call. |
 | refusal-checker-probe.md | Older successful real refusal probe; refusals now use deterministic checks. |
