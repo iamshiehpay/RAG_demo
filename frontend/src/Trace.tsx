@@ -9,7 +9,7 @@ export function Trace({ calls, chunks }: { calls: LLMCallTrace[]; chunks: Retrie
           aria-label="Context Budget token usage" />
       </label>
       <dl className="metrics">
-        <div><dt>Estimated prompt (includes 300 safety margin)</dt><dd>{call.estimated_prompt_tokens}</dd></div>
+        <div><dt>Estimated prompt (includes {call.safety_margin} safety margin)</dt><dd>{call.estimated_prompt_tokens}</dd></div>
         <div><dt>prompt_eval_count</dt><dd>{call.prompt_eval_count ?? 'Not reported'}</dd></div>
         <div><dt>Output reservation (thinking + answer)</dt><dd>{call.num_predict}</dd></div>
         <div><dt>eval_count</dt><dd>{call.eval_count ?? 'Not reported'}</dd></div>

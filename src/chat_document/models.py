@@ -53,6 +53,7 @@ class LLMCallTrace(BaseModel):
     think: str
     num_predict: int
     context_budget: int
+    safety_margin: int
     thinking: str
     latency_ms: float
     done_reason: str

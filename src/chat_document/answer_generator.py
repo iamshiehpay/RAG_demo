@@ -7,6 +7,7 @@ from .models import Chunk, Citation
 
 SYSTEM_PROMPT = """Answer only from the supplied Document excerpts. Do not use outside knowledge.
 Attach a supplied [C#] Citation to EVERY factual claim. Never invent Citation IDs.
+For multiple Citations use [C1][C3], never [C1, C3] or line suffixes such as †L1-L4.
 Use exactly ASCII square brackets: [C1]. Do not use alternate brackets such as 【C1】.
 Use the question's language and preserve all source numbers exactly.
 When citing tables, first explain the comparison baseline before giving conclusions.

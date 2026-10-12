@@ -1,19 +1,16 @@
 """Every LLM call crosses this guard; numeric policies mirror AGENTS.md."""
 
 from collections.abc import AsyncIterator
+from contextlib import aclosing
 from dataclasses import dataclass
 from time import perf_counter
 from typing import Literal
 
-import httpx
-
 from .events import DeltaEvent, TraceEvent
 from .llm_adapter import LLMAdapter, LLMRequest
 from .models import LLMCallTrace
+from .policy import CONTEXT_BUDGET, SAFETY_MARGIN
 from .tokens import count_tokens
-
-CONTEXT_BUDGET = 10_000
-SAFETY_MARGIN = 300
 
 
 @dataclass(frozen=True)
@@ -75,6 +72,7 @@ class LLMGateway:
                         think=policy.think,
                         num_predict=policy.num_predict,
                         context_budget=self.context_budget,
+                        safety_margin=SAFETY_MARGIN,
                         thinking=thinking,
                         latency_ms=(perf_counter() - started) * 1000,
                         done_reason=done_reason,
@@ -83,16 +81,17 @@ class LLMGateway:
             )
 
         try:
-            async for frame in self.adapter.stream(request):
-                thinking += frame.thinking
-                if frame.content:
-                    yield DeltaEvent(text=frame.content)
-                if frame.done:
-                    terminal = frame
-                    break
+            async with aclosing(self.adapter.stream(request)) as frames:
+                async for frame in frames:
+                    thinking += frame.thinking
+                    if frame.content:
+                        yield DeltaEvent(text=frame.content)
+                    if frame.done:
+                        terminal = frame
+                        break
             if terminal is None:
                 raise LLMFailure("LLM stream ended without a completion record. Please retry.")
-        except (httpx.HTTPError, ValueError):
+        except Exception:
             yield trace("error")
             raise
         yield trace(terminal.done_reason)

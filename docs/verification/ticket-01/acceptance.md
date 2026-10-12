@@ -2,6 +2,8 @@
 
 Worktree: `rag/.worktrees/01-walking-skeleton`; branch: `lat/01-walking-skeleton`; base: `940744f`.
 
+This is the original submission's evidence. Follow-up corrections and the expanded 20-test suite are recorded in [review-fixes.md](review-fixes.md).
+
 ## Reproduction and results
 
 All checks ran on 2026-10-12 with local Ollama and real `bge-m3`. Deterministic tests substitute only a scripted recording LLM; the browser run used the real `gpt-oss:120b-cloud` model and the committed production frontend.

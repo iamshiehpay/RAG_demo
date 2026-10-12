@@ -49,6 +49,7 @@ export type LLMCallTrace = {
   think: string;
   num_predict: number;
   context_budget: number;
+  safety_margin: number;
   thinking: string;
   latency_ms: number;
   done_reason: string;

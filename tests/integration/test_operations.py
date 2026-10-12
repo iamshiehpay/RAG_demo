@@ -6,6 +6,7 @@ from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
+from chat_document.policy import CONTEXT_BUDGET, QUESTION_TOKEN_LIMIT, SAFETY_MARGIN
 from chat_document.tokens import count_tokens
 
 
@@ -39,14 +40,15 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
     assert source.text and source.page_start >= 1
     assert llm.calls
     for call in llm.calls:
-        prompt_tokens = sum(count_tokens(m["content"]) for m in call.messages) + 300
+        prompt_tokens = sum(count_tokens(m["content"]) for m in call.messages) + SAFETY_MARGIN
         assert prompt_tokens == call.estimated_prompt_tokens
-        assert prompt_tokens + call.num_predict <= 10_000
+        assert prompt_tokens + call.num_predict <= CONTEXT_BUDGET
         system = call.messages[0]["content"]
         assert "EVERY factual claim" in system
         assert "文件中未提及" in system and "Not mentioned in the document." in system
         assert call.think == "medium" and call.num_predict == 3000
     trace = events[-1].calls[0]
+    assert trace.safety_margin == SAFETY_MARGIN
     assert trace.prompt_eval_count == 100
     assert trace.estimated_prompt_tokens == llm.calls[0].estimated_prompt_tokens
 
@@ -83,7 +85,7 @@ async def test_questions_over_1000_tokens_never_call_llm():
     llm = ScriptedLLM([])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
-    result = [e async for e in app.ask("question " * 1001)]
+    result = [e async for e in app.ask("question " * (QUESTION_TOKEN_LIMIT + 1))]
     assert [e.type for e in result] == ["error"]
     assert result[0].code == "question_too_long"
     assert llm.calls == []

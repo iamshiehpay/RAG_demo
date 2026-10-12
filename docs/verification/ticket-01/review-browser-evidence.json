@@ -1,0 +1,29 @@
+{
+  "calls": [
+    {
+      "call_type": "answer",
+      "context_budget": 10000,
+      "done_reason": "stop",
+      "estimated_prompt_tokens": 2075,
+      "eval_count": 1491,
+      "latency_ms": 4489.179166965187,
+      "num_predict": 3000,
+      "prompt_eval_count": 1850,
+      "safety_margin": 300,
+      "think": "medium",
+      "thinking_characters": 2257
+    }
+  ],
+  "checks": {
+    "backend_margin_in_ui": true,
+    "backend_margin_reported": true,
+    "citation_source_opens": true,
+    "meter_10k": true,
+    "no_horizontal_overflow": true,
+    "real_q3_completed": true,
+    "trace_open": true,
+    "within_budget": true
+  },
+  "delta_count": 152,
+  "result": "PASS"
+}

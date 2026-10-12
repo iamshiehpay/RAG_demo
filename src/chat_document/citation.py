@@ -40,11 +40,16 @@ class CitationText:
                 output.append(character)
                 continue
             self.pending += character
-            complete = re.fullmatch(r"[\[【［]\s*(C\d+)\s*[\]】］]", self.pending)
+            complete = re.fullmatch(
+                r"[\[【［]\s*(C\d+(?:\s*,\s*C\d+)*)\s*(?:†L\d+(?:-L\d+)?)?[\]】］]", self.pending
+            )
             if complete:
-                output.append(f"[{complete[1]}]")
+                output.append("".join(f"[{id}]" for id in re.findall(r"C\d+", complete[1])))
                 self.pending = ""
-            elif not re.fullmatch(r"[\[【［]\s*(?:C\d*\s*)?", self.pending):
+            elif not re.fullmatch(
+                r"[\[【［]\s*(?:C\d*(?:\s*,\s*(?:C\d*)?)*\s*(?:†(?:L\d*(?:-(?:L\d*)?)?)?)?)?",
+                self.pending,
+            ):
                 output.append(self.flush())
         return "".join(output)
 
