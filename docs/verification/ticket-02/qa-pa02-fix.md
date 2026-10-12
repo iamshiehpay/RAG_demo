@@ -1,5 +1,7 @@
 # Ticket #02 — PA-02 / F1 correction
 
+Historical F1 candidate. HCOM #4773 confirmed this correction and requested a geometry guard for numeric columns; the current candidate and verification are recorded in [N1 correction](qa-n1-fix.md).
+
 Requested in HCOM #4427 after independent QA on integrated main. Base: `056b3e46d8410b946de8b36b46ea14b6b79651c2`. Implementation checkpoint: `3cf7405f23a5d1c43ff8a3b865467477629870a5`. Final evidence head is supplied in the review request. Original [QA report](qa/qa-report.md) remains unchanged as failure evidence.
 
 ## Changes and regression evidence
