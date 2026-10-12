@@ -1,3 +1,4 @@
+import re
 from collections.abc import AsyncIterator
 
 from .citation import CitationText
@@ -25,6 +26,12 @@ def answer_messages(
         if current_question is not None
         else ""
     )
+    # Match Router's Chinese-script rule, anchored to the current question.
+    if re.search(r"[\u4e00-\u9fff]", current_question or standalone_question):
+        language_reference += (
+            "\nPreserve the CURRENT USER QUESTION's Traditional/Simplified Chinese script; "
+            "when ambiguous, use Traditional Chinese (繁體中文), even after English history."
+        )
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
         {

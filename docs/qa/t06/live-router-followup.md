@@ -138,3 +138,39 @@ browser and backend were stopped; no Vite process was started.
 Final checks: **68 passed, 1 eval deselected, 6 existing warnings, 66.74s**; ruff check/format
 (32 files), generated event parity, frontend typecheck/build and `git diff --check` pass.
 The frontend was rebuilt and its changed `dist/` is included.
+
+## Traditional/Simplified answer-script repair (#2269)
+
+The branch fast-forwarded to main `b005721` before this repair. Independent QA had all seven
+live #06 checks passing, but found a Simplified Chinese answer to `那它的成本呢？` despite
+a Traditional/shared-character current question. The previous instruction specified language,
+without explicitly preserving its Chinese script.
+
+The production change is six lines in `answer_messages`: use Router's existing CJK detection
+and append the current-question Traditional/Simplified preservation rule, defaulting ambiguous
+shared characters to Traditional Chinese. Number-preservation instructions remain unchanged.
+Context Packer already counts these exact messages, so this new rule is budgeted automatically.
+No production converter, extra call, Router rule, event contract or frontend behavior changed.
+
+Three prompt tests initially failed, then passed (Traditional, Simplified and the exact shared-
+character follow-up). An English current question does not inherit the rule from a Chinese
+rewrite. The dev-only recorded-answer check uses OpenCC in the existing smoke module; the
+20-case Router smoke has no answers and therefore gains no answer calls. It flags the prior
+independent QA answer, but the repeated browser answer passes. An observed false positive
+(`群` → `羣`, both Traditional) was reproduced in a failing test and corrected by normalizing
+Traditional variants with `t2tw` for comparison. Actual answers are never converted.
+
+Live browser: upload LightRAG → Q2 → `那它的成本呢？`, once, using real bge-m3 and gpt-oss.
+The answer contains `檢索階段`, `個 token`, `實體與關係`, and `社群結構`, and passes the
+dev-only script check. Router returned genuine Synthesis with a named LightRAG rewrite,
+163 tokens/stop. The answer used 363 tokens/stop. Estimated + reserved budgets were
+1,719 and 4,626 / 10,000. Raw Sub-query text is retained, including model-generated Simplified
+characters; this repair targets the answer. The screenshot was inspected; browser errors: none.
+Browser/backend stopped; no Vite process. Golden Facts quality remains deferred.
+
+Evidence: [Q2 events](script-browser/ask-1.json), [follow-up events](script-browser/ask-2.json),
+[OpenCC check](script-browser/script-check.json), [browser screenshot](script-browser/followup.png).
+
+Final checks: **76 passed, 1 eval deselected, 6 existing warnings, 112.20s**. Ruff check/format,
+generated event parity, frontend typecheck/build and `git diff --check` pass. The frontend build
+is unchanged. The smoke answer helper checks recorded answers without adding Cloud calls.

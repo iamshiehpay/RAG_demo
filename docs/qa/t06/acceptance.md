@@ -79,3 +79,14 @@ Standalone Question and answer. **68 passed**, 1 eval deselected, 66.74s; format
 parity, frontend typecheck/build pass. The linked report retains the original failures and
 separate new evidence. The 600-token Router reservation is unchanged. Golden Facts answer
 quality is still not accepted by this repair.
+
+## Chinese answer-script follow-up (#2269)
+
+Independent re-verification passed the seven live checks, but found Simplified answer text
+for the Traditional/shared-character follow-up. The minimal answer-prompt repair preserves
+the current question's Traditional/Simplified script and defaults ambiguous text to Traditional.
+Repeated browser Q2 → `那它的成本呢？` gives a Traditional answer; recorded-answer OpenCC
+check passes, while the original QA answer still fails. Traditional variants such as 群/羣
+are normalized only for this dev comparison. No production conversion or additional LLM call.
+See [report and evidence](live-router-followup.md). **76 passed**, 1 eval deselected, 112.20s;
+ruff, formatting, event parity, frontend typecheck/build and diff check pass; dist unchanged.

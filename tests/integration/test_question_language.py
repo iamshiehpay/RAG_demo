@@ -3,6 +3,7 @@ import json
 import numpy as np
 import pytest
 
+from chat_document.answer_generator import answer_messages
 from chat_document.application import Application
 from chat_document.context_packer import ContextPacker
 from chat_document.llm_adapter import ScriptedLLM
@@ -90,3 +91,24 @@ def test_context_capacity_counts_current_question_language_reference():
     )
     assert packer.fits("Short rewritten question", [chunk])
     assert not packer.fits("Short rewritten question", [chunk], current_question="question " * 950)
+
+
+@pytest.mark.parametrize(
+    "question",
+    ["檢索階段的成本是多少？", "检索阶段的成本是多少？", "那它的成本呢？"],
+)
+def test_answer_prompt_preserves_current_question_chinese_script_and_numbers(question):
+    messages = answer_messages(
+        "What is its cost?", "Cost: 610 × 1,000 tokens.", current_question=question
+    )
+    prompt = messages[-1]["content"]
+    assert "Preserve the CURRENT USER QUESTION's Traditional/Simplified Chinese script" in prompt
+    assert "when ambiguous, use Traditional Chinese (繁體中文)" in prompt
+    assert f"Current user question (language reference): {question}" in prompt
+    assert "610 × 1,000" in prompt
+    assert "Preserve all source numbers exactly" in messages[0]["content"]
+
+
+def test_english_question_does_not_take_chinese_script_rule_from_rewrite():
+    messages = answer_messages("檢索成本是多少？", "Evidence", current_question="What is the cost?")
+    assert "Traditional/Simplified Chinese script" not in messages[-1]["content"]

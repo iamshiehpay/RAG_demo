@@ -7,7 +7,7 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.models import ConversationTurn
 from chat_document.router import Router
 
-from .test_router_smoke_eval import assess_rewrite
+from .test_router_smoke_eval import assess_answer_script, assess_rewrite
 
 
 @pytest.mark.parametrize(
@@ -34,3 +34,18 @@ async def test_smoke_checks_history_topic_and_flags_simplified_script(
     )
     assert checks["passed"] is expected_ok
     assert bool(checks["script_warning"]) is script_warning
+
+
+@pytest.mark.parametrize(
+    "question,answer,warning",
+    [
+        ("那它的成本呢？", "检索阶段：610 × 1,000 个 token。", True),
+        ("那它的成本呢？", "檢索階段：610 × 1,000 個 token。", False),
+        ("检索成本是多少？", "检索阶段：610 × 1,000 个 token。", False),
+        ("那它的成本呢？", "社群結構的檢索成本。", False),
+    ],
+)
+def test_live_answer_script_check_flags_simplified_answer_to_traditional_question(
+    question, answer, warning
+):
+    assert bool(assess_answer_script(question, answer)) is warning

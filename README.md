@@ -38,6 +38,8 @@ Upload processes synchronously in the request. Each page is a virtual Section, p
 Section detection, table reconstruction, background ingestion/cache, Summary Tree, automatic retries/Citation validation, Golden Facts eval and the final Tufte design are later tickets. Q3 currently demonstrates the complete streaming/Citation flow; precise Table 2 interpretation is not an acceptance claim for this slice. A truncated or interrupted answer fails without becoming final; the UI clears provisional text and provides a retry button.
 
 Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question, evidence and current question as its language reference. The current question controls answer language. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
+Chinese answers preserve the current question's Traditional/Simplified script; ambiguous
+shared characters default to Traditional Chinese. Source numbers remain unchanged.
 
 Router names the JSON keys in its prompt and also sends the schema through Ollama `format`.
 It tolerates the observed `type` alias and extra keys. A missing Standalone Question uses the

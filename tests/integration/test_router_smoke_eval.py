@@ -16,6 +16,8 @@ from chat_document.router_regression import CASES
 
 ROOT = Path(__file__).resolve().parents[2]
 TRADITIONAL = opencc.OpenCC("s2t.json")
+SIMPLIFIED = opencc.OpenCC("t2s.json")
+TRADITIONAL_VARIANTS = opencc.OpenCC("t2tw.json")
 
 # Frozen before the first neutral-prompt run. None occur in CASES or the Router prompt.
 HELD_OUT = [
@@ -78,6 +80,22 @@ def assess_rewrite(question, has_history, rewritten, referents=()):
         "history_rewrite_changed": changed,
         "script_warning": script_warning,
     }
+
+
+def assess_answer_script(question, answer):
+    """Dev-only check for recorded live answers; shared characters are inconclusive."""
+    if not re.search(r"[\u4e00-\u9fff]", question):
+        return None
+    simplified_question = TRADITIONAL_VARIANTS.convert(
+        TRADITIONAL.convert(question)
+    ) != TRADITIONAL_VARIANTS.convert(question)
+    converter = SIMPLIFIED if simplified_question else TRADITIONAL
+    candidate = converter.convert(answer)
+    if not simplified_question:
+        # 群/羣 and similar Traditional variants are not Simplified-script errors.
+        if TRADITIONAL_VARIANTS.convert(candidate) == TRADITIONAL_VARIANTS.convert(answer):
+            return None
+    return {"observed": answer, "script_candidate": candidate} if candidate != answer else None
 
 
 class RecordingOllama(OllamaLLM):
