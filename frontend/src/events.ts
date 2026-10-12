@@ -8,6 +8,13 @@ export type Chunk = {
   page_end: number;
   text: string;
   order: number;
+  kind: "text" | "table";
+  table_label: string | null;
+  table_caption: string | null;
+  table_headers: Array<string>;
+  table_rows: Array<Array<string>>;
+  table_reconstructed: boolean;
+  linked_chunk_ids: Array<string>;
 };
 
 export type Citation = {

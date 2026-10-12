@@ -4,6 +4,7 @@ import re
 
 from .models import Chunk, Section
 from .policy import CHUNK_TOKEN_TARGET, OVERSIZED_PARAGRAPH_OVERLAP
+from .tables import split_table
 from .tokens import count_tokens
 
 SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?])\s+|(?<=[。！？])\s*")
@@ -115,7 +116,32 @@ def chunk_sections(
                 current.clear()
                 current_pages.clear()
 
+        def add_tables(i, section=section, flush=flush):
+            for table in section.tables:
+                if table.paragraph_index != i:
+                    continue
+                flush()
+                for text, rows in split_table(table):
+                    chunks.append(
+                        Chunk(
+                            id=f"{document_id}:chunk-{len(chunks) + 1}",
+                            section_id=section.id,
+                            section=section.title,
+                            page_start=table.page_start,
+                            page_end=table.page_end,
+                            text=text,
+                            order=len(chunks),
+                            kind="table",
+                            table_label=table.label,
+                            table_caption=table.caption,
+                            table_headers=table.headers,
+                            table_rows=rows,
+                            table_reconstructed=table.reconstructed,
+                        )
+                    )
+
         for i, paragraph in enumerate(section.paragraphs):
+            add_tables(i)
             pages = (
                 section.paragraph_pages[i]
                 if section.paragraph_pages
@@ -127,4 +153,5 @@ def chunk_sections(
                 current.append(bounded)
                 current_pages.append(pages)
         flush()
+        add_tables(len(section.paragraphs))
     return chunks

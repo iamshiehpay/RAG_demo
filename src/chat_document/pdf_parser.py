@@ -10,6 +10,7 @@ import pymupdf
 from .chunker import chunk_sections
 from .models import Section
 from .policy import CHUNK_TOKEN_TARGET
+from .tables import TableRegion, reconstruct_tables
 
 logger = logging.getLogger(__name__)
 _NUMBER = re.compile(r"(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\.?")
@@ -375,19 +376,31 @@ def _section_title(lines: list[_Line], index: int, body_size: float) -> tuple[st
 
 
 def _virtual_sections(section: Section, target: int) -> list[Section]:
-    # Fixed-length virtual Sections use the same Unicode/sentence-safe bounds as Chunks.
-    return [
-        Section(
-            id=f"virtual-{i}",
-            title=f"Virtual Section {i}",
-            page_start=chunk.page_start,
-            page_end=chunk.page_end,
-            paragraphs=[chunk.text],
-            paragraph_pages=[(chunk.page_start, chunk.page_end)],
-            is_virtual=True,
+    # Table Chunks remain typed even when no headings can be identified.
+    chunks = chunk_sections([section], "virtual", target=target)
+    output = []
+    for i, chunk in enumerate(chunks, 1):
+        tables = []
+        if chunk.kind == "table":
+            original = next(t for t in section.tables if t.label == chunk.table_label)
+            tables = [
+                original.model_copy(
+                    update={"paragraph_index": 0, "rows": chunk.table_rows, "raw_text": chunk.text}
+                )
+            ]
+        output.append(
+            Section(
+                id=f"virtual-{i}",
+                title=f"Virtual Section {i}",
+                page_start=chunk.page_start,
+                page_end=chunk.page_end,
+                paragraphs=[] if tables else [chunk.text],
+                paragraph_pages=[] if tables else [(chunk.page_start, chunk.page_end)],
+                tables=tables,
+                is_virtual=True,
+            )
         )
-        for i, chunk in enumerate(chunk_sections([section], "virtual", target=target), 1)
-    ]
+    return output
 
 
 def _body_continuation_target(line: _Line) -> bool:
@@ -445,7 +458,9 @@ def _wraps_line(previous: _Line, following: _Line) -> bool:
     )
 
 
-def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section]:
+def _sections(
+    lines: list[_Line], body_size: float, target: int, tables: list[TableRegion]
+) -> list[Section]:
     sections: list[Section] = []
     current = Section(
         id="section-1",
@@ -480,12 +495,24 @@ def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section
 
     def flush_section():
         flush_paragraph()
-        if current.paragraphs or current.title != "Front matter":
+        if current.paragraphs or current.tables or current.title != "Front matter":
             sections.append(current)
 
+    table_anchors = {region.anchor: region.table for region in tables}
+    table_lines = {i for region in tables for i in region.line_indices}
     index = 0
     while index < len(lines):
         line = lines[index]
+        if index in table_lines:
+            flush_paragraph()
+            if index in table_anchors and not excluded:
+                table = table_anchors[index]
+                table.paragraph_index = len(current.paragraphs)
+                current.tables.append(table)
+                current.page_end = max(current.page_end, table.page_end)
+            previous = None
+            index += 1
+            continue
         title, consumed = _section_title(lines, index, body_size)
         if title:
             normalized = re.sub(r"^[\d.]+\s+", "", title).strip().casefold()
@@ -540,7 +567,7 @@ def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section
         index += 1
     if not excluded:
         flush_section()
-    if not any(section.paragraphs for section in sections):
+    if not any(section.paragraphs or section.tables for section in sections):
         raise DocumentError("This Document has no indexable text outside References.")
     if not detected:
         return _virtual_sections(sections[0], target)
@@ -565,6 +592,6 @@ def parse_pdf(content: bytes, *, chunk_token_target: int = CHUNK_TOKEN_TARGET) -
                 raise DocumentError(
                     "This Document has no text layer; scanned PDFs are not supported."
                 )
-            return _sections(lines, body_size, chunk_token_target)
+            return _sections(lines, body_size, chunk_token_target, reconstruct_tables(lines))
     except (pymupdf.FileDataError, pymupdf.EmptyFileError) as exc:
         raise DocumentError("Please upload a valid PDF Document.") from exc

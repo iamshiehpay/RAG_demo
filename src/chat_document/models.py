@@ -12,6 +12,19 @@ class ConversationTurn(BaseModel):
     answer: str
 
 
+class Table(BaseModel):
+    label: str
+    caption: str
+    page_start: int
+    page_end: int
+    paragraph_index: int = 0
+    headers: list[str] = Field(default_factory=list)
+    rows: list[list[str]] = Field(default_factory=list)
+    meaning: str = ""
+    raw_text: str
+    reconstructed: bool = False
+
+
 class Section(BaseModel):
     """A heading and its direct text, including heading-only parent metadata.
 
@@ -26,6 +39,7 @@ class Section(BaseModel):
     paragraphs: list[str]
     # Parallel to paragraphs; optional so callers constructing #01 Sections remain compatible.
     paragraph_pages: list[tuple[int, int]] = Field(default_factory=list)
+    tables: list[Table] = Field(default_factory=list)
     is_appendix: bool = False
     is_virtual: bool = False
 
@@ -38,6 +52,13 @@ class Chunk(BaseModel):
     page_end: int
     text: str
     order: int
+    kind: Literal["text", "table"] = "text"
+    table_label: str | None = None
+    table_caption: str | None = None
+    table_headers: list[str] = Field(default_factory=list)
+    table_rows: list[list[str]] = Field(default_factory=list)
+    table_reconstructed: bool = True
+    linked_chunk_ids: list[str] = Field(default_factory=list)
 
     @property
     def context(self) -> str:
