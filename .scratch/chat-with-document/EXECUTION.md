@@ -73,3 +73,4 @@ Status: in-progress
 | #01 QA | 回答中的 Markdown（`**粗體**`）原樣顯示；10K 長條沒有明確刻度 | #09 |
 | #01 QA | Q3 回答只引用一次、把 NaiveRAG 比較誤當成消融結果 | #03（表格重建與回答 prompt） |
 | #01 QA | 乾淨 clone 啟動（ST-01）、`fetch_data.sh`（ST-02） | #11 |
+| #06 Review | Lookup／Synthesis 因額度放不下而略去的 Chunk 數量，沒有記在 Trace | #03（同一段檢索流程） |
