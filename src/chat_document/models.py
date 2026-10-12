@@ -54,6 +54,13 @@ class Citation(BaseModel):
     page_end: int
 
 
+class UnverifiedSpan(BaseModel):
+    """Sentence in final answer; Unicode code-point offsets, end exclusive."""
+
+    start: int
+    end: int
+
+
 class LLMCallTrace(BaseModel):
     call_type: str
     estimated_prompt_tokens: int

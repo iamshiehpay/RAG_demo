@@ -112,3 +112,9 @@
 
 - **AI 寫錯的句子歸屬被回歸測試抓到：** 第一版 Validator 把「結論。 [C99] 下一句」的無效 Citation 歸給下一句，違反 D01 只標記引用無效編號的句子。透過 Application.ask 先重現，再把句末後的 Citation 連回前一句；數值 64.8／60.0 不切開，中英文句末與重複無效編號也補了檢查。
 - **延後項目有具體失敗證據：** 字元逐個串流的 `[C1 C3]`、`[C1–C3]` 與 alternate bracket range 測試先失敗；補正規化後通過。範圍只有在每個編號都存在於 Citation map 時才展開，巨大、反向或跨 C/S 範圍保留成無效 Citation 交給 Validator，避免把不可信範圍偷換成有效來源。
+
+## 2026-10-13：#07 審查後的 Unverified 與失敗細節
+
+- **獨立 reviewer 抓到 AI 把 UI 標記混入回答文字：** 第一版在句尾加「未驗證」，前端再按字串找標記，導致「論文中的假設仍未驗證[C1]。」也被標成 Unverified，history 也混入 UI 文字。先用 Application.ask 重現，再改成 FinalEvent 的 UnverifiedSpan（Unicode code-point start/end），前端用 Array.from(text) 對齊位置；自然語句和 history 保持原文，只有無效 Citation 句子有 badge。
+- **相同正規化程式也要帶對資料：** 分批抽取事實的 CitationText 沒有 map，合法 `[C1–C3]` 因此被丟掉。新增真實 bge-m3、oversized Synthesis 的回歸測試先重現，再傳該 batch 的 allowed Citations；句子切分也補 vs.、e.g.、i.e.、et al.，移除無效編號後收斂多餘空格。
+- **錯誤與重試狀態仍有小缺漏：** 審查指出 Router／query embedding 共用 answer_failed，重試第一個 delta 蓋掉「重新產生中」，較早的失敗 Turn 可在後續成功 Turn 前被原地替換。改為 stage-specific connection error、維持 retrying 狀態，且只讓最後一個 Turn 提供 Retry。半有效範圍整段拒絕的 fail-closed 規則經 reviewer 確認接受，保留 README 原有「全部編號都存在才展開」規則。

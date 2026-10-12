@@ -86,10 +86,8 @@ async def test_invalid_citation_flags_only_its_sentence_and_counts_in_trace():
     )
     events = [e async for e in app.ask("What does this say?")]
     final = next(e for e in events if e.type == "final")
-    assert final.answer == (
-        "Intro without a Citation. Supported [C1]. Invented. 未驗證 文件中未提及。"
-    )
-    assert final.unverified == ["Invented."]
+    assert final.answer == ("Intro without a Citation. Supported [C1]. Invented. 文件中未提及。")
+    assert [final.answer[s.start : s.end] for s in final.unverified] == ["Invented."]
     assert [c.id for c in final.citations] == ["C1"]
     assert events[-1].invalid_citation_count == 1
 
@@ -126,6 +124,29 @@ async def test_thinking_streams_before_answer_and_preserves_split_citation():
     assert app.history[-1].answer == final.answer
 
 
+async def test_unverified_prose_stays_plain_and_only_invalid_sentence_has_structured_span():
+    app, _ = await uploaded_app(["not JSON", "論文中的假設仍未驗證[C1]。🙂 這句錯誤[C99]。"])
+    events = [e async for e in app.ask("What does this say?")]
+    final = next(e for e in events if e.type == "final")
+    assert final.answer == "論文中的假設仍未驗證[C1]。🙂 這句錯誤。"
+    assert [final.answer[s.start : s.end] for s in final.unverified] == ["🙂 這句錯誤。"]
+    assert app.history[-1].answer == final.answer
+    assert events[-1].invalid_citation_count == 1
+
+
+@pytest.mark.parametrize("abbreviation", ["vs.", "e.g.", "i.e.", "et al."])
+async def test_unverified_span_preserves_abbreviated_sentence_and_collapses_removed_id_spaces(
+    abbreviation,
+):
+    sentence = f"Result {abbreviation} the baseline [C99] remains 64.8%."
+    app, _ = await uploaded_app(["not JSON", f"Intro [C1]. {sentence} Next [C1]."])
+    events = [e async for e in app.ask("What does this say?")]
+    final = next(e for e in events if e.type == "final")
+    expected = f"Result {abbreviation} the baseline remains 64.8%."
+    assert final.answer == f"Intro [C1]. {expected} Next [C1]."
+    assert [final.answer[s.start : s.end] for s in final.unverified] == [expected]
+
+
 async def test_citations_after_punctuation_flag_the_preceding_sentence_only():
     app, _ = await uploaded_app(
         [
@@ -135,10 +156,8 @@ async def test_citations_after_punctuation_flag_the_preceding_sentence_only():
     )
     events = [e async for e in app.ask("What does this say?")]
     final = next(e for e in events if e.type == "final")
-    assert final.unverified == ["Unknown 60.0%.", "無效。"]
-    assert final.answer == (
-        "Known 64.8%. [C1] Unknown 60.0%. 未驗證 Next uncited.\n無效。 未驗證有效[C1]。"
-    )
+    assert [final.answer[s.start : s.end] for s in final.unverified] == ["Unknown 60.0%.", "無效。"]
+    assert final.answer == ("Known 64.8%. [C1] Unknown 60.0%. Next uncited.\n無效。有效[C1]。")
     assert events[-1].invalid_citation_count == 3
 
 
@@ -176,10 +195,63 @@ async def test_invalid_range_is_not_expanded_into_valid_sources(marker):
     app, _ = await uploaded_app(["not JSON", f"Untrusted {marker}. Supported [C1]."])
     events = [e async for e in app.ask("What does this say?")]
     final = next(e for e in events if e.type == "final")
-    assert final.answer == "Untrusted. 未驗證 Supported [C1]."
-    assert final.unverified == ["Untrusted."]
+    assert final.answer == "Untrusted. Supported [C1]."
+    assert [final.answer[s.start : s.end] for s in final.unverified] == ["Untrusted."]
     assert [c.id for c in final.citations] == ["C1"]
     assert events[-1].invalid_citation_count == 1
+
+
+async def test_synthesis_extraction_range_uses_each_batch_citation_map():
+    import json
+    import re
+
+    from chat_document.settings import RetrievalSettings
+
+    from .fixtures import paragraph_pdf
+
+    class RangeExtractionLLM(ScriptedLLM):
+        def __init__(self):
+            super().__init__([])
+            self.extracted_ids = []
+
+        async def stream(self, request):
+            if request.format is not None:
+                script = json.dumps(
+                    dict(
+                        question_type="Synthesis",
+                        standalone_question="Compare facts",
+                        sub_queries=["facts"],
+                    )
+                )
+            elif request.num_predict == 1000:
+                ids = list(dict.fromkeys(re.findall(r"C\d+", request.messages[-1]["content"])))
+                selected = ids[:3]
+                self.extracted_ids.extend(selected)
+                script = f"Range fact [{selected[0]}–{selected[-1]}]."
+            else:
+                script = "Final [C1]."
+            self.scripts.append(script)
+            async for frame in super().stream(request):
+                yield frame
+
+    llm = RangeExtractionLLM()
+    app = Application(
+        OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(synthesis_top_k=30)
+    )
+    assert [
+        e
+        async for e in app.upload_document(
+            paragraph_pdf("Evidence about the Document. " * 1500), "sample.pdf"
+        )
+    ][-1].type == "ready"
+    events = [e async for e in app.ask("Compare facts")]
+    assert any(e.type == "final" for e in events), [
+        e.model_dump() for e in events if e.type == "error"
+    ]
+    prompt = llm.calls[-1].messages[-1]["content"]
+    assert "Range fact [C1][C2][C3]." in prompt
+    assert all(f"[{id}]" in prompt for id in llm.extracted_ids)
+    assert all(c.discarded_fact_lines == 0 for c in events[-1].calls)
 
 
 @pytest.mark.parametrize("failure_stage", ["router", "embedding", "answer"])
@@ -209,6 +281,9 @@ async def test_transport_failure_stops_downstream_work_and_same_question_can_ret
     embedder.fail = failure_stage == "embedding"
     events = [e async for e in app.ask("What does this say?")]
     assert events[-1].type == "error"
+    assert events[-1].code == f"{failure_stage}_failed"
+    assert failure_stage.capitalize() in events[-1].message
+    assert "local Ollama daemon" in events[-1].message
     assert not any(e.type in {"retry", "final"} for e in events)
     assert app.history == []
     assert len(llm.calls) == (2 if failure_stage == "answer" else 1)

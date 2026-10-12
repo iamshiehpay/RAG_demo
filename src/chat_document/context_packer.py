@@ -190,9 +190,9 @@ class ContextPacker:
                         text += event.text
                     elif isinstance(event, TraceEvent):
                         calls.extend(event.calls)
-                formatter = CitationText()
-                text = formatter.feed(text) + formatter.flush()
                 allowed = set(re.findall(r"\[C\d+\]", evidence))
+                formatter = CitationText([c for c in citations if f"[{c.id}]" in allowed])
+                text = formatter.feed(text) + formatter.flush()
                 lines = [line.strip() for line in text.splitlines() if line.strip()]
                 discarded = 0
                 for line in lines:

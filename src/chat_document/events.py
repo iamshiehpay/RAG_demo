@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, TypeAdapter
 
-from .models import Citation, FallbackReason, LLMCallTrace, RetrievedChunk
+from .models import Citation, FallbackReason, LLMCallTrace, RetrievedChunk, UnverifiedSpan
 
 
 class StageEvent(BaseModel):
@@ -70,7 +70,7 @@ class FinalEvent(BaseModel):
     type: Literal["final"] = "final"
     answer: str
     citations: list[Citation]
-    unverified: list[str] = Field(default_factory=list)
+    unverified: list[UnverifiedSpan] = Field(default_factory=list)
 
 
 class TraceEvent(BaseModel):

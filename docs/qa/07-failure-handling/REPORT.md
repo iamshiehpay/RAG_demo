@@ -1,4 +1,6 @@
-# #07 acceptance evidence
+# #07 initial acceptance evidence
+
+This initial checkpoint report is retained as history. Independent review found issues subsequently fixed; see REVIEW-FIXES.md for the current acceptance result.
 
 Implementation checkpoint: `e3a0c45`, branch `lat/07-failure-handling`, base `f5be286`.
 

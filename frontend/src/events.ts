@@ -38,7 +38,7 @@ export type FinalEvent = {
   type: "final";
   answer: string;
   citations: Array<Citation>;
-  unverified: Array<string>;
+  unverified: Array<UnverifiedSpan>;
 };
 
 export type LLMCallTrace = {
@@ -118,6 +118,11 @@ export type TraceEvent = {
   type: "trace";
   calls: Array<LLMCallTrace>;
   invalid_citation_count: number;
+};
+
+export type UnverifiedSpan = {
+  start: number;
+  end: number;
 };
 
 export type Event = StageEvent | ReadyEvent | PlanEvent | RejectedEvent | RetrievalEvent | CitationMapEvent | ThinkingEvent | DeltaEvent | RetryEvent | FinalEvent | TraceEvent | ErrorEvent;

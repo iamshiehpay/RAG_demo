@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass
 
-from .models import Chunk, Citation
+from .models import Chunk, Citation, UnverifiedSpan
 
 
 def citation_map(chunks: list[Chunk]) -> list[Citation]:
@@ -28,8 +28,27 @@ def cited_sources(answer: str, citations: list[Citation]) -> list[Citation]:
 class ValidatedAnswer:
     answer: str
     citations: list[Citation]
-    unverified: list[str]
+    unverified: list[UnverifiedSpan]
     invalid_citation_count: int
+
+
+def sentences(answer: str):
+    """Keep common abbreviations and trailing Citations with their sentence."""
+    start = 0
+    for boundary in re.finditer(r"[。！？!?]|\.(?=\s|\[|$)|\n", answer):
+        if boundary.start() < start:
+            continue
+        if boundary[0] == "." and re.search(
+            r"\b(?:vs|e\.g|i\.e|et al)\.$", answer[: boundary.end()], re.IGNORECASE
+        ):
+            continue
+        end = boundary.end()
+        trailing = re.match(r"(?:[ \t]*\[[CS][^\]\n]*\])*", answer[end:])
+        end += trailing.end()
+        yield answer[start:end]
+        start = end
+    if start < len(answer):
+        yield answer[start:]
 
 
 def validate_citations(answer: str, citations: list[Citation]) -> ValidatedAnswer:
@@ -38,13 +57,10 @@ def validate_citations(answer: str, citations: list[Citation]) -> ValidatedAnswe
     unverified = []
     invalid_count = 0
     output = []
+    offset = 0
     # Keep trailing Citation tokens with the preceding sentence. Decimal points do
     # not end a sentence; newlines also delimit unpunctuated Markdown list items.
-    sentences = re.findall(
-        r".+?(?:[。！？!?]|\.(?=\s|\[|$)|(?=\n)|$)(?:[ \t]*\[[CS][^\]\n]*\])*|\n",
-        answer,
-    )
-    for sentence in sentences:
+    for sentence in sentences(answer):
         count = 0
 
         def replace(match: re.Match) -> str:
@@ -57,10 +73,16 @@ def validate_citations(answer: str, citations: list[Citation]) -> ValidatedAnswe
         cleaned = re.sub(r"\[([CS]\d+(?:\s*[-–—]\s*[CS]\d+)?)\]", replace, sentence)
         if count:
             cleaned = re.sub(r"[ \t]+(?=[。！？!?.])", "", cleaned)
-            unverified.append(cleaned.strip())
-            cleaned = cleaned.rstrip() + " 未驗證"
+            cleaned = re.sub(r"[ \t]{2,}", " ", cleaned).rstrip(" \t")
+            unverified.append(
+                UnverifiedSpan(
+                    start=offset + len(cleaned) - len(cleaned.lstrip()),
+                    end=offset + len(cleaned.rstrip()),
+                )
+            )
         invalid_count += count
         output.append(cleaned)
+        offset += len(cleaned)
     validated = "".join(output)
     return ValidatedAnswer(
         validated, cited_sources(validated, citations), unverified, invalid_count

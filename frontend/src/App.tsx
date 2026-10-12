@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk } from './events';
+import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
 import { Trace } from './Trace';
 import { consumeEvents } from './sse';
@@ -9,7 +9,7 @@ interface Turn {
   id: number; question: string; answer: string; citations: Citation[];
   chunks: RetrievedChunk[]; calls: LLMCallTrace[]; status: string; final: boolean; error: string;
   plan: PlanEvent | null; rejected: boolean;
-  thinking: string; unverified: string[]; invalidCitationCount: number;
+  thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; retrying: boolean;
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
 
@@ -47,11 +47,12 @@ export function App() {
 
   async function ask(askedQuestion: string, retryId?: number) {
     if (!askedQuestion.trim() || !document || busy) return;
+    if (retryId !== undefined && turns.at(-1)?.id !== retryId) return;
     const id = retryId ?? Date.now();
     setBusy(true); setError(''); setSource(null); setQuestion('');
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
-      thinking: '', unverified: [], invalidCitationCount: 0,
+      thinking: '', unverified: [], invalidCitationCount: 0, retrying: false,
       status: '判斷問題類型', final: false, error: '' };
     setTurns(previous => retryId === undefined ? [...previous, freshTurn] :
       previous.map(turn => turn.id === retryId ? freshTurn : turn));
@@ -66,11 +67,12 @@ export function App() {
             case 'retrieval': return { ...turn, chunks: event.chunks, status: '思考中' };
             case 'citation_map': return { ...turn, citations: event.citations };
             case 'thinking': return { ...turn, thinking: turn.thinking + event.text };
-            case 'delta': return { ...turn, answer: turn.answer + event.text, status: '回答中 · 暫定' };
+            case 'delta': return { ...turn, answer: turn.answer + event.text,
+              status: turn.retrying ? '重新產生中 · 暫定' : '回答中 · 暫定' };
             case 'retry': return { ...turn, answer: '', thinking: '', unverified: [],
-              final: false, status: '重新產生中' };
+              retrying: true, final: false, status: '重新產生中' };
             case 'final': return { ...turn, answer: event.answer, citations: event.citations,
-              unverified: event.unverified, final: true, status: 'Answer complete' };
+              unverified: event.unverified, retrying: false, final: true, status: 'Answer complete' };
             case 'trace': return { ...turn, calls: event.calls,
               invalidCitationCount: event.invalid_citation_count };
             case 'rejected': return { ...turn, answer: '', error: event.message,
@@ -112,7 +114,8 @@ export function App() {
         <Answer text={turn.answer} citations={turn.citations} provisional={!turn.final}
           unverified={turn.unverified} onSource={citation => void showSource(citation)} />
         {turn.error && <div className="error" role="alert"><p>{turn.error}</p>
-          {!turn.rejected && <button disabled={busy} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
+          {!turn.rejected && turn.id === turns.at(-1)?.id &&
+            <button disabled={busy} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
         {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0) &&
           <Trace plan={turn.plan} chunks={turn.chunks} calls={turn.calls}
             thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} />}

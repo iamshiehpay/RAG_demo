@@ -86,6 +86,7 @@ class Application:
         self, question: str, *, history: list[ConversationTurn] | None = None
     ) -> AsyncIterator[Event]:
         calls: list[LLMCallTrace] = []
+        stage = "router"
         try:
             index = self.index
             if index is None:
@@ -114,6 +115,7 @@ class Application:
                 if plan.question_type == "Global"
                 else plan
             )
+            stage = "embedding"
             retrieved = await self.context_packer.retrieve(
                 index, context_plan, current_question=question
             )
@@ -121,6 +123,7 @@ class Application:
             chunks = sorted((item.chunk for item in retrieved), key=lambda chunk: chunk.order)
             citations = citation_map(chunks)
             yield CitationMapEvent(citations=citations)
+            stage = "answer"
             context = await self.context_packer.pack(
                 context_plan, chunks, citations, calls, current_question=question
             )
@@ -161,7 +164,16 @@ class Application:
             if calls:
                 yield TraceEvent(calls=calls)
             yield ErrorEvent(code="budget_exceeded", message=str(exc))
-        except (httpx.HTTPError, ValueError) as exc:
+        except httpx.HTTPError as exc:
+            if calls:
+                yield TraceEvent(calls=calls)
+            reason = "timed out" if isinstance(exc, httpx.TimeoutException) else "connection failed"
+            yield ErrorEvent(
+                code=f"{stage}_failed",
+                message=f"{stage.capitalize()} {reason}. Check that the local Ollama daemon "
+                f"is running, then retry. Details: {exc}",
+            )
+        except ValueError as exc:
             if calls:
                 yield TraceEvent(calls=calls)
             yield ErrorEvent(code="answer_failed", message=f"Answer failed: {exc}")
