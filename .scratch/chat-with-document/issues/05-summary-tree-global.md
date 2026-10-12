@@ -13,6 +13,7 @@ Status: ready-for-agent
   - **Group Summary：** Section Summary 加起來超過額度時，才一層層往上合併。
   - **Document Summary：** 最頂層。
   - 處理進度顯示「摘要 n/N」，Summary Tree 也存進快取。
+- **沒有段落的 Section 不產生 Section Summary：** #02 會保留只有標題、沒有 Chunk 的上層 Section（例如 LightRAG 的 §3、§5、§7.3），這些 Section 不送進摘要，Summary Tree 只由有 Chunk 的 Section 組成（來源：#02 Review N3）。
 - **追溯來源：** Section Summary 記錄它所屬 Section 的全部 Chunk；Group Summary 記錄它涵蓋的 Section。
 - **文件概覽：** 處理完成時，把 Document Summary 顯示為文件概覽；對話期間也一直看得到。
 - **Global 回答：** 用 `medium`，依據 Summary Tree 中「放得進額度的最詳細那一層」，並用 `[S#]` 標示引用。點 `[S#]` 時，顯示該 Section 的頁碼範圍和摘要。

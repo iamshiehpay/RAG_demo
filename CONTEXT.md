@@ -53,7 +53,7 @@ _Avoid_：sub-question、facet
 _Avoid_：context window（指模型本身的上限，比 Context Budget 大）
 
 **Citation**：
-回答中指向來源的引用，來源可以是 Chunk 或 Section Summary，會標示 Section 與頁碼。找不到有效來源的句子，標記為 Unverified。
+回答中指向來源的引用，來源可以是 Chunk 或 Section Summary，會標示 Section 與頁碼。引用了不存在的編號時，移除該編號，並把那句話標記為 Unverified；沒有附 Citation 的句子不標記（使用者決策，2026-10-12）。
 _Avoid_：reference（會跟論文的 References 章節混淆）
 
 **Trace**：
