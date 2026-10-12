@@ -20,11 +20,11 @@ Status: in-progress
 
 | # | 票 | 依賴 | 波次 | 預計修改範圍（衝突協調） | 狀態 |
 |---|---|---|---|---|---|
-| 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | merged 9ba4327（Review APPROVE），QA 中 |
-| 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | todo |
-| 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | todo |
-| 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | todo |
-| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | todo |
+| 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | done（9ba4327；Review APPROVE；QA 7/7 PASS）|
+| 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | dispatched（levi-t02-vida）|
+| 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | dispatched（levi-t06-miso）|
+| 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | dispatched（levi-t08-fire）|
+| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | dispatched 初稿（levi-t09-dune）|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | todo |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | todo |
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | todo |
@@ -70,3 +70,6 @@ Status: in-progress
 | #01 Review | 過長段落切開時，重疊的起點對齊到字詞／句子邊界 | #02 |
 | #01 Review | 上傳失敗時不應已清掉目前的 Document | #04 |
 | #01 Review | `[C1 C3]`（空白分隔）與 `[C1–C3]`（範圍）引用的正規化 | #07 |
+| #01 QA | 回答中的 Markdown（`**粗體**`）原樣顯示；10K 長條沒有明確刻度 | #09 |
+| #01 QA | Q3 回答只引用一次、把 NaiveRAG 比較誤當成消融結果 | #03（表格重建與回答 prompt） |
+| #01 QA | 乾淨 clone 啟動（ST-01）、`fetch_data.sh`（ST-02） | #11 |

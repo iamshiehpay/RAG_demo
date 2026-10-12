@@ -1,0 +1,85 @@
+--- t1
+Performance of ablated versions of LightRAG
+
+Retrieving evidence…
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t2
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t3
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t4
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t5
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t6
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t7
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t8
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t9
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t10
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nThinking…\n\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t11
+Performance of ablated versions of LightRAG
+
+Thinking…
+
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nProvisional answer\n\nThe ablation study (Table 2) compares LightRAG variants against Naï\nTrace · 0 LLM calls\nQuestion\nAnswering…"
+--- t12
+Performance of ablated versions of LightRAG
+
+Provisional answer
+
+The ablation study (Table 2) compares LightRAG variants against NaïveRAG across four domains (Agriculture, CS, Legal, Mix) and three metric groups (Comprehensiveness, Diversity, Empowerment, Overall).  
+
+**Baseline (NaïveRAG vs
+Trace · 0 LLM calls
+"Chat with Document\n\nAsk a question. Follow the evidence back to your Document.\n\nPDF Document\n\nlightrag.pdf · 37 Chunks · Ready\n\nPerformance of ablated versions of LightRAG\n\nProvisional answer\n\nThe ablation study (Table 2) compares LightRAG variants against NaïveRAG across four domains (Agriculture, CS, Legal, Mix) and three metric groups (Comprehensiveness, Diversity, Empowerment, Overall).  \n\n**Baseline (NaïveRAG vs LightRAG)**  \n- **Agriculture:** LightRAG reaches 67.6 % (Comprehensiveness), 7"

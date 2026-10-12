@@ -1,6 +1,6 @@
 # #01 Walking skeleton：上傳 → 提問 → 串流出附 Citation 的回答
 
-Status: ready-for-agent
+Status: done
 
 ## Parent
 
@@ -32,14 +32,22 @@ Status: ready-for-agent
 
 ## Acceptance criteria
 
-- [ ] 一行指令就能啟動。用瀏覽器上傳 LightRAG 論文後，可以提問。
-- [ ] 問 Q3 時，回答會串流出來；`[C#]` 點開後能看到原文和頁碼。
-- [ ] Trace 顯示每次 LLM 呼叫的估算 tokens、`prompt_eval_count`、think 等級、10K 長條，以及檢索到的 Chunk 和分數。
-- [ ] 確定性測試（假 LLM 加上真的 bge-m3）：假 LLM 記錄下來的每一次呼叫，prompt tokens 加上輸出預留都 ≤ 10,000。
-- [ ] 確定性測試：把額度設定到一定會超過的值時，guard 會被觸發，提問會發出 `error` 事件，而且不會發出 `final`。
-- [ ] HTTP 契約測試：提問的 SSE 事件順序是 `plan` → `retrieval` → `citation_map` → `delta`… → `final` → `trace`。
-- [ ] 前端的 TypeScript 事件型別和後端的事件模型一致。
+- [x] 一行指令就能啟動。用瀏覽器上傳 LightRAG 論文後，可以提問。
+- [x] 問 Q3 時，回答會串流出來；`[C#]` 點開後能看到原文和頁碼。
+- [x] Trace 顯示每次 LLM 呼叫的估算 tokens、`prompt_eval_count`、think 等級、10K 長條，以及檢索到的 Chunk 和分數。
+- [x] 確定性測試（假 LLM 加上真的 bge-m3）：假 LLM 記錄下來的每一次呼叫，prompt tokens 加上輸出預留都 ≤ 10,000。
+- [x] 確定性測試：把額度設定到一定會超過的值時，guard 會被觸發，提問會發出 `error` 事件，而且不會發出 `final`。
+- [x] HTTP 契約測試：提問的 SSE 事件順序是 `plan` → `retrieval` → `citation_map` → `delta`… → `final` → `trace`。
+- [x] 前端的 TypeScript 事件型別和後端的事件模型一致。
 
 ## Blocked by
 
 None - can start immediately
+
+## Comments
+
+- 2026-10-12 Orchestrator：完成。實作 levi-t01-kava（Codex gpt-6.1-sol high）；交付 commit `5fa91d3`、`ae6c370`、`9ba4327`，已 fast-forward 到 `main`。
+  - Review（Claude Opus 5.5 high）：第一輪 CHANGES_REQUESTED（小數被句子切分破壞、缺 6,700 prompt 上限測試等 8 項），修正後複查 APPROVE。
+  - 整合後驗證（main `cf49802`）：pytest 20 passed、ruff 通過、事件型別一致。
+  - QA（Claude Sonnet 5.5 high，真實瀏覽器）：7 條驗收全部 PASS；報告 `docs/verification/ticket-01/qa/qa-report.md`。
+  - 移交：Markdown 未渲染、10K 長條刻度 → #09；Q3 回答引用過少、Table 2 解讀錯誤 → #03；乾淨 clone 啟動（ST-01）→ #11；其餘延後項目見 `EXECUTION.md`。
