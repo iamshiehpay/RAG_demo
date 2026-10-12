@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from time import perf_counter
 from typing import Literal
 
+import httpx
+
 from .events import DeltaEvent, TraceEvent
 from .llm_adapter import LLMAdapter, LLMRequest
 from .models import LLMCallTrace
@@ -60,28 +62,39 @@ class LLMGateway:
         request = LLMRequest(messages, policy.think, policy.num_predict, estimated)
         started = perf_counter()
         thinking = ""
-        async for frame in self.adapter.stream(request):
-            thinking += frame.thinking
-            if frame.content:
-                yield DeltaEvent(text=frame.content)
-            if frame.done:
-                if frame.done_reason == "length":
-                    raise LLMFailure("Answer was truncated. Please retry.")
-                yield TraceEvent(
-                    calls=[
-                        LLMCallTrace(
-                            call_type=call_type,
-                            estimated_prompt_tokens=estimated,
-                            prompt_eval_count=frame.prompt_eval_count,
-                            eval_count=frame.eval_count,
-                            think=policy.think,
-                            num_predict=policy.num_predict,
-                            context_budget=self.context_budget,
-                            thinking=thinking,
-                            latency_ms=(perf_counter() - started) * 1000,
-                            done_reason=frame.done_reason,
-                        )
-                    ]
-                )
-                return
-        raise LLMFailure("LLM stream ended without a completion record. Please retry.")
+        terminal = None
+
+        def trace(done_reason: str) -> TraceEvent:
+            return TraceEvent(
+                calls=[
+                    LLMCallTrace(
+                        call_type=call_type,
+                        estimated_prompt_tokens=estimated,
+                        prompt_eval_count=terminal.prompt_eval_count if terminal else None,
+                        eval_count=terminal.eval_count if terminal else None,
+                        think=policy.think,
+                        num_predict=policy.num_predict,
+                        context_budget=self.context_budget,
+                        thinking=thinking,
+                        latency_ms=(perf_counter() - started) * 1000,
+                        done_reason=done_reason,
+                    )
+                ]
+            )
+
+        try:
+            async for frame in self.adapter.stream(request):
+                thinking += frame.thinking
+                if frame.content:
+                    yield DeltaEvent(text=frame.content)
+                if frame.done:
+                    terminal = frame
+                    break
+            if terminal is None:
+                raise LLMFailure("LLM stream ended without a completion record. Please retry.")
+        except (httpx.HTTPError, ValueError):
+            yield trace("error")
+            raise
+        yield trace(terminal.done_reason)
+        if terminal.done_reason == "length":
+            raise LLMFailure("Answer was truncated. Please retry.")

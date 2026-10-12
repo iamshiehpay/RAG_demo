@@ -28,6 +28,9 @@ def test_upload_http_emits_ready_and_serves_committed_frontend():
         )
         assert [event["type"] for event in result] == ["stage", "stage", "stage", "ready"]
         assert result[-1]["chunk_count"] == 1
+        home = client.get("/")
+        assert home.status_code == 200
+        assert "Chat with Document" in home.text
         # Source lookup must fail clearly rather than fall through to the SPA.
         missing = client.get("/api/sources/unknown-id")
         assert missing.status_code == 404

@@ -74,6 +74,7 @@ class Application:
                 code="question_too_long", message="Question must not exceed 1,000 tokens."
             )
             return
+        trace = None
         try:
             yield PlanEvent(question_type="Lookup", standalone_question=question, sub_queries=[])
             retrieved = await index.retrieve(question)
@@ -82,7 +83,6 @@ class Application:
             citations = citation_map(chunks)
             yield CitationMapEvent(citations=citations)
             answer = ""
-            trace = None
             async for event in self.answer_generator.generate(question, chunks, citations):
                 if isinstance(event, DeltaEvent):
                     answer += event.text
@@ -98,3 +98,5 @@ class Application:
             yield ErrorEvent(code="budget_exceeded", message=str(exc))
         except (httpx.HTTPError, ValueError) as exc:
             yield ErrorEvent(code="answer_failed", message=f"Answer failed: {exc}")
+            if trace:
+                yield trace

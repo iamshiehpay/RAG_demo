@@ -27,3 +27,9 @@
   - 用字串比對檢查數字不可靠：`64.8` 在 Table 2 出現 3 次，實測時寫錯變體的回答也被算成答對。
 
   教訓：同一個模型很難看到自己的盲點，換一個模型審查很有效。
+
+## 2026-10-12：Walking skeleton 的失敗 Trace
+
+- **AI 寫錯並被測試抓到：** 第一版 Gateway 在 `done_reason=length` 時立即 raise，導致失敗的 LLM 呼叫沒有 Trace。透過「上傳 Document／提問」補一個回歸斷言後，測試明確失敗；修正成先保存 token／thinking／done_reason，再發出 error 和 Trace，仍不產生 final。重試策略留給 #07。
+- **AI 自行修正前端狀態處理：** 第一版把串流是否定稿的變數修改放在 React state updater 內。Updater 可能延後執行，因此改為在失敗時直接依該 Turn 的 `final` 狀態決定是否保留回答，讓 updater 保持純函式。
+- **真實模型推翻了 AI 對格式的假設：** Q3 瀏覽器驗收中，gpt-oss 雖收到 `[C#]` 規則，仍產生 `【C3】`。第一版只辨識 ASCII 方括號，結果 Citation 不能點。補上應用層回歸測試（marker 被切在三個串流 frame），確認先失敗，再於 Citation mapping seam 正規化括號；保留編號、不做無效引用的驗證（#07）。同一次 Q3 也再次顯示原始表格文字會造成錯誤解讀；結構重建仍由 #03 處理。

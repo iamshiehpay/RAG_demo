@@ -6,6 +6,7 @@ from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
+from chat_document.tokens import count_tokens
 
 
 @pytest.mark.asyncio
@@ -38,7 +39,12 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
     assert source.text and source.page_start >= 1
     assert llm.calls
     for call in llm.calls:
-        assert call.estimated_prompt_tokens + call.num_predict <= 10_000
+        prompt_tokens = sum(count_tokens(m["content"]) for m in call.messages) + 300
+        assert prompt_tokens == call.estimated_prompt_tokens
+        assert prompt_tokens + call.num_predict <= 10_000
+        system = call.messages[0]["content"]
+        assert "EVERY factual claim" in system
+        assert "文件中未提及" in system and "Not mentioned in the document." in system
         assert call.think == "medium" and call.num_predict == 3000
     trace = events[-1].calls[0]
     assert trace.prompt_eval_count == 100
@@ -56,3 +62,86 @@ async def test_guard_emits_error_without_final_or_llm_call():
     assert result[-1].code == "budget_exceeded"
     assert "final" not in [e.type for e in result]
     assert llm.calls == []
+
+
+async def test_scanned_document_is_rejected_before_embedding_or_llm():
+    from .fixtures import text_pdf
+
+    llm = ScriptedLLM([])
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    result = [event async for event in app.upload_document(text_pdf(""), "scan.pdf")]
+    assert result[-1].type == "error"
+    assert result[-1].code == "invalid_document"
+    assert "text layer" in result[-1].message
+    assert app.document is None
+    assert llm.calls == []
+
+
+async def test_questions_over_1000_tokens_never_call_llm():
+    from .fixtures import text_pdf
+
+    llm = ScriptedLLM([])
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    result = [e async for e in app.ask("question " * 1001)]
+    assert [e.type for e in result] == ["error"]
+    assert result[0].code == "question_too_long"
+    assert llm.calls == []
+
+
+async def test_truncated_answer_never_becomes_final():
+    from chat_document.llm_adapter import LLMFrame
+
+    from .fixtures import text_pdf
+
+    llm = ScriptedLLM(
+        [[LLMFrame(content="Partial [C1]"), LLMFrame(done=True, done_reason="length")]]
+    )
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    result = [e async for e in app.ask("What does this say?")]
+    assert "delta" in [e.type for e in result]
+    assert any(e.type == "error" for e in result)
+    assert "final" not in [e.type for e in result]
+    assert result[-1].type == "trace"
+    assert result[-1].calls[0].done_reason == "length"
+
+
+async def test_citation_markers_split_across_stream_frames_remain_clickable():
+    from chat_document.llm_adapter import LLMFrame
+
+    from .fixtures import text_pdf
+
+    llm = ScriptedLLM(
+        [
+            [
+                LLMFrame(content="A claim 【"),
+                LLMFrame(content="C1"),
+                LLMFrame(content="】."),
+                LLMFrame(done=True, prompt_eval_count=100, eval_count=10, done_reason="stop"),
+            ]
+        ]
+    )
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    result = [e async for e in app.ask("What does this say?")]
+    final = next(e for e in result if e.type == "final")
+    assert final.answer == "A claim [C1]."
+    assert "".join(e.text for e in result if e.type == "delta") == final.answer
+    assert final.citations[0].id == "C1"
+    assert app.source(final.citations[0].source_id).text == "hello Document"
+
+
+async def test_interrupted_llm_stream_emits_error_and_failed_call_trace():
+    from chat_document.llm_adapter import LLMFrame
+
+    from .fixtures import text_pdf
+
+    llm = ScriptedLLM([[LLMFrame(content="Unfinished answer [C1]")]])
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    result = [e async for e in app.ask("What does this say?")]
+    assert [e.type for e in result][-2:] == ["error", "trace"]
+    assert "final" not in [e.type for e in result]
+    assert "completion record" in result[-2].message
+    assert result[-1].calls[0].done_reason == "error"

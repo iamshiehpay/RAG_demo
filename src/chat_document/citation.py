@@ -21,3 +21,33 @@ def citation_map(chunks: list[Chunk]) -> list[Citation]:
 def cited_sources(answer: str, citations: list[Citation]) -> list[Citation]:
     ids = set(re.findall(r"\[(C\d+)\]", answer))
     return [citation for citation in citations if citation.id in ids]
+
+
+class CitationText:
+    """Canonicalize Citation brackets without losing IDs or ordinary prose.
+
+    Buffer only a possible Citation prefix, so tokens like 【 / C3 / 】 work
+    across frames. Unknown IDs stay intact for the later Citation Validator.
+    """
+
+    def __init__(self):
+        self.pending = ""
+
+    def feed(self, text: str) -> str:
+        output = []
+        for character in text:
+            if not self.pending and character not in "[【［":
+                output.append(character)
+                continue
+            self.pending += character
+            complete = re.fullmatch(r"[\[【［]\s*(C\d+)\s*[\]】］]", self.pending)
+            if complete:
+                output.append(f"[{complete[1]}]")
+                self.pending = ""
+            elif not re.fullmatch(r"[\[【［]\s*(?:C\d*\s*)?", self.pending):
+                output.append(self.flush())
+        return "".join(output)
+
+    def flush(self) -> str:
+        text, self.pending = self.pending, ""
+        return text
