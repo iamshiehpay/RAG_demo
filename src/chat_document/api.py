@@ -14,6 +14,7 @@ from .embedder import OllamaEmbedder
 from .events import Event
 from .llm_adapter import OllamaLLM
 from .llm_gateway import LLMGateway
+from .settings import RetrievalSettings
 
 DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
@@ -43,7 +44,11 @@ def sse(events: AsyncIterator[Event]) -> StreamingResponse:
 def create_app(application: Application | None = None) -> FastAPI:
     if application is None:
         base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-        application = Application(OllamaEmbedder(base_url), LLMGateway(OllamaLLM(base_url)))
+        application = Application(
+            OllamaEmbedder(base_url),
+            LLMGateway(OllamaLLM(base_url)),
+            settings=RetrievalSettings.from_env(),
+        )
     app = FastAPI(title="Chat with Document")
 
     @app.post("/api/documents")

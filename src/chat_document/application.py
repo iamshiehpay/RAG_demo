@@ -9,6 +9,7 @@ import httpx
 from .answer_generator import AnswerGenerator
 from .chunker import chunk_sections
 from .citation import citation_map, cited_sources
+from .context_packer import ContextPacker
 from .embedder import Embedder
 from .events import (
     CitationMapEvent,
@@ -28,16 +29,20 @@ from .models import Chunk, ConversationTurn, Document, LLMCallTrace
 from .pdf_parser import DocumentError, parse_pdf
 from .policy import QUESTION_TOKEN_LIMIT
 from .router import Router
+from .settings import RetrievalSettings
 from .tokens import count_tokens
 
 logger = logging.getLogger(__name__)
 
 
 class Application:
-    def __init__(self, embedder: Embedder, gateway: LLMGateway):
+    def __init__(
+        self, embedder: Embedder, gateway: LLMGateway, *, settings: RetrievalSettings | None = None
+    ):
         self.embedder = embedder
         self.answer_generator = AnswerGenerator(gateway)
         self.router = Router(gateway)
+        self.context_packer = ContextPacker(gateway, settings or RetrievalSettings())
         self.document: Document | None = None
         self.index: Index | None = None
         self.history: list[ConversationTurn] = []
@@ -101,14 +106,17 @@ class Application:
                 question, self.history if history is None else history, calls
             )
             yield plan
-            retrieved = await index.retrieve(plan.standalone_question)
+            retrieved = await self.context_packer.retrieve(index, plan)
             yield RetrievalEvent(chunks=retrieved)
             chunks = sorted((item.chunk for item in retrieved), key=lambda chunk: chunk.order)
             citations = citation_map(chunks)
             yield CitationMapEvent(citations=citations)
+            context = await self.context_packer.pack(
+                plan.standalone_question, chunks, citations, calls
+            )
             answer = ""
             async for event in self.answer_generator.generate(
-                plan.standalone_question, chunks, citations
+                plan.standalone_question, chunks, citations, context=context
             ):
                 if isinstance(event, DeltaEvent):
                     answer += event.text

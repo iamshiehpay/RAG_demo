@@ -40,11 +40,12 @@ def test_upload_http_emits_ready_and_serves_committed_frontend():
 def test_ask_http_sse_order_and_citation_source():
     llm = ScriptedLLM(
         [
+            "not JSON",
             [
                 LLMFrame(content="The Document says "),
                 LLMFrame(content="hello. [C1]"),
                 LLMFrame(done=True, prompt_eval_count=90, eval_count=10, done_reason="stop"),
-            ]
+            ],
         ]
     )
     with TestClient(create_app(Application(OllamaEmbedder(), LLMGateway(llm)))) as client:

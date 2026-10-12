@@ -31,13 +31,17 @@ bash scripts/fetch_data.sh
 
 Example question (Q3): `Performance of ablated versions of LightRAG`.
 
-## Current walking skeleton scope (#01)
+## Current scope (#01, #06)
 
-Upload processes synchronously in the request. Each page is a virtual Section, paragraphs are packed into roughly 500-token Chunks, and dense retrieval returns the top five Chunks. Prompt excerpts follow Document order. All questions currently use Lookup. State is in memory and resets on restart or replacement upload.
+Upload processes synchronously in the request. Each page is a virtual Section, paragraphs are packed into roughly 500-token Chunks, and a guarded JSON Router produces Question Type, Standalone Question and Sub-queries in one low-thinking call. Lookup retrieves five Chunks; Synthesis retrieves three for the Standalone Question and two per Sub-query, deduplicated in Document order. Global temporarily uses the Synthesis path until the Summary Tree ticket is integrated. Context Packer batches oversized evidence into cited facts and merges them again when needed, retaining original Citation IDs. State is in memory and resets on restart or replacement upload.
 
-Section detection, table reconstruction, background ingestion/cache, Summary Tree, Router, automatic retries/Citation validation, Golden Facts eval and the final Tufte design are later tickets. Q3 currently demonstrates the complete streaming/Citation flow; precise Table 2 interpretation is not an acceptance claim for this slice. A truncated or interrupted answer fails without becoming final; the UI clears provisional text and provides a retry button.
+Section detection, table reconstruction, background ingestion/cache, Summary Tree, automatic retries/Citation validation, Golden Facts eval and the final Tufte design are later tickets. Q3 currently demonstrates the complete streaming/Citation flow; precise Table 2 interpretation is not an acceptance claim for this slice. A truncated or interrupted answer fails without becoming final; the UI clears provisional text and provides a retry button.
 
-Every LLM call goes through the same Gateway: `o200k_harmony` counts the prompt, 300 tokens cover template overhead, and the policy reserves output including model thinking. Answer calls use `think=medium`, reserve 3,000 tokens and enforce the 6,700 raw-prompt-token cap. The Gateway raises before calling the adapter when the Context Budget would exceed 10,000. Trace records the estimate including the safety margin alongside Ollama's actual counts.
+Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question and evidence. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
+
+Retrieval counts can be configured using `LOOKUP_TOP_K`, `SYNTHESIS_TOP_K`, and `SUB_QUERY_TOP_K` environment variables (defaults 5, 3, and 2), or by passing `RetrievalSettings` to `Application` for eval. Values must be positive integers.
+
+Every LLM call goes through the same Gateway: `o200k_harmony` counts the prompt, 300 tokens cover template overhead, and the policy reserves output including model thinking. Router JSON schema tokens are included in the estimate as well. Answer calls use `think=medium`, reserve 3,000 tokens and enforce the 6,700 raw-prompt-token cap. The Gateway raises before calling the adapter when the Context Budget would exceed 10,000. Trace records the estimate including the safety margin alongside Ollama's actual counts.
 
 ## Checks
 
@@ -70,4 +74,4 @@ uv run python scripts/generate_event_types.py
 
 ## Implementation seams
 
-`src/chat_document/application.py` owns `upload_document` and `ask`; HTTP and tests consume their typed event streams. `events.py` is the event-contract source of truth. Separate modules own PDF parsing, Chunking, embedding, Index, LLM adapters/Gateway, Answer Generator and Citation mapping. `ScriptedLLM` records complete guarded requests and can simulate stream fragments or failures. These modules let later tickets extend their paths without changing the two application seams.
+`src/chat_document/application.py` owns `upload_document` and `ask`; HTTP and tests consume their typed event streams. `events.py` is the event-contract source of truth. Separate modules own PDF parsing, Chunking, embedding, Index, Router, Context Packer, LLM adapters/Gateway, Answer Generator and Citation mapping. `ScriptedLLM` records complete guarded requests and can simulate stream fragments or failures. These modules let later tickets extend their paths without changing the two application seams.

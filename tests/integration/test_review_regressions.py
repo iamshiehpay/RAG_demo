@@ -72,13 +72,14 @@ async def test_comma_and_line_suffixed_citations_normalize_across_frames():
 
     llm = ScriptedLLM(
         [
+            "not JSON",
             [
                 LLMFrame(content="Multi [C1, "),
                 LLMFrame(content="C3] and 【C3"),
                 LLMFrame(content="†L1-"),
                 LLMFrame(content="L4】."),
                 LLMFrame(done=True, prompt_eval_count=100, eval_count=20, done_reason="stop"),
-            ]
+            ],
         ]
     )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -101,7 +102,11 @@ async def test_ask_accumulates_traces_from_every_gateway_call(over_budget_second
 
     class TwoCallGateway(LLMGateway):
         # Simulate a multi-call flow through real budget guards and the scripted adapter.
-        async def generate(self, call_type, messages):
+        async def generate(self, call_type, messages, **kwargs):
+            if call_type == "router":
+                async for event in super().generate(call_type, messages, **kwargs):
+                    yield event
+                return
             for i in range(2):
                 prompt = messages
                 if i == 1 and over_budget_second_call:
@@ -111,11 +116,11 @@ async def test_ask_accumulates_traces_from_every_gateway_call(over_budget_second
                 async for event in super().generate(call_type, prompt):
                     yield event
 
-    llm = ScriptedLLM(["One ", "two [C1]."])
+    llm = ScriptedLLM(["not JSON", "One ", "two [C1]."])
     app = Application(OllamaEmbedder(), TwoCallGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("What does this say?")]
-    expected = 1 if over_budget_second_call else 2
+    expected = 2 if over_budget_second_call else 3
     assert len(llm.calls) == expected
     assert len(result[-1].calls) == expected
     if over_budget_second_call:
@@ -136,7 +141,7 @@ async def test_terminal_llm_frame_closes_adapter_before_ask_finishes():
             finally:
                 self.closed = True
 
-    llm = ClosingLLM(["An answer [C1]."])
+    llm = ClosingLLM(["not JSON", "An answer [C1]."])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("What does this say?")]
@@ -152,8 +157,8 @@ async def test_real_10k_prompt_cap_failure_is_an_application_error_without_final
 
     class OversizedPromptGateway(LLMGateway):
         # Control only upstream prompt text; keep the real Gateway budget policy and guard.
-        async def generate(self, call_type, messages):
-            prompt = "x " * BUDGET_TABLE["answer"].prompt_limit
+        async def generate(self, call_type, messages, **kwargs):
+            prompt = "x " * BUDGET_TABLE[call_type].prompt_limit
             async for event in super().generate(call_type, [{"role": "user", "content": prompt}]):
                 yield event
 

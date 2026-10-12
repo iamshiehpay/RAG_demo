@@ -12,7 +12,7 @@ from chat_document.tokens import count_tokens
 
 @pytest.mark.asyncio
 async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
-    llm = ScriptedLLM(["Ablation variants are compared with NaiveRAG. [C1]"])
+    llm = ScriptedLLM(["not JSON", "Ablation variants are compared with NaiveRAG. [C1]"])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     uploaded = [
         event
@@ -41,8 +41,15 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
     assert llm.calls
     for call in llm.calls:
         prompt_tokens = sum(count_tokens(m["content"]) for m in call.messages) + SAFETY_MARGIN
-        assert prompt_tokens == call.estimated_prompt_tokens
         assert prompt_tokens + call.num_predict <= CONTEXT_BUDGET
+        if call.format is not None:
+            import json
+
+            prompt_tokens += count_tokens(json.dumps(call.format, ensure_ascii=False))
+        assert prompt_tokens == call.estimated_prompt_tokens
+        if call is llm.calls[0]:
+            assert call.think == "low" and call.num_predict == 600
+            continue
         system = call.messages[0]["content"]
         assert "EVERY factual claim" in system
         assert "文件中未提及" in system and "Not mentioned in the document." in system
@@ -86,7 +93,7 @@ async def test_questions_over_1000_tokens_never_call_llm():
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("question " * (QUESTION_TOKEN_LIMIT + 1))]
-    assert [e.type for e in result] == ["error"]
+    assert [e.type for e in result] == ["rejected"]
     assert result[0].code == "question_too_long"
     assert llm.calls == []
 
@@ -97,7 +104,7 @@ async def test_truncated_answer_never_becomes_final():
     from .fixtures import text_pdf
 
     llm = ScriptedLLM(
-        [[LLMFrame(content="Partial [C1]"), LLMFrame(done=True, done_reason="length")]]
+        ["not JSON", [LLMFrame(content="Partial [C1]"), LLMFrame(done=True, done_reason="length")]]
     )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
@@ -106,7 +113,7 @@ async def test_truncated_answer_never_becomes_final():
     assert any(e.type == "error" for e in result)
     assert "final" not in [e.type for e in result]
     assert result[-1].type == "trace"
-    assert result[-1].calls[0].done_reason == "length"
+    assert result[-1].calls[-1].done_reason == "length"
 
 
 async def test_citation_markers_split_across_stream_frames_remain_clickable():
@@ -116,12 +123,13 @@ async def test_citation_markers_split_across_stream_frames_remain_clickable():
 
     llm = ScriptedLLM(
         [
+            "not JSON",
             [
                 LLMFrame(content="A claim 【"),
                 LLMFrame(content="C1"),
                 LLMFrame(content="】."),
                 LLMFrame(done=True, prompt_eval_count=100, eval_count=10, done_reason="stop"),
-            ]
+            ],
         ]
     )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -139,11 +147,11 @@ async def test_interrupted_llm_stream_emits_error_and_failed_call_trace():
 
     from .fixtures import text_pdf
 
-    llm = ScriptedLLM([[LLMFrame(content="Unfinished answer [C1]")]])
+    llm = ScriptedLLM(["not JSON", [LLMFrame(content="Unfinished answer [C1]")]])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("What does this say?")]
     assert [e.type for e in result][-2:] == ["error", "trace"]
     assert "final" not in [e.type for e in result]
     assert "completion record" in result[-2].message
-    assert result[-1].calls[0].done_reason == "error"
+    assert result[-1].calls[-1].done_reason == "error"

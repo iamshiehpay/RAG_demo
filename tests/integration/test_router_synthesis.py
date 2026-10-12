@@ -84,3 +84,203 @@ async def test_router_history_keeps_only_two_rounds_each_at_most_500_tokens():
     assert "Round 2" in messages[0]["content"] and "Round 3" in messages[2]["content"]
     answer_prompt = "\n".join(m["content"] for m in llm.calls[-1].messages)
     assert "Round 2" not in answer_prompt and "Answer 3" not in answer_prompt
+
+
+async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_order():
+    from pathlib import Path
+
+    llm = ScriptedLLM(
+        [
+            router_script(
+                "Synthesis",
+                "Compare LightRAG with GraphRAG.",
+                [
+                    "LightRAG GraphRAG retrieval cost token consumption 610 1000 API calls",
+                    "LightRAG GraphRAG incremental updates new data community reconstruction",
+                ],
+            ),
+            "Cost and incremental updates [C1].",
+        ]
+    )
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
+    ][-1].type == "ready"
+    events = [e async for e in app.ask("Compare LightRAG with GraphRAG.")]
+    plan, retrieval = events[:2]
+    assert plan.question_type == "Synthesis" and len(plan.sub_queries) == 2
+    chunks = [item.chunk for item in retrieval.chunks]
+    text = "\n".join(c.text for c in chunks).lower()
+    assert "610" in text and "incremental" in text
+    assert any("community" in c.text.lower() and "update" in c.text.lower() for c in chunks)
+    assert len(chunks) <= 7
+    assert len({c.id for c in chunks}) == len(chunks)
+    assert [c.order for c in chunks] == sorted(c.order for c in chunks)
+    answer_prompt = llm.calls[-1].messages[-1]["content"]
+    for number, chunk in enumerate(chunks, 1):
+        assert f"[C{number}] {chunk.context}" in answer_prompt
+
+
+async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_sources():
+    from pathlib import Path
+
+    from chat_document.settings import RetrievalSettings
+    from chat_document.tokens import count_tokens
+
+    llm = ScriptedLLM(
+        [
+            router_script(
+                "Synthesis",
+                "Compare costs and incremental updates.",
+                [
+                    "retrieval costs",
+                    "incremental updates",
+                ],
+            ),
+            "Retrieval fact [C1].",
+            "Incremental update fact [C20].",
+            "Combined answer [C1][C20].",
+        ]
+    )
+    app = Application(
+        OllamaEmbedder(),
+        LLMGateway(llm),
+        settings=RetrievalSettings(synthesis_top_k=30, sub_query_top_k=2),
+    )
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
+    ][-1].type == "ready"
+    events = [e async for e in app.ask("Compare costs and incremental updates.")]
+    assert any(e.type == "final" for e in events), [
+        e.model_dump() for e in events if e.type == "error"
+    ]
+    assert [c.call_type for c in events[-1].calls] == [
+        "router",
+        "fact_extraction",
+        "fact_extraction",
+        "answer",
+    ]
+    citation_map = next(e.citations for e in events if e.type == "citation_map")
+    final = next(e for e in events if e.type == "final")
+    assert {c.id for c in final.citations} == {"C1", "C20"}
+    for citation in final.citations:
+        assert citation == next(c for c in citation_map if c.id == citation.id)
+        assert app.source(citation.source_id).text
+    answer_prompt = llm.calls[-1].messages[-1]["content"]
+    assert "Retrieval fact [C1]." in answer_prompt
+    assert "Incremental update fact [C20]." in answer_prompt
+    assert count_tokens(answer_prompt) < 6700
+    for call in llm.calls:
+        assert call.estimated_prompt_tokens + call.num_predict <= 10000
+
+
+async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
+    from pathlib import Path
+
+    from chat_document.settings import RetrievalSettings
+
+    # Script deliberately expands extraction output to force the recursive merging branch.
+    first = "cost " * 3500 + "[C1]"
+    second = "update " * 3500 + "[C20]"
+    llm = ScriptedLLM(
+        [
+            router_script(
+                "Synthesis", "Compare costs and incremental updates.", ["cost", "update"]
+            ),
+            first,
+            second,
+            "Compressed cost [C1].",
+            "Compressed update [C20].",
+            "Combined answer [C1][C20].",
+        ]
+    )
+    app = Application(
+        OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(synthesis_top_k=30)
+    )
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
+    ][-1].type == "ready"
+    events = [e async for e in app.ask("Compare costs and incremental updates.")]
+    assert any(e.type == "final" for e in events)
+    assert [c.call_type for c in events[-1].calls].count("fact_extraction") == 4
+    final = next(e for e in events if e.type == "final")
+    assert {c.id for c in final.citations} == {"C1", "C20"}
+    assert "Compressed cost [C1]." in llm.calls[-1].messages[-1]["content"]
+    for call in llm.calls:
+        assert call.estimated_prompt_tokens + call.num_predict <= 10000
+
+
+async def test_configurable_top_k_counts_and_global_temporarily_uses_synthesis():
+    from pathlib import Path
+
+    from chat_document.settings import RetrievalSettings
+
+    question = "LightRAG retrieval costs"
+    llm = ScriptedLLM(
+        [
+            router_script("Lookup", question),
+            "Lookup [C1].",
+            router_script("Synthesis", question, [question, question]),
+            "Synthesis [C1].",
+            router_script("Global", question),
+            "Global [C1].",
+        ]
+    )
+    app = Application(
+        OllamaEmbedder(),
+        LLMGateway(llm),
+        settings=RetrievalSettings(lookup_top_k=2, synthesis_top_k=1, sub_query_top_k=4),
+    )
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
+    ][-1].type == "ready"
+    for expected_type, expected_count in [("Lookup", 2), ("Synthesis", 4), ("Global", 1)]:
+        events = [e async for e in app.ask(question, history=[])]
+        assert events[0].question_type == expected_type
+        assert len(events[1].chunks) == expected_count
+        assert any(e.type == "final" for e in events)
+    assert RetrievalSettings().model_dump() == dict(
+        lookup_top_k=5, synthesis_top_k=3, sub_query_top_k=2
+    )
+
+
+async def test_router_transport_failure_stops_before_query_embedding():
+    import httpx
+
+    class RecordingEmbedder(OllamaEmbedder):
+        def __init__(self):
+            super().__init__()
+            self.calls = []
+
+        async def embed(self, texts):
+            self.calls.append(texts)
+            return await super().embed(texts)
+
+    embedder = RecordingEmbedder()
+    llm = ScriptedLLM([httpx.ReadTimeout("Router timeout")])
+    app = Application(embedder, LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    events = [e async for e in app.ask("What does this say?")]
+    assert [e.type for e in events] == ["error", "trace"]
+    assert events[-1].calls[0].call_type == "router"
+    assert len(llm.calls) == 1 and len(embedder.calls) == 1
+
+
+async def test_successful_turns_supply_history_to_later_follow_up():
+    llm = ScriptedLLM(
+        [
+            router_script(question="LightRAG incremental updates"),
+            "Incremental updates [C1].",
+            router_script(question="GraphRAG incremental updates"),
+            "GraphRAG updates [C1].",
+        ]
+    )
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    assert any(e.type == "final" for e in [e async for e in app.ask("How does LightRAG update?")])
+    events = [e async for e in app.ask("那 GraphRAG 呢？")]
+    assert events[0].standalone_question == "GraphRAG incremental updates"
+    assert llm.calls[2].messages[1:3] == [
+        dict(role="user", content="How does LightRAG update?"),
+        dict(role="assistant", content="Incremental updates [C1]."),
+    ]
