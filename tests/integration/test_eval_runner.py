@@ -65,6 +65,7 @@ async def test_failed_ask_records_failed_call_without_judging_provisional_answer
         [
             LOOKUP_PLAN,
             [LLMFrame(content="Unfinished claim"), LLMFrame(done=True, done_reason="length")],
+            [LLMFrame(content="Unfinished retry"), LLMFrame(done=True, done_reason="length")],
         ]
     )
     gateway = RecordingGateway(llm)
@@ -76,8 +77,9 @@ async def test_failed_ask_records_failed_call_without_judging_provisional_answer
     run = report.runs[0]
     assert run.answer == "" and run.error
     assert not run.facts[0].passed
-    assert len(llm.calls) == 2 and run.calls[-1].done_reason == "length"
-    assert [call.call_type for call in run.calls] == ["router", "answer"]
+    assert len(llm.calls) == 3 and run.calls[-1].done_reason == "length"
+    assert llm.calls[-1].think == "low"
+    assert [call.call_type for call in run.calls] == ["router", "answer", "answer"]
     write_report(report, tmp_path / "failure.md")
     assert "length" in (tmp_path / "failure.md").read_text()
 
