@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, UnverifiedSpan } from './events';
+import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
 import { Trace } from './Trace';
 import { consumeEvents } from './sse';
+import { UploadProgress } from './Shared';
 
 interface Turn {
   id: number; question: string; answer: string; citations: Citation[];
@@ -18,7 +19,9 @@ export function App() {
   const [question, setQuestion] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState('Upload a PDF with a text layer to begin.');
+  const [uploading, setUploading] = useState(false);
+  const [uploadStage, setUploadStage] = useState<StageEvent | null>(null);
+  const [uploadEventsUrl, setUploadEventsUrl] = useState('');
   const [error, setError] = useState('');
   const [source, setSource] = useState<Chunk | null>(null);
   const updateTurn = (id: number, update: (turn: Turn) => Turn) => setTurns(previous => previous.map(
@@ -26,27 +29,43 @@ export function App() {
   ));
 
   async function upload(file: File) {
-    setBusy(true); setError(''); setDocument(null); setTurns([]); setSource(null);
-    setUploadStatus('Uploading Document…');
+    setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
     const form = new FormData(); form.append('document', file);
+    let eventsUrl = '';
     try {
-      await consumeEvents(await fetch('/api/documents', { method: 'POST', body: form }), event => {
-        if (event.type === 'stage') {
-          const labels = { parsing: 'Reading PDF', chunking: 'Preparing Chunks', embedding: 'Building the search index' };
-          setUploadStatus(`${labels[event.stage]}…`);
-        } else if (event.type === 'ready') {
-          setDocument(event); setUploadStatus(`${event.name} · ${event.chunk_count} Chunks · Ready`);
-        } else if (event.type === 'error') {
-          setError(event.message); setUploadStatus('Document could not be processed. Choose another PDF.');
-        }
-      });
+      const response = await fetch('/api/documents', { method: 'POST', body: form });
+      if (!response.ok) throw new Error(`Upload failed (${response.status}). Please retry.`);
+      const accepted = await response.json() as { job_id: string; events_url: string };
+      eventsUrl = accepted.events_url;
+      setUploadEventsUrl(eventsUrl);
+      await followUpload(eventsUrl);
     } catch (error) {
-      setError(message(error)); setUploadStatus('Upload failed. Please choose the PDF again.');
+      setError(message(error));
+      if (!eventsUrl) setUploading(false);
     } finally { setBusy(false); }
   }
 
+  async function followUpload(eventsUrl: string) {
+    await consumeEvents(await fetch(eventsUrl), event => {
+      if (event.type === 'stage') setUploadStage(event);
+      else if (event.type === 'ready') {
+        setDocument(event); setTurns([]); setSource(null); setQuestion(''); setError('');
+        setUploading(false); setUploadEventsUrl('');
+      } else if (event.type === 'error') {
+        setError(event.message); setUploading(false); setUploadEventsUrl('');
+      }
+    });
+  }
+
+  async function reconnectUpload() {
+    setBusy(true); setError('');
+    try { await followUpload(uploadEventsUrl); }
+    catch (error) { setError(message(error)); }
+    finally { setBusy(false); }
+  }
+
   async function ask(askedQuestion: string, retryId?: number) {
-    if (!askedQuestion.trim() || !document || busy) return;
+    if (!askedQuestion.trim() || !document || busy || uploading) return;
     if (retryId !== undefined && turns.at(-1)?.id !== retryId) return;
     const id = retryId ?? Date.now();
     setBusy(true); setError(''); setSource(null); setQuestion('');
@@ -101,9 +120,11 @@ export function App() {
     <header><h1>Chat with Document</h1><p>Ask a question. Follow the evidence back to your Document.</p></header>
     <section className="upload" aria-label="Upload Document">
       <label htmlFor="document">PDF Document</label>
-      <input id="document" type="file" accept="application/pdf,.pdf" disabled={busy}
+      <input id="document" type="file" accept="application/pdf,.pdf" disabled={busy || uploading}
         onChange={event => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ''; }} />
-      <p role="status">{uploadStatus}</p>
+      <UploadProgress stage={uploadStage} busy={uploading} ready={!!document} name={document?.name} />
+      {uploading && !busy && uploadEventsUrl &&
+        <button onClick={() => void reconnectUpload()}>Reconnect upload progress</button>}
     </section>
     {error && <p className="error" role="alert">{error}</p>}
     <section className="conversation" aria-label="Conversation">
@@ -115,7 +136,7 @@ export function App() {
           unverified={turn.unverified} onSource={citation => void showSource(citation)} />
         {turn.error && <div className="error" role="alert"><p>{turn.error}</p>
           {!turn.rejected && turn.id === turns.at(-1)?.id &&
-            <button disabled={busy} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
+            <button disabled={busy || uploading} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
         {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0) &&
           <Trace plan={turn.plan} chunks={turn.chunks} calls={turn.calls}
             thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} />}
@@ -129,8 +150,12 @@ export function App() {
     <form onSubmit={submit}>
       <label htmlFor="question">Question</label>
       <textarea id="question" rows={3} value={question} onChange={event => setQuestion(event.target.value)}
-        disabled={!document || busy} placeholder={document ? 'Ask about your Document…' : 'Upload a Document first'} />
-      <button type="submit" disabled={!document || busy || !question.trim()}>{busy && document ? 'Answering…' : 'Ask'}</button>
+        disabled={!document || busy || uploading} aria-describedby={!document || uploading ? 'question-disabled-reason' : undefined}
+        placeholder={document ? 'Ask about your Document…' : 'Upload a Document first'} />
+      {(!document || uploading) && <p id="question-disabled-reason" role="status">
+        {uploading ? '文件處理中，完成後才能提問。' : '請先上傳 PDF，文件準備完成後才能提問。'}
+      </p>}
+      <button type="submit" disabled={!document || busy || uploading || !question.trim()}>{busy && document && !uploading ? 'Answering…' : 'Ask'}</button>
     </form>
   </main>;
 }

@@ -1,5 +1,6 @@
 import json
 
+import httpx
 from fastapi.testclient import TestClient
 
 from chat_document.api import create_app
@@ -9,6 +10,7 @@ from chat_document.llm_adapter import LLMFrame, ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 
 from .fixtures import structured_pdf, text_pdf
+from .test_ingestion_jobs import RecordingEmbedder
 
 
 def events(response):
@@ -19,15 +21,28 @@ def events(response):
     ]
 
 
-def test_upload_http_emits_ready_and_serves_committed_frontend():
+def upload(client, content=None):
+    response = client.post(
+        "/api/documents",
+        files={"document": ("sample.pdf", text_pdf() if content is None else content)},
+    )
+    assert response.status_code == 202
+    accepted = response.json()
+    assert accepted["events_url"] == f"/api/documents/{accepted['job_id']}/events"
+    return events(client.get(accepted["events_url"]))
+
+
+def test_upload_http_emits_ready_or_error_and_serves_committed_frontend():
     with TestClient(
         create_app(Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([]))))
     ) as client:
-        result = events(
-            client.post("/api/documents", files={"document": ("sample.pdf", text_pdf())})
-        )
-        assert [event["type"] for event in result] == ["stage", "stage", "stage", "ready"]
+        result = upload(client)
+        assert [event["type"] for event in result] == ["stage"] * 4 + ["ready"]
         assert result[-1]["chunk_count"] == 1
+        failed = upload(client, text_pdf(""))
+        assert [event["type"] for event in failed] == ["stage", "error"]
+        assert failed[-1]["code"] == "invalid_document"
+        assert client.get("/api/documents/unknown/events").status_code == 404
         home = client.get("/")
         assert home.status_code == 200
         assert "Chat with Document" in home.text
@@ -42,9 +57,7 @@ def test_default_app_reads_chunk_size_from_environment(monkeypatch):
     monkeypatch.setenv("CHUNK_TOKEN_TARGET", "35")
     monkeypatch.setenv("LOOKUP_TOP_K", "1")
     with TestClient(create_app()) as client:
-        result = events(
-            client.post("/api/documents", files={"document": ("structure.pdf", structured_pdf())})
-        )
+        result = upload(client, structured_pdf())
         assert result[-1]["type"] == "ready"
         assert result[-1]["chunk_count"] == 5
 
@@ -67,7 +80,7 @@ def test_ask_http_sse_order_and_citation_source():
         ]
     )
     with TestClient(create_app(Application(OllamaEmbedder(), LLMGateway(llm)))) as client:
-        events(client.post("/api/documents", files={"document": ("sample.pdf", text_pdf())}))
+        upload(client)
         result = events(client.post("/api/ask", json={"question": "What does the Document say?"}))
         assert [event["type"] for event in result] == [
             "plan",
@@ -99,9 +112,36 @@ def test_ask_http_sse_order_and_citation_source():
 def test_rejected_http_sse_is_terminal_without_final_or_model_call():
     llm = ScriptedLLM([])
     with TestClient(create_app(Application(OllamaEmbedder(), LLMGateway(llm)))) as client:
-        events(client.post("/api/documents", files={"document": ("sample.pdf", text_pdf())}))
+        upload(client)
         result = events(client.post("/api/ask", json={"question": "question " * 1001}))
         assert [event["type"] for event in result] == ["rejected"]
         assert result[0]["token_limit"] == 1000 and result[0]["question_tokens"] > 1000
         assert result[0]["code"] == "question_too_long"
+        assert llm.calls == []
+
+
+async def test_upload_http_returns_202_while_embedding_is_pending_and_blocks_ask():
+    import asyncio
+
+    embedder = RecordingEmbedder(hold=True)
+    llm = ScriptedLLM([])
+    application = Application(embedder, LLMGateway(llm))
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=create_app(application)), base_url="http://test"
+    ) as client:
+        accepted = await asyncio.wait_for(
+            client.post("/api/documents", files={"document": ("sample.pdf", text_pdf())}),
+            timeout=2,
+        )
+        assert accepted.status_code == 202
+        await asyncio.wait_for(embedder.entered.wait(), timeout=5)
+        rejected = events(await client.post("/api/ask", json={"question": "hello?"}))
+        assert rejected[-1]["code"] == "document_not_ready"
+        conflict = await client.post(
+            "/api/documents", files={"document": ("other.pdf", text_pdf())}
+        )
+        assert conflict.status_code == 409
+        embedder.release.set()
+        result = events(await client.get(accepted.json()["events_url"]))
+        assert result[-1]["type"] == "ready"
         assert llm.calls == []

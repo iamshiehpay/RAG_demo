@@ -104,7 +104,7 @@ export type RetryEvent = {
 
 export type StageEvent = {
   type: "stage";
-  stage: "parsing" | "chunking" | "embedding";
+  stage: "parsing" | "chunking" | "embedding" | "complete";
   completed: number;
   total: number;
 };

@@ -1,6 +1,6 @@
 import type { Event } from './events';
 
-/** POST-based SSE; the backend event models define the payload union. */
+/** Upload GET and ask POST SSE; backend event models define the payload union. */
 export async function consumeEvents(response: Response, onEvent: (event: Event) => void) {
   if (!response.ok) throw new Error(`Request failed (${response.status}). Please retry.`);
   if (!response.body) throw new Error('Streaming response is unavailable.');
