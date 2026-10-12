@@ -71,6 +71,8 @@ def test_ask_http_sse_order_and_citation_source():
             question_type="Synthesis",
             standalone_question="What does the Document say?",
             sub_queries=["hello", "Document"],
+            plan_source="router",
+            fallback_reason=None,
         )
         assert result[3]["text"] + result[4]["text"] == result[5]["answer"]
         citation = result[5]["citations"][0]

@@ -100,8 +100,11 @@ async def test_truncated_router_falls_back_but_retains_its_failed_trace():
     events = [e async for e in app.ask("Original question")]
     assert events[0].question_type == "Lookup"
     assert events[0].standalone_question == "Original question"
+    assert events[0].plan_source == "fallback" and events[0].fallback_reason == "length"
     assert any(e.type == "final" for e in events)
     assert [c.done_reason for c in events[-1].calls] == ["length", "stop"]
+    assert events[-1].calls[0].plan_source == "fallback"
+    assert events[-1].calls[0].fallback_reason == "length"
 
 
 async def test_explicit_history_does_not_modify_session_history():

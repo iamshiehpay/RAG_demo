@@ -18,6 +18,8 @@ packages = ["src/chat_document"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests/integration"]
+addopts = "-m 'not eval'"
+markers = ["eval: opt-in live LLM evaluation (requires local Ollama and cloud access)"]
 
 [tool.ruff]
 line-length = 100

@@ -1,5 +1,7 @@
 """Domain values shared by processing modules and the event contract."""
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -63,3 +65,5 @@ class LLMCallTrace(BaseModel):
     latency_ms: float
     done_reason: str
     discarded_fact_lines: int = 0
+    plan_source: Literal["router", "fallback"] | None = None
+    fallback_reason: str | None = None

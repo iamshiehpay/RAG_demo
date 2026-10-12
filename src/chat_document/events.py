@@ -27,6 +27,8 @@ class PlanEvent(BaseModel):
     question_type: Literal["Global", "Synthesis", "Lookup"]
     standalone_question: str
     sub_queries: list[str]
+    plan_source: Literal["router", "fallback"] = "router"
+    fallback_reason: str | None = None
 
 
 class RejectedEvent(BaseModel):

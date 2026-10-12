@@ -45,6 +45,8 @@ async def test_malformed_router_json_falls_back_to_lookup_with_original_question
     assert events[0].standalone_question == "Original question"
     assert events[0].sub_queries == []
     assert any(e.type == "final" for e in events)
+    assert events[0].plan_source == "fallback" and events[0].fallback_reason == "invalid_json"
+    assert events[-1].calls[0].fallback_reason == "invalid_json"
 
 
 async def test_too_long_question_has_explicit_rejection_event_and_zero_calls():

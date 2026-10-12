@@ -53,3 +53,11 @@
 - **AI 的測試假設不符合真正輸出額度：** 原遞迴合併測試每批腳本超過 3,500 tokens，超出 `num_predict=1000`，所以不能證明真實遞迴路徑。修正 ScriptedLLM，連 thinking 也納入輸出上限；改用較大合成 Document、多批低於 1,000 tokens 的結果，總量仍超過 6K，確認再次合併能保留原始 Citation。
 - **審查補上 Question Type 和歷史的隔離：** AI 原本把批次抽取套用到 Lookup，也讓 eval 的顯式歷史污染 session。修正成 Lookup 依排名選擇放得下的完整 Chunk；只在 Synthesis 原始上下文超過 6K 時抽取。顯式傳入歷史不修改 session。Global 的過渡路徑仍是 Synthesis，等 #05 接上 Summary Tree。
 - **驗收腳本也有固定數量的假設：** Trace 的瀏覽器腳本先假定 top-k=30 一定只有兩批，但 Sub-query 的聯集多帶出一些 Chunk，實際是三批，腳本因此耗盡。測試依 request 類型逐批供應回應後，UI 順利完成，Trace 顯示三批丟棄行數 2、1、1。這是 fixture 修正，正式程式不需要更動。
+
+## 2026-10-13：#06 真實 Router QA 推翻腳本驗收
+
+- **測試替身掩蓋 AI 的格式假設：** ScriptedLLM 一直給合法 JSON，確定性測試全過；獨立 QA 卻發現 Ollama Cloud 不執行 `format` schema，Router prompt 又沒列出完整鍵名，12 題僅 1 題有合法計畫。修正 prompt，明列三個鍵、型別和範例；解析容忍實測的 `type` 別名與額外欄位。保留 9 份逐字真實回應作為 fixture，再加入預設排除的 live smoke。最終實測 12/12 正確、零 fallback，輸出 52–179 tokens，沒有把 600-token 額度調大。
+- **原本把 fallback 當正常 Lookup，Trace 看不出失敗：** 新增 `plan_source` 和 `fallback_reason`，計畫事件與 Router 呼叫 Trace 都保留來源。帶歷史卻缺少改寫時，明確記錄 `missing_rewrite`，不再宣稱代名詞已解開。#08 同步改為把 fallback 與真正的分類結果分開計分。
+- **schema 合法不代表追問改寫成功：** 第一輪修正的 live smoke 雖然類型 12/12，仍有「它」未解開；加上具名主詞規則後，又發現中文短問句被英文歷史帶成英文。把語言提示放進目前問題，live smoke 也斷言語言與具名主詞。最終瀏覽器追問顯示完整中文的 LightRAG／GraphRAG 成本問題。
+- **有效 Sub-query 也可能找錯證據：** 瀏覽器 Q2 最初得到 Synthesis，但泛稱 cost 的子查詢只找到 Table 3 caption，沒有 `610 × 1,000` 成本段落。針對檢索系統比較，明列 token／API-call 成本與 incremental updates 的查詢要求；重新跑真實 bge-m3 與雲端 Router，兩種原文證據都進入檢索結果。
+- **不把缺少的 Trace 證據補成推論：** 舊 Q3 Router 確實以 low 用完 600 tokens，但 QA 沒保存完整 JSON 或 thinking，無法判定兩者各用多少。新 prompt 界定表格消融題為 Lookup、要求簡短 JSON；最終瀏覽器 Q3 用 63 tokens 正常結束。修正證據與這項限制一併記在 `docs/qa/t06/live-router-followup.md`。

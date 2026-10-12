@@ -1,0 +1,65 @@
+[
+  {
+    "source": "router-probe-q2.txt",
+    "line": 1,
+    "question": "Compare LightRAG with GraphRAG",
+    "raw": "{\n  \"question_type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What are the core architectural components and data structures used in LightRAG versus GraphRAG?\",\n    \"How do LightRAG and GraphRAG differ in their retrieval mechanisms and integration of external knowledge sources?\",\n    \"What performance metrics (e.g., retrieval accuracy, latency, scalability) are reported for LightRAG compared to GraphRAG?\",\n    \"What are the reported limitations or challenges for each method, and how do they impact practical deployment?\"\n  ],\n  \"answer\": null\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-q2.txt",
+    "line": 2,
+    "question": "Compare LightRAG with GraphRAG",
+    "raw": "{\n  \"question_type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What are the core architectural differences between LightRAG and GraphRAG, including how each model incorporates external knowledge sources?\",\n    \"How do LightRAG and GraphRAG differ in terms of retrieval mechanisms, indexing structures, and graph utilization?\",\n    \"What performance metrics (e.g., accuracy, latency, memory usage) have been reported for LightRAG versus GraphRAG on benchmark tasks?\",\n    \"What are the reported limitations or challenges for each approach, such as scalability, handling of dynamic data, or dependence on pre‑trained components?\",\n    \"What evidence does the document provide regarding the suitability of LightRAG versus GraphRAG for specific application domains (e.g., question answering, recommendation, knowledge‑base completion)?\"\n  ],\n  \"answer\": null\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-q2.txt",
+    "line": 3,
+    "question": "Compare LightRAG with GraphRAG",
+    "raw": "{\n  \"question_type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What are the core architectural differences between LightRAG and GraphRAG, including how each model incorporates external knowledge sources?\",\n    \"How do LightRAG and GraphRAG differ in terms of retrieval mechanisms and the way they construct or use graph structures for reasoning?\",\n    \"What performance metrics (e.g., accuracy, latency, scalability) have been reported for LightRAG versus GraphRAG on benchmark tasks?\",\n    \"What are the main limitations or challenges identified for LightRAG and for GraphRAG, and how do they compare?\",\n    \"What evidence or experimental results support the claimed advantages of LightRAG over GraphRAG, or vice versa?\"\n  ]\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-others.txt",
+    "line": 1,
+    "question": "Performance of ablated versions of LightRAG",
+    "raw": "{\n  \"question_type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What ablation variants of LightRAG are evaluated in the document?\",\n    \"What performance metrics are reported for each ablated version?\",\n    \"How do the results of the ablated versions compare to the full LightRAG model?\",\n    \"What conclusions does the document draw about the impact of each ablated component on overall performance?\"\n  ]\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-others.txt",
+    "line": 2,
+    "question": "Performance of ablated versions of LightRAG",
+    "raw": "{\n  \"question_type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What ablation variants of LightRAG are evaluated in the document?\",\n    \"What performance metrics are reported for each ablated version?\",\n    \"How do the results of the ablated versions compare to the full LightRAG model?\",\n    \"What conclusions does the document draw about the impact of each ablated component on overall performance?\"\n  ]\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-others.txt",
+    "line": 3,
+    "question": "Performance of ablated versions of LightRAG",
+    "raw": "{\n  \"question_type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What ablation variants of LightRAG are evaluated in the document?\",\n    \"What performance metrics are reported for each ablated version?\",\n    \"How do the results of the ablated versions compare to the full LightRAG model?\",\n    \"What conclusions does the document draw about the impact of each ablated component on overall performance?\"\n  ]\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-others.txt",
+    "line": 4,
+    "question": "這篇論文有什麼限制？",
+    "raw": "{\n  \"type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What methodological limitations are discussed in the paper?\",\n    \"Are there any constraints related to the sample size or data collection?\",\n    \"Does the paper mention limitations regarding the generalizability of its findings?\",\n    \"What potential biases or confounding factors are acknowledged by the authors?\"\n  ]\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-others.txt",
+    "line": 5,
+    "question": "這篇論文有什麼限制？",
+    "raw": "{\n  \"type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What methodological limitations are discussed in the paper?\",\n    \"Are there any constraints related to the sample size or data collection?\",\n    \"Does the paper mention limitations regarding the generalizability of its findings?\",\n    \"What potential biases or confounding factors are acknowledged by the authors?\"\n  ]\n}",
+    "expected": "Synthesis"
+  },
+  {
+    "source": "router-probe-others.txt",
+    "line": 6,
+    "question": "這篇論文有什麼限制？",
+    "raw": "{\n  \"type\": \"Synthesis\",\n  \"sub_queries\": [\n    \"What methodological limitations are mentioned in the paper?\",\n    \"Are there any constraints related to the sample size or data collection?\",\n    \"Does the paper discuss limitations regarding the generalizability of its findings?\",\n    \"What potential biases or confounding factors are acknowledged by the authors?\",\n    \"Are there any technical or practical limitations highlighted for future research?\"\n  ]\n}",
+    "expected": "Synthesis"
+  }
+]

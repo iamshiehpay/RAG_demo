@@ -54,6 +54,8 @@ export type LLMCallTrace = {
   latency_ms: number;
   done_reason: string;
   discarded_fact_lines: number;
+  plan_source: "router" | "fallback" | null;
+  fallback_reason: string | null;
 };
 
 export type PlanEvent = {
@@ -61,6 +63,8 @@ export type PlanEvent = {
   question_type: "Global" | "Synthesis" | "Lookup";
   standalone_question: string;
   sub_queries: Array<string>;
+  plan_source: "router" | "fallback";
+  fallback_reason: string | null;
 };
 
 export type ReadyEvent = {

@@ -63,3 +63,12 @@ The independent reviewer requested changes after confirming the original 32-test
 - Numeric history, Sub-query, evidence and top-k limits plus conservative packing allowances are named in `policy.py`. Type generation, ruff, formatting, TypeScript and frontend rebuild all pass. The new Trace count is displayed in the frontend.
 
 Browser follow-up: `trace-filtered-facts.png` captures the rebuilt frontend on LightRAG, with three extraction calls showing discarded-line counts **2, 1, 1** and the full Synthesis plan. The UI completes successfully and reports no browser errors. The temporary scripted adapter supplies each batch independently because Sub-query union can add Chunks beyond the standalone top-k; an initial fixed two-batch fixture ran out of replies and was replaced. Browser and backend were stopped after this check.
+
+## Integrated live QA follow-up (#1672)
+
+Independent live QA on main `79aac57` found that the original scripted checks hid near-miss JSON
+and silent Lookup fallback. [Live Router follow-up](live-router-followup.md) documents the repair,
+exact raw fixtures, opt-in 12-case smoke, fallback provenance, and real-cloud browser evidence.
+The final smoke has 12/12 correct types, zero fallbacks, named follow-up referents and retained
+question language. Browser Q2 retrieves cost/incremental-update evidence; Q3 is genuine Lookup
+with 63 generated Router tokens and `stop`. The 600-token reservation is unchanged.

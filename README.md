@@ -39,6 +39,12 @@ Section detection, table reconstruction, background ingestion/cache, Summary Tre
 
 Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question and evidence. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
 
+Router names the JSON keys in its prompt and also sends the schema through Ollama `format`.
+It tolerates the observed `type` alias and extra keys. A missing Standalone Question uses the
+original question only without history; with history it records a failed rewrite. Trace shows
+`plan_source` (`router` or `fallback`) and any `fallback_reason`, so fallback Lookup is visible.
+The output reservation remains 600 tokens including thinking.
+
 Retrieval counts can be configured using `LOOKUP_TOP_K`, `SYNTHESIS_TOP_K`, and `SUB_QUERY_TOP_K` environment variables (defaults 5, 3, and 2), or by passing `RetrievalSettings` to `Application` for eval. Values must be positive integers.
 
 Every LLM call goes through the same Gateway: `o200k_harmony` counts the prompt, 300 tokens cover template overhead, and the policy reserves output including model thinking. Router JSON schema tokens are included in the estimate as well. Answer calls use `think=medium`, reserve 3,000 tokens and enforce the 6,700 raw-prompt-token cap. The Gateway raises before calling the adapter when the Context Budget would exceed 10,000. Trace records the estimate including the safety margin alongside Ollama's actual counts.
@@ -54,6 +60,16 @@ uv run ruff check src tests scripts/generate_event_types.py
 uv run ruff format --check src tests scripts/generate_event_types.py
 uv run python scripts/generate_event_types.py --check
 ```
+
+The default suite excludes cloud LLM evaluations. Run the 12-case live Router smoke explicitly:
+
+```bash
+uv run pytest -q -m eval tests/integration/test_router_smoke_eval.py
+```
+
+This requires the local Ollama daemon and cloud login. It records raw responses, plans and token
+traces in `docs/qa/t06/live-router-smoke.json`; it requires at least 10/12 correct types, no
+fallbacks, and resolved follow-ups in the question's language.
 
 ## Frontend development
 

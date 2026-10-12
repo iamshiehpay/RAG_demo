@@ -1,0 +1,439 @@
+{
+  "recorded_at": "2026-10-12T15:57:36.640193+00:00",
+  "model": "gpt-oss:120b-cloud",
+  "correct": 12,
+  "total": 12,
+  "parse_fallbacks": 0,
+  "results": [
+    {
+      "question": "Summary this document.",
+      "history": [],
+      "expected": "Global",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Global",
+        "standalone_question": "Summarize this document.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Global\",\"standalone_question\":\"Summarize this document.\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 822,
+          "prompt_eval_count": 483,
+          "eval_count": 93,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. Summary whole document => Global. standalone_question: \"Summary this document.\" Should be \"Summarize this document.\" but keep language. So \"Summary this document.\" maybe rewrite to proper: \"Summarize this document.\" Use same language English. sub_queries: [].\n\nReturn JSON.",
+          "latency_ms": 943.4104170650244,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "這篇在講什麼？",
+      "history": [],
+      "expected": "Global",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Global",
+        "standalone_question": "這篇在講什麼？",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Global\",\"standalone_question\":\"這篇在講什麼？\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 828,
+          "prompt_eval_count": 489,
+          "eval_count": 78,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. The question asks \"這篇在講什麼？\" which is a global summary request. So question_type = Global. standalone_question: \"這篇在講什麼？\" sub_queries: []",
+          "latency_ms": 1557.986875064671,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "Give me the key takeaways of this paper.",
+      "history": [],
+      "expected": "Global",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Global",
+        "standalone_question": "Give me the key takeaways of this paper.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Global\",\"standalone_question\":\"Give me the key takeaways of this paper.\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 828,
+          "prompt_eval_count": 489,
+          "eval_count": 52,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to output JSON. Question is Global. standalone_question same. sub_queries empty list.",
+          "latency_ms": 1432.8982499428093,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "Compare LightRAG with GraphRAG.",
+      "history": [],
+      "expected": "Synthesis",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG vs GraphRAG retrieval mechanism",
+          "LightRAG vs GraphRAG cost analysis",
+          "LightRAG vs GraphRAG incremental update strategy"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Synthesis\",\"standalone_question\":\"Compare LightRAG with GraphRAG.\",\"sub_queries\":[\"LightRAG vs GraphRAG retrieval mechanism\",\"LightRAG vs GraphRAG cost analysis\",\"LightRAG vs GraphRAG incremental update strategy\"]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 827,
+          "prompt_eval_count": 488,
+          "eval_count": 80,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. It's a Synthesis. Provide sub_queries.",
+          "latency_ms": 863.4578750934452,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "LightRAG 有什麼限制？",
+      "history": [],
+      "expected": "Synthesis",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "LightRAG 有什麼限制？",
+        "sub_queries": [
+          "LightRAG 限制",
+          "LightRAG 系統瓶頸",
+          "LightRAG 可擴展性問題"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Synthesis\",\"standalone_question\":\"LightRAG 有什麼限制？\",\"sub_queries\":[\"LightRAG 限制\",\"LightRAG 系統瓶頸\",\"LightRAG 可擴展性問題\"]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 828,
+          "prompt_eval_count": 489,
+          "eval_count": 92,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. Asking about limitations => synthesis? It's about evidence across sections. Choose Synthesis. Provide sub_queries 2-3. Provide JSON.",
+          "latency_ms": 1083.471457939595,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "How do the experiments support the paper's claims?",
+      "history": [],
+      "expected": "Synthesis",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "How do the experiments support the paper's claims?",
+        "sub_queries": [
+          "experiment results supporting claims",
+          "evidence linking experiments to claims",
+          "analysis of experimental validation"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Synthesis\",\"standalone_question\":\"How do the experiments support the paper's claims?\",\"sub_queries\":[\"experiment results supporting claims\",\"evidence linking experiments to claims\",\"analysis of experimental validation\"]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 828,
+          "prompt_eval_count": 489,
+          "eval_count": 121,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. This asks how experiments support claims => synthesis across sections. So question_type Synthesis. standalone_question: \"How do the experiments support the paper's claims?\" It's already standalone. sub_queries: need 2-3 short queries like \"experiment results supporting claims\", \"evidence linking experiments to claims\". Provide JSON.",
+          "latency_ms": 1762.56737485528,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "Performance of ablated versions of LightRAG.",
+      "history": [],
+      "expected": "Lookup",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "Performance of ablated versions of LightRAG.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Lookup\",\"standalone_question\":\"Performance of ablated versions of LightRAG.\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 828,
+          "prompt_eval_count": 489,
+          "eval_count": 68,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. Asking for performance of ablated versions => likely lookup of ablation results table. That's a Lookup. Provide sub_queries as [].\n\nReturn JSON.",
+          "latency_ms": 887.8930418286473,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "What datasets were used?",
+      "history": [],
+      "expected": "Lookup",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "What datasets were used?",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Lookup\",\"standalone_question\":\"What datasets were used?\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 823,
+          "prompt_eval_count": 484,
+          "eval_count": 68,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. The question asks \"What datasets were used?\" That's a Lookup: a fact list. So question_type Lookup, standalone_question same, sub_queries [].\n\nReturn JSON.",
+          "latency_ms": 764.835209120065,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "Table 2 裡 -Origin 在 Mix 的 Overall 是多少？",
+      "history": [],
+      "expected": "Lookup",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "Table 2 中 -Origin 在 Mix 的 Overall 是多少？",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Lookup\",\"standalone_question\":\"Table 2 中 -Origin 在 Mix 的 Overall 是多少？\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 834,
+          "prompt_eval_count": 495,
+          "eval_count": 88,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. It's asking for a specific value in Table 2, a lookup. So question_type Lookup. standalone_question Chinese: \"Table 2 中 -Origin 在 Mix 的 Overall 是多少？\" sub_queries [].\n\nReturn JSON.",
+          "latency_ms": 1546.2192499544472,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "How many API calls does LightRAG need for retrieval?",
+      "history": [],
+      "expected": "Lookup",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "How many API calls does LightRAG need for retrieval?",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Lookup\",\"standalone_question\":\"How many API calls does LightRAG need for retrieval?\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 830,
+          "prompt_eval_count": 491,
+          "eval_count": 75,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. Question is lookup? It's asking a fact: number of API calls needed for retrieval. That's a specific fact. So Lookup. sub_queries empty list. Output.",
+          "latency_ms": 845.8991670049727,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "那 LightRAG 呢？",
+      "history": [
+        [
+          "user",
+          "What is GraphRAG's retrieval cost in the paper?"
+        ],
+        [
+          "assistant",
+          "GraphRAG needs about 610 x 1,000 tokens per retrieval because it traverses communities."
+        ]
+      ],
+      "expected": "Lookup",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "LightRAG 的检索成本在论文中是多少？",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Lookup\",\"standalone_question\":\"LightRAG 的检索成本在论文中是多少？\",\"sub_queries\":[]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 860,
+          "prompt_eval_count": 531,
+          "eval_count": 58,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to output JSON. Question about LightRAG retrieval cost. It's Lookup. Provide sub_queries [].\n\n",
+          "latency_ms": 829.538291785866,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    },
+    {
+      "question": "那它跟 GraphRAG 比呢？",
+      "history": [
+        [
+          "user",
+          "Summary this document."
+        ],
+        [
+          "assistant",
+          "LightRAG is a graph-based RAG system with dual-level retrieval and incremental updates..."
+        ]
+      ],
+      "expected": "Synthesis",
+      "correct": true,
+      "plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "LightRAG 与 GraphRAG 相比如何？",
+        "sub_queries": [
+          "LightRAG GraphRAG 检索机制",
+          "LightRAG GraphRAG 成本比较",
+          "LightRAG GraphRAG 增量更新"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null
+      },
+      "raw": "{\"question_type\":\"Synthesis\",\"standalone_question\":\"LightRAG 与 GraphRAG 相比如何？\",\"sub_queries\":[\"LightRAG GraphRAG 检索机制\",\"LightRAG GraphRAG 成本比较\",\"LightRAG GraphRAG 增量更新\"]}",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 851,
+          "prompt_eval_count": 522,
+          "eval_count": 179,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. The question is comparison => Synthesis. standalone_question in Chinese: \"它跟 GraphRAG 比呢？\" replace pronoun: \"LightRAG 跟 GraphRAG 比呢？\" maybe \"LightRAG 与 GraphRAG 相比如何？\". Use Chinese. sub_queries 2-3. Provide queries like \"LightRAG GraphRAG 检索机制\", \"LightRAG GraphRAG 成本比较\", \"LightRAG GraphRAG 增量更新\". Output.",
+          "latency_ms": 1553.9814161602408,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        }
+      ]
+    }
+  ]
+}
