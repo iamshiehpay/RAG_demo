@@ -23,11 +23,11 @@ Status: in-progress
 | 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | done（9ba4327；Review APPROVE；QA 7/7 PASS）|
 | 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | dispatched（levi-t02-vida）|
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
-| 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | dispatched（levi-t08-fire）|
+| 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | merged 11968fd（Review APPROVE），QA 中 |
 | 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | dispatched 初稿（levi-t09-dune）|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | todo |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | todo |
-| 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | todo |
+| 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | dispatched（levi-t07-bali）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | todo |
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | todo |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | todo |
@@ -79,3 +79,12 @@ Status: in-progress
 | #06 Review | 文字系統不一致時保留 `plan_source=router`；#08 要讀 `rewrite_language_mismatch` | #08 |
 | #06 Review | 回答把「610 × 1,000 tokens」寫成「610,000 個 token」；Golden Facts 判定要接受等值寫法 | #08 |
 | #06 QA | 簡體中文提問時，Router 的 Standalone Question 變成繁體（回答仍是簡體，不影響結果） | #11（觀察，不阻擋） |
+
+## 中斷點（2026-10-13，Orchestrator 額度用盡）
+
+- main：`11968fd`（含 #01、#06、#08）。#01、#06 done；#08 QA 進行中（報告將寫到 `docs/verification/ticket-08/qa/`）。
+- #07：實作完成（`f26b09e`），獨立 Review 進行中。
+- #02：Review 修正中／已送複審（見 `.lat/briefs/pending-request.md`）。
+- #09：初稿完成，等使用者回覆 D02（`.lat/decisions/D02-tufte-draft-direction.md`）。
+- 未開始：#03、#04、#05、#10、#11。
+- 恢復：主控以 `hcom start --as levi` 重新連線，讀 `.lat/tasks/`、`.lat/decisions/`、`.lat/briefs/` 與本檔。
