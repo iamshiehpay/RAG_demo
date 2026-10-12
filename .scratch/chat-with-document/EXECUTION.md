@@ -25,9 +25,9 @@ Status: in-progress
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
 | 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | dispatched 初稿（levi-t09-dune）|
-| 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | todo |
+| 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | dispatched（levi-t04-kano）|
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | todo |
-| 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | merged 9538b88（Review APPROVE），QA 中 |
+| 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | todo |
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | todo |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | todo |
@@ -85,6 +85,9 @@ Status: in-progress
 | #02 Review | 沒有段落的 Section（如 LightRAG 的 §3、§5、§7.3）不送進 Section Summary | #05 |
 | #07 Review | 上傳時 Ollama 失敗只顯示通用的 `ingestion_failed`（EV-05 上傳段） | #04 |
 | #07 Review | `HTTPStatusError`（如模型不存在 404）被報成連線失敗；embedding 階段的 `ValueError` 報成 `answer_failed`；分批抽取失敗也標 `stage="answer"` | #11 |
+| #02 Review | 圖中帶編號的步驟標籤（粗體「1 Extract Entities」、較大字「2 Build Graph」）會開出假 Section | #10（第二份文件驗證時觀察） |
+| #02 Review | 框線內、沒有編號的標題（陰影底上的「Conclusion」、緊貼 teaser caption 的「Abstract」）可能被濾掉 | #10 |
+| #07 QA | 錯誤後狀態列仍是暫定的斜體；句子間沒空白時 Unverified 標籤緊貼下一句 | #09 |
 
 ## 中斷點（2026-10-13，Orchestrator 額度用盡）
 
