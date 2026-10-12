@@ -189,6 +189,33 @@ async def test_full_model_anchor_does_not_match_a_suffixed_variant():
     assert not (await check_fact(answer, MIX_LOW, LLMGateway(llm))).passed
 
 
+async def test_numeric_variants_accept_compound_and_spaced_model_names():
+    from eval.golden_facts import AGRICULTURE_ORIGIN, MIX_LOW
+
+    for separator in ("-", "‑", " -", " "):
+        for fact, answer in (
+            (
+                MIX_LOW,
+                f"On Mix, LightRAG{separator}Low reaches 64.8% Overall, above full LightRAG 60.0%.",
+            ),
+            (
+                AGRICULTURE_ORIGIN,
+                f"On Agriculture, LightRAG{separator}Origin reaches 74.4% Overall, "
+                "above full LightRAG 67.6%.",
+            ),
+        ):
+            llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+            assert (await check_fact(answer, fact, LLMGateway(llm))).passed, answer
+
+
+async def test_numeric_percentages_accept_omitted_zero_decimal():
+    from eval.golden_facts import MIX_LOW
+
+    answer = "On Mix, -Low reaches 64.8% Overall, above full LightRAG 60%."
+    llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+    assert (await check_fact(answer, MIX_LOW, LLMGateway(llm))).passed
+
+
 async def test_fixed_refusals_pass_without_judge_calls_and_accept_one_final_period():
     from chat_document.llm_adapter import LLMFrame
 

@@ -96,3 +96,5 @@
 - **Reviewer 抓到 AI 的評估假陰性：** 基準裡 Q1 experiments 的正確內容因 markdown 的兩個尾隨空格／換行而無法通過 raw substring 驗證。先加會失敗的 hard-break、U+202F 與 U+2011 回歸，再同時正規化回答及摘錄的 typography／空白；保留文字、大小寫、標點、Citation，虛構的字仍拒絕。
 - **AI 把 Golden Facts 寫得比需求嚴格：** Table 1 原本把四個資料集塞在同一條數字 fact，要求單一摘錄出現全部 anchors；Table 3 額外要求 MAPK／AUC／engagement，Q1 experiments 也混入負向判準。依審查拆成每個資料集一條 fact，Mix 比較獨立檢查，移除 Table 3 額外要求，Q1 的 universal-best 改成獨立 forbidden。額外加強變體與數值的 clause／row／table column 對應，避免同一摘錄裡 -High 的數字被算成 -Low，以及 LightRAG-High 被算成完整版。
 - **Reviewer 修正 AI 把 Judge 當成唯一判準的設計：** 固定拒答改成 deterministic 比對，允許一個句末句號，不再浪費 Judge 呼叫或因 Judge 截斷誤判；拒答文字集中到 policy。報告區分 ask／Judge 時間、把 budget 超額標為 harness/upstream bug、把 live Judge probes 從 Golden Facts 結果分離；Q3 增加可追溯到 p.8／Table 2 Chunk 的 Citation 檢查。先前報告全部標示 superseded，重新量測基準。
+
+- **第二次審查抓到 numeric anchor 修正引入的假陰性：** 單字邊界讓正確的 `LightRAG‑Low`／`LightRAG‑Origin` 無法匹配 `-Low`／`-Origin`。先用完整變體名的兩個數字 fact 重現失敗，再接受獨立、連字號和空白前綴寫法，同時保留完整版不能匹配變體的反向測試。`60%` 與 `60.0%` 的回歸也先失敗再通過。Citation 檢查在 Table Chunk kind／label 可用時優先要求它；沒有該 metadata 時保留明示的 p.8／Table 2 fallback。

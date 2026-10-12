@@ -43,8 +43,13 @@ punctuation and Citation markers remain required. Invented text still fails.
 Numeric facts require model/variant, dataset, metric and value context plus
 variant/value association in the same clause/row or corresponding table column.
 Full `LightRAG` does not match `LightRAG-High`. The Judge checks meaning and
-comparison direction. Table 1 is checked separately for each dataset. Q3 also
-requires a used Citation resolving to a Chunk on p.8 or containing `Table 2`.
+comparison direction. Variant anchors accept standalone `-Low`/`-Origin`,
+compound `LightRAG-Low` (including Unicode hyphens), and spaced `LightRAG Low`
+or `LightRAG -Low`. Integer percentages may omit `.0` (`60%` equals `60.0%`).
+Table 1 is checked separately for each dataset. Q3 requires a used Citation
+resolving to the matching Table Chunk when `kind="table"` / `table_label`
+metadata is available. Until #03 supplies that metadata, it falls back to a
+Chunk on p.8 or containing `Table 2`; this fallback does not prove table structure.
 
 Forbidden claims fail only when asserted; negations and quotations of the wrong
 claim do not count. Judge JSON, transport or truncation failures fail closed.

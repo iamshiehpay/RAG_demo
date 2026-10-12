@@ -44,8 +44,20 @@ def normalize(text: str) -> str:
 
 
 def term_pattern(term: str) -> str:
-    # ASCII name boundaries prevent LightRAG from matching LightRAG-High.
-    return r"(?<![a-z0-9_-])" + re.escape(normalize(term)) + r"(?![a-z0-9_-])"
+    # Variants may be written alone or prefixed by LightRAG. Full-model
+    # anchors must still exclude all of those variant spellings.
+    term = normalize(term)
+    if term in {"-high", "-low", "-origin"}:
+        pattern = r"(?:" + re.escape(term) + r"|lightrag(?:\s*-\s*|\s+)" + term[1:] + ")"
+    else:
+        if re.fullmatch(r"\d+\.0%", term):
+            pattern = re.escape(term[:-3]) + r"(?:\.0)?%"
+        elif re.fullmatch(r"\d+%", term):
+            pattern = re.escape(term[:-1]) + r"(?:\.0)?%"
+        else:
+            pattern = re.escape(term)
+    suffix = r"(?!\s+(?:-\s*)?(?:high|low|origin)\b)" if term == "lightrag" else ""
+    return r"(?<![a-z0-9_-])" + pattern + r"(?![a-z0-9_-])" + suffix
 
 
 def has_term(text: str, term: str) -> bool:
@@ -57,7 +69,8 @@ def binding_matches(evidence: str, binding: NumericBinding) -> bool:
     # model or another percentage prevents assigning its value to this variant.
     clauses = re.split(r"[\n;；。!?]|(?<=\.)\s+", evidence)
     model_pattern = (
-        r"lightrag(?:-(?:high|low|origin))?|graphrag|naiverag|-(?:high|low|origin)|完整版"
+        r"lightrag(?:(?:\s*-\s*|\s+)(?:high|low|origin))?"
+        r"|graphrag|naiverag|-(?:high|low|origin)|完整版"
     )
     for clause in clauses:
         text = normalize(clause)

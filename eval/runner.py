@@ -90,6 +90,25 @@ class EvaluationReport:
 def check_source_citation(
     application: Application, finals: list[FinalEvent], case: EvaluationCase
 ) -> FactResult:
+    def matches(source: Chunk) -> bool:
+        label = getattr(source, "table_label", "")
+        if case.required_citation_term is not None and label:
+            return normalize(case.required_citation_term) == normalize(label)
+        return (
+            case.required_citation_page is not None
+            and source.page_start <= case.required_citation_page <= source.page_end
+        ) or (
+            case.required_citation_term is not None
+            and normalize(case.required_citation_term) in normalize(source.context)
+        )
+
+    # #03 can add kind/table_label metadata without weakening the existing
+    # untyped-Chunk fallback used by the Lookup skeleton.
+    table_ids = {
+        chunk.id
+        for chunk in (application.document.chunks if application.document else [])
+        if getattr(chunk, "kind", None) == "table" and matches(chunk)
+    }
     for final in finals:
         for citation in final.citations:
             if f"[{citation.id}]" not in final.answer:
@@ -100,19 +119,15 @@ def check_source_citation(
                 continue
             if not isinstance(source, Chunk):
                 continue
-            page_matches = (
-                case.required_citation_page is not None
-                and source.page_start <= case.required_citation_page <= source.page_end
-            )
-            term_matches = case.required_citation_term is not None and normalize(
-                case.required_citation_term
-            ) in normalize(source.context)
-            if page_matches or term_matches:
+            source_matches = source.id in table_ids if table_ids else matches(source)
+            if source_matches:
                 return FactResult(
                     "table2_citation",
                     "events",
                     True,
-                    "Used Citation resolves to the required source Chunk",
+                    "Used Citation resolves to the required Table Chunk"
+                    if table_ids
+                    else "Used Citation resolves to the required source Chunk (metadata fallback)",
                     citation.id,
                 )
     return FactResult(
