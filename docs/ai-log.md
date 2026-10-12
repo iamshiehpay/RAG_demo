@@ -126,3 +126,10 @@
 - Regression: `uv run pytest tests/integration/test_ingestion.py -q` at base cf49802: 1 failed, 2 passed; the truncated case reproduced the wrong message.
 - Correction: reject non-PDF and `Document.is_repaired` inputs before text extraction. The same command now passes all three cases. Valid scanned PDFs retain their distinct no-text error.
 - PyMuPDF documents `is_repaired` as major structural repair, not exhaustive PDF validation: https://pymupdf.readthedocs.io/en/latest/document.html#Document.is_repaired .
+
+## 2026-10-12 — #02 typography and overlap regressions
+
+- Real LightRAG inspection exposed an AI parser mistake: a bold Table 4 header (`Mix`) became an artificial Appendix Section, removing table labels from content. A failing upload regression now requires the table headers to remain content. The parser uses shared baseline geometry to suppress bold table-cell headings; no table reconstruction is added.
+- The #01 oversized-paragraph overlap could start inside `encyclopediawordnumber103`, yielding `opediawordnumber103`. `test_long_paragraph_overlap_starts_on_a_complete_word` reproduced it (1 failed); overlap now snaps to a nearby sentence or complete Latin word, and sentence-less CJK keeps Unicode character boundaries.
+- During that fix, the AI incorrectly passed start/end positions to module-level `re.finditer`; application tests caught processing errors. Compiled-pattern `finditer` corrected the calls; the five paragraph/overlap regressions passed.
+- The configurable-size fixture initially clipped single-line text at the page edge, failing to create enough tokens to exercise packing. Text boxes now retain the complete fixture text, and the 35/60-token packing tests verify whole paragraphs and precise page ranges.

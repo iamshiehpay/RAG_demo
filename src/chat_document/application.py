@@ -29,7 +29,7 @@ from .index import Index
 from .llm_gateway import BudgetExceeded, LLMFailure, LLMGateway
 from .models import Chunk, ConversationTurn, Document, LLMCallTrace
 from .pdf_parser import DocumentError, parse_pdf
-from .policy import HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
+from .policy import CHUNK_TOKEN_TARGET, HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
 from .router import Router
 from .settings import RetrievalSettings
 from .tokens import count_tokens
@@ -39,8 +39,16 @@ logger = logging.getLogger(__name__)
 
 class Application:
     def __init__(
-        self, embedder: Embedder, gateway: LLMGateway, *, settings: RetrievalSettings | None = None
+        self,
+        embedder: Embedder,
+        gateway: LLMGateway,
+        *,
+        settings: RetrievalSettings | None = None,
+        chunk_token_target: int = CHUNK_TOKEN_TARGET,
     ):
+        if chunk_token_target < 1:
+            raise ValueError("Chunk token target must be positive.")
+        self.chunk_token_target = chunk_token_target
         self.embedder = embedder
         self.answer_generator = AnswerGenerator(gateway)
         self.router = Router(gateway)
@@ -58,7 +66,7 @@ class Application:
             sections = parse_pdf(content)
             yield StageEvent(stage="chunking", completed=0, total=1)
             document_id = uuid4().hex
-            chunks = chunk_sections(sections, document_id)
+            chunks = chunk_sections(sections, document_id, target=self.chunk_token_target)
             yield StageEvent(stage="embedding", completed=0, total=len(chunks))
             index = await Index.build(chunks, self.embedder)
             self.document = Document(id=document_id, name=name, sections=sections, chunks=chunks)
