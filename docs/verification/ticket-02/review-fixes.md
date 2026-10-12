@@ -1,3 +1,5 @@
+> Historical evidence for the #2626 fixes, before #3351 identified prose/frame filtering issues. See [second review fixes](review-3.md) for the latest checkpoint.
+
 # Ticket #02 — review fixes for Levi #2626
 
 Implementation checkpoint: `ed121cfb39e9c89ea259e23e5a983b62fb805406` on `lat/02-structure-aware-chunking`, rebased first onto main `f5be286afa66a3a216a15d298efecb575d6d54c8`. The final evidence commit is given in the HCOM re-review request. The [first report](report.md) remains historical evidence for the earlier candidate.
