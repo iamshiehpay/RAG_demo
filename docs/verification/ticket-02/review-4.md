@@ -1,5 +1,7 @@
 # Ticket #02 — third review fixes (#3699)
 
+> Fourth review approved this candidate. See [final rebase](final-rebase.md) for current integrated-base verification and the new real-browser check.
+
 Base: `109bab37a7e9f1a6d7f18a3c3f1d6874c7bd3907`. Implementation checkpoint: `b851d3da5c6e5409c530fa97d673a4936c4db459`. Final evidence head is supplied in the HCOM request. Main's #07 advance to `9538b88` is acknowledged; this candidate keeps the requested review base until Levi requests rebase.
 
 ## M1 — styled Figure labels

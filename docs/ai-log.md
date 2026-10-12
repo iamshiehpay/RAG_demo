@@ -157,3 +157,8 @@
 - **審查抓到 AI 修正引入的回歸：** 為了保護陰影框與頁框，AI 讓任何像標題的文字都保護整個圖形區域。結果粗體 `LLM`、本文大小的 `LLM AGENT` 留在內容，較大字的 `Dual-level Retrieval` 更把 caption 與後面的 Introduction 段落搶成新 Section。合成 PDF 上傳先失敗，再將保護限於頁框大小的區域、真正帶編號的 Section 與段落句子流；確定是圖內的短標籤則先過濾，不因粗體或大字保留。
 - **全大寫加句點仍不足以辨識標題：** `2 GPU HOURS.` 和 `3. THE SOFTWARE IS PROVIDED AS IS.` 會搶走後續段落；同列與拆開編號兩個回歸先失敗。現在句點例外還要有粗體、small-caps、字體變化或較大字級。LightRAG §7.2／§7.4 的 mixed-size small-caps 保留；標題的句末句點去除。正向合成案例分別使用粗體與不同字體，與真正內文樣式的反向案例分開。
 - **減少重複的判斷規則：** 句末標點共用一個 regex，短標籤字數與寬行比例改成具名常數，逐行圖形標籤判斷集中到 helper。陰影框、帶／不帶編號的頁框與 LightRAG Figure 1 回歸持續保留。
+
+## 2026-10-13：#02 最終 rebase 保留 #07 失敗行為
+
+- **整合方向由人確認：** 第四次獨立審查批准 #02，要求 rebase 到含 #07 的 `79c82a8`；編號步驟圖內標籤與頁框內無編號標題的邊界案例移交 #10，不在 #02 擴充。
+- **衝突要保留兩邊的契約：** Citation 旁註包住 #07 的 structured UnverifiedSpan renderer，保留 Unicode code-point 位移、暫定樣式、C/S inline 引用；Gateway 同時保留 low retry 的 effective think 與腳本辨識用的 call_type。抽取失敗測試用真正 Section 的可變批次數，並維持 trace → error 的終止次序。AI log 去除 rebase 產生的重複區塊，保留 #06／#07／#08／#02 內容並依日期排列；前端 dist 由合併後 source 重建。
