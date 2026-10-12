@@ -20,7 +20,7 @@ Status: in-progress
 
 | # | 票 | 依賴 | 波次 | 預計修改範圍（衝突協調） | 狀態 |
 |---|---|---|---|---|---|
-| 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | dispatched |
+| 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | merged 9ba4327（Review APPROVE），QA 中 |
 | 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | todo |
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | todo |
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | todo |
@@ -61,3 +61,12 @@ Status: in-progress
 | 10. 來源查詢遇到不存在的編號 | #01 |
 
 需要使用者決定：缺口 6，紀錄於 `.lat/decisions/D01-unverified-and-fixed-reply.md`。
+
+## Review 延後項目（從前一票的 Review 移交）
+
+| 來源 | 項目 | 歸屬 |
+|---|---|---|
+| #01 Review | 截斷的 PDF 被報成「沒有文字層」 | #02 |
+| #01 Review | 過長段落切開時，重疊的起點對齊到字詞／句子邊界 | #02 |
+| #01 Review | 上傳失敗時不應已清掉目前的 Document | #04 |
+| #01 Review | `[C1 C3]`（空白分隔）與 `[C1–C3]`（範圍）引用的正規化 | #07 |
