@@ -68,8 +68,11 @@ uv run pytest -q -m eval tests/integration/test_router_smoke_eval.py
 ```
 
 This requires the local Ollama daemon and cloud login. It records raw responses, plans and token
-traces in `docs/qa/t06/live-router-smoke.json`; it requires at least 10/12 correct types, no
-fallbacks, and resolved follow-ups in the question's language.
+traces in a new timestamped `eval/reports/router-smoke-*.json`, resolved against the repository
+root. It reports the 12 canonical cases and eight held-out cases separately, requiring at least
+10/12 and 7/8 correct types, no fallbacks, and resolved historical topics. OpenCC (dev dependency)
+flags Simplified-to-Traditional changes in Chinese rewrites; unchanged/shared characters are
+inconclusive. Existing evidence files are never overwritten by the smoke.
 
 ## Frontend development
 

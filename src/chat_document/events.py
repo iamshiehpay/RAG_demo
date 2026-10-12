@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, TypeAdapter
 
-from .models import Citation, LLMCallTrace, RetrievedChunk
+from .models import Citation, FallbackReason, LLMCallTrace, RetrievedChunk
 
 
 class StageEvent(BaseModel):
@@ -28,7 +28,7 @@ class PlanEvent(BaseModel):
     standalone_question: str
     sub_queries: list[str]
     plan_source: Literal["router", "fallback"] = "router"
-    fallback_reason: str | None = None
+    fallback_reason: FallbackReason | None = None
 
 
 class RejectedEvent(BaseModel):

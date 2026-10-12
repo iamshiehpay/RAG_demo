@@ -1,80 +1,94 @@
-# Live Router QA follow-up #1672
+# Router live QA and evaluation-validity repair
 
 Base: integrated main `79aac57`. Date: 2026-10-13 (Asia/Taipei).
 
-The original scripted tests hid a live defect: Ollama Cloud ignored the `format` contract and
-the prompt did not name all three JSON keys. Most real responses therefore fell back to Lookup,
-even when the model identified Synthesis in its thinking. The corrected Router now explicitly
-names the keys and allowed values, shows a minimal example, distinguishes ablation/table Lookup
-from cross-Section comparisons, and requests a short plan rather than an answer. Schema `format`
-is still sent. Router remains `think=low`, `num_predict=600`; no budget was increased.
+Review #1974 found that the earlier repair (`f9f1651`) taught Q2 and other regression labels in
+its prompt. Its 12/12 score and targeted cost/update retrieval were tuned regression results,
+not evidence of generalisation. The prior report [live-router-smoke.json](live-router-smoke.json)
+is retained as historical evidence; the smoke no longer overwrites it.
 
-## Parsing and observable failures
+The current prompt has no LightRAG/RAG names, ablation/dataset examples, token/API-call query
+instructions, or Golden Fact topics. It uses generic scope rules: one table/figure result is
+Lookup; comparisons may cover mechanisms, costs, maintenance/update aspects. The JSON example
+is rail versus sea freight. An initial neutral solar/wind example overlapped one new follow-up's
+domain, so the example changed to freight while all eight new questions and labels stayed fixed.
+No held-out error was used to change a question or label. Both neutral runs are retained below.
 
-- The known `type` alias is accepted, extra `answer` / `answer_format` fields are ignored, and
-  absent Sub-queries normalize to an empty list. Classification and valid rewrites survive.
-- Missing/blank Standalone Question defaults to the original question only without history.
-  With history it is a failed plan, recorded as `missing_rewrite`.
-- Failed plans use visible Lookup fallback with `plan_source=fallback` and a reason:
-  `invalid_json`, `invalid_plan`, `missing_rewrite`, or `length`. Genuine Router Lookup has
-  `plan_source=router`, `fallback_reason=null`. Both the plan event and Router call Trace carry
-  this metadata; the Trace UI displays the plan source and any fallback reason.
-- Nine exact raw outputs from `router-probe-q2.txt` / `router-probe-others.txt` are preserved in
-  `tests/integration/data/router_qa_raw.json` with source filename/line. The 12-case probe only
-  recorded key names, so additional shape tests reconstruct those cases without claiming they
-  are verbatim outputs. Missing rewrites with history, answer-only objects and extra keys are
-  covered by deterministic tests. The first five origin tests failed before implementation.
+## Parsing, metadata and budget
 
-## The 600-token Q3 hit
+The parser fixes confirmed by review remain: the known `type` alias and extra keys are tolerated;
+valid classification/rewrite survives. Missing rewrite defaults to the question only without
+history; with history it records `missing_rewrite`. Failed plans are visible Lookup fallbacks.
 
-The old trace had `think=low`, `prompt_eval_count=934`, estimated prompt 1,259 including safety,
-and `eval_count=600`, `done_reason=length`. This was not a prompt-budget overflow. QA did not
-capture partial Router content or complete thinking, so the split between thinking and JSON
-tokens cannot be recovered and no exact token-level cause is claimed. The old prompt was
-underspecified and treated ablation performance as decomposition across Sections; direct old
-Q3 probes produced four long Sub-queries. The new prompt explicitly routes a table's ablation
-results to Lookup and bounds the requested JSON. Both new live checks terminate within the
-unchanged reservation: the browser Q3 Router uses **63 output tokens**, `stop`, despite a larger
-1,244-token model-reported prompt with two rounds of history.
+Both PlanEvent and Router LLMCallTrace carry `plan_source` and `fallback_reason`. The latter is
+now a Literal union of `length`, `invalid_json`, `invalid_plan`, `missing_rewrite`, or null, also
+reflected in regenerated TypeScript. Genuine Router Lookup is `router`/null. Trace displays
+origin and any reason. Router still uses `think=low`, `num_predict=600`; the budget was not raised.
+Nine exact old probe outputs plus reconstructed key-only shapes remain deterministic fixtures.
 
-## Live verification
+## Corrected Q3 evidence
 
-`uv run pytest -q -m eval tests/integration/test_router_smoke_eval.py`: **1 passed in 14.27s**.
-The canonical 12 `router_regression.CASES` yield **12/12 correct Question Types**, **zero parse
-fallbacks**, **zero length fallbacks**, and **52–179 generated tokens** per call. Both history
-cases resolve LightRAG; Chinese/English question language is retained. Raw JSON, plans, thinking,
-token counts and latency are saved in [live-router-smoke.json](live-router-smoke.json).
-Default pytest excludes this test with the `eval` marker. A fallback Lookup cannot count as a
-correct classification in the smoke report. #08 was notified of the additive event/Trace fields;
-Router.plan and CASES tuple interfaces remain unchanged.
+The old QA trace has `prompt_eval_count=934`, estimated prompt 1,259 including safety,
+`eval_count=600`, `done_reason=length`. It contains the **full** Router thinking:
+`Need to answer synthesis: compare ablated versions. Provide subqueries.`
+This is 14 `o200k_harmony` tokens, so roughly 586/600 output tokens were content. Long/runaway
+JSON/Sub-queries are the likely cause, rather than excessive thinking. Partial JSON was not
+captured, so its exact form is unknown. The previous claim that thinking was incomplete was
+wrong and is corrected here and in ai-log. The small prompt did not exceed its budget.
 
-The browser used real local bge-m3 and real `gpt-oss:120b-cloud`, serving the rebuilt frontend at
-`http://127.0.0.1:8120` through a temporary recording Application. The recorder only saves emitted
-events; it does not alter planning, retrieval or generation.
+## Live smoke
 
-| Input | Live plan and evidence | Router output |
+`uv run pytest -q -s -m eval tests/integration/test_router_smoke_eval.py`: **1 passed in 20.99s**.
+
+| Set | Genuine correct types | Fallbacks | Rewrite/script failures | Generated tokens |
+| --- | --- | --- | --- | --- |
+| Canonical CASES | 12/12 | 0 | 0 | 75–160 |
+| Eight held-out questions | 8/8 | 0 | 0 | 91–184 |
+
+The held-out set mixes Chinese/English, all three types, and weather-sensor/energy follow-ups.
+Its cases are absent from CASES and the final prompt. These are small, single-run validation
+samples; the browser results below show they do not cover all history-dependent behavior.
+
+Current report: [freight-example smoke](../../../eval/reports/router-smoke-20261012T162145462813Z.json).
+Earlier exploratory neutral run: [solar-example smoke](../../../eval/reports/router-smoke-20261012T161722133754Z.json).
+Reports include the actual prompt, raw JSON, history, expected labels, plans, rewrite checks,
+thinking, tokens and latency. Each run uses a repository-root-resolved timestamped path under
+`eval/reports/`, created exclusively; running from another cwd cannot overwrite committed docs.
+
+The follow-up guard requires the historical topic, not just an entity already in the question:
+canonical case 11 must contain cost/API-related terms. It returned `LightRAG 的檢索成本是多少？`.
+Dev-only OpenCC s2t flags Simplified-to-Traditional changes, including `检索成本`; shared or
+ambiguous characters are inconclusive. Three deterministic tests through Router prove that a
+name-only follow-up and Simplified rewrite fail the guard while a complete Traditional rewrite
+passes. Smoke is excluded from default pytest. Existing addopts/markers are preserved for #08.
+
+## Browser: remaining acceptance failures
+
+Real local bge-m3 and real gpt-oss served the rebuilt frontend at `http://127.0.0.1:8120`.
+The temporary Application records emitted events without changing execution.
+
+| Check | Final neutral result | Status |
 | --- | --- | --- |
-| Compare LightRAG with GraphRAG | Synthesis; three method/cost/update Sub-queries; retrieved original cost paragraph containing `610` and incremental-update paragraphs | 82 tokens, stop |
-| 那它的成本呢？ | Lookup; rewritten as `LightRAG和GraphRAG的成本是多少？`, in Chinese, with named referents | 89 tokens, stop |
-| Performance of ablated versions of LightRAG | Genuine Lookup; no Sub-queries or fallback, original table evidence retrieved | 63 tokens, stop |
+| Q2 type/Sub-queries | Genuine Synthesis; architecture, performance, limitations/maintenance queries; 103 Router tokens, stop | PASS |
+| Q2 required retrieval | Neither the paragraph containing `610` nor incremental-update passages appear in retrieved evidence | **FAIL** |
+| Follow-up `那它的成本呢？` | Lookup; `LightRAG 的成本是多少？` in Traditional Chinese; 78 Router tokens, stop | PASS |
+| Q3 after these two rounds | Synthesis rather than Lookup; English input rewritten as `LightRAG 的消融版本的性能如何？`; 134 tokens, stop, no fallback | **FAIL type/language**, PASS completion/budget |
 
-Complete event tapes: [Q2](live-browser/ask-1.json), [follow-up](live-browser/ask-2.json),
-[Q3](live-browser/ask-3.json). Screenshots: [Q2 Trace](live-browser/q2-trace.png),
-[follow-up Trace](live-browser/followup-trace.png), [Q3 Trace](live-browser/q3-trace.png).
-Screenshots were visually inspected; no browser errors were reported. These checks establish
-Router and retrieval behavior, not Golden Facts answer quality; table reconstruction remains #03.
+The first solar-example browser run found incremental-update text but missed cost. The final
+freight-example run missed both; these results were reported to Levi without restoring
+Golden-Fact-specific prompt instructions. The direct canonical Q3 has no history and passes,
+but the actual browser history context does not. Overall browser acceptance remains **FAIL**;
+the 20-case smoke score is not substituted for these failed checks. Golden Facts answer quality
+is not accepted by this repair.
 
-An earlier valid Q2 plan used a broad cost query and retrieved only the Table 3 caption. The
-retrieval-system comparison instruction now explicitly names token/API-call cost and incremental
-updates; the final live evidence includes the cost paragraph. Earlier rewrite instructions also
-allowed an English-history follow-up to remain English or retain a pronoun. The prompt now
-specifies named referents and adds a language reminder to the current question; the smoke asserts
-these properties instead of accepting schema-valid JSON alone.
+Current event tapes: [Q2](live-browser/ask-1.json), [follow-up](live-browser/ask-2.json),
+[Q3](live-browser/ask-3.json). Inspected screenshots: [Q2](live-browser/q2-trace.png),
+[follow-up](live-browser/followup-trace.png), [Q3](live-browser/q3-trace.png).
+No browser errors were reported. Browser/backend were stopped; no Vite process was started.
 
-## Final checks
+## Final deterministic checks
 
-- `uv run pytest -q`: **61 passed, 1 eval deselected, 6 existing deprecation warnings, 65.45s**.
-- Scoped ruff check and format (`src tests scripts/generate_event_types.py`): PASS, 30 files.
-- Generated backend/frontend event parity, frontend typecheck and production build: PASS.
-- `git diff --check`: PASS. Updated `frontend/dist/` is included in the fix commit.
-- The isolated browser and backend were stopped; no Vite process was started.
+- `uv run pytest -q`: **64 passed, 1 eval deselected, 6 existing warnings, 67.49s**.
+- Scoped ruff check/format (`src tests scripts/generate_event_types.py`): PASS, 31 files.
+- Event type parity, frontend typecheck/production build and `git diff --check`: PASS.
+- Frontend build is unchanged: the Literal refinement only changes generated source types.

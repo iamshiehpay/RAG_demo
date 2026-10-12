@@ -3,9 +3,13 @@
   "events": [
     {
       "type": "plan",
-      "question_type": "Lookup",
-      "standalone_question": "Performance of ablated versions of LightRAG",
-      "sub_queries": [],
+      "question_type": "Synthesis",
+      "standalone_question": "LightRAG 的消融版本的性能如何？",
+      "sub_queries": [
+        "LightRAG 消融实验结果",
+        "不同组件对 LightRAG 性能的影响",
+        "LightRAG 各消融版本的评估指标"
+      ],
       "plan_source": "router",
       "fallback_reason": null
     },
@@ -14,19 +18,19 @@
       "chunks": [
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-1",
-            "section_id": "page-1",
-            "section": "Virtual Section 1",
-            "page_start": 1,
-            "page_end": 1,
-            "text": "LIGHTRAG: SIMPLE AND FAST\nRETRIEVAL-AUGMENTED GENERATION\n\nZirui Guo1,2, Lianghao Xia2, Yanhua Yu1,∗, Tu Ao1, Chao Huang2∗\n\nBeijing University of Posts and Telecommunications1\n\nUniversity of Hong Kong2\n\nzrguo101@hku.hk aka_xia@foxmail.com chaohuang75@gmail.com\n\nABSTRACT\n\nRetrieval-Augmented Generation (RAG) systems enhance large language models\n(LLMs) by integrating external knowledge sources, enabling more accurate and\ncontextually relevant responses tailored to user needs. However, existing RAG\nsystems have significant limitations, including reliance on flat data representa-\ntions and inadequate contextual awareness, which can lead to fragmented answers\nthat fail to capture complex inter-dependencies. To address these challenges, we\npropose LightRAG, which incorporates graph structures into text indexing and\nretrieval processes. This innovative framework employs a dual-level retrieval sys-\ntem that enhances comprehensive information retrieval from both low-level and\nhigh-level knowledge discovery. Additionally, the integration of graph structures\nwith vector representations facilitates efficient retrieval of related entities and their\nrelationships, significantly improving response times while maintaining contextual\nrelevance. This capability is further enhanced by an incremental update algorithm\nthat ensures the timely integration of new data, allowing the system to remain\neffective and responsive in rapidly changing data environments. Extensive experi-\nmental validation demonstrates considerable improvements in retrieval accuracy\nand efficiency compared to existing approaches. We have made our LightRAG\nopen-source and available at the link: https://github.com/HKUDS/LightRAG.\n\n1\nINTRODUCTION\n\narXiv:2410.05779v3  [cs.IR]  28 Apr 2025",
-            "order": 0
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-14",
+            "section_id": "page-6",
+            "section": "Virtual Section 6",
+            "page_start": 6,
+            "page_end": 6,
+            "text": "We compare LightRAG against each baseline across various evaluation dimensions and datasets. The\nresults are presented in Table 1. Based on these findings, we draw the following conclusions:\n\n6",
+            "order": 13
           },
-          "score": 0.5907468795776367
+          "score": 0.5674558281898499
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
             "section_id": "page-7",
             "section": "Virtual Section 7",
             "page_start": 7,
@@ -34,11 +38,11 @@
             "text": "Comprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nThe Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora When handling large\ntoken counts and complex queries that require a thorough understanding of the dataset’s context,\ngraph-based RAG systems like LightRAG and GraphRAG consistently outperform purely chunk-\nbased retrieval methods such as NaiveRAG, HyDE, and RQRAG. This performance gap becomes\nparticularly pronounced as the dataset size increases. For instance, in the largest dataset (Legal), the\ndisparity widens significantly, with baseline methods achieving only about 20% win rates compared\nto the dominance of LightRAG. This trend underscores the advantages of graph-enhanced RAG\nsystems in capturing complex semantic dependencies within large-scale corpora, facilitating a more\ncomprehensive understanding of knowledge and leading to improved generalization performance.",
             "order": 15
           },
-          "score": 0.5963612794876099
+          "score": 0.6211577653884888
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-18",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-18",
             "section_id": "page-8",
             "section": "Virtual Section 8",
             "page_start": 8,
@@ -46,11 +50,23 @@
             "text": "Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference.\n\nAgriculture\nCS\nLegal\nMix\n\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\n\nComprehensiveness\n32.4%\n67.6%\n38.4%\n61.6%\n16.4%\n83.6%\n38.8%\n61.2%\nDiversity\n23.6%\n76.4%\n38.0%\n62.0%\n13.6%\n86.4%\n32.4%\n67.6%\nEmpowerment\n32.4%\n67.6%\n38.8%\n61.2%\n16.4%\n83.6%\n42.8%\n57.2%\nOverall\n32.4%\n67.6%\n38.8%\n61.2%\n15.2%\n84.8%\n40.0%\n60.0%\n\nNaiveRAG\n-High\nNaiveRAG\n-High\nNaiveRAG\n-High\nNaiveRAG\n-High\n\nComprehensiveness\n34.8%\n65.2%\n42.8%\n57.2%\n23.6%\n76.4%\n40.4%\n59.6%\nDiversity\n27.2%\n72.8%\n36.8%\n63.2%\n16.8%\n83.2%\n36.0%\n64.0%\nEmpowerment\n36.0%\n64.0%\n42.4%\n57.6%\n22.8%\n77.2%\n47.6%\n52.4%\nOverall\n35.2%\n64.8%\n44.0%\n56.0%\n22.0%\n78.0%\n42.4%\n57.6%\n\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low",
             "order": 17
           },
-          "score": 0.7240828275680542
+          "score": 0.5805937051773071
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-21",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-20",
+            "section_id": "page-8",
+            "section": "Virtual Section 8",
+            "page_start": 8,
+            "page_end": 8,
+            "text": "• Low-level-only Retrieval: The -High variant removes high-order retrieval, leading to a significant\nperformance decline across nearly all datasets and metrics. This drop is mainly due to its emphasis\non the specific information, which focuses excessively on entities and their immediate neighbors.\nWhile this approach enables deeper exploration of directly related entities, it struggles to gather\ninformation for complex queries that demand comprehensive insights.\n• High-level-only Retrieval: The -Low variant prioritizes capturing a broader range of content by\nleveraging entity-wise relationships rather than focusing on specific entities. This approach offers\na significant advantage in comprehensiveness, allowing it to gather more extensive and varied\ninformation. However, the trade-off is a reduced depth in examining specific entities, which can\nlimit its ability to provide highly detailed insights. Consequently, this high-level-only retrieval\nmethod may struggle with tasks that require precise, detailed answers.\n• Hybrid Mode: The hybrid mode, or the full version of LightRAG, combines the strengths of\nboth low-level and high-level retrieval methods. It retrieves a broader set of relationships while\nsimultaneously conducting an in-depth exploration of specific entities. This dual-level approach\nensures both breadth in the retrieval process and depth in the analysis, providing a comprehensive\nview of the data. As a result, LightRAG achieves balanced performance across multiple dimensions.\n\nSemantic Graph Excels in RAG. We eliminated the use of original text in our retrieval process.\nSurprisingly, the resulting variant, -Origin, does not exhibit significant performance declines across\nall four datasets. In some cases, this variant even shows improvements (e.g. in Agriculture and Mix).\nWe attribute this phenomenon to the effective extraction of key information during the graph-based\nindexing process, which provides sufficient context for answering queries. Additionally, the original\ntext often contains irrelevant information that can introduce noise in the response.\n\n4.4\nCASE STUDY (RQ3)\n\nTo provide a clear comparison between baseline methods and our LightRAG, we present specific\ncase examples in Table 3, which includes responses to a machine learning question from both\nthe competitive baseline, GraphRAG, and our LightRAG framework. In this instance, LightRAG\noutperforms in all evaluation dimensions assessed by the LLM judge, including comprehensiveness,\ndiversity, empowerment, and overall quality. Our key observations are as follows:",
+            "order": 19
+          },
+          "score": 0.556354820728302
+        },
+        {
+          "chunk": {
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
             "section_id": "page-8",
             "section": "Virtual Section 8",
             "page_start": 8,
@@ -58,19 +74,7 @@
             "text": "i) Comprehensiveness. Notably, LightRAG covers a broader range of machine learning metrics,\nshowcasing its comprehensiveness and ability to effectively discover relevant information. This\nhighlights the strength of our graph-based indexing paradigm, which excels in precise entity and\nrelation extraction as well as LLM profiling. ii) Both Diversity and Empowerment. Furthermore,\nLightRAG not only offers a more diverse array of information but also delivers more empowering\ncontent. This success is due to LightRAG’s hierarchical retrieval paradigm, which combines in-depth\n\n8",
             "order": 20
           },
-          "score": 0.5637774467468262
-        },
-        {
-          "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-28",
-            "section_id": "page-10",
-            "section": "Virtual Section 10",
-            "page_start": 10,
-            "page_end": 10,
-            "text": "This work introduces an advancement in Retrieval-Augmented Generation (RAG) through the\nintegration of a graph-based indexing approach that enhances both efficiency and comprehension\nin information retrieval. LightRAG utilizes a comprehensive knowledge graph to facilitate rapid\nand relevant document retrieval, enabling a deeper understanding of complex queries. Its dual-level\nretrieval paradigm allows for the extraction of both specific and abstract information, catering to\ndiverse user needs. Furthermore, LightRAG’s seamless incremental update capability ensures that\nthe system remains current and responsive to new information, thereby maintaining its effectiveness\nover time. Overall, LightRAG excels in both efficiency and effectiveness, significantly improving the\nspeed and quality of information retrieval and generation while reducing costs for LLM inference.\n\n10",
-            "order": 27
-          },
-          "score": 0.5857195854187012
+          "score": 0.6217222809791565
         }
       ]
     },
@@ -79,584 +83,588 @@
       "citations": [
         {
           "id": "C1",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-1",
-          "section": "Virtual Section 1",
-          "page_start": 1,
-          "page_end": 1
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-14",
+          "section": "Virtual Section 6",
+          "page_start": 6,
+          "page_end": 6
         },
         {
           "id": "C2",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
           "section": "Virtual Section 7",
           "page_start": 7,
           "page_end": 7
         },
         {
           "id": "C3",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-18",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-18",
           "section": "Virtual Section 8",
           "page_start": 8,
           "page_end": 8
         },
         {
           "id": "C4",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-21",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-20",
           "section": "Virtual Section 8",
           "page_start": 8,
           "page_end": 8
         },
         {
           "id": "C5",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-28",
-          "section": "Virtual Section 10",
-          "page_start": 10,
-          "page_end": 10
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
         }
       ]
     },
     {
       "type": "delta",
-      "text": "**A"
+      "text": "Light"
     },
     {
       "type": "delta",
-      "text": "blated Light"
+      "text": "RAG 的消"
     },
     {
       "type": "delta",
-      "text": "RAG performance ("
+      "text": "融版本仍"
     },
     {
       "type": "delta",
-      "text": "comp"
+      "text": "然能够"
     },
     {
       "type": "delta",
-      "text": "ared with"
+      "text": "超"
     },
     {
       "type": "delta",
-      "text": " NaiveRAG)**"
+      "text": "越"
     },
     {
       "type": "delta",
-      "text": "  \n\n| Dataset /"
+      "text": " NaiveRAG，但"
     },
     {
       "type": "delta",
-      "text": " Setting"
+      "text": "相"
     },
     {
       "type": "delta",
-      "text": " | Com"
+      "text": "较"
     },
     {
       "type": "delta",
-      "text": "prehensiveness | Diversity"
+      "text": "于完整"
     },
     {
       "type": "delta",
-      "text": " | Empower"
+      "text": "的 LightRAG（"
     },
     {
       "type": "delta",
-      "text": "ment | Overall |\n"
+      "text": "Hybrid"
     },
     {
       "type": "delta",
-      "text": "|-------------------"
+      "text": " 模"
     },
     {
       "type": "delta",
-      "text": "|-------------------"
+      "text": "式）表现"
     },
     {
       "type": "delta",
-      "text": "|-----------"
+      "text": "有所"
     },
     {
       "type": "delta",
-      "text": "|-------------"
+      "text": "下降"
     },
     {
       "type": "delta",
-      "text": "|---------"
+      "text": "。"
     },
     {
       "type": "delta",
-      "text": "|\n| **Agr"
+      "text": "  \n\n- 在"
     },
     {
       "type": "delta",
-      "text": "iculture** ("
+      "text": "四"
     },
     {
       "type": "delta",
-      "text": "Na"
+      "text": "个数据集（Agr"
     },
     {
       "type": "delta",
-      "text": "iveRAG "
+      "text": "iculture、"
     },
     {
       "type": "delta",
-      "text": "vs Light"
+      "text": "CS、Legal、Mix"
     },
     {
       "type": "delta",
-      "text": "RAG) | 32"
+      "text": "）上，"
     },
     {
       "type": "delta",
-      "text": ".4 % →"
+      "text": "完整 Light"
     },
     {
       "type": "delta",
-      "text": " **"
+      "text": "RAG 的 Overall"
     },
     {
       "type": "delta",
-      "text": "67.6 %**"
+      "text": " 得"
     },
     {
       "type": "delta",
-      "text": " | 23"
+      "text": "分分别为 **67"
     },
     {
       "type": "delta",
-      "text": ".6 % → **"
+      "text": ".6%"
     },
     {
       "type": "delta",
-      "text": "76"
+      "text": " /"
     },
     {
       "type": "delta",
-      "text": ".4 %** |"
+      "text": " 61"
     },
     {
       "type": "delta",
-      "text": " 32"
+      "text": ".2% / 84"
     },
     {
       "type": "delta",
-      "text": ".4 % → **"
+      "text": ".8% / 60"
     },
     {
       "type": "delta",
-      "text": "67.6 %**"
+      "text": ".0%**，"
     },
     {
       "type": "delta",
-      "text": " | 32.4"
+      "text": "而仅"
     },
     {
       "type": "delta",
-      "text": " % → **"
+      "text": "保"
     },
     {
       "type": "delta",
-      "text": "67.6 %**"
+      "text": "留低"
     },
     {
       "type": "delta",
-      "text": " |\n| **CS** ("
+      "text": "层"
     },
     {
       "type": "delta",
-      "text": "NaiveRAG vs"
+      "text": "检"
     },
     {
       "type": "delta",
-      "text": " LightRAG) |"
+      "text": "索的"
     },
     {
       "type": "delta",
-      "text": " 38.4"
+      "text": " **-"
     },
     {
       "type": "delta",
-      "text": " % → **61."
+      "text": "High** "
     },
     {
       "type": "delta",
-      "text": "6 %** | "
+      "text": "变体的"
     },
     {
       "type": "delta",
-      "text": "38.0 % →"
+      "text": " Overall 得"
     },
     {
       "type": "delta",
-      "text": " **62"
+      "text": "分降"
     },
     {
       "type": "delta",
-      "text": ".0 %** |"
+      "text": "至 **64"
     },
     {
       "type": "delta",
-      "text": " 38.8"
+      "text": ".8% / 56"
     },
     {
       "type": "delta",
-      "text": " % → **61."
+      "text": "."
     },
     {
       "type": "delta",
-      "text": "2 %** | "
+      "text": "0% / 78"
     },
     {
       "type": "delta",
-      "text": "38.8"
+      "text": ".0% / 57"
     },
     {
       "type": "delta",
-      "text": " % → **61"
+      "text": ".6%**，仍"
     },
     {
       "type": "delta",
-      "text": ".2 %** |\n"
+      "text": "高"
     },
     {
       "type": "delta",
-      "text": "| **Legal** (Na"
+      "text": "于对应"
     },
     {
       "type": "delta",
-      "text": "iveRAG vs "
+      "text": "的 NaiveRAG‑"
     },
     {
       "type": "delta",
-      "text": "LightRAG) | "
+      "text": "High（"
     },
     {
       "type": "delta",
-      "text": "16.4 % →"
+      "text": "分别"
     },
     {
       "type": "delta",
-      "text": " **83"
+      "text": "为"
     },
     {
       "type": "delta",
-      "text": ".6 %** |"
+      "text": " 35.2% /"
     },
     {
       "type": "delta",
-      "text": " 13.6"
+      "text": " 44"
     },
     {
       "type": "delta",
-      "text": " % → **86."
+      "text": ".0% / 22"
     },
     {
       "type": "delta",
-      "text": "4 %** | "
+      "text": ".0% / 42"
     },
     {
       "type": "delta",
-      "text": "16.4"
+      "text": ".4%）"
     },
     {
       "type": "delta",
-      "text": " % → **83"
+      "text": "[C3]。"
     },
     {
       "type": "delta",
-      "text": ".6"
+      "text": "  \n\n"
     },
     {
       "type": "delta",
-      "text": " %** | 15"
+      "text": "- "
     },
     {
       "type": "delta",
-      "text": ".2"
+      "text": "仅"
     },
     {
       "type": "delta",
-      "text": " % → **84"
+      "text": "保留高层检"
     },
     {
       "type": "delta",
-      "text": ".8 %** |\n"
+      "text": "索的 **-Low**"
     },
     {
       "type": "delta",
-      "text": "| **Mix** (Na"
+      "text": " 变体（"
     },
     {
       "type": "delta",
-      "text": "iveRAG vs "
+      "text": "表"
     },
     {
       "type": "delta",
-      "text": "LightRAG) | "
+      "text": "中未"
     },
     {
       "type": "delta",
-      "text": "38.8 % →"
+      "text": "给"
     },
     {
       "type": "delta",
-      "text": " **61"
+      "text": "出具体"
     },
     {
       "type": "delta",
-      "text": ".2 %** |"
+      "text": "数值，但从"
     },
     {
       "type": "delta",
-      "text": " 32.4 %"
+      "text": "描述"
     },
     {
       "type": "delta",
-      "text": " → **67.6"
+      "text": "可"
     },
     {
       "type": "delta",
-      "text": " "
+      "text": "知"
     },
     {
       "type": "delta",
-      "text": "%** | 42"
+      "text": "）"
     },
     {
       "type": "delta",
-      "text": ".8"
+      "text": "在 **"
     },
     {
       "type": "delta",
-      "text": " % → **57"
+      "text": "Comprehensiveness** 上"
     },
     {
       "type": "delta",
-      "text": ".2 %** |"
+      "text": "有显"
     },
     {
       "type": "delta",
-      "text": " 40.0 %"
+      "text": "著提升，"
     },
     {
       "type": "delta",
-      "text": " → **60.0"
+      "text": "能够"
     },
     {
       "type": "delta",
-      "text": " %** |\n"
+      "text": "收"
     },
     {
       "type": "delta",
-      "text": "| **Na"
+      "text": "集更"
     },
     {
       "type": "delta",
-      "text": "iveRAG"
+      "text": "广泛的信息"
     },
     {
       "type": "delta",
-      "text": "‑"
+      "text": "，却"
     },
     {
       "type": "delta",
-      "text": "High** (baseline"
+      "text": "在 **"
     },
     {
       "type": "delta",
-      "text": ")"
+      "text": "Depth**（"
     },
     {
       "type": "delta",
-      "text": " vs."
+      "text": "即"
     },
     {
       "type": "delta",
-      "text": " **LightRAG**"
+      "text": "对"
     },
     {
       "type": "delta",
-      "text": " |"
+      "text": "特"
     },
     {
       "type": "delta",
-      "text": " 34"
+      "text": "定实体的细致"
     },
     {
       "type": "delta",
-      "text": ".8"
+      "text": "分析"
     },
     {
       "type": "delta",
-      "text": " % → **65."
+      "text": "）上"
     },
     {
       "type": "delta",
-      "text": "2 "
+      "text": "受"
     },
     {
       "type": "delta",
-      "text": "%** | 27"
+      "text": "限"
     },
     {
       "type": "delta",
-      "text": ".2 % →"
+      "text": "，导致整体性能"
     },
     {
       "type": "delta",
-      "text": " **72.8"
+      "text": "不"
     },
     {
       "type": "delta",
-      "text": " %** | 36"
+      "text": "如 Hybrid"
     },
     {
       "type": "delta",
-      "text": ".0 % → **"
+      "text": " "
     },
     {
       "type": "delta",
-      "text": "64.0"
+      "text": "版本"
     },
     {
       "type": "delta",
-      "text": " %**"
+      "text": "[C4]。"
     },
     {
       "type": "delta",
-      "text": " | 35.2 "
+      "text": "  \n\n-"
     },
     {
       "type": "delta",
-      "text": "% →"
+      "text": " 低层‑only"
     },
     {
       "type": "delta",
-      "text": " **64"
+      "text": "（"
     },
     {
       "type": "delta",
-      "text": ".8"
+      "text": "-High）变"
     },
     {
       "type": "delta",
-      "text": " %** |\n| **"
+      "text": "体由于"
     },
     {
       "type": "delta",
-      "text": "NaiveRAG‑Low"
+      "text": "过"
     },
     {
       "type": "delta",
-      "text": "** (baseline) vs."
+      "text": "度关注实体"
     },
     {
       "type": "delta",
-      "text": " **LightRAG** |"
+      "text": "及其直接"
     },
     {
       "type": "delta",
-      "text": " 42"
+      "text": "邻居，在"
     },
     {
       "type": "delta",
-      "text": ".8"
+      "text": "处理"
     },
     {
       "type": "delta",
-      "text": " % → **57"
+      "text": "需要"
     },
     {
       "type": "delta",
-      "text": ".2 %** |"
+      "text": "综合"
     },
     {
       "type": "delta",
-      "text": " 36"
+      "text": "理解"
     },
     {
       "type": "delta",
-      "text": ".8"
+      "text": "的复杂查询"
     },
     {
       "type": "delta",
-      "text": " % → **63"
+      "text": "时出现"
     },
     {
       "type": "delta",
-      "text": ".2"
+      "text": "明显"
     },
     {
       "type": "delta",
-      "text": " "
+      "text": "性能"
     },
     {
       "type": "delta",
-      "text": "%** | 42"
+      "text": "下降，这"
     },
     {
       "type": "delta",
-      "text": ".4"
+      "text": "在"
     },
     {
       "type": "delta",
-      "text": " % → **57."
+      "text": "几"
     },
     {
       "type": "delta",
-      "text": "6 %** | "
+      "text": "乎所有数据集和"
     },
     {
       "type": "delta",
-      "text": "44.0 % →"
+      "text": "评"
     },
     {
       "type": "delta",
-      "text": " **56"
+      "text": "估指标上"
     },
     {
       "type": "delta",
-      "text": ".0 %** |\n\n"
+      "text": "都有"
     },
     {
       "type": "delta",
-      "text": "*Baseline"
+      "text": "体现"
     },
     {
       "type": "delta",
-      "text": " comparison"
+      "text": "[C4]。  \n\n综"
     },
     {
       "type": "delta",
-      "text": "*: For"
+      "text": "上，消"
     },
     {
       "type": "delta",
-      "text": " each metric"
+      "text": "融后的"
     },
     {
       "type": "delta",
-      "text": ", the ab"
+      "text": " LightRAG（"
     },
     {
       "type": "delta",
-      "text": "lated LightRAG version"
+      "text": "-High 与"
     },
     {
       "type": "delta",
-      "text": " consistently yields"
+      "text": " -"
     },
     {
       "type": "delta",
-      "text": " substantially"
+      "text": "Low）均"
     },
     {
       "type": "delta",
-      "text": " higher percentages"
+      "text": "比"
     },
     {
       "type": "delta",
-      "text": " than its"
+      "text": "基"
+    },
+    {
+      "type": "delta",
+      "text": "线"
     },
     {
       "type": "delta",
@@ -664,151 +672,102 @@
     },
     {
       "type": "delta",
-      "text": "iveRAG counterpart, indicating"
+      "text": "iveRAG 有"
     },
     {
       "type": "delta",
-      "text": " improved"
+      "text": "明显"
     },
     {
       "type": "delta",
-      "text": " compreh"
+      "text": "优势"
     },
     {
       "type": "delta",
-      "text": "ensiveness, diversity, empowerment"
+      "text": "，但相"
     },
     {
       "type": "delta",
-      "text": ", and overall performance"
+      "text": "较"
     },
     {
       "type": "delta",
-      "text": " across all"
+      "text": "于融合"
     },
     {
       "type": "delta",
-      "text": " tested"
+      "text": "低"
     },
     {
       "type": "delta",
-      "text": " domains and"
+      "text": "层与"
     },
     {
       "type": "delta",
-      "text": " retrieval"
+      "text": "高层检索的完整"
     },
     {
       "type": "delta",
-      "text": "‑"
+      "text": " LightRAG，"
     },
     {
       "type": "delta",
-      "text": "strength"
+      "text": "性能有所"
     },
     {
       "type": "delta",
-      "text": " settings.\n\n"
+      "text": "削"
     },
     {
       "type": "delta",
-      "text": "**Source"
+      "text": "弱，尤其是"
     },
     {
       "type": "delta",
-      "text": "**"
+      "text": " -"
     },
     {
       "type": "delta",
-      "text": ": Table 2 of"
+      "text": "High "
     },
     {
       "type": "delta",
-      "text": " the paper"
+      "text": "变体在整体"
     },
     {
       "type": "delta",
-      "text": " presenting"
+      "text": "表现"
     },
     {
       "type": "delta",
-      "text": " ab"
+      "text": "上最"
     },
     {
       "type": "delta",
-      "text": "lated LightRAG results"
+      "text": "为"
     },
     {
       "type": "delta",
-      "text": ","
+      "text": "受"
     },
     {
       "type": "delta",
-      "text": " which lists the"
-    },
-    {
-      "type": "delta",
-      "text": " metric"
-    },
-    {
-      "type": "delta",
-      "text": " values"
-    },
-    {
-      "type": "delta",
-      "text": " for Na"
-    },
-    {
-      "type": "delta",
-      "text": "iveRAG and LightR"
-    },
-    {
-      "type": "delta",
-      "text": "AG across"
-    },
-    {
-      "type": "delta",
-      "text": " Agriculture"
-    },
-    {
-      "type": "delta",
-      "text": ", CS, Legal, Mix"
-    },
-    {
-      "type": "delta",
-      "text": ", and for"
-    },
-    {
-      "type": "delta",
-      "text": " Na"
-    },
-    {
-      "type": "delta",
-      "text": "iveRAG‑High/"
-    },
-    {
-      "type": "delta",
-      "text": "‑"
-    },
-    {
-      "type": "delta",
-      "text": "Low configurations"
-    },
-    {
-      "type": "delta",
-      "text": " "
-    },
-    {
-      "type": "delta",
-      "text": "[C3]."
+      "text": "限。  "
     },
     {
       "type": "final",
-      "answer": "**Ablated LightRAG performance (compared with NaiveRAG)**  \n\n| Dataset / Setting | Comprehensiveness | Diversity | Empowerment | Overall |\n|-------------------|-------------------|-----------|-------------|---------|\n| **Agriculture** (NaiveRAG vs LightRAG) | 32.4 % → **67.6 %** | 23.6 % → **76.4 %** | 32.4 % → **67.6 %** | 32.4 % → **67.6 %** |\n| **CS** (NaiveRAG vs LightRAG) | 38.4 % → **61.6 %** | 38.0 % → **62.0 %** | 38.8 % → **61.2 %** | 38.8 % → **61.2 %** |\n| **Legal** (NaiveRAG vs LightRAG) | 16.4 % → **83.6 %** | 13.6 % → **86.4 %** | 16.4 % → **83.6 %** | 15.2 % → **84.8 %** |\n| **Mix** (NaiveRAG vs LightRAG) | 38.8 % → **61.2 %** | 32.4 % → **67.6 %** | 42.8 % → **57.2 %** | 40.0 % → **60.0 %** |\n| **NaiveRAG‑High** (baseline) vs. **LightRAG** | 34.8 % → **65.2 %** | 27.2 % → **72.8 %** | 36.0 % → **64.0 %** | 35.2 % → **64.8 %** |\n| **NaiveRAG‑Low** (baseline) vs. **LightRAG** | 42.8 % → **57.2 %** | 36.8 % → **63.2 %** | 42.4 % → **57.6 %** | 44.0 % → **56.0 %** |\n\n*Baseline comparison*: For each metric, the ablated LightRAG version consistently yields substantially higher percentages than its NaiveRAG counterpart, indicating improved comprehensiveness, diversity, empowerment, and overall performance across all tested domains and retrieval‑strength settings.\n\n**Source**: Table 2 of the paper presenting ablated LightRAG results, which lists the metric values for NaiveRAG and LightRAG across Agriculture, CS, Legal, Mix, and for NaiveRAG‑High/‑Low configurations [C3].",
+      "answer": "LightRAG 的消融版本仍然能够超越 NaiveRAG，但相较于完整的 LightRAG（Hybrid 模式）表现有所下降。  \n\n- 在四个数据集（Agriculture、CS、Legal、Mix）上，完整 LightRAG 的 Overall 得分分别为 **67.6% / 61.2% / 84.8% / 60.0%**，而仅保留低层检索的 **-High** 变体的 Overall 得分降至 **64.8% / 56.0% / 78.0% / 57.6%**，仍高于对应的 NaiveRAG‑High（分别为 35.2% / 44.0% / 22.0% / 42.4%）[C3]。  \n\n- 仅保留高层检索的 **-Low** 变体（表中未给出具体数值，但从描述可知）在 **Comprehensiveness** 上有显著提升，能够收集更广泛的信息，却在 **Depth**（即对特定实体的细致分析）上受限，导致整体性能不如 Hybrid 版本[C4]。  \n\n- 低层‑only（-High）变体由于过度关注实体及其直接邻居，在处理需要综合理解的复杂查询时出现明显性能下降，这在几乎所有数据集和评估指标上都有体现[C4]。  \n\n综上，消融后的 LightRAG（-High 与 -Low）均比基线 NaiveRAG 有明显优势，但相较于融合低层与高层检索的完整 LightRAG，性能有所削弱，尤其是 -High 变体在整体表现上最为受限。  ",
       "citations": [
         {
           "id": "C3",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-18",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-18",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
+        },
+        {
+          "id": "C4",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-20",
           "section": "Virtual Section 8",
           "page_start": 8,
           "page_end": 8
@@ -821,15 +780,15 @@
       "calls": [
         {
           "call_type": "router",
-          "estimated_prompt_tokens": 1563,
-          "prompt_eval_count": 1244,
-          "eval_count": 63,
+          "estimated_prompt_tokens": 1329,
+          "prompt_eval_count": 1010,
+          "eval_count": 134,
           "think": "low",
           "num_predict": 600,
           "context_budget": 10000,
           "safety_margin": 300,
-          "thinking": "Need to output JSON classification. This is Lookup? Asking for performance of ablated versions -> likely a table. So Lookup. sub_queries [].\n\n",
-          "latency_ms": 1390.4326248448342,
+          "thinking": "Need to output JSON classification. This is a lookup or synthesis? Asking performance of ablated versions => likely synthesis across sections. Choose Synthesis. Provide standalone_question in Chinese. \"Performance of ablated versions of LightRAG\" translate: \"LightRAG 的消融版本的性能如何？\" Provide sub_queries.",
+          "latency_ms": 977.2433750331402,
           "done_reason": "stop",
           "discarded_fact_lines": 0,
           "plan_source": "router",
@@ -837,15 +796,15 @@
         },
         {
           "call_type": "answer",
-          "estimated_prompt_tokens": 2075,
-          "prompt_eval_count": 1850,
-          "eval_count": 949,
+          "estimated_prompt_tokens": 2078,
+          "prompt_eval_count": 1853,
+          "eval_count": 919,
           "think": "medium",
           "num_predict": 3000,
           "context_budget": 10000,
           "safety_margin": 300,
-          "thinking": "We need to answer: \"Performance of ablated versions of LightRAG\". The document includes Table 2 in C3: Performance of ablated versions of LightRAG, using NaiveRAG as reference. It shows metrics for different domains (Agriculture, CS, Legal, Mix) and also for NaiveRAG-High and NaiveRAG-Low? Actually the table includes rows for NaiveRAG and LightRAG across domains, then rows for NaiveRAG-High and LightRAG, then NaiveRAG-Low (but low rows not shown values). We need to summarize performance of ablated versions of LightRAG. Likely we need to present the percentages for each metric (Comprehensiveness, Diversity, Empowerment, Overall) for LightRAG in each domain and for high/low variants.\n\nThus answer: According to Table 2, LightRAG (ablated) achieves X% etc. Provide citations.\n\nWe must cite each factual claim with [C3]. Use multiple citations if needed but same source.\n\nLet's craft answer: For the four datasets (Agriculture, CS, Legal, Mix), LightRAG improves over NaiveRAG across all metrics: Comprehensiveness 67.6% vs 32.4% etc. Provide numbers.\n\nAlso for high and low variants: LightRAG (High) shows 65.2% etc. Provide numbers.\n\nWe need to explain baseline: compare LightRAG to NaiveRAG.\n\nLet's produce answer.",
-          "latency_ms": 4912.318791029975,
+          "thinking": "We need to answer: \"LightRAG 的消融版本的性能如何？\" (How is the performance of LightRAG's ablated versions?). Use only supplied excerpts. The relevant info is in C3 and C4. C3 provides tables of performance of ablated versions of LightRAG, using NaiveRAG as reference. It shows metrics for variants: maybe -High and -Low? Actually C3 shows two sets: first block shows LightRAG vs NaiveRAG across datasets (Agriculture, CS, Legal, Mix). Then second block shows NaiveRAG-High vs LightRAG? Wait: The second block shows \"NaiveRAG -High\" and \"NaiveRAG -High\"? Actually the headings: \"NaiveRAG -High\" and \"NaiveRAG -High\"? Might be mis formatting. But C4 explains -High variant removes high-order retrieval, leading to performance decline. -Low variant prioritizes high-level retrieval, giving advantage in comprehensiveness but less depth. Hybrid mode (full LightRAG) combines both.\n\nThus answer: The ablated versions (high-only and low-only) show reduced performance compared to full LightRAG, with -High (low-level only) dropping across most metrics, while -Low (high-level only) improves comprehensiveness but hurts depth. Provide specific numbers from C3: For example, in Agriculture, LightRAG overall 67.6% vs NaiveRAG 32.4%; the -High variant overall 65.2% (vs NaiveRAG-High 34.8%?) Actually second block shows \"NaiveRAG -High\" and \"NaiveRAG -High\"? Might be LightRAG -High? The numbers: Comprehensiveness 34.8% vs 65.2% (maybe NaiveRAG-High vs LightRAG-High). So LightRAG-High overall 64.8% vs NaiveRAG-High 35.2%. Similarly for -Low variant overall 57.6% vs NaiveRAG-Low 42.4%? Actually third block shows \"NaiveRAG -Low\" and \"NaiveRAG -Low\"? Not clear. But we can summarize: Ablated versions still outperform NaiveRAG but lower than full LightRAG. Provide numbers.\n\nWe must cite each factual claim. Use [C3] for numbers, [C4] for qualitative description.\n\nLet's craft answer in Chinese.",
+          "latency_ms": 3724.558041896671,
           "done_reason": "stop",
           "discarded_fact_lines": 0,
           "plan_source": null,

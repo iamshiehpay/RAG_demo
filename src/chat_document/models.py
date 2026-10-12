@@ -4,6 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+FallbackReason = Literal["length", "invalid_json", "invalid_plan", "missing_rewrite"]
+
 
 class ConversationTurn(BaseModel):
     question: str
@@ -66,4 +68,4 @@ class LLMCallTrace(BaseModel):
     done_reason: str
     discarded_fact_lines: int = 0
     plan_source: Literal["router", "fallback"] | None = None
-    fallback_reason: str | None = None
+    fallback_reason: FallbackReason | None = None

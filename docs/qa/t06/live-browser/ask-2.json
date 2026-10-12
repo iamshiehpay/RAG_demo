@@ -4,7 +4,7 @@
     {
       "type": "plan",
       "question_type": "Lookup",
-      "standalone_question": "LightRAG和GraphRAG的成本是多少？",
+      "standalone_question": "LightRAG 的成本是多少？",
       "sub_queries": [],
       "plan_source": "router",
       "fallback_reason": null
@@ -14,7 +14,7 @@
       "chunks": [
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-1",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-1",
             "section_id": "page-1",
             "section": "Virtual Section 1",
             "page_start": 1,
@@ -22,11 +22,11 @@
             "text": "LIGHTRAG: SIMPLE AND FAST\nRETRIEVAL-AUGMENTED GENERATION\n\nZirui Guo1,2, Lianghao Xia2, Yanhua Yu1,∗, Tu Ao1, Chao Huang2∗\n\nBeijing University of Posts and Telecommunications1\n\nUniversity of Hong Kong2\n\nzrguo101@hku.hk aka_xia@foxmail.com chaohuang75@gmail.com\n\nABSTRACT\n\nRetrieval-Augmented Generation (RAG) systems enhance large language models\n(LLMs) by integrating external knowledge sources, enabling more accurate and\ncontextually relevant responses tailored to user needs. However, existing RAG\nsystems have significant limitations, including reliance on flat data representa-\ntions and inadequate contextual awareness, which can lead to fragmented answers\nthat fail to capture complex inter-dependencies. To address these challenges, we\npropose LightRAG, which incorporates graph structures into text indexing and\nretrieval processes. This innovative framework employs a dual-level retrieval sys-\ntem that enhances comprehensive information retrieval from both low-level and\nhigh-level knowledge discovery. Additionally, the integration of graph structures\nwith vector representations facilitates efficient retrieval of related entities and their\nrelationships, significantly improving response times while maintaining contextual\nrelevance. This capability is further enhanced by an incremental update algorithm\nthat ensures the timely integration of new data, allowing the system to remain\neffective and responsive in rapidly changing data environments. Extensive experi-\nmental validation demonstrates considerable improvements in retrieval accuracy\nand efficiency compared to existing approaches. We have made our LightRAG\nopen-source and available at the link: https://github.com/HKUDS/LightRAG.\n\n1\nINTRODUCTION\n\narXiv:2410.05779v3  [cs.IR]  28 Apr 2025",
             "order": 0
           },
-          "score": 0.5777512788772583
+          "score": 0.5405378341674805
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-13",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-13",
             "section_id": "page-6",
             "section": "Virtual Section 6",
             "page_start": 6,
@@ -34,23 +34,11 @@
             "text": "• GraphRAG (Edge et al., 2024): This is a graph-enhanced RAG system that utilizes an LLM to\nextract entities and relationships from the text, representing them as nodes and edges. It generates\ncorresponding descriptions for these elements, aggregates nodes into communities, and produces a\ncommunity report to capture global information. When handling high-level queries, GraphRAG\nretrieves more comprehensive information by traversing these communities.\n\nImplementation and Evaluation Details. In our experiments, we utilize the nano vector database\nfor vector data management and access. For all LLM-based operations in LightRAG, we default\nto using GPT-4o-mini. To ensure consistency, the chunk size is set to 1200 across all datasets.\nAdditionally, the gleaning parameter is fixed at 1 for both GraphRAG and LightRAG.\n\nDefining ground truth for many RAG queries, particularly those involving complex high-level\nsemantics, poses significant challenges. To address this, we build on existing work (Edge et al.,\n2024) and adopt an LLM-based multi-dimensional comparison method. We employ a robust LLM,\nspecifically GPT-4o-mini, to rank each baseline against our LightRAG. The evaluation prompt we\nused is detailed in Appendix 7.3.4. In total, we utilize four evaluation dimensions, including:\n\ni) Comprehensiveness: How thoroughly does the answer address all aspects and details of the\nquestion? ii) Diversity: How varied and rich is the answer in offering different perspectives and\ninsights related to the question? iii) Empowerment: How effectively does the answer enable the\nreader to understand the topic and make informed judgments? iv) Overall: This dimension assesses\nthe cumulative performance across the three preceding criteria to identify the best overall answer.\n\nThe LLM directly compares two answers for each dimension and selects the superior response for\neach criterion. After identifying the winning answer for the three dimensions, the LLM combines the\nresults to determine the overall better answer. To ensure a fair evaluation and mitigate the potential\nbias that could arise from the order in which the answers are presented in the prompt, we alternate the\nplacement of each answer. We calculate win rates accordingly, ultimately leading to the final results.\n\n4.2\nCOMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
             "order": 12
           },
-          "score": 0.5874024629592896
+          "score": 0.5311409831047058
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
-            "section_id": "page-7",
-            "section": "Virtual Section 7",
-            "page_start": 7,
-            "page_end": 7,
-            "text": "Comprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nThe Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora When handling large\ntoken counts and complex queries that require a thorough understanding of the dataset’s context,\ngraph-based RAG systems like LightRAG and GraphRAG consistently outperform purely chunk-\nbased retrieval methods such as NaiveRAG, HyDE, and RQRAG. This performance gap becomes\nparticularly pronounced as the dataset size increases. For instance, in the largest dataset (Legal), the\ndisparity widens significantly, with baseline methods achieving only about 20% win rates compared\nto the dominance of LightRAG. This trend underscores the advantages of graph-enhanced RAG\nsystems in capturing complex semantic dependencies within large-scale corpora, facilitating a more\ncomprehensive understanding of knowledge and leading to improved generalization performance.",
-            "order": 15
-          },
-          "score": 0.6058035492897034
-        },
-        {
-          "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-25",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-25",
             "section_id": "page-9",
             "section": "Virtual Section 9",
             "page_start": 9,
@@ -58,11 +46,11 @@
             "text": "We compare the cost of our LightRAG with that of the\ntop-performing baseline, GraphRAG, from two key\nperspectives. First, we examine the number of tokens\nand API calls during the indexing and retrieval pro-\ncesses. Second, we analyze these metrics in relation\nto handling data changes in dynamic environments.\nThe results of this evaluation on the legal dataset are\npresented in Table 2. In this context, Textract repre-\nsents the token overhead for entity and relationship extraction, Cmax denotes the maximum number\nof tokens allowed per API call, and Cextract indicates the number of API calls required for extraction.\n\nIn the retrieval phase, GraphRAG generates 1,399 communities, with 610 level-2 communities\nactively utilized for retrieval in this experiment. Each community report averages 1,000 tokens,\nresulting in a total token consumption of 610,000 tokens (610 communities × 1,000 tokens per\ncommunity). Additionally, GraphRAG’s requirement to traverse each community individually leads\nto hundreds of API calls, significantly increasing retrieval overhead. In contrast, LightRAG optimizes\nthis process by using fewer than 100 tokens for keyword generation and retrieval, requiring only a\nsingle API call for the entire process. This efficiency is achieved through our retrieval mechanism,\n\n9",
             "order": 24
           },
-          "score": 0.6282829642295837
+          "score": 0.5853559970855713
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-26",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-26",
             "section_id": "page-10",
             "section": "Virtual Section 10",
             "page_start": 10,
@@ -70,7 +58,19 @@
             "text": "which seamlessly integrates graph structures and vectorized representations for information retrieval,\nthereby eliminating the need to process large volumes of information upfront.\n\nIn the incremental data update phase, designed to address changes in dynamic real-world scenarios,\nboth models exhibit similar overhead for entity and relationship extraction. However, GraphRAG\nshows significant inefficiency in managing newly added data. When a new dataset of the same\nsize as the legal dataset is introduced, GraphRAG must dismantle its existing community structure\nto incorporate new entities and relationships, followed by complete regeneration. This process\nincurs a substantial token cost of approximately 5,000 tokens per community report. Given 1,399\ncommunities, GraphRAG would require around 1,399 × 2 × 5,000 tokens to reconstruct both the\noriginal and new community reports—an exorbitant expense that underscores its inefficiency. In\ncontrast, LightRAG seamlessly integrates newly extracted entities and relationships into the existing\ngraph without the need for full reconstruction. This approach results in significantly lower overhead\nduring incremental updates, demonstrating its superior efficiency and cost-effectiveness.\n\n5\nRELATED WORK\n\n5.1\nRETRIEVAL-AUGMENTED GENERATION WITH LLMS\n\nRetrieval-Augmented Generation (RAG) systems enhance LLM inputs by retrieving relevant infor-\nmation from external sources, grounding responses in factual, domain-specific knowledge Ram et al.\n(2023); Fan et al. (2024). Current RAG approaches Gao et al. (2022; 2023); Chan et al. (2024); Yu\net al. (2024) typically embed queries in a vector space to find the nearest context vectors. However,\nmany of these methods rely on fragmented text chunks and only retrieve the top-k contexts, limiting\ntheir ability to capture comprehensive global information needed for effective responses.",
             "order": 25
           },
-          "score": 0.592324435710907
+          "score": 0.5358713269233704
+        },
+        {
+          "chunk": {
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-28",
+            "section_id": "page-10",
+            "section": "Virtual Section 10",
+            "page_start": 10,
+            "page_end": 10,
+            "text": "This work introduces an advancement in Retrieval-Augmented Generation (RAG) through the\nintegration of a graph-based indexing approach that enhances both efficiency and comprehension\nin information retrieval. LightRAG utilizes a comprehensive knowledge graph to facilitate rapid\nand relevant document retrieval, enabling a deeper understanding of complex queries. Its dual-level\nretrieval paradigm allows for the extraction of both specific and abstract information, catering to\ndiverse user needs. Furthermore, LightRAG’s seamless incremental update capability ensures that\nthe system remains current and responsive to new information, thereby maintaining its effectiveness\nover time. Overall, LightRAG excels in both efficiency and effectiveness, significantly improving the\nspeed and quality of information retrieval and generation while reducing costs for LLM inference.\n\n10",
+            "order": 27
+          },
+          "score": 0.5295716524124146
         }
       ]
     },
@@ -79,35 +79,35 @@
       "citations": [
         {
           "id": "C1",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-1",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-1",
           "section": "Virtual Section 1",
           "page_start": 1,
           "page_end": 1
         },
         {
           "id": "C2",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-13",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-13",
           "section": "Virtual Section 6",
           "page_start": 6,
           "page_end": 6
         },
         {
           "id": "C3",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
-          "section": "Virtual Section 7",
-          "page_start": 7,
-          "page_end": 7
-        },
-        {
-          "id": "C4",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-25",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-25",
           "section": "Virtual Section 9",
           "page_start": 9,
           "page_end": 9
         },
         {
+          "id": "C4",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-26",
+          "section": "Virtual Section 10",
+          "page_start": 10,
+          "page_end": 10
+        },
+        {
           "id": "C5",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-26",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-28",
           "section": "Virtual Section 10",
           "page_start": 10,
           "page_end": 10
@@ -120,35 +120,43 @@
     },
     {
       "type": "delta",
-      "text": "RAG的"
+      "text": "RAG"
     },
     {
       "type": "delta",
-      "text": "成本非常"
+      "text": " 在"
     },
     {
       "type": "delta",
-      "text": "低：在"
+      "text": "检"
     },
     {
       "type": "delta",
-      "text": "检索阶段"
+      "text": "索阶段的成本"
     },
     {
       "type": "delta",
-      "text": "只"
+      "text": "非常"
     },
     {
       "type": "delta",
-      "text": "需"
+      "text": "低——"
     },
     {
       "type": "delta",
-      "text": "不到"
+      "text": "仅"
     },
     {
       "type": "delta",
-      "text": " 100 个"
+      "text": "使用不足"
+    },
+    {
+      "type": "delta",
+      "text": " "
+    },
+    {
+      "type": "delta",
+      "text": "100 个"
     },
     {
       "type": "delta",
@@ -156,215 +164,87 @@
     },
     {
       "type": "delta",
-      "text": " 用"
+      "text": " "
     },
     {
       "type": "delta",
-      "text": "于关键词生成和"
+      "text": "生成"
     },
     {
       "type": "delta",
-      "text": "检索，并且整个"
+      "text": "关键词并"
     },
     {
       "type": "delta",
-      "text": "过程只调用"
+      "text": "完成"
     },
     {
       "type": "delta",
-      "text": "一次"
+      "text": "检索，并"
     },
     {
       "type": "delta",
-      "text": " API；"
+      "text": "且整个"
     },
     {
       "type": "delta",
-      "text": "在增"
+      "text": "过程只需"
     },
     {
       "type": "delta",
-      "text": "量更新"
+      "text": "一次 API 调"
     },
     {
       "type": "delta",
-      "text": "时只"
+      "text": "用；"
     },
     {
       "type": "delta",
-      "text": "需把"
+      "text": "相比之下，Graph"
     },
     {
       "type": "delta",
-      "text": "新"
+      "text": "RAG 在"
     },
     {
       "type": "delta",
-      "text": "抽"
+      "text": "同"
     },
     {
       "type": "delta",
-      "text": "取"
+      "text": "一实验"
     },
     {
       "type": "delta",
-      "text": "的实体和"
+      "text": "中需要约"
     },
     {
       "type": "delta",
-      "text": "关系直接"
+      "text": " "
     },
     {
       "type": "delta",
-      "text": "并"
+      "text": "610 000 个 token"
     },
     {
       "type": "delta",
-      "text": "入"
+      "text": "（610"
     },
     {
       "type": "delta",
-      "text": "已有图"
+      "text": " 个"
     },
     {
       "type": "delta",
-      "text": "结构"
+      "text": "社区 × 1"
     },
     {
       "type": "delta",
-      "text": "，几乎没有额"
+      "text": " 000 token"
     },
     {
       "type": "delta",
-      "text": "外的 token 开"
-    },
-    {
-      "type": "delta",
-      "text": "销"
-    },
-    {
-      "type": "delta",
-      "text": "[C4]"
-    },
-    {
-      "type": "delta",
-      "text": "[C5]。\n\n"
-    },
-    {
-      "type": "delta",
-      "text": "相比"
-    },
-    {
-      "type": "delta",
-      "text": "之下，GraphRAG"
-    },
-    {
-      "type": "delta",
-      "text": "的"
-    },
-    {
-      "type": "delta",
-      "text": "成本要"
-    },
-    {
-      "type": "delta",
-      "text": "高得"
-    },
-    {
-      "type": "delta",
-      "text": "多：检"
-    },
-    {
-      "type": "delta",
-      "text": "索阶段需要"
-    },
-    {
-      "type": "delta",
-      "text": "生成 1,399 "
-    },
-    {
-      "type": "delta",
-      "text": "个社区，其中"
-    },
-    {
-      "type": "delta",
-      "text": " 610 个"
-    },
-    {
-      "type": "delta",
-      "text": "二"
-    },
-    {
-      "type": "delta",
-      "text": "层"
-    },
-    {
-      "type": "delta",
-      "text": "社区被"
-    },
-    {
-      "type": "delta",
-      "text": "实际"
-    },
-    {
-      "type": "delta",
-      "text": "使用，每"
-    },
-    {
-      "type": "delta",
-      "text": "个"
-    },
-    {
-      "type": "delta",
-      "text": "社区报告约"
-    },
-    {
-      "type": "delta",
-      "text": " 1,"
-    },
-    {
-      "type": "delta",
-      "text": "000 个 token"
-    },
-    {
-      "type": "delta",
-      "text": "，累计约"
-    },
-    {
-      "type": "delta",
-      "text": " 610,"
-    },
-    {
-      "type": "delta",
-      "text": "000 个 token"
-    },
-    {
-      "type": "delta",
-      "text": "，并"
-    },
-    {
-      "type": "delta",
-      "text": "且因为"
-    },
-    {
-      "type": "delta",
-      "text": "必须"
-    },
-    {
-      "type": "delta",
-      "text": "逐"
-    },
-    {
-      "type": "delta",
-      "text": "个"
-    },
-    {
-      "type": "delta",
-      "text": "遍"
-    },
-    {
-      "type": "delta",
-      "text": "历社区而"
+      "text": "/社区）并"
     },
     {
       "type": "delta",
@@ -384,111 +264,95 @@
     },
     {
       "type": "delta",
-      "text": "[C4]；"
+      "text": "[C3]。"
     },
     {
       "type": "delta",
-      "text": "在增量更新时"
+      "text": "在"
     },
     {
       "type": "delta",
-      "text": "，若"
+      "text": "增量更新"
     },
     {
       "type": "delta",
-      "text": "加入"
+      "text": "阶段，Light"
     },
     {
       "type": "delta",
-      "text": "与"
+      "text": "RAG"
     },
     {
       "type": "delta",
-      "text": "法律"
+      "text": " "
     },
     {
       "type": "delta",
-      "text": "数据集"
+      "text": "通过直接将"
     },
     {
       "type": "delta",
-      "text": "等"
+      "text": "新"
     },
     {
       "type": "delta",
-      "text": "量"
+      "text": "抽"
     },
     {
       "type": "delta",
-      "text": "的新"
+      "text": "取的实体和"
     },
     {
       "type": "delta",
-      "text": "数据，"
+      "text": "关系并"
     },
     {
       "type": "delta",
-      "text": "必须"
+      "text": "入"
     },
     {
       "type": "delta",
-      "text": "拆"
+      "text": "现"
     },
     {
       "type": "delta",
-      "text": "除"
+      "text": "有"
     },
     {
       "type": "delta",
-      "text": "并重新生成"
+      "text": "图结构"
     },
     {
       "type": "delta",
-      "text": "所有"
+      "text": "，避免"
     },
     {
       "type": "delta",
-      "text": "社区报告"
+      "text": "了大"
     },
     {
       "type": "delta",
-      "text": "，每个报告"
+      "text": "规模社区"
     },
     {
       "type": "delta",
-      "text": "约 5,"
+      "text": "重建，从"
     },
     {
       "type": "delta",
-      "text": "000 个 token，整体"
+      "text": "而保持"
     },
     {
       "type": "delta",
-      "text": "需要约 1,"
+      "text": "了显"
     },
     {
       "type": "delta",
-      "text": "399 × 2 "
+      "text": "著更"
     },
     {
       "type": "delta",
-      "text": "× 5,000 "
-    },
-    {
-      "type": "delta",
-      "text": "≈ 13,990,"
-    },
-    {
-      "type": "delta",
-      "text": "000 个 token 的"
-    },
-    {
-      "type": "delta",
-      "text": "巨"
-    },
-    {
-      "type": "delta",
-      "text": "额开"
+      "text": "低的开"
     },
     {
       "type": "delta",
@@ -496,22 +360,58 @@
     },
     {
       "type": "delta",
-      "text": "[C5]。"
+      "text": "[C4]。"
+    },
+    {
+      "type": "delta",
+      "text": "总体"
+    },
+    {
+      "type": "delta",
+      "text": "而言，Light"
+    },
+    {
+      "type": "delta",
+      "text": "RAG"
+    },
+    {
+      "type": "delta",
+      "text": " 的成本远"
+    },
+    {
+      "type": "delta",
+      "text": "低于传统"
+    },
+    {
+      "type": "delta",
+      "text": "的基"
+    },
+    {
+      "type": "delta",
+      "text": "于社区"
+    },
+    {
+      "type": "delta",
+      "text": "的 R"
+    },
+    {
+      "type": "delta",
+      "text": "AG 方法。"
     },
     {
       "type": "final",
-      "answer": "LightRAG的成本非常低：在检索阶段只需不到 100 个 token 用于关键词生成和检索，并且整个过程只调用一次 API；在增量更新时只需把新抽取的实体和关系直接并入已有图结构，几乎没有额外的 token 开销[C4][C5]。\n\n相比之下，GraphRAG的成本要高得多：检索阶段需要生成 1,399 个社区，其中 610 个二层社区被实际使用，每个社区报告约 1,000 个 token，累计约 610,000 个 token，并且因为必须逐个遍历社区而产生数百次 API 调用[C4]；在增量更新时，若加入与法律数据集等量的新数据，必须拆除并重新生成所有社区报告，每个报告约 5,000 个 token，整体需要约 1,399 × 2 × 5,000 ≈ 13,990,000 个 token 的巨额开销[C5]。",
+      "answer": "LightRAG 在检索阶段的成本非常低——仅使用不足 100 个 token 生成关键词并完成检索，并且整个过程只需一次 API 调用；相比之下，GraphRAG 在同一实验中需要约 610 000 个 token（610 个社区 × 1 000 token/社区）并产生数百次 API 调用[C3]。在增量更新阶段，LightRAG 通过直接将新抽取的实体和关系并入现有图结构，避免了大规模社区重建，从而保持了显著更低的开销[C4]。总体而言，LightRAG 的成本远低于传统的基于社区的 RAG 方法。",
       "citations": [
         {
-          "id": "C4",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-25",
+          "id": "C3",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-25",
           "section": "Virtual Section 9",
           "page_start": 9,
           "page_end": 9
         },
         {
-          "id": "C5",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-26",
+          "id": "C4",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-26",
           "section": "Virtual Section 10",
           "page_start": 10,
           "page_end": 10
@@ -524,15 +424,15 @@
       "calls": [
         {
           "call_type": "router",
-          "estimated_prompt_tokens": 1326,
-          "prompt_eval_count": 997,
-          "eval_count": 89,
+          "estimated_prompt_tokens": 1175,
+          "prompt_eval_count": 846,
+          "eval_count": 78,
           "think": "low",
           "num_predict": 600,
           "context_budget": 10000,
           "safety_margin": 300,
-          "thinking": "Need to output JSON. question_type? Likely Lookup (cost). So Lookup, standalone_question Chinese: \"它的成本是多少？\" but replace pronoun with entity: LightRAG和GraphRAG的成本是多少？ Use Chinese. sub_queries [].\n\n",
-          "latency_ms": 1563.3804581593722,
+          "thinking": "Need to output classification. It's a lookup? Asking cost of it (LightRAG?). Likely lookup. So question_type Lookup, standalone_question replace pronoun: \"LightRAG 的成本是多少？\" sub_queries [].\n\n",
+          "latency_ms": 732.9349580686539,
           "done_reason": "stop",
           "discarded_fact_lines": 0,
           "plan_source": "router",
@@ -540,15 +440,15 @@
         },
         {
           "call_type": "answer",
-          "estimated_prompt_tokens": 2530,
-          "prompt_eval_count": 2305,
-          "eval_count": 536,
+          "estimated_prompt_tokens": 2195,
+          "prompt_eval_count": 1970,
+          "eval_count": 349,
           "think": "medium",
           "num_predict": 3000,
           "context_budget": 10000,
           "safety_margin": 300,
-          "thinking": "We need to answer: \"LightRAG和GraphRAG的成本是多少？\" i.e., cost of LightRAG and GraphRAG. The document provides cost comparison in C4 and C5. C4 mentions token and API call costs: GraphRAG generates 1,399 communities, 610 level-2 communities used, each community report 1,000 tokens => total token consumption 610,000 tokens. Also hundreds of API calls. LightRAG uses fewer than 100 tokens for keyword generation and retrieval, requiring only a single API call. C5 mentions incremental update cost: GraphRAG token cost approx 5,000 tokens per community report, with 1,399 communities, requiring around 1,399 × 2 × 5,000 tokens (since reconstruct both original and new). LightRAG has significantly lower overhead, no full reconstruction.\n\nThus answer: GraphRAG cost: token consumption 610,000 tokens in retrieval plus hundreds of API calls; incremental update token cost ~1,399 * 2 * 5,000 = about 13,990,000 tokens. LightRAG cost: less than 100 tokens for retrieval and only one API call; incremental update minimal overhead, no large token cost. Provide citations.\n\nWe must cite each factual claim. Use [C4] for retrieval cost, [C5] for incremental update cost. Provide answer in Chinese as question is Chinese.",
-          "latency_ms": 3979.7269590198994,
+          "thinking": "The user asks in Chinese: \"LightRAG 的成本是多少？\" i.e., \"What is the cost of LightRAG?\" We need to answer using only supplied document excerpts. The excerpts contain cost comparisons: C3 and C4 discuss token and API call costs. C3 says LightRAG uses fewer than 100 tokens for keyword generation and retrieval, requiring only a single API call for the entire process, compared to GraphRAG's 610,000 tokens and many API calls. C4 mentions incremental update overhead lower, but not specific numbers. C5 says LightRAG improves speed and reduces costs for LLM inference, but no numbers. So answer: LightRAG's cost is less than 100 tokens for retrieval and a single API call, and lower overhead for incremental updates, compared to GraphRAG's high token usage. Provide citations. Use Chinese answer.",
+          "latency_ms": 2341.6010001674294,
           "done_reason": "stop",
           "discarded_fact_lines": 0,
           "plan_source": null,

@@ -55,7 +55,7 @@ export type LLMCallTrace = {
   done_reason: string;
   discarded_fact_lines: number;
   plan_source: "router" | "fallback" | null;
-  fallback_reason: string | null;
+  fallback_reason: "length" | "invalid_json" | "invalid_plan" | "missing_rewrite" | null;
 };
 
 export type PlanEvent = {
@@ -64,7 +64,7 @@ export type PlanEvent = {
   standalone_question: string;
   sub_queries: Array<string>;
   plan_source: "router" | "fallback";
-  fallback_reason: string | null;
+  fallback_reason: "length" | "invalid_json" | "invalid_plan" | "missing_rewrite" | null;
 };
 
 export type ReadyEvent = {

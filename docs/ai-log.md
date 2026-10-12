@@ -60,4 +60,12 @@
 - **原本把 fallback 當正常 Lookup，Trace 看不出失敗：** 新增 `plan_source` 和 `fallback_reason`，計畫事件與 Router 呼叫 Trace 都保留來源。帶歷史卻缺少改寫時，明確記錄 `missing_rewrite`，不再宣稱代名詞已解開。#08 同步改為把 fallback 與真正的分類結果分開計分。
 - **schema 合法不代表追問改寫成功：** 第一輪修正的 live smoke 雖然類型 12/12，仍有「它」未解開；加上具名主詞規則後，又發現中文短問句被英文歷史帶成英文。把語言提示放進目前問題，live smoke 也斷言語言與具名主詞。最終瀏覽器追問顯示完整中文的 LightRAG／GraphRAG 成本問題。
 - **有效 Sub-query 也可能找錯證據：** 瀏覽器 Q2 最初得到 Synthesis，但泛稱 cost 的子查詢只找到 Table 3 caption，沒有 `610 × 1,000` 成本段落。針對檢索系統比較，明列 token／API-call 成本與 incremental updates 的查詢要求；重新跑真實 bge-m3 與雲端 Router，兩種原文證據都進入檢索結果。
-- **不把缺少的 Trace 證據補成推論：** 舊 Q3 Router 確實以 low 用完 600 tokens，但 QA 沒保存完整 JSON 或 thinking，無法判定兩者各用多少。新 prompt 界定表格消融題為 Lookup、要求簡短 JSON；最終瀏覽器 Q3 用 63 tokens 正常結束。修正證據與這項限制一併記在 `docs/qa/t06/live-router-followup.md`。
+- **修正 AI 對 Trace 證據的誤讀：** 舊 Q3 Router 以 low 用完 600 tokens，QA 有保存完整 thinking：`Need to answer synthesis: compare ablated versions. Provide subqueries.`，用 `o200k_harmony` 計數為 14 tokens，因此約 586 tokens 是內容，很可能是過長或失控的 JSON／Sub-queries。AI 曾誤稱 thinking 不完整；審查指出後已更正。未保存部分 JSON，所以無法還原其確切形式。先前修正的瀏覽器 Q3 用 63 tokens 結束；那輪結果的 prompt 另有測試調校偏誤，見下節。
+
+## 2026-10-13：#06 審查抓到評估洩漏
+
+- **AI 把驗收題寫進 prompt：** 前次修正把 Q2 本身與成本／增量更新 Sub-query 當範例，又列出 ablation、dataset 等回歸題線索，12/12 不能證明泛化。審查要求後改成單一表格／圖、比較機制／成本／維護的通用規則，以及其他領域的範例；不再含 LightRAG、RAG 或 Golden Facts 的特定查詢詞。
+- **neutral 範例也要檢查是否與 held-out 重疊：** 第一個 neutral 版本用太陽能／風能範例，和八題新測試中的追問主題重疊。改用鐵路／海運貨運範例，保持八題與標籤不變，再重跑並保留分開報告。held-out 題涵蓋中英文、三種 Question Type、天氣感測器和能源的追問；沒有依其答錯結果調整題目或標籤。
+- **原本的追問檢查太弱：** 「那 LightRAG 呢？」本來就含 LightRAG，單比名字不會抓到遺失的檢索成本主題。新增成本／API 等歷史主題檢查，也以 dev-only OpenCC s2t 標記簡體轉換；「检索成本」現在會使 smoke 失敗，共用字無法判定字體的限制明載於報告。
+- **保留失敗，避免繼續對 Golden Facts 調 prompt：** 第一個 neutral 瀏覽器 Q2 的分類與 incremental-update 證據正確，但沒有檢索到含 `610` 的成本段落；這個失敗已通知協調者，沒有把 token／API-call 等特定驗收詞放回 prompt。最終貨運範例的瀏覽器結果另列於 follow-up 報告。
+- **小型 smoke 過關，不代表完整聊天流程過關：** 最終通用貨運範例在 canonical 12/12、held-out 8/8 通過，且歷史主題／繁體檢查都過。但瀏覽器 Q2 沒取回成本與增量更新段落；先聊完兩輪再問英文 Q3 時，模型改判 Synthesis 並改寫成中文。這些案例保留為 FAIL，沒有用 smoke 分數代替實際驗收；後續需改善通用計畫／歷史處理與檢索品質。

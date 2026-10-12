@@ -69,6 +69,7 @@ Browser follow-up: `trace-filtered-facts.png` captures the rebuilt frontend on L
 Independent live QA on main `79aac57` found that the original scripted checks hid near-miss JSON
 and silent Lookup fallback. [Live Router follow-up](live-router-followup.md) documents the repair,
 exact raw fixtures, opt-in 12-case smoke, fallback provenance, and real-cloud browser evidence.
-The final smoke has 12/12 correct types, zero fallbacks, named follow-up referents and retained
-question language. Browser Q2 retrieves cost/incremental-update evidence; Q3 is genuine Lookup
-with 63 generated Router tokens and `stop`. The 600-token reservation is unchanged.
+Review #1974 found that the earlier 12/12 and browser results used a prompt tuned to the cases.
+The current neutral prompt scores 12/12 canonical and 8/8 held-out, but live browser acceptance
+is **FAIL**: Q2 misses cost/update passages; Q3 after history is Synthesis and changes language.
+The linked follow-up report records both scores and failures. The 600-token reservation is unchanged.

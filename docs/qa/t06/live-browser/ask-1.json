@@ -4,11 +4,11 @@
     {
       "type": "plan",
       "question_type": "Synthesis",
-      "standalone_question": "Compare LightRAG with GraphRAG.",
+      "standalone_question": "Compare LightRAG with GraphRAG",
       "sub_queries": [
-        "LightRAG vs GraphRAG retrieval mechanism",
-        "LightRAG vs GraphRAG cost and token usage",
-        "LightRAG vs GraphRAG incremental update strategy"
+        "LightRAG architecture vs GraphRAG architecture",
+        "LightRAG performance metrics compared to GraphRAG",
+        "LightRAG limitations and maintenance compared to GraphRAG"
       ],
       "plan_source": "router",
       "fallback_reason": null
@@ -18,19 +18,7 @@
       "chunks": [
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-8",
-            "section_id": "page-4",
-            "section": "Virtual Section 4",
-            "page_start": 4,
-            "page_end": 4,
-            "text": "the raw text Di. This process effectively reduces the overhead associated with graph operations on\n\nˆD by minimizing the graph’s size, leading to more efficient data processing.\n\nOur LightRAG offers two advantages through its graph-based text indexing paradigm. First, Com-\nprehensive Information Understanding. The constructed graph structures enable the extraction\nof global information from multi-hop subgraphs, greatly enhancing LightRAG’s ability to handle\ncomplex queries that span multiple document chunks. Second, Enhanced Retrieval Performance.\nthe key-value data structures derived from the graph are optimized for rapid and precise retrieval.\nThis provides a superior alternative to less accurate embedding matching methods (Gao et al., 2023)\nand inefficient chunk traversal techniques (Edge et al., 2024) commonly used in existing approaches.\n\nFast Adaptation to Incremental Knowledge Base. To efficiently adapt to evolving data changes\nwhile ensuring accurate and relevant responses, our LightRAG incrementally updates the knowledge\nbase without the need for complete reprocessing of the entire external database. For a new document\nD′, the incremental update algorithm processes it using the same graph-based indexing steps φ as\nbefore, resulting in ˆD′ = (ˆV′, ˆE′). Subsequently, LightRAGcombines the new graph data with the\noriginal by taking the union of the node sets ˆV and ˆV′, as well as the edge sets ˆE and ˆE′.\n\nTwo key objectives guide our approach to fast adaptation for the incremental knowledge base: Seam-\nless Integration of New Data. By applying a consistent methodology to new information, the\nincremental update module allows the LightRAG to integrate new external databases without disrupt-\ning the existing graph structure. This approach preserves the integrity of established connections,\nensuring that historical data remains accessible while enriching the graph without conflicts or redun-\ndancies. Reducing Computational Overhead . By eliminating the need to rebuild the entire index\ngraph, this method reduces computational overhead and facilitates the rapid assimilation of new data.\nConsequently, LightRAG maintains system accuracy, provides current information, and conserves\nresources, ensuring users receive timely updates and enhancing the overall RAG effectiveness.\n\n3.2\nDUAL-LEVEL RETRIEVAL PARADIGM\n\nTo retrieve relevant information from both specific document chunks and their complex inter-\ndependencies, our LightRAG proposes generating query keys at both detailed and abstract levels.",
-            "order": 7
-          },
-          "score": 0.6827212572097778
-        },
-        {
-          "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-13",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-13",
             "section_id": "page-6",
             "section": "Virtual Section 6",
             "page_start": 6,
@@ -38,11 +26,11 @@
             "text": "• GraphRAG (Edge et al., 2024): This is a graph-enhanced RAG system that utilizes an LLM to\nextract entities and relationships from the text, representing them as nodes and edges. It generates\ncorresponding descriptions for these elements, aggregates nodes into communities, and produces a\ncommunity report to capture global information. When handling high-level queries, GraphRAG\nretrieves more comprehensive information by traversing these communities.\n\nImplementation and Evaluation Details. In our experiments, we utilize the nano vector database\nfor vector data management and access. For all LLM-based operations in LightRAG, we default\nto using GPT-4o-mini. To ensure consistency, the chunk size is set to 1200 across all datasets.\nAdditionally, the gleaning parameter is fixed at 1 for both GraphRAG and LightRAG.\n\nDefining ground truth for many RAG queries, particularly those involving complex high-level\nsemantics, poses significant challenges. To address this, we build on existing work (Edge et al.,\n2024) and adopt an LLM-based multi-dimensional comparison method. We employ a robust LLM,\nspecifically GPT-4o-mini, to rank each baseline against our LightRAG. The evaluation prompt we\nused is detailed in Appendix 7.3.4. In total, we utilize four evaluation dimensions, including:\n\ni) Comprehensiveness: How thoroughly does the answer address all aspects and details of the\nquestion? ii) Diversity: How varied and rich is the answer in offering different perspectives and\ninsights related to the question? iii) Empowerment: How effectively does the answer enable the\nreader to understand the topic and make informed judgments? iv) Overall: This dimension assesses\nthe cumulative performance across the three preceding criteria to identify the best overall answer.\n\nThe LLM directly compares two answers for each dimension and selects the superior response for\neach criterion. After identifying the winning answer for the three dimensions, the LLM combines the\nresults to determine the overall better answer. To ensure a fair evaluation and mitigate the potential\nbias that could arise from the order in which the answers are presented in the prompt, we alternate the\nplacement of each answer. We calculate win rates accordingly, ultimately leading to the final results.\n\n4.2\nCOMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
             "order": 12
           },
-          "score": 0.6711152791976929
+          "score": 0.6693480014801025
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
             "section_id": "page-7",
             "section": "Virtual Section 7",
             "page_start": 7,
@@ -50,23 +38,23 @@
             "text": "Comprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nThe Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora When handling large\ntoken counts and complex queries that require a thorough understanding of the dataset’s context,\ngraph-based RAG systems like LightRAG and GraphRAG consistently outperform purely chunk-\nbased retrieval methods such as NaiveRAG, HyDE, and RQRAG. This performance gap becomes\nparticularly pronounced as the dataset size increases. For instance, in the largest dataset (Legal), the\ndisparity widens significantly, with baseline methods achieving only about 20% win rates compared\nto the dominance of LightRAG. This trend underscores the advantages of graph-enhanced RAG\nsystems in capturing complex semantic dependencies within large-scale corpora, facilitating a more\ncomprehensive understanding of knowledge and leading to improved generalization performance.",
             "order": 15
           },
-          "score": 0.7052632570266724
+          "score": 0.6992244720458984
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-17",
-            "section_id": "page-7",
-            "section": "Virtual Section 7",
-            "page_start": 7,
-            "page_end": 7,
-            "text": "Enhancing Response Diversity with LightRAG: Compared to various baselines, LightRAG demon-\nstrates a significant advantage in the Diversity metric, particularly within the larger Legal dataset.\nIts consistent lead in this area underscores LightRAG’s effectiveness in generating a wider range\nof responses, especially in scenarios where diverse content is essential. We attribute this advantage\nto LightRAG’s dual-level retrieval paradigm, which facilitates comprehensive information retrieval\nfrom both low-level and high-level dimensions. This approach effectively leverages graph-based text\nindexing to consistently capture the full context in response to queries.\n\nLightRAG’s Superiority over GraphRAG: While both LightRAG and GraphRAG use graph-based\nretrieval mechanisms, LightRAG consistently outperforms GraphRAG, particularly in larger datasets\nwith complex language contexts. In the Agriculture, CS, and Legal datasets—each containing millions\nof tokens—LightRAG shows a clear advantage, significantly surpassing GraphRAG and highlighting\nits strength in comprehensive information understanding within diverse environments. Enhanced\nResponse Variety: By integrating low-level retrieval of specific entities with high-level retrieval of\nbroader topics, LightRAG boosts response diversity. This dual-level mechanism effectively addresses\nboth detailed and abstract queries, ensuring a thorough grasp of information. Complex Query\nHandling: This approach is especially valuable in scenarios requiring diverse perspectives. By\naccessing both specific details and overarching themes, LightRAG adeptly responds to complex\nqueries involving interconnected topics, providing contextually relevant answers.\n\n4.3\nABLATION STUDIES (RQ2)\n\nWe also conduct ablation studies to evaluate the impact of our dual-level retrieval paradigm and the\neffectiveness of our graph-based text indexing in LightRAG. The results are presented in Table 2.\n\nEffectiveness of Dual-level Retrieval Paradigm. We begin by analyzing the effects of low-level and\nhigh-level retrieval paradigms. We compare two ablated models—each omitting one module—against\nLightRAG across four datasets. Here are our key observations for the different variants:\n\n7",
-            "order": 16
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+            "section_id": "page-8",
+            "section": "Virtual Section 8",
+            "page_start": 8,
+            "page_end": 8,
+            "text": "i) Comprehensiveness. Notably, LightRAG covers a broader range of machine learning metrics,\nshowcasing its comprehensiveness and ability to effectively discover relevant information. This\nhighlights the strength of our graph-based indexing paradigm, which excels in precise entity and\nrelation extraction as well as LLM profiling. ii) Both Diversity and Empowerment. Furthermore,\nLightRAG not only offers a more diverse array of information but also delivers more empowering\ncontent. This success is due to LightRAG’s hierarchical retrieval paradigm, which combines in-depth\n\n8",
+            "order": 20
           },
-          "score": 0.6861162185668945
+          "score": 0.6737582683563232
         },
         {
           "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-22",
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-22",
             "section_id": "page-9",
             "section": "Virtual Section 9",
             "page_start": 9,
@@ -74,31 +62,7 @@
             "text": "Table 3: Case Study: Comparison Between LightRAG and the Baseline Method GraphRAG.",
             "order": 21
           },
-          "score": 0.7084946632385254
-        },
-        {
-          "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-25",
-            "section_id": "page-9",
-            "section": "Virtual Section 9",
-            "page_start": 9,
-            "page_end": 9,
-            "text": "We compare the cost of our LightRAG with that of the\ntop-performing baseline, GraphRAG, from two key\nperspectives. First, we examine the number of tokens\nand API calls during the indexing and retrieval pro-\ncesses. Second, we analyze these metrics in relation\nto handling data changes in dynamic environments.\nThe results of this evaluation on the legal dataset are\npresented in Table 2. In this context, Textract repre-\nsents the token overhead for entity and relationship extraction, Cmax denotes the maximum number\nof tokens allowed per API call, and Cextract indicates the number of API calls required for extraction.\n\nIn the retrieval phase, GraphRAG generates 1,399 communities, with 610 level-2 communities\nactively utilized for retrieval in this experiment. Each community report averages 1,000 tokens,\nresulting in a total token consumption of 610,000 tokens (610 communities × 1,000 tokens per\ncommunity). Additionally, GraphRAG’s requirement to traverse each community individually leads\nto hundreds of API calls, significantly increasing retrieval overhead. In contrast, LightRAG optimizes\nthis process by using fewer than 100 tokens for keyword generation and retrieval, requiring only a\nsingle API call for the entire process. This efficiency is achieved through our retrieval mechanism,\n\n9",
-            "order": 24
-          },
-          "score": 0.7180692553520203
-        },
-        {
-          "chunk": {
-            "id": "b75d6662511d41319b48cd1b40e97019:chunk-28",
-            "section_id": "page-10",
-            "section": "Virtual Section 10",
-            "page_start": 10,
-            "page_end": 10,
-            "text": "This work introduces an advancement in Retrieval-Augmented Generation (RAG) through the\nintegration of a graph-based indexing approach that enhances both efficiency and comprehension\nin information retrieval. LightRAG utilizes a comprehensive knowledge graph to facilitate rapid\nand relevant document retrieval, enabling a deeper understanding of complex queries. Its dual-level\nretrieval paradigm allows for the extraction of both specific and abstract information, catering to\ndiverse user needs. Furthermore, LightRAG’s seamless incremental update capability ensures that\nthe system remains current and responsive to new information, thereby maintaining its effectiveness\nover time. Overall, LightRAG excels in both efficiency and effectiveness, significantly improving the\nspeed and quality of information retrieval and generation while reducing costs for LLM inference.\n\n10",
-            "order": 27
-          },
-          "score": 0.6873143315315247
+          "score": 0.6768410801887512
         }
       ]
     },
@@ -107,70 +71,109 @@
       "citations": [
         {
           "id": "C1",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-8",
-          "section": "Virtual Section 4",
-          "page_start": 4,
-          "page_end": 4
-        },
-        {
-          "id": "C2",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-13",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-13",
           "section": "Virtual Section 6",
           "page_start": 6,
           "page_end": 6
         },
         {
-          "id": "C3",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
+          "id": "C2",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
           "section": "Virtual Section 7",
           "page_start": 7,
           "page_end": 7
+        },
+        {
+          "id": "C3",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
         },
         {
           "id": "C4",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-17",
-          "section": "Virtual Section 7",
-          "page_start": 7,
-          "page_end": 7
-        },
-        {
-          "id": "C5",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-22",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-22",
           "section": "Virtual Section 9",
           "page_start": 9,
           "page_end": 9
-        },
-        {
-          "id": "C6",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-25",
-          "section": "Virtual Section 9",
-          "page_start": 9,
-          "page_end": 9
-        },
-        {
-          "id": "C7",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-28",
-          "section": "Virtual Section 10",
-          "page_start": 10,
-          "page_end": 10
         }
       ]
     },
     {
       "type": "delta",
-      "text": "**Architect"
+      "text": "**Performance"
     },
     {
       "type": "delta",
-      "text": "ural and"
+      "text": " metrics"
     },
     {
       "type": "delta",
-      "text": " functional"
+      "text": "**\n\n"
     },
     {
       "type": "delta",
-      "text": " differences**\n\n*"
+      "text": "The"
+    },
+    {
+      "type": "delta",
+      "text": " win"
+    },
+    {
+      "type": "delta",
+      "text": "‑rate tables show that Light"
+    },
+    {
+      "type": "delta",
+      "text": "RAG consistently achieves"
+    },
+    {
+      "type": "delta",
+      "text": " higher percentages"
+    },
+    {
+      "type": "delta",
+      "text": " than"
+    },
+    {
+      "type": "delta",
+      "text": " GraphRAG across"
+    },
+    {
+      "type": "delta",
+      "text": " all"
+    },
+    {
+      "type": "delta",
+      "text": " four evaluation dimensions ("
+    },
+    {
+      "type": "delta",
+      "text": "Comprehensiveness, Diversity"
+    },
+    {
+      "type": "delta",
+      "text": ", Empowerment, Overall"
+    },
+    {
+      "type": "delta",
+      "text": ") on"
+    },
+    {
+      "type": "delta",
+      "text": " each"
+    },
+    {
+      "type": "delta",
+      "text": " dataset. For"
+    },
+    {
+      "type": "delta",
+      "text": " example, in the first set"
+    },
+    {
+      "type": "delta",
+      "text": " of results"
     },
     {
       "type": "delta",
@@ -178,923 +181,83 @@
     },
     {
       "type": "delta",
-      "text": "RAG builds"
+      "text": "RAG’s win"
     },
     {
       "type": "delta",
-      "text": " a graph"
+      "text": " rates"
     },
     {
       "type": "delta",
-      "text": "‑based text"
+      "text": " are 74"
     },
     {
       "type": "delta",
-      "text": " index that supports"
+      "text": " % vs"
     },
     {
       "type": "delta",
-      "text": " **dual"
+      "text": ". 26"
     },
     {
       "type": "delta",
-      "text": "‑level retrieval** (low"
+      "text": " % ("
     },
     {
       "type": "delta",
-      "text": "‑level entity"
+      "text": "Comprehensiveness), "
     },
     {
       "type": "delta",
-      "text": " queries"
+      "text": "76 % vs. "
     },
     {
       "type": "delta",
-      "text": " and high‑level abstract"
+      "text": "24 % (Diversity"
     },
     {
       "type": "delta",
-      "text": " queries"
+      "text": "), 74"
     },
     {
       "type": "delta",
-      "text": ") and an"
+      "text": ".8 "
     },
     {
       "type": "delta",
-      "text": " **incremental update**"
+      "text": "% vs. 25"
     },
     {
       "type": "delta",
-      "text": " mechanism"
+      "text": ".2 % (Emp"
     },
     {
       "type": "delta",
-      "text": " that merges"
+      "text": "owerment) and 75"
     },
     {
       "type": "delta",
-      "text": " new document"
+      "text": "."
     },
     {
       "type": "delta",
-      "text": " graphs"
+      "text": "2 % vs. "
     },
     {
       "type": "delta",
-      "text": " with"
+      "text": "24.8 % ("
     },
     {
       "type": "delta",
-      "text": " the existing"
+      "text": "Overall) "
     },
     {
       "type": "delta",
-      "text": " one"
+      "text": "[C2]. In"
     },
     {
       "type": "delta",
-      "text": " without rebuilding"
-    },
-    {
-      "type": "delta",
-      "text": " the whole index"
-    },
-    {
-      "type": "delta",
-      "text": " "
-    },
-    {
-      "type": "delta",
-      "text": "[C1]"
-    },
-    {
-      "type": "delta",
-      "text": "[C4].  \n* GraphRAG"
-    },
-    {
-      "type": "delta",
-      "text": " also"
-    },
-    {
-      "type": "delta",
-      "text": " uses"
-    },
-    {
-      "type": "delta",
-      "text": " a graph‑enh"
-    },
-    {
-      "type": "delta",
-      "text": "anced RAG approach"
-    },
-    {
-      "type": "delta",
-      "text": ", extracting"
-    },
-    {
-      "type": "delta",
-      "text": " entities and relationships with"
-    },
-    {
-      "type": "delta",
-      "text": " an"
-    },
-    {
-      "type": "delta",
-      "text": " LLM and organizing"
-    },
-    {
-      "type": "delta",
-      "text": " them"
-    },
-    {
-      "type": "delta",
-      "text": " into communities for"
-    },
-    {
-      "type": "delta",
-      "text": " retrieval"
-    },
-    {
-      "type": "delta",
-      "text": ", but it does not describe"
-    },
-    {
-      "type": "delta",
-      "text": " an"
-    },
-    {
-      "type": "delta",
-      "text": " incremental update"
-    },
-    {
-      "type": "delta",
-      "text": " capability"
-    },
-    {
-      "type": "delta",
-      "text": " "
-    },
-    {
-      "type": "delta",
-      "text": "[C2].\n\n**Efficiency"
-    },
-    {
-      "type": "delta",
-      "text": " and cost**\n\n*"
-    },
-    {
-      "type": "delta",
-      "text": " During retrieval"
-    },
-    {
-      "type": "delta",
-      "text": ", GraphRAG creates"
-    },
-    {
-      "type": "delta",
-      "text": " "
-    },
-    {
-      "type": "delta",
-      "text": "1,399"
-    },
-    {
-      "type": "delta",
-      "text": " communities, travers"
-    },
-    {
-      "type": "delta",
-      "text": "es 610 level"
-    },
-    {
-      "type": "delta",
-      "text": "‑2 communities and"
-    },
-    {
-      "type": "delta",
-      "text": " consumes"
-    },
-    {
-      "type": "delta",
-      "text": " about"
-    },
-    {
-      "type": "delta",
-      "text": " 610 000 tokens ("
-    },
-    {
-      "type": "delta",
-      "text": "≈1"
-    },
-    {
-      "type": "delta",
-      "text": " 000 tokens"
-    },
-    {
-      "type": "delta",
-      "text": " per community) with"
-    },
-    {
-      "type": "delta",
-      "text": " “"
-    },
-    {
-      "type": "delta",
-      "text": "hundreds of API"
-    },
-    {
-      "type": "delta",
-      "text": " calls” "
-    },
-    {
-      "type": "delta",
-      "text": "[C6].  \n* Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG generates fewer"
-    },
-    {
-      "type": "delta",
-      "text": " than 100 tokens for"
-    },
-    {
-      "type": "delta",
-      "text": " keyword generation"
-    },
-    {
-      "type": "delta",
-      "text": " and retrieval and"
-    },
-    {
-      "type": "delta",
-      "text": " needs **"
-    },
-    {
-      "type": "delta",
-      "text": "only a single API call**"
-    },
-    {
-      "type": "delta",
-      "text": " for the whole"
-    },
-    {
-      "type": "delta",
-      "text": " process [C6]."
-    },
-    {
-      "type": "delta",
-      "text": "  \n"
-    },
-    {
-      "type": "delta",
-      "text": "*"
-    },
-    {
-      "type": "delta",
-      "text": " This shows Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG’s retrieval"
-    },
-    {
-      "type": "delta",
-      "text": " mechanism"
-    },
-    {
-      "type": "delta",
-      "text": " is far"
-    },
-    {
-      "type": "delta",
-      "text": " more token"
-    },
-    {
-      "type": "delta",
-      "text": "‑ and API"
-    },
-    {
-      "type": "delta",
-      "text": "‑efficient than"
-    },
-    {
-      "type": "delta",
-      "text": " GraphRAG’s"
-    },
-    {
-      "type": "delta",
-      "text": " community"
-    },
-    {
-      "type": "delta",
-      "text": "‑tr"
-    },
-    {
-      "type": "delta",
-      "text": "aversal approach "
-    },
-    {
-      "type": "delta",
-      "text": "[C6].\n\n**Performance"
-    },
-    {
-      "type": "delta",
-      "text": " on"
-    },
-    {
-      "type": "delta",
-      "text": " evaluation metrics**\n\nThe"
-    },
-    {
-      "type": "delta",
-      "text": " comparison"
-    },
-    {
-      "type": "delta",
-      "text": " tables"
-    },
-    {
-      "type": "delta",
-      "text": " treat"
-    },
-    {
-      "type": "delta",
-      "text": " Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG as the baseline and"
-    },
-    {
-      "type": "delta",
-      "text": " LightRAG as the competing"
-    },
-    {
-      "type": "delta",
-      "text": " system.\n\n"
-    },
-    {
-      "type": "delta",
-      "text": "*"
-    },
-    {
-      "type": "delta",
-      "text": " **First"
-    },
-    {
-      "type": "delta",
-      "text": " evaluation"
-    },
-    {
-      "type": "delta",
-      "text": " set**"
-    },
-    {
-      "type": "delta",
-      "text": " (pres"
-    },
-    {
-      "type": "delta",
-      "text": "umably a"
-    },
-    {
-      "type": "delta",
-      "text": " smaller dataset):"
-    },
-    {
-      "type": "delta",
-      "text": "  \n  * Com"
-    },
-    {
-      "type": "delta",
-      "text": "prehensiveness –"
-    },
-    {
-      "type": "delta",
-      "text": " GraphRAG "
-    },
-    {
-      "type": "delta",
-      "text": "26.0 "
-    },
-    {
-      "type": "delta",
-      "text": "% vs Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 74"
-    },
-    {
-      "type": "delta",
-      "text": ".0 %  \n"
-    },
-    {
-      "type": "delta",
-      "text": "  * Diversity – Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 24.0"
-    },
-    {
-      "type": "delta",
-      "text": " % vs Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 76.0"
-    },
-    {
-      "type": "delta",
-      "text": " %  \n  * Empower"
-    },
-    {
-      "type": "delta",
-      "text": "ment – Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 25"
-    },
-    {
-      "type": "delta",
-      "text": ".2 % vs Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 74"
-    },
-    {
-      "type": "delta",
-      "text": ".8 %  \n "
-    },
-    {
-      "type": "delta",
-      "text": " * Overall – Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 24.8"
-    },
-    {
-      "type": "delta",
-      "text": " % vs LightRAG"
-    },
-    {
-      "type": "delta",
-      "text": " 75"
-    },
-    {
-      "type": "delta",
-      "text": ".2"
-    },
-    {
-      "type": "delta",
-      "text": " % "
-    },
-    {
-      "type": "delta",
-      "text": "[C3].\n\n"
-    },
-    {
-      "type": "delta",
-      "text": "* **Second evaluation set**"
-    },
-    {
-      "type": "delta",
-      "text": " (larger datasets"
-    },
-    {
-      "type": "delta",
-      "text": " such"
-    },
-    {
-      "type": "delta",
-      "text": " as Agriculture, CS, Legal"
-    },
-    {
-      "type": "delta",
-      "text": "):  \n  * Com"
-    },
-    {
-      "type": "delta",
-      "text": "prehensiveness – GraphR"
-    },
-    {
-      "type": "delta",
-      "text": "AG 45.6"
-    },
-    {
-      "type": "delta",
-      "text": " % vs LightRAG"
-    },
-    {
-      "type": "delta",
-      "text": " 54"
-    },
-    {
-      "type": "delta",
-      "text": ".4 %  \n "
-    },
-    {
-      "type": "delta",
-      "text": " * Diversity – Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 22.8"
-    },
-    {
-      "type": "delta",
-      "text": " % vs LightRAG"
-    },
-    {
-      "type": "delta",
-      "text": " 77"
-    },
-    {
-      "type": "delta",
-      "text": ".2"
-    },
-    {
-      "type": "delta",
-      "text": " %  \n  * Empower"
-    },
-    {
-      "type": "delta",
-      "text": "ment – Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG 41.2"
-    },
-    {
-      "type": "delta",
-      "text": " % vs LightRAG"
-    },
-    {
-      "type": "delta",
-      "text": " 58.8"
-    },
-    {
-      "type": "delta",
-      "text": " %  \n  * Overall"
-    },
-    {
-      "type": "delta",
-      "text": " – GraphRAG "
-    },
-    {
-      "type": "delta",
-      "text": "45.2 % vs"
-    },
-    {
-      "type": "delta",
-      "text": " LightRAG 54"
-    },
-    {
-      "type": "delta",
-      "text": ".8 % "
-    },
-    {
-      "type": "delta",
-      "text": "[C3].\n\nIn"
-    },
-    {
-      "type": "delta",
-      "text": " both"
-    },
-    {
-      "type": "delta",
-      "text": " sets"
-    },
-    {
-      "type": "delta",
-      "text": " Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG consistently **"
-    },
-    {
-      "type": "delta",
-      "text": "outperforms Graph"
-    },
-    {
-      "type": "delta",
-      "text": "RAG** across all"
-    },
-    {
-      "type": "delta",
-      "text": " four dimensions,"
-    },
-    {
-      "type": "delta",
-      "text": " with especially"
-    },
-    {
-      "type": "delta",
-      "text": " large"
-    },
-    {
-      "type": "delta",
-      "text": " gaps"
-    },
-    {
-      "type": "delta",
-      "text": " in the"
-    },
-    {
-      "type": "delta",
-      "text": " Diversity metric.\n\n**Impact"
-    },
-    {
-      "type": "delta",
-      "text": " on large‑scale corpora"
-    },
-    {
-      "type": "delta",
-      "text": " and"
-    },
-    {
-      "type": "delta",
-      "text": " complex queries**\n\n*"
-    },
-    {
-      "type": "delta",
-      "text": " The"
-    },
-    {
-      "type": "delta",
-      "text": " authors note"
-    },
-    {
-      "type": "delta",
-      "text": " that graph‑enh"
-    },
-    {
-      "type": "delta",
-      "text": "anced RAG systems"
-    },
-    {
-      "type": "delta",
-      "text": " (including LightRAG)"
-    },
-    {
-      "type": "delta",
-      "text": " outperform"
-    },
-    {
-      "type": "delta",
-      "text": " purely"
-    },
-    {
-      "type": "delta",
-      "text": " chunk‑based bas"
-    },
-    {
-      "type": "delta",
-      "text": "elines, and"
-    },
-    {
-      "type": "delta",
-      "text": " that **Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG shows"
-    },
-    {
-      "type": "delta",
-      "text": " a clear advantage over GraphR"
-    },
-    {
-      "type": "delta",
-      "text": "AG on"
-    },
-    {
-      "type": "delta",
-      "text": " the"
-    },
-    {
-      "type": "delta",
-      "text": " largest"
-    },
-    {
-      "type": "delta",
-      "text": " datasets"
-    },
-    {
-      "type": "delta",
-      "text": " (Agriculture, CS,"
-    },
-    {
-      "type": "delta",
-      "text": " Legal),"
-    },
-    {
-      "type": "delta",
-      "text": " which"
-    },
-    {
-      "type": "delta",
-      "text": " contain"
-    },
-    {
-      "type": "delta",
-      "text": " millions of tokens** "
-    },
-    {
-      "type": "delta",
-      "text": "[C4]."
-    },
-    {
-      "type": "delta",
-      "text": "  \n* This superiority"
-    },
-    {
-      "type": "delta",
-      "text": " is attributed to Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG’s dual‑level"
-    },
-    {
-      "type": "delta",
-      "text": " retrieval paradigm, which captures"
-    },
-    {
-      "type": "delta",
-      "text": " both detailed"
-    },
-    {
-      "type": "delta",
-      "text": " and abstract"
-    },
-    {
-      "type": "delta",
-      "text": " information, leading"
-    },
-    {
-      "type": "delta",
-      "text": " to higher"
-    },
-    {
-      "type": "delta",
-      "text": " response diversity and better handling"
-    },
-    {
-      "type": "delta",
-      "text": " of complex,"
-    },
-    {
-      "type": "delta",
-      "text": " interconnected"
-    },
-    {
-      "type": "delta",
-      "text": " queries "
-    },
-    {
-      "type": "delta",
-      "text": "[C4]"
-    },
-    {
-      "type": "delta",
-      "text": "[C7].\n\n**Summary"
-    },
-    {
-      "type": "delta",
-      "text": "**\n\n- Light"
-    },
-    {
-      "type": "delta",
-      "text": "RAG adds"
-    },
-    {
-      "type": "delta",
-      "text": " incremental"
-    },
-    {
-      "type": "delta",
-      "text": " updates"
-    },
-    {
-      "type": "delta",
-      "text": ", dual"
-    },
-    {
-      "type": "delta",
-      "text": "‑level retrieval, and a"
-    },
-    {
-      "type": "delta",
-      "text": " highly"
-    },
-    {
-      "type": "delta",
-      "text": " token"
-    },
-    {
-      "type": "delta",
-      "text": "‑efficient"
-    },
-    {
-      "type": "delta",
-      "text": " retrieval"
-    },
-    {
-      "type": "delta",
-      "text": " pipeline"
-    },
-    {
-      "type": "delta",
-      "text": ", whereas"
-    },
-    {
-      "type": "delta",
-      "text": " GraphRAG relies"
-    },
-    {
-      "type": "delta",
-      "text": " on community"
-    },
-    {
-      "type": "delta",
-      "text": "‑based traversal"
-    },
-    {
-      "type": "delta",
-      "text": " without"
-    },
-    {
-      "type": "delta",
-      "text": " incremental"
-    },
-    {
-      "type": "delta",
-      "text": " support"
-    },
-    {
-      "type": "delta",
-      "text": ".  \n- Emp"
-    },
-    {
-      "type": "delta",
-      "text": "irically, LightRAG"
-    },
-    {
-      "type": "delta",
-      "text": " beats"
-    },
-    {
-      "type": "delta",
-      "text": " GraphRAG on Com"
-    },
-    {
-      "type": "delta",
-      "text": "prehensiveness, Diversity,"
-    },
-    {
-      "type": "delta",
-      "text": " Empowerment, and Overall win"
-    },
-    {
-      "type": "delta",
-      "text": "‑"
-    },
-    {
-      "type": "delta",
-      "text": "rates"
-    },
-    {
-      "type": "delta",
-      "text": " across multiple"
-    },
-    {
-      "type": "delta",
-      "text": " datasets, with"
-    },
-    {
-      "type": "delta",
-      "text": " especially"
-    },
-    {
-      "type": "delta",
-      "text": " pronounced gains"
-    },
-    {
-      "type": "delta",
-      "text": " in Diversity."
-    },
-    {
-      "type": "delta",
-      "text": "  \n- Light"
+      "text": " the second set Light"
     },
     {
       "type": "delta",
@@ -1102,7 +265,7 @@
     },
     {
       "type": "delta",
-      "text": " reduces computational overhead dramatically"
+      "text": " leads"
     },
     {
       "type": "delta",
@@ -1110,101 +273,237 @@
     },
     {
       "type": "delta",
-      "text": " using"
+      "text": " e.g., 54"
     },
     {
       "type": "delta",
-      "text": " "
+      "text": ".4"
     },
     {
       "type": "delta",
-      "text": "<100 tokens and"
+      "text": " % vs. 45"
     },
     {
       "type": "delta",
-      "text": " a single API call versus Graph"
+      "text": ".6 % (Com"
     },
     {
       "type": "delta",
-      "text": "RAG’s hundreds"
+      "text": "prehensiveness), 77"
     },
     {
       "type": "delta",
-      "text": " of calls"
+      "text": ".2 % vs"
     },
     {
       "type": "delta",
-      "text": " and >"
+      "text": ". 22"
     },
     {
       "type": "delta",
-      "text": "600 "
+      "text": ".8 % (D"
     },
     {
       "type": "delta",
-      "text": "000 tokens. "
+      "text": "iversity), 58"
     },
     {
       "type": "delta",
-      "text": "[C1]"
+      "text": ".8 % vs."
     },
     {
       "type": "delta",
-      "text": "[C2]"
+      "text": " 41.2 %"
     },
     {
       "type": "delta",
-      "text": "[C3][C4]"
+      "text": " (Empowerment) and"
     },
     {
       "type": "delta",
-      "text": "[C6][C7]"
+      "text": " 54"
+    },
+    {
+      "type": "delta",
+      "text": ".8 % vs."
+    },
+    {
+      "type": "delta",
+      "text": " 45.2 %"
+    },
+    {
+      "type": "delta",
+      "text": " (Overall) "
+    },
+    {
+      "type": "delta",
+      "text": "[C2].\n\n**Qual"
+    },
+    {
+      "type": "delta",
+      "text": "itative advantages"
+    },
+    {
+      "type": "delta",
+      "text": "**\n\nLight"
+    },
+    {
+      "type": "delta",
+      "text": "RAG is"
+    },
+    {
+      "type": "delta",
+      "text": " described as covering"
+    },
+    {
+      "type": "delta",
+      "text": " a broader range of machine‑"
+    },
+    {
+      "type": "delta",
+      "text": "learning metrics, providing"
+    },
+    {
+      "type": "delta",
+      "text": " more"
+    },
+    {
+      "type": "delta",
+      "text": " diverse information"
+    },
+    {
+      "type": "delta",
+      "text": ","
+    },
+    {
+      "type": "delta",
+      "text": " and delivering more empowering content."
+    },
+    {
+      "type": "delta",
+      "text": " These"
+    },
+    {
+      "type": "delta",
+      "text": " strengths"
+    },
+    {
+      "type": "delta",
+      "text": " are"
+    },
+    {
+      "type": "delta",
+      "text": " attributed to its hierarchical"
+    },
+    {
+      "type": "delta",
+      "text": " retrieval paradigm,"
+    },
+    {
+      "type": "delta",
+      "text": " which combines in‑"
+    },
+    {
+      "type": "delta",
+      "text": "depth graph"
+    },
+    {
+      "type": "delta",
+      "text": "‑based indexing"
+    },
+    {
+      "type": "delta",
+      "text": " with L"
+    },
+    {
+      "type": "delta",
+      "text": "LM profiling"
+    },
+    {
+      "type": "delta",
+      "text": " "
+    },
+    {
+      "type": "delta",
+      "text": "[C3].\n\n**Summary"
+    },
+    {
+      "type": "delta",
+      "text": "**\n\nOverall"
+    },
+    {
+      "type": "delta",
+      "text": ", LightRAG out"
+    },
+    {
+      "type": "delta",
+      "text": "performs GraphRAG"
+    },
+    {
+      "type": "delta",
+      "text": " both"
+    },
+    {
+      "type": "delta",
+      "text": " quantit"
+    },
+    {
+      "type": "delta",
+      "text": "atively (higher win‑rate"
+    },
+    {
+      "type": "delta",
+      "text": " percentages on"
+    },
+    {
+      "type": "delta",
+      "text": " all dimensions) and qualit"
+    },
+    {
+      "type": "delta",
+      "text": "atively (bro"
+    },
+    {
+      "type": "delta",
+      "text": "ader metric"
+    },
+    {
+      "type": "delta",
+      "text": " coverage, greater"
+    },
+    {
+      "type": "delta",
+      "text": " diversity, and more"
+    },
+    {
+      "type": "delta",
+      "text": " empowering answers"
+    },
+    {
+      "type": "delta",
+      "text": ") "
+    },
+    {
+      "type": "delta",
+      "text": "[C2][C3]."
     },
     {
       "type": "final",
-      "answer": "**Architectural and functional differences**\n\n* LightRAG builds a graph‑based text index that supports **dual‑level retrieval** (low‑level entity queries and high‑level abstract queries) and an **incremental update** mechanism that merges new document graphs with the existing one without rebuilding the whole index [C1][C4].  \n* GraphRAG also uses a graph‑enhanced RAG approach, extracting entities and relationships with an LLM and organizing them into communities for retrieval, but it does not describe an incremental update capability [C2].\n\n**Efficiency and cost**\n\n* During retrieval, GraphRAG creates 1,399 communities, traverses 610 level‑2 communities and consumes about 610 000 tokens (≈1 000 tokens per community) with “hundreds of API calls” [C6].  \n* LightRAG generates fewer than 100 tokens for keyword generation and retrieval and needs **only a single API call** for the whole process [C6].  \n* This shows LightRAG’s retrieval mechanism is far more token‑ and API‑efficient than GraphRAG’s community‑traversal approach [C6].\n\n**Performance on evaluation metrics**\n\nThe comparison tables treat GraphRAG as the baseline and LightRAG as the competing system.\n\n* **First evaluation set** (presumably a smaller dataset):  \n  * Comprehensiveness – GraphRAG 26.0 % vs LightRAG 74.0 %  \n  * Diversity – GraphRAG 24.0 % vs LightRAG 76.0 %  \n  * Empowerment – GraphRAG 25.2 % vs LightRAG 74.8 %  \n  * Overall – GraphRAG 24.8 % vs LightRAG 75.2 % [C3].\n\n* **Second evaluation set** (larger datasets such as Agriculture, CS, Legal):  \n  * Comprehensiveness – GraphRAG 45.6 % vs LightRAG 54.4 %  \n  * Diversity – GraphRAG 22.8 % vs LightRAG 77.2 %  \n  * Empowerment – GraphRAG 41.2 % vs LightRAG 58.8 %  \n  * Overall – GraphRAG 45.2 % vs LightRAG 54.8 % [C3].\n\nIn both sets LightRAG consistently **outperforms GraphRAG** across all four dimensions, with especially large gaps in the Diversity metric.\n\n**Impact on large‑scale corpora and complex queries**\n\n* The authors note that graph‑enhanced RAG systems (including LightRAG) outperform purely chunk‑based baselines, and that **LightRAG shows a clear advantage over GraphRAG on the largest datasets (Agriculture, CS, Legal), which contain millions of tokens** [C4].  \n* This superiority is attributed to LightRAG’s dual‑level retrieval paradigm, which captures both detailed and abstract information, leading to higher response diversity and better handling of complex, interconnected queries [C4][C7].\n\n**Summary**\n\n- LightRAG adds incremental updates, dual‑level retrieval, and a highly token‑efficient retrieval pipeline, whereas GraphRAG relies on community‑based traversal without incremental support.  \n- Empirically, LightRAG beats GraphRAG on Comprehensiveness, Diversity, Empowerment, and Overall win‑rates across multiple datasets, with especially pronounced gains in Diversity.  \n- LightRAG also reduces computational overhead dramatically, using <100 tokens and a single API call versus GraphRAG’s hundreds of calls and >600 000 tokens. [C1][C2][C3][C4][C6][C7]",
+      "answer": "**Performance metrics**\n\nThe win‑rate tables show that LightRAG consistently achieves higher percentages than GraphRAG across all four evaluation dimensions (Comprehensiveness, Diversity, Empowerment, Overall) on each dataset. For example, in the first set of results LightRAG’s win rates are 74 % vs. 26 % (Comprehensiveness), 76 % vs. 24 % (Diversity), 74.8 % vs. 25.2 % (Empowerment) and 75.2 % vs. 24.8 % (Overall) [C2]. In the second set LightRAG also leads, e.g., 54.4 % vs. 45.6 % (Comprehensiveness), 77.2 % vs. 22.8 % (Diversity), 58.8 % vs. 41.2 % (Empowerment) and 54.8 % vs. 45.2 % (Overall) [C2].\n\n**Qualitative advantages**\n\nLightRAG is described as covering a broader range of machine‑learning metrics, providing more diverse information, and delivering more empowering content. These strengths are attributed to its hierarchical retrieval paradigm, which combines in‑depth graph‑based indexing with LLM profiling [C3].\n\n**Summary**\n\nOverall, LightRAG outperforms GraphRAG both quantitatively (higher win‑rate percentages on all dimensions) and qualitatively (broader metric coverage, greater diversity, and more empowering answers) [C2][C3].",
       "citations": [
         {
-          "id": "C1",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-8",
-          "section": "Virtual Section 4",
-          "page_start": 4,
-          "page_end": 4
-        },
-        {
           "id": "C2",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-13",
-          "section": "Virtual Section 6",
-          "page_start": 6,
-          "page_end": 6
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
+          "section": "Virtual Section 7",
+          "page_start": 7,
+          "page_end": 7
         },
         {
           "id": "C3",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-16",
-          "section": "Virtual Section 7",
-          "page_start": 7,
-          "page_end": 7
-        },
-        {
-          "id": "C4",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-17",
-          "section": "Virtual Section 7",
-          "page_start": 7,
-          "page_end": 7
-        },
-        {
-          "id": "C6",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-25",
-          "section": "Virtual Section 9",
-          "page_start": 9,
-          "page_end": 9
-        },
-        {
-          "id": "C7",
-          "source_id": "b75d6662511d41319b48cd1b40e97019:chunk-28",
-          "section": "Virtual Section 10",
-          "page_start": 10,
-          "page_end": 10
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
         }
       ],
       "unverified": []
@@ -1214,15 +513,15 @@
       "calls": [
         {
           "call_type": "router",
-          "estimated_prompt_tokens": 827,
-          "prompt_eval_count": 488,
-          "eval_count": 82,
+          "estimated_prompt_tokens": 824,
+          "prompt_eval_count": 485,
+          "eval_count": 103,
           "think": "low",
           "num_predict": 600,
           "context_budget": 10000,
           "safety_margin": 300,
-          "thinking": "We need to output JSON. It's a Synthesis. Provide sub_queries.",
-          "latency_ms": 872.6338748820126,
+          "thinking": "We need to classify. Comparing two systems => Synthesis. Provide standalone_question: \"Compare LightRAG with GraphRAG\". sub_queries 2-3. Provide JSON.",
+          "latency_ms": 758.2285420503467,
           "done_reason": "stop",
           "discarded_fact_lines": 0,
           "plan_source": "router",
@@ -1230,15 +529,15 @@
         },
         {
           "call_type": "answer",
-          "estimated_prompt_tokens": 2889,
-          "prompt_eval_count": 2664,
-          "eval_count": 1170,
+          "estimated_prompt_tokens": 1632,
+          "prompt_eval_count": 1407,
+          "eval_count": 895,
           "think": "medium",
           "num_predict": 3000,
           "context_budget": 10000,
           "safety_margin": 300,
-          "thinking": "We need to answer using only supplied excerpts, citing. Compare LightRAG with GraphRAG. We have data: C1 describes LightRAG advantages, incremental updates, etc. C2 mentions GraphRAG description. C3 provides performance tables comparing LightRAG and GraphRAG across metrics (Comprehensiveness, Diversity, Empowerment, Overall) for multiple datasets (presumably two sets of numbers). C4 discusses LightRAG superiority over GraphRAG, especially in larger datasets, and mentions dual-level retrieval improves diversity. C6 gives cost comparison: LightRAG uses <100 tokens and single API call vs GraphRAG many tokens and many API calls. C7 summarises LightRAG benefits.\n\nWe need to compare: performance (metrics), cost efficiency, architecture differences (graph-based indexing, dual-level retrieval), incremental updates, etc.\n\nWe must cite each factual claim with appropriate citation IDs. Use [C1], [C2], etc. For tables, need to explain baseline before giving conclusions. So for performance, we need to explain that the baseline is GraphRAG and LightRAG, then give numbers. In C3, there are two sets of numbers? It seems first block maybe for some dataset? Actually C3 shows two groups: first block (Comprehensiveness etc) with percentages: 26.0% vs 74.0% etc. Then second block with GraphRAG and LightRAG again but different numbers (45.6% vs 54.4% etc). Possibly two different datasets. We can summarize that LightRAG outperforms GraphRAG across all metrics in both sets. Provide example numbers.\n\nNow craft answer: LightRAG offers dual-level retrieval, incremental updates, lower computational overhead, better performance metrics, lower token usage and API calls.\n\nCite accordingly.\n\nLet's produce final answer.",
-          "latency_ms": 7454.242666019127,
+          "thinking": "We need to compare LightRAG with GraphRAG using the supplied excerpts. We have data in C2: a table with percentages for various dimensions (Comprehensiveness, Diversity, Empowerment, Overall) for GraphRAG and LightRAG across presumably two datasets? The table seems to have two columns per method? Actually the table shows rows: first block maybe for one dataset? The formatting is confusing. Let's parse.\n\nC2 shows:\n\nComprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nThen labels: GraphRAG LightRAG GraphRAG LightRAG GraphRAG LightRAG GraphRAG LightRAG\n\nSo likely there are four datasets, each with GraphRAG and LightRAG percentages. Then second block:\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nAgain with same labels.\n\nThus we can compare LightRAG vs GraphRAG: LightRAG generally higher win rates across dimensions. Also C1 mentions GraphRAG extracts entities and relationships, aggregates nodes into communities, and LightRAG uses same gleaning parameter. C3 says LightRAG covers broader range of metrics, more diverse and empowering content due to hierarchical retrieval paradigm. So combine.\n\nThus answer: LightRAG outperforms GraphRAG in comprehensiveness, diversity, empowerment, overall win rates across datasets, and offers broader metric coverage and more diverse/empowering content thanks to hierarchical retrieval. Provide citations.\n\n",
+          "latency_ms": 3523.076542187482,
           "done_reason": "stop",
           "discarded_fact_lines": 0,
           "plan_source": null,
