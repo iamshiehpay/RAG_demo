@@ -1,0 +1,15 @@
+# Company-internal slides — never commit
+AI_Engineer_Job_intro_assignment_v4.pdf
+
+# Test documents are downloaded by scripts/fetch_data.sh (arXiv license does not grant redistribution)
+data/*.pdf
+
+# Generated / installed
+.cache/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+frontend/node_modules/
+.DS_Store
