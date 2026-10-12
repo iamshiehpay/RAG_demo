@@ -271,3 +271,6 @@ failure and integrated pass are recorded under ticket-03/post-issue02.
 
 - **AI 初版的長度基準會被 Chunk overlap 放大：** Section Summary 的 15% 最初用全部 Chunk 文字計數；改成原始 Section 段落加 Table Chunk 文字計算，摘要依據仍包含所有 Chunk，來源記錄不變。單一超長段落的 500-token 上限、分段摘要後合併與零 Chunk parent 排除，都由公開 upload 操作驗證。
 - **既有假 LLM 不能把 Router 腳本吃成上傳摘要：** 加入 Summary Tree 後，所有上傳都會先呼叫摘要；舊測試只有 ask 腳本。測試 adapter 明確提供摘要回應、完整記錄 calls，並用 ask_calls 分開斷言提問；客製抽取 adapter 的 summary 分支先回到相同 seam，避免留下多餘腳本。正式 ScriptedLLM 不改動。
+- **實測推翻「列出機制名稱就足以覆蓋三句摘要」：** 初次 Global eval 的中文與恰三句通過，但 graph indexing／dual-level／incremental update 的具體語意未通過；Q1 另有 judge 摘錄含省略號而非逐字引用。保留初次 FAIL 報告，僅加強 Global prompt：短摘要也說明機制，以第一句動機與 indexing、第二句 retrieval 與更新、第三句實驗與結論安排，不改 Router 或 checker。
+- **Ollama Cloud 同時呼叫實測：** 8 次 Section Summary 分別以 concurrency=1/2/4/8 執行，全部 8/8 成功；wall time 8.82/4.31/2.64/2.10 秒，所有呼叫經原 Gateway、low、num_predict=1200，沒有 length 或超 10K。只能說這組短輸入在 8 個 in-flight 內沒有觀察到限制，不能證明服務完全沒上限；遵守已定 default=4，保留可配置選项與原始 JSON。
+- **短格式也不能把檢索成本挪到更新成本：** 後續三句摘要把「單次 API 呼叫」接到增量更新上；這是回答壓縮時的錯誤，加入 Global-only 的 operation distinction，要求 retrieval／indexing／incremental update 的 token 與 API 數據不得互換。保留前後報告，不改 checker、分類或數值規則。

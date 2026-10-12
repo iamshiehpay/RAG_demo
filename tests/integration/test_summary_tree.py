@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pymupdf
+import pytest
 
 from chat_document.application import Application
 from chat_document.cache import ProcessingCache
@@ -180,12 +181,15 @@ async def test_heading_only_sections_are_skipped():
     ) - len(empty)
 
 
-async def test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled():
+@pytest.mark.parametrize("configured,expected", [(None, 4), (2, 2)])
+async def test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled(
+    configured, expected, monkeypatch
+):
     import asyncio
 
     class HeldLLM(ScriptedLLM):
         def __init__(self):
-            super().__init__(["Summary"] * 4)
+            super().__init__(["Summary"] * 7)
             self.active = self.maximum = 0
             self.entered = asyncio.Event()
             self.release = asyncio.Event()
@@ -193,7 +197,7 @@ async def test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled():
         async def stream(self, request):
             self.active += 1
             self.maximum = max(self.maximum, self.active)
-            if self.active == 2:
+            if self.active == expected:
                 self.entered.set()
             try:
                 await self.release.wait()
@@ -203,12 +207,51 @@ async def test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled():
                 self.active -= 1
 
     llm = HeldLLM()
-    app = Application(OllamaEmbedder(), LLMGateway(llm), summary_concurrency=2)
-    job = app.start_upload(structured_pdf(), "Document.pdf")
+    monkeypatch.delenv("SUMMARY_CONCURRENCY", raising=False)
+    app = Application(OllamaEmbedder(), LLMGateway(llm), summary_concurrency=configured)
+    job = app.start_upload(summary_pdf(6), "Document.pdf")
     await asyncio.wait_for(llm.entered.wait(), timeout=15)
     assert app.document is None
     assert [e async for e in app.ask("Summarize")][-1].code == "document_not_ready"
     llm.release.set()
     uploaded = [e async for e in app.upload_events(job)]
     assert uploaded[-1].type == "ready"
-    assert llm.maximum == 2 and llm.active == 0
+    assert llm.maximum == expected and llm.active == 0
+
+
+@pytest.mark.parametrize("words", [1, 200, 1000])
+async def test_section_summary_length_target_covers_minimum_proportional_and_maximum(words):
+    llm = ScriptedLLM(["Section Summary", "Overview"])
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    uploaded = [e async for e in app.upload_document(summary_pdf(words=words), "Document.pdf")]
+    assert uploaded[-1].type == "ready"
+    original = "\n\n".join(app.document.sections[0].paragraphs)
+    target = max(80, min(500, round(count_tokens(original) * 0.15)))
+    assert app.document.summary_tree.section_summaries[0].target_tokens == target
+    assert f"Target {target} tokens" in llm.calls[0].messages[0]["content"]
+    assert target == 80 if words == 1 else target == 500 if words == 1000 else 80 < target < 500
+    assert llm.calls[0].num_predict == 1200
+
+
+async def test_failed_summary_replacement_keeps_previous_document_and_no_partial_cache(tmp_path):
+    from chat_document.llm_adapter import LLMFrame
+
+    llm = ScriptedLLM(
+        [
+            "Original Section Summary",
+            "Original Overview",
+            [LLMFrame(content="Truncated summary"), LLMFrame(done=True, done_reason="length")],
+        ]
+    )
+    app = Application(OllamaEmbedder(), LLMGateway(llm), cache=ProcessingCache(tmp_path))
+    content = summary_pdf()
+    assert [e async for e in app.upload_document(content, "original.pdf")][-1].type == "ready"
+    previous = app.document
+    records = list(tmp_path.glob("*.json"))
+    failed = [e async for e in app.upload_document(summary_pdf(words=101), "replacement.pdf")]
+    assert failed[-1].type == "error"
+    assert not any(e.type == "ready" for e in failed)
+    assert "truncated" in failed[-1].message.lower()
+    assert app.document is previous
+    assert list(tmp_path.glob("*.json")) == records
+    assert not list(tmp_path.glob("*.tmp"))
