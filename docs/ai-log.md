@@ -104,3 +104,7 @@
 - **第三次審查抓到評估把 fallback 當成 Router 成功：** 整合報告的 Lookup「通過」沒有驗證計畫來源，追問未改寫也因 ask 接受 history 就通過。先用 scripted PlanEvent 重現 fallback Lookup 的假陽性，再要求 plan_source=router，fallback 以 FALLBACK 記錄且分類失敗。與 #06 agent 約定 plan_source／fallback_reason 介面，兩個追問以 canonical case metadata 檢查 Standalone Question 改變及明確的 referent／檢索成本或比較；不再用參數被接受作為品質判準。舊報告標示 superseded。
 
 - **人補上語言改寫的驗收限制：** #06 新增 rewrite_language_mismatch 後，#08 原先只看 plan_source／referent，會讓帶有語言不符旗標的 scripted PlanEvent 通過改寫測試。先重現，再把旗標納入改寫失敗條件，報告保留原始 router_standalone_question，方便追查；Question Type 與改寫品質分開檢查。
+
+- **AI 的 rebase 修復腳本被 TOML conflict 擋住：** 用 uv run 啟動 Python 時，uv 先解析尚未解決的 pyproject.toml 而拒絕執行；AI 未確認該步 exit status 就繼續，讓 marker 留在中間 checkpoint。改用 uv run --no-project 執行修復，明確驗證 TOML 可解析且沒有 conflict markers 後才繼續。最终保留兩邊的 eval exclusion／marker 與兩份 AI log，並以完整測試驗證整合。
+
+- **整合後的測試 fixture 仍假定 Router user message 只有問句：** #06 新增語言提示 wrapper，歷史內容與問句皆正確傳入，但舊斷言比較整個 content 而失敗。改為驗證最後一則仍為 user 且保留原問句，歷史 role/content 仍逐字核對；改写品質另外由新的 provenance／referent／語言旗標斷言負責。

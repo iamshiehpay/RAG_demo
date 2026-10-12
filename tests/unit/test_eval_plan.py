@@ -6,11 +6,6 @@ from eval.runner import RecordingGateway, run_evaluation
 
 
 async def test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed(tmp_path):
-    # Compatible scripted events while #06's provenance fields await integration.
-    class ProvenancePlan(PlanEvent):
-        plan_source: str
-        fallback_reason: str | None = None
-
     class ScriptedApplication:
         async def upload_document(self, content, name):
             yield ReadyEvent(document_id="d", name=name, chunk_count=0)
@@ -20,18 +15,18 @@ async def test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed(tmp
             yield FinalEvent(answer="Evidence", citations=[])
 
     plans = [
-        ProvenancePlan(
+        PlanEvent(
             question_type="Lookup",
             standalone_question="Question?",
             sub_queries=[],
             plan_source="router",
         ),
-        ProvenancePlan(
+        PlanEvent(
             question_type="Lookup",
             standalone_question="Question?",
             sub_queries=[],
             plan_source="fallback",
-            fallback_reason="Invalid Router JSON",
+            fallback_reason="invalid_json",
         ),
     ]
     path = tmp_path / "document.pdf"
@@ -43,19 +38,15 @@ async def test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed(tmp
     assert report.runs[0].facts[0].passed
     assert report.runs[1].facts[0].status == "FALLBACK"
     assert not report.runs[1].facts[0].passed
-    assert report.runs[1].fallback_reason == "Invalid Router JSON"
+    assert report.runs[1].fallback_reason == "invalid_json"
     write_report(report, tmp_path / "report.md")
     text = (tmp_path / "report.md").read_text()
-    assert "| FALLBACK |" in text and "Invalid Router JSON" in text
+    assert "| FALLBACK |" in text and "invalid_json" in text
     assert "1/2 (50.0%)" in text
 
 
 async def test_follow_up_must_change_and_resolve_the_canonical_referents(tmp_path):
     from eval.golden_facts import router_cases
-
-    class ProvenancePlan(PlanEvent):
-        plan_source: str = "router"
-        fallback_reason: str | None = None
 
     class ScriptedApplication:
         async def upload_document(self, content, name):
@@ -67,23 +58,23 @@ async def test_follow_up_must_change_and_resolve_the_canonical_referents(tmp_pat
 
     cost, comparison = router_cases()[10:12]
     plans = [
-        ProvenancePlan(question_type="Lookup", standalone_question=cost.question, sub_queries=[]),
-        ProvenancePlan(
+        PlanEvent(question_type="Lookup", standalone_question=cost.question, sub_queries=[]),
+        PlanEvent(
             question_type="Lookup",
             standalone_question="What is its retrieval cost?",
             sub_queries=[],
         ),
-        ProvenancePlan(
+        PlanEvent(
             question_type="Lookup",
             standalone_question="LightRAG 的檢索成本是多少？",
             sub_queries=[],
         ),
-        ProvenancePlan(
+        PlanEvent(
             question_type="Synthesis",
             standalone_question="Compare GraphRAG with it.",
             sub_queries=[],
         ),
-        ProvenancePlan(
+        PlanEvent(
             question_type="Synthesis",
             standalone_question="Compare LightRAG with GraphRAG.",
             sub_queries=[],
@@ -107,21 +98,17 @@ async def test_follow_up_must_change_and_resolve_the_canonical_referents(tmp_pat
 async def test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite(tmp_path):
     from eval.golden_facts import router_cases
 
-    class ProvenancePlan(PlanEvent):
-        plan_source: str = "router"
-        fallback_reason: str | None = None
-        rewrite_language_mismatch: bool = True
-        router_standalone_question: str | None = "What is LightRAG's retrieval cost?"
-
     class ScriptedApplication:
         async def upload_document(self, content, name):
             yield ReadyEvent(document_id="d", name=name, chunk_count=0)
 
         async def ask(self, question, *, history):
-            yield ProvenancePlan(
+            yield PlanEvent(
                 question_type="Lookup",
                 standalone_question="LightRAG 的檢索成本是多少？",
                 sub_queries=[],
+                rewrite_language_mismatch=True,
+                router_standalone_question="What is LightRAG's retrieval cost?",
             )
             yield FinalEvent(answer="Evidence", citations=[])
 

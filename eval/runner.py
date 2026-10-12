@@ -209,14 +209,10 @@ async def run_evaluation(
                     for event in events:
                         if isinstance(event, PlanEvent):
                             run.question_type = event.question_type
-                            run.plan_source = getattr(event, "plan_source", None)
-                            run.fallback_reason = getattr(event, "fallback_reason", None)
-                            run.rewrite_language_mismatch = getattr(
-                                event, "rewrite_language_mismatch", False
-                            )
-                            run.router_standalone_question = getattr(
-                                event, "router_standalone_question", None
-                            )
+                            run.plan_source = event.plan_source
+                            run.fallback_reason = event.fallback_reason
+                            run.rewrite_language_mismatch = event.rewrite_language_mismatch
+                            run.router_standalone_question = event.router_standalone_question
                             run.standalone_question = event.standalone_question
                             run.sub_queries = event.sub_queries
                         elif isinstance(event, FinalEvent):

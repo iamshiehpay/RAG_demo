@@ -196,4 +196,5 @@ async def test_canonical_router_cases_convert_history_and_isolate_independent_qu
         assert request.messages[1:-1] == [
             {"role": role, "content": content} for role, content in case.history
         ]
-        assert request.messages[-1] == {"role": "user", "content": case.question}
+        assert request.messages[-1]["role"] == "user"
+        assert case.question in request.messages[-1]["content"]
