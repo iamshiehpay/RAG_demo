@@ -1,9 +1,13 @@
 import type { LLMCallTrace, PlanEvent, RetrievedChunk } from './events';
+import { ThinkingContent } from './Shared';
 
-export function Trace({ calls, chunks, plan }: {
+export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount = 0 }: {
   calls: LLMCallTrace[]; chunks: RetrievedChunk[]; plan: PlanEvent | null;
+  thinking?: string; invalidCitationCount?: number;
 }) {
   return <details className="trace"><summary>Trace · {calls.length} LLM call{calls.length === 1 ? '' : 's'}</summary>
+    <p>Invalid Citations: {invalidCitationCount}</p>
+    {calls.length === 0 && <ThinkingContent text={thinking} />}
     {plan && <section aria-label="Question plan"><h4>Question plan</h4>
       <dl className="metrics">
         <div><dt>Question Type</dt><dd>{plan.question_type}</dd></div>
@@ -34,7 +38,7 @@ export function Trace({ calls, chunks, plan }: {
         {call.discarded_fact_lines > 0 && <div><dt>Discarded extraction lines</dt>
           <dd>{call.discarded_fact_lines}</dd></div>}
       </dl>
-      {call.thinking && <details><summary>Model thinking</summary><pre>{call.thinking}</pre></details>}
+      <ThinkingContent text={call.thinking} />
     </section>)}
     <h4>Retrieved Chunks · cosine similarity</h4>
     {chunks.map(item => <details key={item.chunk.id}>

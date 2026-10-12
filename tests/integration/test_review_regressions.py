@@ -122,9 +122,9 @@ async def test_ask_accumulates_traces_from_every_gateway_call(over_budget_second
     result = [e async for e in app.ask("What does this say?")]
     expected = 2 if over_budget_second_call else 3
     assert len(llm.calls) == expected
-    assert len(result[-1].calls) == expected
+    assert len(next(e for e in result if e.type == "trace").calls) == expected
     if over_budget_second_call:
-        assert result[-2].type == "error" and result[-2].code == "budget_exceeded"
+        assert result[-1].type == "error" and result[-1].code == "budget_exceeded"
         assert not any(e.type == "final" for e in result)
 
 
@@ -197,7 +197,7 @@ async def test_unexpected_llm_exception_emits_generic_error_and_trace():
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("What does this say?")]
-    assert [e.type for e in result][-2:] == ["error", "trace"]
-    assert "Internal details" not in result[-2].message
+    assert [e.type for e in result][-2:] == ["trace", "error"]
+    assert "Internal details" not in result[-1].message
     assert not any(e.type == "final" for e in result)
-    assert result[-1].calls[0].done_reason == "error"
+    assert result[-2].calls[0].done_reason == "error"

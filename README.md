@@ -31,11 +31,11 @@ bash scripts/fetch_data.sh
 
 Example question (Q3): `Performance of ablated versions of LightRAG`.
 
-## Current scope (#01, #06)
+## Current scope (#01, #06, #07)
 
 Upload processes synchronously in the request. Each page is a virtual Section, paragraphs are packed into roughly 500-token Chunks, and a guarded JSON Router produces Question Type, Standalone Question and Sub-queries in one low-thinking call. Lookup retrieves five Chunks; Synthesis retrieves three for the Standalone Question and two per Sub-query, deduplicated in Document order. Global temporarily uses the Synthesis path until the Summary Tree ticket is integrated. Context Packer batches oversized evidence into cited facts and merges them again when needed, retaining original Citation IDs. State is in memory and resets on restart or replacement upload.
 
-Section detection, table reconstruction, background ingestion/cache, Summary Tree, automatic retries/Citation validation, Golden Facts eval and the final Tufte design are later tickets. Q3 currently demonstrates the complete streaming/Citation flow; precise Table 2 interpretation is not an acceptance claim for this slice. A truncated or interrupted answer fails without becoming final; the UI clears provisional text and provides a retry button.
+Section detection, table reconstruction, background ingestion/cache, Summary Tree, Golden Facts eval and the final Tufte design are later tickets. Q3 currently demonstrates the complete streaming/Citation flow; precise Table 2 interpretation is not an acceptance claim for this slice. Streamed text is provisional until `final`. A truncated answer retries once with `think=low`, clearing the first attempt and showing「重新產生中」. If that retry also fails, the UI clears partial text and shows a retry button. Router, query-embedding and answer connection failures stop downstream work and emit a terminal error (preceded by available Trace records). Invalid Citation IDs are removed, their sentences are marked「未驗證 · Unverified」, and Trace counts the invalid occurrences; uncited sentences are not flagged (D01). Space-separated Citations and ranges are normalized, with ranges expanded only when every ID is supplied. Streamed model thinking appears in collapsed Trace details.
 
 Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question, evidence and current question as its language reference. The current question controls answer language. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
 Chinese answers preserve the current question's Traditional/Simplified script; ambiguous

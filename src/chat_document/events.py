@@ -76,6 +76,7 @@ class FinalEvent(BaseModel):
 class TraceEvent(BaseModel):
     type: Literal["trace"] = "trace"
     calls: list[LLMCallTrace]
+    invalid_citation_count: int = 0
 
 
 class ErrorEvent(BaseModel):

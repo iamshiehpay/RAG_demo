@@ -26,6 +26,8 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .answer-text, pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 pre { font: inherit; margin: 12px 0; }
 .provisional { font-style: italic; }
+.provisional-text { font-style: italic; color: var(--muted); }
+.unverified-mark { color: var(--danger); font-size: 14px; font-weight: bold; }
 .error { color: var(--danger); }
 .trace { margin-top: 24px; font-size: 15px; }
 summary { cursor: pointer; color: var(--accent); padding: 6px 0; }

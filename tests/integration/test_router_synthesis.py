@@ -301,8 +301,8 @@ async def test_router_transport_failure_stops_before_query_embedding():
     app = Application(embedder, LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     events = [e async for e in app.ask("What does this say?")]
-    assert [e.type for e in events] == ["error", "trace"]
-    assert events[-1].calls[0].call_type == "router"
+    assert [e.type for e in events] == ["trace", "error"]
+    assert events[-2].calls[0].call_type == "router"
     assert len(llm.calls) == 1 and len(embedder.calls) == 1
 
 
@@ -339,9 +339,9 @@ async def test_query_embedding_failure_does_not_start_answer_generation():
     app = Application(FailingQueryEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     events = [e async for e in app.ask("What does this say?")]
-    assert [e.type for e in events] == ["plan", "error", "trace"]
+    assert [e.type for e in events] == ["plan", "trace", "error"]
     assert len(llm.calls) == 1
-    assert [c.call_type for c in events[-1].calls] == ["router"]
+    assert [c.call_type for c in events[-2].calls] == ["router"]
 
 
 async def test_extraction_losing_citation_ids_fails_without_final_answer():
@@ -366,10 +366,10 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
     assert not any(e.type == "final" for e in events)
     assert not any(e.type == "delta" for e in events)  # Extraction text is not answer text.
     assert "Citation IDs" in next(e.message for e in events if e.type == "error")
-    assert [c.call_type for c in events[-1].calls] == [
+    assert [c.call_type for c in events[-2].calls] == [
         "router",
         "fact_extraction",
         "fact_extraction",
     ]
     assert len(llm.calls) == 3
-    assert all(c.discarded_fact_lines == 1 for c in events[-1].calls[1:])
+    assert all(c.discarded_fact_lines == 1 for c in events[-2].calls[1:])

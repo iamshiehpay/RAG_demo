@@ -2,8 +2,8 @@ import re
 from collections.abc import AsyncIterator
 
 from .citation import CitationText
-from .events import DeltaEvent, TraceEvent
-from .llm_gateway import LLMGateway
+from .events import DeltaEvent, RetryEvent, ThinkingEvent, TraceEvent
+from .llm_gateway import LLMGateway, LLMTruncated
 from .models import Chunk, Citation
 from .policy import FIXED_REFUSALS
 
@@ -57,23 +57,32 @@ class AnswerGenerator:
         *,
         context: str | None = None,
         current_question: str | None = None,
-    ) -> AsyncIterator[DeltaEvent | TraceEvent]:
+    ) -> AsyncIterator[DeltaEvent | RetryEvent | ThinkingEvent | TraceEvent]:
         if context is None:
             context = "\n\n".join(
                 f"[{citation.id}] {chunk.context}"
                 for chunk, citation in zip(chunks, citations, strict=True)
             )
-        formatter = CitationText()
-        async for event in self.gateway.generate(
-            "answer",
-            answer_messages(standalone_question, context, current_question=current_question),
-        ):
-            if isinstance(event, DeltaEvent):
-                text = formatter.feed(event.text)
-                if text:
-                    yield DeltaEvent(text=text)
-            else:
-                remaining = formatter.flush()
-                if remaining:
-                    yield DeltaEvent(text=remaining)
-                yield event
+        messages = answer_messages(standalone_question, context, current_question=current_question)
+        for attempt in range(2):
+            formatter = CitationText(citations)
+            try:
+                async for event in self.gateway.generate(
+                    "answer", messages, **({"think": "low"} if attempt else {})
+                ):
+                    if isinstance(event, DeltaEvent):
+                        text = formatter.feed(event.text)
+                        if text:
+                            yield DeltaEvent(text=text)
+                    elif isinstance(event, TraceEvent):
+                        remaining = formatter.flush()
+                        if remaining:
+                            yield DeltaEvent(text=remaining)
+                        yield event
+                    else:
+                        yield event
+                return
+            except LLMTruncated:
+                if attempt:
+                    raise
+                yield RetryEvent(reason="length")

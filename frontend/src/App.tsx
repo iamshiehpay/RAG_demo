@@ -9,6 +9,7 @@ interface Turn {
   id: number; question: string; answer: string; citations: Citation[];
   chunks: RetrievedChunk[]; calls: LLMCallTrace[]; status: string; final: boolean; error: string;
   plan: PlanEvent | null; rejected: boolean;
+  thinking: string; unverified: string[]; invalidCitationCount: number;
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
 
@@ -44,13 +45,16 @@ export function App() {
     } finally { setBusy(false); }
   }
 
-  async function ask(askedQuestion: string) {
+  async function ask(askedQuestion: string, retryId?: number) {
     if (!askedQuestion.trim() || !document || busy) return;
-    const id = Date.now();
+    const id = retryId ?? Date.now();
     setBusy(true); setError(''); setSource(null); setQuestion('');
-    setTurns(previous => [...previous, { id, question: askedQuestion, answer: '', citations: [],
+    const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
-      status: '判斷問題類型', final: false, error: '' }]);
+      thinking: '', unverified: [], invalidCitationCount: 0,
+      status: '判斷問題類型', final: false, error: '' };
+    setTurns(previous => retryId === undefined ? [...previous, freshTurn] :
+      previous.map(turn => turn.id === retryId ? freshTurn : turn));
     try {
       await consumeEvents(await fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: askedQuestion }),
@@ -61,11 +65,14 @@ export function App() {
             case 'plan': return { ...turn, plan: event, status: '檢索' };
             case 'retrieval': return { ...turn, chunks: event.chunks, status: '思考中' };
             case 'citation_map': return { ...turn, citations: event.citations };
+            case 'thinking': return { ...turn, thinking: turn.thinking + event.text };
             case 'delta': return { ...turn, answer: turn.answer + event.text, status: '回答中 · 暫定' };
-            case 'retry': return { ...turn, answer: '', status: 'Regenerating…' };
+            case 'retry': return { ...turn, answer: '', thinking: '', unverified: [],
+              final: false, status: '重新產生中' };
             case 'final': return { ...turn, answer: event.answer, citations: event.citations,
-              final: true, status: 'Answer complete' };
-            case 'trace': return { ...turn, calls: event.calls };
+              unverified: event.unverified, final: true, status: 'Answer complete' };
+            case 'trace': return { ...turn, calls: event.calls,
+              invalidCitationCount: event.invalid_citation_count };
             case 'rejected': return { ...turn, answer: '', error: event.message,
               rejected: true, status: '問題過長，請縮短問題', final: false };
             case 'error': return { ...turn, answer: '', error: event.message, status: 'Answer failed', final: false };
@@ -102,11 +109,13 @@ export function App() {
       {turns.map(turn => <article key={turn.id}>
         <h2>{turn.rejected ? '問題過長' : turn.question}</h2>
         <p className={turn.final ? 'status' : 'status provisional'} role="status">{turn.status}</p>
-        <Answer text={turn.answer} citations={turn.citations} onSource={citation => void showSource(citation)} />
+        <Answer text={turn.answer} citations={turn.citations} provisional={!turn.final}
+          unverified={turn.unverified} onSource={citation => void showSource(citation)} />
         {turn.error && <div className="error" role="alert"><p>{turn.error}</p>
-          {!turn.rejected && <button disabled={busy} onClick={() => void ask(turn.question)}>Retry question</button>}</div>}
+          {!turn.rejected && <button disabled={busy} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
         {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0) &&
-          <Trace plan={turn.plan} chunks={turn.chunks} calls={turn.calls} />}
+          <Trace plan={turn.plan} chunks={turn.chunks} calls={turn.calls}
+            thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} />}
       </article>)}
     </section>
     {source && <section className="source" aria-label="Citation source">

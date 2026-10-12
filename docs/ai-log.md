@@ -108,3 +108,7 @@
 - **AI 的 rebase 修復腳本被 TOML conflict 擋住：** 用 uv run 啟動 Python 時，uv 先解析尚未解決的 pyproject.toml 而拒絕執行；AI 未確認該步 exit status 就繼續，讓 marker 留在中間 checkpoint。改用 uv run --no-project 執行修復，明確驗證 TOML 可解析且沒有 conflict markers 後才繼續。最终保留兩邊的 eval exclusion／marker 與兩份 AI log，並以完整測試驗證整合。
 
 - **整合後的測試 fixture 仍假定 Router user message 只有問句：** #06 新增語言提示 wrapper，歷史內容與問句皆正確傳入，但舊斷言比較整個 content 而失敗。改為驗證最後一則仍為 user 且保留原問句，歷史 role/content 仍逐字核對；改写品質另外由新的 provenance／referent／語言旗標斷言負責。
+## 2026-10-13：#07 的失敗狀態與 Citation Validator
+
+- **AI 寫錯的句子歸屬被回歸測試抓到：** 第一版 Validator 把「結論。 [C99] 下一句」的無效 Citation 歸給下一句，違反 D01 只標記引用無效編號的句子。透過 Application.ask 先重現，再把句末後的 Citation 連回前一句；數值 64.8／60.0 不切開，中英文句末與重複無效編號也補了檢查。
+- **延後項目有具體失敗證據：** 字元逐個串流的 `[C1 C3]`、`[C1–C3]` 與 alternate bracket range 測試先失敗；補正規化後通過。範圍只有在每個編號都存在於 Citation map 時才展開，巨大、反向或跨 C/S 範圍保留成無效 Citation 交給 Validator，避免把不可信範圍偷換成有效來源。

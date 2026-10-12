@@ -104,7 +104,11 @@ async def test_truncated_answer_never_becomes_final():
     from .fixtures import text_pdf
 
     llm = ScriptedLLM(
-        ["not JSON", [LLMFrame(content="Partial [C1]"), LLMFrame(done=True, done_reason="length")]]
+        [
+            "not JSON",
+            [LLMFrame(content="Partial [C1]"), LLMFrame(done=True, done_reason="length")],
+            [LLMFrame(done=True, done_reason="length")],
+        ]
     )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
@@ -112,8 +116,8 @@ async def test_truncated_answer_never_becomes_final():
     assert "delta" in [e.type for e in result]
     assert any(e.type == "error" for e in result)
     assert "final" not in [e.type for e in result]
-    assert result[-1].type == "trace"
-    assert result[-1].calls[-1].done_reason == "length"
+    assert result[-1].type == "error"
+    assert result[-2].calls[-1].done_reason == "length"
 
 
 async def test_citation_markers_split_across_stream_frames_remain_clickable():
@@ -151,7 +155,7 @@ async def test_interrupted_llm_stream_emits_error_and_failed_call_trace():
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("What does this say?")]
-    assert [e.type for e in result][-2:] == ["error", "trace"]
+    assert [e.type for e in result][-2:] == ["trace", "error"]
     assert "final" not in [e.type for e in result]
-    assert "completion record" in result[-2].message
-    assert result[-1].calls[-1].done_reason == "error"
+    assert "completion record" in result[-1].message
+    assert result[-2].calls[-1].done_reason == "error"

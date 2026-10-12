@@ -117,6 +117,7 @@ export type ThinkingEvent = {
 export type TraceEvent = {
   type: "trace";
   calls: Array<LLMCallTrace>;
+  invalid_citation_count: number;
 };
 
 export type Event = StageEvent | ReadyEvent | PlanEvent | RejectedEvent | RetrievalEvent | CitationMapEvent | ThinkingEvent | DeltaEvent | RetryEvent | FinalEvent | TraceEvent | ErrorEvent;

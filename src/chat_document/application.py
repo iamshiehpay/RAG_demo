@@ -8,7 +8,7 @@ import httpx
 
 from .answer_generator import AnswerGenerator
 from .chunker import chunk_sections
-from .citation import citation_map, cited_sources
+from .citation import citation_map, validate_citations
 from .context_packer import ContextPacker
 from .embedder import Embedder
 from .events import (
@@ -20,7 +20,9 @@ from .events import (
     ReadyEvent,
     RejectedEvent,
     RetrievalEvent,
+    RetryEvent,
     StageEvent,
+    ThinkingEvent,
     TraceEvent,
 )
 from .index import Index
@@ -135,27 +137,38 @@ class Application:
                     yield event
                 elif isinstance(event, TraceEvent):
                     calls.extend(event.calls)
+                elif isinstance(event, RetryEvent):
+                    answer = ""
+                    yield event
+                elif isinstance(event, ThinkingEvent):
+                    yield event
             if not answer.strip():
                 raise LLMFailure("LLM returned an empty answer. Please retry.")
+            validated = validate_citations(answer, citations)
+            answer = validated.answer
             if history is None:
                 self.history = (
                     self.history + [ConversationTurn(question=question, answer=answer)]
                 )[-HISTORY_ROUND_LIMIT:]
-            yield FinalEvent(answer=answer, citations=cited_sources(answer, citations))
+            yield FinalEvent(
+                answer=answer, citations=validated.citations, unverified=validated.unverified
+            )
             if calls:
-                yield TraceEvent(calls=calls)
+                yield TraceEvent(
+                    calls=calls, invalid_citation_count=validated.invalid_citation_count
+                )
         except BudgetExceeded as exc:
+            if calls:
+                yield TraceEvent(calls=calls)
             yield ErrorEvent(code="budget_exceeded", message=str(exc))
-            if calls:
-                yield TraceEvent(calls=calls)
         except (httpx.HTTPError, ValueError) as exc:
-            yield ErrorEvent(code="answer_failed", message=f"Answer failed: {exc}")
             if calls:
                 yield TraceEvent(calls=calls)
+            yield ErrorEvent(code="answer_failed", message=f"Answer failed: {exc}")
         except Exception:
             logger.exception("Unexpected answer failure")
+            if calls:
+                yield TraceEvent(calls=calls)
             yield ErrorEvent(
                 code="answer_failed", message="Unexpected answer failure. Please retry."
             )
-            if calls:
-                yield TraceEvent(calls=calls)

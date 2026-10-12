@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from time import perf_counter
 from typing import Literal
 
-from .events import DeltaEvent, TraceEvent
+from .events import DeltaEvent, ThinkingEvent, TraceEvent
 from .llm_adapter import LLMAdapter, LLMRequest
 from .models import LLMCallTrace
 from .policy import CONTEXT_BUDGET, SAFETY_MARGIN
@@ -50,8 +50,13 @@ class LLMGateway:
         self.context_budget = context_budget
 
     async def generate(
-        self, call_type: str, messages: list[dict[str, str]], *, format: dict | None = None
-    ) -> AsyncIterator[DeltaEvent | TraceEvent]:
+        self,
+        call_type: str,
+        messages: list[dict[str, str]],
+        *,
+        format: dict | None = None,
+        think: Literal["low", "medium"] | None = None,
+    ) -> AsyncIterator[DeltaEvent | ThinkingEvent | TraceEvent]:
         policy = BUDGET_TABLE[call_type]
         raw_tokens = sum(count_tokens(message["content"]) for message in messages)
         if format is not None:
@@ -63,7 +68,8 @@ class LLMGateway:
                 f"{policy.num_predict} output reservation > permitted budget "
                 f"({self.context_budget}); prompt limit is {policy.prompt_limit}."
             )
-        request = LLMRequest(messages, policy.think, policy.num_predict, estimated, format)
+        effective_think = think or policy.think
+        request = LLMRequest(messages, effective_think, policy.num_predict, estimated, format)
         started = perf_counter()
         thinking = ""
         terminal = None
@@ -76,7 +82,7 @@ class LLMGateway:
                         estimated_prompt_tokens=estimated,
                         prompt_eval_count=terminal.prompt_eval_count if terminal else None,
                         eval_count=terminal.eval_count if terminal else None,
-                        think=policy.think,
+                        think=effective_think,
                         num_predict=policy.num_predict,
                         context_budget=self.context_budget,
                         safety_margin=SAFETY_MARGIN,
@@ -91,6 +97,8 @@ class LLMGateway:
             async with aclosing(self.adapter.stream(request)) as frames:
                 async for frame in frames:
                     thinking += frame.thinking
+                    if frame.thinking and call_type == "answer":
+                        yield ThinkingEvent(text=frame.thinking)
                     if frame.content:
                         yield DeltaEvent(text=frame.content)
                     if frame.done:
