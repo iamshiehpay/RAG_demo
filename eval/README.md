@@ -63,6 +63,11 @@ resolving to the matching Table Chunk when `kind="table"` / `table_label`
 metadata is available. Until #03 supplies that metadata, it falls back to a
 Chunk on p.8 or containing `Table 2`; this fallback does not prove table structure.
 
+The COST fact fails closed on shorthand or omitted terminology: its excerpt must
+include the numeric anchor `610` (as in `610 × 1,000` or `610,000`) and literal
+`API`. Equivalent `610k`/`61萬` or “one call”/“一次呼叫” without `API` currently
+fail the deterministic anchors even if the Judge recognizes the correct meaning.
+
 Forbidden claims fail only when asserted; negations and quotations of the wrong
 claim do not count. Judge JSON, transport or truncation failures fail closed.
 BudgetExceeded is labeled `HARNESS_BUG` (an upstream arrangement bug), separate
