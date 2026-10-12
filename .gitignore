@@ -13,3 +13,7 @@ __pycache__/
 .ruff_cache/
 frontend/node_modules/
 .DS_Store
+
+# LAT local state and per-ticket worktrees
+.lat/
+.worktrees/
