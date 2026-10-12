@@ -18,6 +18,9 @@ _SENTENCE_END = re.compile(r"[.!?。！？;；]$")
 _FIGURE_LABEL_WORD_LIMIT = 15
 _PROSE_LINE_WIDTH_RATIO = 0.55
 _PAGE_FRAME_COVERAGE_RATIO = 0.8
+_CJK_CHARACTERS = r"\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af\U00020000-\U000323af"
+_CJK_TEXT = re.compile(f"[{_CJK_CHARACTERS}]")
+_CJK_LINE_WRAP = re.compile(rf"(?<=[{_CJK_CHARACTERS}\d])\n(?=[{_CJK_CHARACTERS}\d])")
 
 
 class DocumentError(ValueError):
@@ -343,7 +346,10 @@ def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section
 
     def flush_paragraph():
         if pending:
-            current.paragraphs.append("\n".join(pending))
+            paragraph = "\n".join(pending)
+            if _CJK_TEXT.search(paragraph):
+                paragraph = _CJK_LINE_WRAP.sub("", paragraph)
+            current.paragraphs.append(paragraph)
             current.paragraph_pages.append((pending_start, pending_end))
             current.page_end = pending_end
             pending.clear()

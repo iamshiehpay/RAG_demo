@@ -413,3 +413,71 @@ async def test_numbered_uppercase_body_sentences_do_not_open_sections(split):
         ]
     )
     assert all(c.section == "1 Introduction" for c in app.document.chunks)
+
+
+async def test_wrapped_chinese_paragraph_splits_only_between_complete_sentences():
+    sentences = [
+        f"第{n}項觀察顯示，月球玄武岩的鐵含量在區域{n}中達到{n * 3 + 7}個單位。"
+        for n in range(1, 161)
+    ]
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [
+        e
+        async for e in app.upload_document(
+            paragraph_pdf("".join(sentences), cjk=True), "wrapped.pdf"
+        )
+    ]
+    assert events[-1].type == "ready"
+    chunks = app.document.chunks
+    assert len(chunks) > 1
+    assert all(count_tokens(sentence) < 50 for sentence in sentences)
+    assert all(c.text.rstrip().endswith("。") for c in chunks)
+    assert all(count_tokens(c.text) <= 500 for c in chunks)
+    combined = "".join(c.text.replace("\n", "") for c in chunks)
+    assert all(sentence in combined for sentence in sentences)
+    for chunk in chunks:
+        # PDF line wraps must not change which complete source sentences a Chunk contains.
+        compact = chunk.text.replace("\n", "")
+        assert all(piece + "。" in sentences for piece in compact.split("。") if piece)
+
+
+async def test_cjk_line_wraps_keep_numbers_intact_and_preserve_latin_spacing():
+    text = (
+        "月球區域1\n4中含量為4\n9個單位，觀察持續穩\n定。\n"
+        "Sample 14\nstayed stable.\n英文版本Sample\n14也保留分隔。"
+    )
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [
+        e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "mixed-wraps.pdf")
+    ]
+    assert events[-1].type == "ready"
+    source = "\n\n".join(p for s in app.document.sections for p in s.paragraphs)
+    chunks = "\n\n".join(c.text for c in app.document.chunks)
+    for extracted in (source, chunks):
+        assert "月球區域14中含量為49個單位，觀察持續穩定。" in extracted
+        assert "Sample 14\nstayed stable." in extracted
+        assert "Sample\n14也保留分隔。" in extracted
+
+
+async def test_short_cjk_sentence_overlap_starts_with_a_complete_sentence():
+    sentences = [
+        sentence
+        for n in range(1, 9)
+        for sentence in [f"第{n}次觀察" + "玄武岩含量" * 30 + "。", f"完成{n}！"]
+    ]
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=200)
+    events = [
+        e
+        async for e in app.upload_document(paragraph_pdf("".join(sentences), cjk=True), "short.pdf")
+    ]
+    assert events[-1].type == "ready"
+    chunks = app.document.chunks
+    assert len(chunks) > 1
+    for chunk in chunks:
+        assert count_tokens(chunk.text) <= 200
+        assert any(chunk.text.startswith(sentence) for sentence in sentences)
+    for left, right in zip(chunks, chunks[1:], strict=False):
+        assert any(
+            left.text.endswith(sentence) and right.text.startswith(sentence)
+            for sentence in sentences
+        )

@@ -175,3 +175,8 @@
 - **Rebase 保留兩邊的意圖：** #02 與 #04 都新增 test_ingestion.py；將 #04 工作測試移到 test_ingestion_jobs.py，完整保留 #02 測試、設定驗證和 parser/chunker 呼叫，同時保留 #04 背景處理與 swap-on-success。由源碼重新產生 event types 與 dist，沒有手合併 build 產物。
 
 - **瀏覽器 QA 編排也曾漏等背景命令：** 一次 exec_command 回傳 session_id 後，AI 提前執行下一個快取比較，導致 before 檔案尚未建立及額外的 409。改為等外部 ingestion 的 ready、命令完成與 UI ready 後才比較；正式證據使用完整 before/after call counts，並另外以新 server 的零呼叫 cache hit 確認，不把等待腳本的錯誤當成產品失敗。
+## 2026-10-13：#02 QA 抓到中文句尾與數字斷行
+
+- **通過既有測試仍漏了等號邊界：** 獨立 QA 以換行中文 PDF 重現，句尾剛好落在 token 上限時，AI 把 `end == hard_end` 當成沒有句界，退回 PDF 行尾空白而切斷句子。相同 160 句玄武岩資料的 upload 測試先失敗，再用明確的「找到句界／未找到」分支，保留剛好等於上限的句尾。
+- **約 10% overlap 不能犧牲完整短句：** 舊邏輯要求 sentence overlap 至少占一半額度，會跳過窗口內只有 3 tokens 的「完成1！」，讓下一塊從前一句中間開始。獨立短句 upload 回歸先失敗，再讓 。！？ 後的句首優先，即使重疊較短；窗口內沒有句首時，中文維持完整字元備援，英文維持完整單字。
+- **PDF 排版換行不該拆開中文數字：** `區域1\n4` 與 `4\n9` 的 source／Chunk 測試先失敗。只在包含 CJK 的同一段落內，將 CJK／數字字元之間的排版 newline 移除；`Sample 14\nstayed stable.` 與 `Sample\n14` 保留英文分隔，不修改純英文表格數字。#04 已確認 source-derived processing identity 會使這次 parser／chunker 修改自動失效舊快取。

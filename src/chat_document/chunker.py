@@ -33,11 +33,13 @@ def _overlap_start(text: str, start: int, end: int, target: int) -> int:
             high = middle
         else:
             low = middle + 1
-    # Prefer a nearby sentence start, otherwise snap forward to a complete word.
+    # CJK sentence starts take precedence even when the resulting overlap is short.
+    # Otherwise prefer a nearby sentence start or snap forward to a complete Latin word.
     sentence_starts = [
         m.end()
         for m in SENTENCE_BOUNDARY.finditer(text, start + 1, end)
-        if low <= m.end() < end and count_tokens(text[m.end() : end]) >= target / 2
+        if low <= m.end() < end
+        and (text[m.start() - 1] in "。！？" or count_tokens(text[m.end() : end]) >= target / 2)
     ]
     if sentence_starts:
         return sentence_starts[0]
@@ -64,15 +66,15 @@ def _paragraphs(text: str, target: int):
         if hard_end == len(text):
             yield text[start:]
             return
-        end = max(
+        sentence_end = max(
             (
                 b
                 for b in boundaries
                 if previous_end < b <= hard_end and count_tokens(text[start:b]) <= target
             ),
-            default=hard_end,
+            default=None,
         )
-        if end == hard_end:
+        if sentence_end is None:
             # A single sentence can itself exceed the target. Keep whole words where possible.
             end = max(
                 (
@@ -82,6 +84,8 @@ def _paragraphs(text: str, target: int):
                 ),
                 default=hard_end,
             )
+        else:
+            end = sentence_end
         yield text[start:end].strip()
         previous_end = end
         start = _overlap_start(text, start, end, round(target * OVERSIZED_PARAGRAPH_OVERLAP))
