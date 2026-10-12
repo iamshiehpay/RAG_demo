@@ -311,6 +311,17 @@ def layout_pdf(layout):
                     "The continued discussion preserves the reading order of the document.",
                     fontsize=10,
                 )
+        elif layout == "column-table":
+            page.insert_text((50, 85), "Table 6: Column counts.", fontsize=10)
+            for i, row in enumerate([["Experiment", "Count"], ["alpha", "19,999,999"]]):
+                for x, text in zip([50, 275], row, strict=True):
+                    page.insert_text((x, 110 + i * 18), text, fontsize=10)
+            page.insert_textbox(
+                pymupdf.Rect(330, 90, 550, 200),
+                "The right column contains independent prose. "
+                "This discussion must stay outside the table.",
+                fontsize=10,
+            )
         elif layout == "misaligned":
             page.insert_text((50, 85), "Table 8: Misaligned measurements.", fontsize=10)
             for i, row in enumerate([["Experiment", "Count"], ["alpha", "12"], ["beta", "94"]]):
@@ -429,3 +440,52 @@ async def test_virtual_sections_keep_duplicate_labels_attached_to_their_own_sour
         (1, "Table 7: First measurements.", [["First", "12"]]),
         (2, "Table 7: Second measurements.", [["Second", "12"]]),
     ]
+
+
+async def test_table_and_embedder_source_changes_invalidate_upload_cache(tmp_path, monkeypatch):
+    from chat_document.cache import ProcessingCache, _pipeline_version
+
+    data = layout_pdf("centred")
+    initial_version = _pipeline_version()
+    first = Application(
+        OllamaEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    assert [e async for e in first.upload_document(data, "first.pdf")][-1].type == "ready"
+    cached = Application(
+        OllamaEmbedder(), LLMGateway(ScriptedLLM([])), cache=ProcessingCache(tmp_path)
+    )
+    events = [e async for e in cached.upload_document(data, "same.pdf")]
+    assert not any(e.type == "stage" and e.stage == "parsing" for e in events)
+    assert cached.document.chunks == first.document.chunks
+    read_bytes = Path.read_bytes
+    for module in ["tables.py", "embedder.py"]:
+        with monkeypatch.context() as patch:
+
+            def changed_source(path, module=module):
+                source = read_bytes(path)
+                if path.name == module and path.parent.name == "chat_document":
+                    source += b"\n# changed processing source\n"
+                return source
+
+            patch.setattr(Path, "read_bytes", changed_source)
+            changed_version = _pipeline_version()
+            assert changed_version != initial_version
+            changed = Application(
+                OllamaEmbedder(),
+                LLMGateway(ScriptedLLM([])),
+                cache=ProcessingCache(tmp_path, pipeline_version=changed_version),
+            )
+            events = [e async for e in changed.upload_document(data, "changed.pdf")]
+            assert events[-1].type == "ready"
+            assert any(e.type == "stage" and e.stage == "parsing" for e in events)
+            table = next(c for c in changed.document.chunks if c.kind == "table")
+            assert table.table_rows[0] == ["Total Documents", "12", "10", "94", "61"]
+
+
+async def test_column_table_uses_the_text_gutter_instead_of_clipping_at_page_midpoint():
+    chunks = await uploaded_chunks(layout_pdf("column-table"))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_headers == ["Experiment", "Count"]
+    assert table.table_rows == [["alpha", "19,999,999"]]
+    assert "right column" not in table.text
+    assert "right column" in "\n".join(c.text for c in chunks if c.kind == "text")

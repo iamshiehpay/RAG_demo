@@ -110,18 +110,22 @@ def _column_bounds(caption, page_lines, page_width):
     middle = page_width / 2
     # Centred/full-width captions use the whole text region. Narrow side captions
     # share a column only when there is separate text in the opposite half.
-    if caption.bbox[2] <= middle and any(
-        line.bbox[0] >= middle and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
+    other_right = [
+        line
         for line in page_lines
-    ):
-        return left, middle
-    if caption.bbox[0] >= middle and any(
-        line.bbox[0] < middle
+        if line.bbox[0] >= middle and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
+    ]
+    if caption.bbox[2] <= middle and other_right:
+        return left, min(line.bbox[0] for line in other_right) - 2
+    other_left = [
+        line
+        for line in page_lines
+        if line.bbox[0] < middle
         and line.bbox[2] <= caption.bbox[0] - 2
         and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
-        for line in page_lines
-    ):
-        return middle, right
+    ]
+    if caption.bbox[0] >= middle and other_left:
+        return max(line.bbox[2] for line in other_left) + 2, right
     return left, right
 
 

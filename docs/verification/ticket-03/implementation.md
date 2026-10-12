@@ -1,13 +1,13 @@
 # Ticket #03 implementation and acceptance evidence
 
-Implementation checkpoints: `ba21a31`, `fef26f5`, `d6a075e` (base `3a15958`); branch
-`lat/03-table-reconstruction`. No main merge or push. Numeric settings remain
+Original implementation checkpoints: `ba21a31`, `fef26f5`, `d6a075e` (original base `3a15958`); branch
+`lat/03-table-reconstruction`. Rebased onto main `d56e092` (includes #04 at `4eee3d2`); review correction checkpoint `bd8f0f7`. Current acceptance is in `review-corrections/README.md`. No main merge or push. Numeric settings remain
 500-token prose Chunks, 2,000-token table row groups, Lookup 5, Synthesis 3/2,
 and the existing guarded LLM policies.
 
 ## Deterministic and UI acceptance
 
-`uv run pytest -q`: **179 passed, 2 eval tests deselected**, 131.36s after the generic-table fix (baseline suite: 116.03s).
+Historical pre-review `uv run pytest -q`: **179 passed, 2 eval tests deselected**, 131.36s after the generic-table fix (baseline suite: 116.03s). Final rebased acceptance: **208 passed, 2 deselected**, 184.59s; see `review-corrections/pytest.txt`.
 Real local bge-m3 and recording ScriptedLLM; no cloud LLM in this suite.
 The following application-operation tests ran successfully in that command:
 
@@ -54,35 +54,38 @@ scripts.measure_table_reading` (move the existing output reports first; the scri
 refuses to overwrite them). The original session used the same runner from an
 untracked `/private/tmp/t03-live-followup.py` orchestration script.
 
-## Implementation paths at head
+## Implementation paths after review corrections
 
-- Upload continues through `application.py:62` unchanged: parser → chunker →
-  Index. `pdf_parser.py:451` invokes coordinate-table recognition; Sections own
-  tables independently of direct prose, including Sections with zero Chunks.
-- `tables.py:99` identifies captioned regions from text coordinates.
-  `_rows:22` clusters geometric rows; `_paired_grid:33` verifies cell counts,
-  positions, numeric values and repeated model headers, producing dataset ×
-  metric × named comparison associations. `table_text:170` repeats dataset/metric
-  at every numeric pair; `_paired_grid:33` derives the unmodified named system
-  row when other labels are shortened variants. No model names or Golden Fact
-  numbers are inserted by the generic rule. Regular rectangular grids also use
-  row/column layout. Unknown shapes retain all detected raw text and default
-  `reconstructed=False`; no LLM table rearrangement exists. Figure-captioned
-  grids such as the cost table are retained and math `_` artifacts removed.
-- `pdf_parser.py:350` excludes table lines from prose, inserts Table metadata at
-  the caption's Section/paragraph position and respects References exclusion.
-  `:314` preserves Table typing in virtual Sections.
-- `chunker.py:91` creates Table Chunks at their source insertion point, adds
-  model fields defined in `models.py:15` / `:47`, and links matching Table N
-  mentions in both directions. `tables.py:189` splits oversized tables between
-  complete rows; every group repeats caption/header. Raw fallbacks retain the
-  limitation flag across splits.
+- #04 background upload uses `Application._ingest`: parser → Chunker → Index,
+  with cached complete results and swap-on-success unchanged. `pdf_parser.py:457`
+  passes page widths to table recognition. Sections own tables independently
+  of direct prose; heading-only Sections remain metadata.
+- `tables.py:212` identifies captioned regions in their page/text column. `_rows:22`
+  clusters geometric rows; `_paired_grid:33` checks paired numbers/subheaders;
+  `_rectangular_grid:190` checks coordinate alignment, numeric cells and row labels.
+  `_collect:144` stops at body prose and can scan above a below-table caption.
+  Labelled prose cells retain uncertain case-study evidence. Caption-centred row
+  labels are not clipped. Table 4 and two-column/caption-below upload regressions
+  are included in the review-correction report.
+- `table_text:275` repeats dataset/metric at paired cells. Comparison headers
+  consistently say candidate for Table 1 and variant for Table 2. `_clean:102`
+  removes math underscore separators/suffixes from raw and reconstructed cells,
+  preserving identifier underscores. Unknown layouts retain source text and
+  the shared LIMITATION marker; no LLM table rearrangement exists.
+- `pdf_parser.py:356` removes detected table lines from prose and anchors Table
+  metadata at the first source line, respecting Section/References boundaries.
+  `:314` builds virtual Table metadata directly from the current Chunk fields,
+  without selecting another source by a duplicated label.
+- `chunker.py:91` creates typed Table Chunks and reciprocal Table N mention links.
+  `tables.py:294` splits rows with repeated caption/header. Oversized uncertain
+  physical lines are split by a character-preserving token bound, repeating the
+  limitation on every group. Chunk and Table both default reconstruction to false.
 - `context_packer.py:87`: rank primary hits → deduplicate → add reciprocal
   links → Lookup-only adjacent Chunks by seed rank → fit whole Chunks → sort
   in Document order. Added evidence keeps real cosine scores. Fitting-path
   omissions increment the request's `dropped_chunk_count`. Larger Synthesis
   evidence remains intact for the existing fact-extraction path at `:148`.
-- `application.py:95` emits the typed retrieval result and propagates the count
+- `application.py:220` emits the typed retrieval result and propagates the count
   to success/error Trace events. Count state is local to the ask operation.
   The existing Gateway/Answer retry and Citation-validation paths remain intact.
   `events.py:44` / `:77` define both event fields; generated `events.ts` passes parity.
@@ -119,6 +122,4 @@ Levi ruling #4395 aligned the previous per-Sub-query term co-occurrence assertio
 with AGENTS' collective Sub-query coverage requirement; rationale is recorded in
 `docs/ai-log.md`. No retrieval-count or Chunk-size tuning was performed.
 
-After rebasing onto merged #04, add `tables.py` and `embedder.py` to its `PIPELINE_SOURCES` digest
-(kano confirmed). Existing parser/chunker/model digest changes already invalidate
-older ingestion caches. No parser settings or upload-flow edits were introduced.
+Completed at rebase: `cache.py:15` includes `tables.py` and `embedder.py` in `PIPELINE_SOURCES`. An authored-PDF upload regression verifies typed-table cache round-tripping and a miss after changing either processing source. Both #04 background-upload behavior and #03 retrieval/drop state were retained; no numeric policy tuning or extra cloud evaluation occurred.

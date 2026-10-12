@@ -14,6 +14,8 @@ from .models import Document
 
 PIPELINE_SOURCES = (
     "pdf_parser.py",
+    "tables.py",
+    "embedder.py",
     "chunker.py",
     "models.py",
     "cache.py",
