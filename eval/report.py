@@ -50,7 +50,7 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
         "",
         f"Repetitions per question: {report.repeats}",
         "",
-        f"Result: {'PASS' if report.passed else 'FAIL'}",
+        f"Result: {report.status}",
         "",
     ]
     for key, value in report.metadata.items():
@@ -71,7 +71,9 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
             f"{count}/{len(results)} ({count / len(results):.1%}) |"
         )
     lines.extend(["", "## Upload LLM calls", "", *calls_table(report.upload_calls), ""])
-    for run in report.runs:
+    for index, run in enumerate(report.runs + report.judge_probes):
+        if index == len(report.runs):
+            lines.extend(["", "## Judge semantic probes (excluded from Golden Facts result)", ""])
         lines.extend(
             [
                 f"## {cell(run.case_id)} — repetition {run.repetition}",
@@ -84,12 +86,21 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
                 "",
                 f"Sub-queries: {cell(run.sub_queries)}",
                 "",
+                f"Ask latency_ms: {run.ask_latency_ms:.2f}",
+                "",
+                f"Judge latency_ms: {run.judge_latency_ms:.2f}",
+                "",
                 f"Total evaluation latency_ms: {run.latency_ms:.2f}",
                 "",
             ]
         )
         if run.error:
-            lines.extend([f"Application failure: {cell(run.error)}", ""])
+            label = (
+                "Harness/upstream bug"
+                if run.error.startswith("budget_exceeded:")
+                else "Application failure"
+            )
+            lines.extend([f"{label}: {cell(run.error)}", ""])
         lines.extend(
             [
                 "### Fact results",
@@ -102,7 +113,7 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
             values = (
                 fact.fact_id,
                 fact.method,
-                "PASS" if fact.passed else "FAIL",
+                fact.status,
                 fact.reason,
                 fact.evidence,
             )

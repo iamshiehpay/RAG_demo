@@ -1,7 +1,6 @@
 """Real Ollama evaluation. Explicitly selected by pytest -m eval."""
 
 import os
-import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -14,6 +13,7 @@ from chat_document.llm_adapter import OllamaLLM
 from .checks import check_fact
 from .golden_facts import LIGHTRAG_CASES, NOT_ALL_BEST, router_cases
 from .models import FactResult
+from .provenance import repository_state
 from .report import write_report
 from .runner import QuestionRun, RecordingGateway, run_evaluation
 
@@ -31,8 +31,7 @@ async def test_golden_facts_live(pytestconfig):
         if unknown:
             raise pytest.UsageError(f"Unknown --eval-cases ids: {sorted(unknown)}")
         cases = tuple(case for case in cases if case.id in ids)
-    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-    dirty = subprocess.check_output(["git", "status", "--porcelain"], text=True).strip()
+    revision, dirty = repository_state()
     report = await run_evaluation(
         Application(OllamaEmbedder(base_url), gateway),
         gateway,
@@ -42,7 +41,7 @@ async def test_golden_facts_live(pytestconfig):
         metadata={
             "Label": pytestconfig.getoption("--eval-label"),
             "Revision": revision,
-            "Uncommitted changes": "yes" if dirty else "no",
+            "Uncommitted changes": dirty,
             "LLM": "gpt-oss:120b-cloud",
             "Embedder": "bge-m3",
             "Execution": "Application.upload_document / Application.ask; Gateway judge calls",
@@ -64,10 +63,10 @@ async def test_golden_facts_live(pytestconfig):
         ):
             start = len(gateway.calls)
             checked = await check_fact(answer, NOT_ALL_BEST, gateway)
-            matched_expectation = checked.passed == expected and not checked.reason.startswith(
-                "Judge failed"
+            matched_expectation = checked.passed == expected and checked.reason == (
+                "No asserted forbidden claim" if expected else "Forbidden claim asserted"
             )
-            report.runs.append(
+            report.judge_probes.append(
                 QuestionRun(
                     id,
                     repetition,
@@ -81,9 +80,12 @@ async def test_golden_facts_live(pytestconfig):
                             f"Expected checker pass={expected}; actual={checked.passed}: "
                             f"{checked.reason}",
                             checked.evidence,
+                            harness_bug=checked.harness_bug,
                         )
                     ],
                     calls=gateway.calls[start:].copy(),
+                    judge_latency_ms=sum(call.latency_ms for call in gateway.calls[start:]),
+                    latency_ms=sum(call.latency_ms for call in gateway.calls[start:]),
                 )
             )
     path = pytestconfig.getoption("--eval-report") or Path("eval/reports") / (

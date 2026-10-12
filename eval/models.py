@@ -5,6 +5,12 @@ from typing import Literal
 
 
 @dataclass(frozen=True)
+class NumericBinding:
+    variants: tuple[str, ...]
+    value: str
+
+
+@dataclass(frozen=True)
 class GoldenFact:
     id: str
     method: Literal["contains", "judge", "forbidden"]
@@ -13,6 +19,7 @@ class GoldenFact:
     evidence_terms: tuple[tuple[str, ...], ...] = ()
     exact_answer: str | None = None
     answer_property: bool = False
+    value_bindings: tuple[NumericBinding, ...] = ()
 
     def __post_init__(self):
         if self.method not in {"contains", "judge", "forbidden"}:
@@ -32,6 +39,11 @@ class FactResult:
     passed: bool
     reason: str
     evidence: str = ""
+    harness_bug: bool = False
+
+    @property
+    def status(self) -> str:
+        return "HARNESS_BUG" if self.harness_bug else "PASS" if self.passed else "FAIL"
 
 
 @dataclass(frozen=True)
@@ -42,3 +54,5 @@ class EvaluationCase:
     expected_question_type: str | None = None
     history: tuple[tuple[str, str], ...] = ()
     minimum_citation_sections: int = 0
+    required_citation_page: int | None = None
+    required_citation_term: str | None = None

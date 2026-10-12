@@ -3,7 +3,7 @@
 import hashlib
 import inspect
 from collections.abc import AsyncIterator, Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
@@ -18,9 +18,9 @@ from chat_document.events import (
     TraceEvent,
 )
 from chat_document.llm_gateway import LLMGateway
-from chat_document.models import LLMCallTrace
+from chat_document.models import Chunk, LLMCallTrace
 
-from .checks import check_fact
+from .checks import check_fact, normalize
 from .models import EvaluationCase, FactResult
 
 
@@ -54,6 +54,8 @@ class QuestionRun:
     calls: list[LLMCallTrace] = field(default_factory=list)
     error: str = ""
     latency_ms: float = 0
+    ask_latency_ms: float = 0
+    judge_latency_ms: float = 0
 
 
 @dataclass
@@ -66,6 +68,15 @@ class EvaluationReport:
     upload_calls: list[LLMCallTrace] = field(default_factory=list)
     upload_error: str = ""
     runs: list[QuestionRun] = field(default_factory=list)
+    judge_probes: list[QuestionRun] = field(default_factory=list)
+
+    @property
+    def status(self) -> str:
+        if any(run.error.startswith("budget_exceeded:") for run in self.runs) or any(
+            fact.harness_bug for run in self.runs for fact in run.facts
+        ):
+            return "HARNESS_BUG"
+        return "PASS" if self.passed else "FAIL"
 
     @property
     def passed(self) -> bool:
@@ -74,6 +85,43 @@ class EvaluationReport:
             and not self.upload_error
             and all(not run.error and all(fact.passed for fact in run.facts) for run in self.runs)
         )
+
+
+def check_source_citation(
+    application: Application, finals: list[FinalEvent], case: EvaluationCase
+) -> FactResult:
+    for final in finals:
+        for citation in final.citations:
+            if f"[{citation.id}]" not in final.answer:
+                continue
+            try:
+                source = application.source(citation.source_id)
+            except KeyError:
+                continue
+            if not isinstance(source, Chunk):
+                continue
+            page_matches = (
+                case.required_citation_page is not None
+                and source.page_start <= case.required_citation_page <= source.page_end
+            )
+            term_matches = case.required_citation_term is not None and normalize(
+                case.required_citation_term
+            ) in normalize(source.context)
+            if page_matches or term_matches:
+                return FactResult(
+                    "table2_citation",
+                    "events",
+                    True,
+                    "Used Citation resolves to the required source Chunk",
+                    citation.id,
+                )
+    return FactResult(
+        "table2_citation",
+        "events",
+        False,
+        "No used Citation resolves to a Chunk on the required page "
+        "or containing the required table label",
+    )
 
 
 async def run_evaluation(
@@ -134,7 +182,11 @@ async def run_evaluation(
                             )
                             for i in range(0, len(case.history), 2)
                         ]
-                    events = [event async for event in application.ask(case.question, **kwargs)]
+                    ask_started = perf_counter()
+                    try:
+                        events = [event async for event in application.ask(case.question, **kwargs)]
+                    finally:
+                        run.ask_latency_ms = (perf_counter() - ask_started) * 1000
                     for event in events:
                         if isinstance(event, PlanEvent):
                             run.question_type = event.question_type
@@ -147,6 +199,8 @@ async def run_evaluation(
                     finals = [event for event in events if isinstance(event, FinalEvent)]
                     if not finals and not run.error:
                         run.error = "Ask did not produce a finalized answer"
+                    if case.required_citation_page is not None or case.required_citation_term:
+                        run.facts.append(check_source_citation(application, finals, case))
                     if case.minimum_citation_sections:
                         sections = {c.section for final in finals for c in final.citations}
                         run.facts.append(
@@ -180,7 +234,13 @@ async def run_evaluation(
                     )
                 for fact in case.facts:
                     run.facts.append(
-                        FactResult(fact.id, fact.method, False, f"Application failure: {run.error}")
+                        FactResult(
+                            fact.id,
+                            fact.method,
+                            False,
+                            f"Application failure: {run.error}",
+                            harness_bug=run.error.startswith("budget_exceeded:"),
+                        )
                         if run.error
                         else await check_fact(run.answer, fact, gateway)
                     )
@@ -191,7 +251,12 @@ async def run_evaluation(
                     if fact.id not in recorded:
                         run.facts.append(FactResult(fact.id, fact.method, False, run.error))
             finally:
+                if run.error.startswith("budget_exceeded:"):
+                    run.facts = [replace(fact, harness_bug=True) for fact in run.facts]
                 run.calls = gateway.calls[call_start:].copy()
                 run.latency_ms = (perf_counter() - started) * 1000
+                run.judge_latency_ms = sum(
+                    call.latency_ms for call in run.calls if call.call_type == "judge"
+                )
                 report.runs.append(run)
     return report

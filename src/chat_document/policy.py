@@ -15,3 +15,6 @@ SUB_QUERY_TOP_K = 2
 # Conservative allowances for tokenization at prompt joins and repeated source labels.
 PACKING_JOIN_TOKEN_ALLOWANCE = 32
 SOURCE_LABEL_TOKEN_ALLOWANCE = 8
+
+# Binding D01: use the question's language for the fixed refusal.
+FIXED_REFUSALS = {"zh": "文件中未提及", "en": "Not mentioned in the document."}

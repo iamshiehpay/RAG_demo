@@ -90,3 +90,9 @@
 - **真實模型抓到 AI 的 Judge prompt 寫錯：** Lookup-only 第一輪評估裡，中文回答與三個正確固定拒答都被判失敗。檢查報告後發現 prompt 把所有條件都當成「回答必須自行宣稱的事實」，所以不會把中文文字視為「回答用中文」，也不會把拒答本身视為符合格式。先加會失敗的 adaptive fake judge 回歸，修正成區分 factual claim 與 answer property，再重跑真實基準；保留初次報告 `lookup-skeleton-initial.md` 作為錯誤證據。逐字摘錄仍嚴格驗證，包含 Citation 與空白，沒有放寬為近似比對。
 - **第二輪量測補上缺少的 Judge 輸入：** answer property 的分類已讓中文答案正確通過，但固定拒答仍被判失敗。Judge 只收到「固定句」的描述，沒有收到 D01 要求的確切句子。先加缺少 expected sentence 就失敗的回歸，再把 `exact_answer` 一起傳給 Judge，並明定拒答本身是格式條件；程式仍先拒絕任何額外內容。中間報告保留為 `lookup-skeleton-property-intermediate.md`，後續基準以完整修正後的報告為準。
 - **Judge 也會把拒答當成錯誤結論：** 完整修正的基準中，Judge 對 `Not mentioned in the document.` 摘錄出相同文字，卻宣稱它斷言了 privacy／license／HotpotQA 的錯誤限制。這不是摘錄捏造，而是語意誤判。先以會故意回傳這個錯誤結論的 ScriptedLLM 重現，再在 checker 確認完整回答恰好為 D01 固定拒答時，直接判定沒有 asserted forbidden claim；帶有額外文字仍需 Judge。保留 `lookup-skeleton-refusal-intermediate.md`，不把錯誤 Judge 結論當作系統真的編造限制。
+
+## 2026-10-12：#08 獨立審查後的修正
+
+- **Reviewer 抓到 AI 的評估假陰性：** 基準裡 Q1 experiments 的正確內容因 markdown 的兩個尾隨空格／換行而無法通過 raw substring 驗證。先加會失敗的 hard-break、U+202F 與 U+2011 回歸，再同時正規化回答及摘錄的 typography／空白；保留文字、大小寫、標點、Citation，虛構的字仍拒絕。
+- **AI 把 Golden Facts 寫得比需求嚴格：** Table 1 原本把四個資料集塞在同一條數字 fact，要求單一摘錄出現全部 anchors；Table 3 額外要求 MAPK／AUC／engagement，Q1 experiments 也混入負向判準。依審查拆成每個資料集一條 fact，Mix 比較獨立檢查，移除 Table 3 額外要求，Q1 的 universal-best 改成獨立 forbidden。額外加強變體與數值的 clause／row／table column 對應，避免同一摘錄裡 -High 的數字被算成 -Low，以及 LightRAG-High 被算成完整版。
+- **Reviewer 修正 AI 把 Judge 當成唯一判準的設計：** 固定拒答改成 deterministic 比對，允許一個句末句號，不再浪費 Judge 呼叫或因 Judge 截斷誤判；拒答文字集中到 policy。報告區分 ask／Judge 時間、把 budget 超額標為 harness/upstream bug、把 live Judge probes 從 Golden Facts 結果分離；Q3 增加可追溯到 p.8／Table 2 Chunk 的 Citation 檢查。先前報告全部標示 superseded，重新量測基準。

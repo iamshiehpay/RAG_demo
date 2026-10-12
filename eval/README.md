@@ -1,18 +1,18 @@
 # Golden Facts evaluation
 
-Run the real application operations and judge with local Ollama (`bge-m3`) and
+Run the application operations and Judge with local Ollama (`bge-m3`) and
 `gpt-oss:120b-cloud`:
 
 ```sh
 uv run pytest -m eval -s
 ```
 
-This uploads `data/lightrag.pdf`, asks Q1–Q3, a Chinese cost question, a Synthesis
-limitations question, three unanswerable questions and the 12 router regression
-questions. It also runs two fixed-answer, real-judge semantic probes (affirmative
-and negated forbidden claims). Reports are written to `eval/reports/` even when
-Golden Facts fail. A failing fact makes the eval test fail after saving the report.
-Default `uv run pytest` excludes the `eval` marker and uses scripted LLMs.
+This uploads `data/lightrag.pdf` and asks Q1–Q3, a Chinese cost question, a
+Synthesis limitations question, three unanswerable questions and the 12 Router
+regression questions. Reports go to `eval/reports/` before asserting the Golden
+Facts result. Default `uv run pytest` excludes live eval and uses scripted LLMs.
+Two real-Judge semantic probes are reported separately and never affect the
+Golden Facts PASS/FAIL or its per-fact rates.
 
 ```sh
 uv run pytest -m eval -s --eval-repeats 3
@@ -21,59 +21,61 @@ uv run pytest -m eval -s --eval-cases Q3 --eval-label ablation-experiment
 
 Options: `--eval-document PATH`, `--eval-report PATH`, `--eval-label NAME`,
 `--eval-cases Q1,Q2,Q3`, `--eval-repeats N` (positive integer, default 1).
-`--eval-record-only` records an honest baseline without requiring all facts to
-pass; the report still says FAIL for failing facts. It does not certify quality.
+`--eval-record-only` saves failures without requiring all facts to pass; the
+report still says FAIL. It does not certify answer quality.
 
 ```sh
 uv run pytest -m eval -s --eval-record-only --eval-label lookup-skeleton \
   --eval-report eval/reports/lookup-skeleton-baseline.md
 ```
 
-The first baseline uses the unchanged #01 Lookup-only application. Missing
-Global/Synthesis routing and history are recorded as failures. #06's exported
-`router_regression.CASES` becomes the canonical question source when integrated;
-before that, the unchanged `spikes/think_level_probe.py` cases are used. The runner
-passes explicit `ConversationTurn` history when `Application.ask` supports it,
-and passes an empty history for independent questions. It never changes retrieval
-or answer generation.
+The baseline measures the #01 Lookup-only application. Missing Global/Synthesis
+routing and history remain failures. After integration, the harness prefers
+#06's canonical `router_regression.CASES`, supports `ConversationTurn` history,
+and supplies empty history for independent questions. It preserves retrieval
+and answer generation. Git provenance falls back to `unknown` for zip delivery.
 
-`GoldenFact` rejects numeric `contains` definitions. Term checks normalize Unicode
-hyphens (including U+2011), whitespace, full-width characters and percent spacing.
-Numbers always use a semantic judge and numeric evidence anchors; normalizing
-percentages is tested separately so numeric substring checks remain forbidden.
-Judge calls use the production Gateway's `judge` policy. Requirements about the
-answer itself (language or fixed reply) are evaluated as answer properties, not
-claims the answer must explicitly make about itself. Each matching claim must
-include a nonempty, contiguous, verbatim answer excerpt. Numeric excerpts must
-contain the required variant, dataset, metric and values, while the judge checks
-assignment and comparison direction. Forbidden claims count only when asserted;
-explicit denial is not a violation. Invalid JSON, invented excerpts, failed calls
-and truncation fail closed. Fixed refusals follow binding D01 (Chinese or English)
-and reject additional invented content.
+`GoldenFact` rejects numeric `contains` definitions. Term matching normalizes
+Unicode hyphens, whitespace, full-width characters and percent spacing. Judge
+excerpts must occur in the answer after normalizing typographic hyphens and
+whitespace (including markdown hard breaks, U+202F and NBSP); words, case,
+punctuation and Citation markers remain required. Invented text still fails.
+Numeric facts require model/variant, dataset, metric and value context plus
+variant/value association in the same clause/row or corresponding table column.
+Full `LightRAG` does not match `LightRAG-High`. The Judge checks meaning and
+comparison direction. Table 1 is checked separately for each dataset. Q3 also
+requires a used Citation resolving to a Chunk on p.8 or containing `Table 2`.
 
-`RecordingGateway` captures all LLM traces, including ingestion, router, retries,
-answers and judges. Reports include every call's estimated prompt tokens, actual
-`prompt_eval_count`, `eval_count`, output reservation, Context Budget, think,
-latency and `done_reason`. Missing counts remain `None`; they are not fabricated.
-Each fact has a per-run result/evidence and an N-run pass rate. Only final events
-supply answers; provisional content from failed requests is never judged.
+Forbidden claims fail only when asserted; negations and quotations of the wrong
+claim do not count. Judge JSON, transport or truncation failures fail closed.
+BudgetExceeded is labeled `HARNESS_BUG` (an upstream arrangement bug), separate
+from ordinary answer-quality failure. Fixed refusals are checked deterministically
+against `policy.FIXED_REFUSALS`, tolerating one final period/。 and rejecting extra
+content. They never call a Judge.
 
-To add another Document's Golden Facts (#10), create `EvaluationCase` definitions
-and call `run_evaluation(application, gateway, document_path, cases, repeats=N)`,
-then `write_report(report, path)`. The application and judge must share the
-`RecordingGateway` so the report accounts for all calls.
+`RecordingGateway` captures all LLM traces, including ingestion, Router, retries,
+answers and Judges. Reports include estimated/actual prompt tokens, eval_count,
+output reservation, Context Budget, think, latency and done_reason for every call.
+Each question separately reports ask latency (embedding/LLM/application), Judge
+call latency and total evaluation latency. Only final events supply answers;
+provisional text from failed operations is never judged.
 
-`lookup-skeleton-initial.md` preserves an initial checker-prompt defect (correct
-Chinese/fixed-reply properties were mistaken for self-asserted factual claims).
-`lookup-skeleton-baseline.md` supersedes it after the checker regression fix.
-`lookup-q3-n3.md` records three real Q3 runs at the original harness checkpoint.
-`lookup-skeleton-property-intermediate.md` records the next probe, which identified
-that the judge also needed the explicit expected fixed sentence. The final baseline
-supplies it; `refusal-checker-probe.md` verifies all three refusals with the real LLM.
-The N=3 report includes one truncated Judge call, marked as a failed fact; this is
-not an answer-generation success claim.
-`lookup-skeleton-refusal-intermediate.md` exposed a real Judge falsely treating an
-exact fixed refusal as an asserted forbidden claim. The checker now recognizes
-only the two exact D01 refusals as containing no factual assertion; answers with
-extra content still go through the judge. This bypass is covered by a deliberately
-wrong scripted judge regression, and actual call counts remain explicit.
+For #10, define `EvaluationCase`/`GoldenFact` values and call
+`run_evaluation(application, gateway, document_path, cases, repeats=N)`, then
+`write_report(report, path)`. Share the `RecordingGateway` between the application
+and Judge so all calls are accounted for.
+
+## Report provenance
+
+`lookup-skeleton-baseline.md` is the authoritative baseline regenerated after
+review request #1370 from committed source with clean provenance. Every earlier
+report below is **superseded** and preserved only as measurement/history evidence:
+
+| Report | Why superseded |
+|---|---|
+| lookup-skeleton-initial.md | Language/refusal properties were treated as self-asserted facts. |
+| lookup-skeleton-property-intermediate.md | Judge lacked the exact expected refusal sentence. |
+| lookup-skeleton-refusal-intermediate.md | Judge falsely treated an exact refusal as a forbidden assertion. |
+| lookup-skeleton-prereview.md | Pre-review whitespace check, overly broad Table 1 fact and other findings. |
+| lookup-q3-n3.md | N=3 evidence at the original harness checkpoint; includes one failed truncated Judge call. |
+| refusal-checker-probe.md | Older successful real refusal probe; refusals now use deterministic checks. |

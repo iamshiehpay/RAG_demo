@@ -4,7 +4,9 @@ Numbers use judge checks with model/variant, dataset, metric, value and directio
 Source locations are requirements context, not substring acceptance criteria.
 """
 
-from .models import EvaluationCase, GoldenFact
+from chat_document.policy import FIXED_REFUSALS
+
+from .models import EvaluationCase, GoldenFact, NumericBinding
 
 
 def semantic(id: str, requirement: str) -> GoldenFact:
@@ -24,6 +26,10 @@ MIX_LOW = GoldenFact(
         ("LightRAG", "完整版"),
         ("60.0%",),
     ),
+    value_bindings=(
+        NumericBinding(("-Low",), "64.8%"),
+        NumericBinding(("LightRAG", "完整版"), "60.0%"),
+    ),
 )
 AGRICULTURE_ORIGIN = GoldenFact(
     "agriculture_origin_overall",
@@ -37,6 +43,10 @@ AGRICULTURE_ORIGIN = GoldenFact(
         ("74.4%",),
         ("LightRAG", "完整版"),
         ("67.6%",),
+    ),
+    value_bindings=(
+        NumericBinding(("-Origin",), "74.4%"),
+        NumericBinding(("LightRAG", "完整版"), "67.6%"),
     ),
 )
 NOT_ALL_BEST = GoldenFact(
@@ -52,6 +62,27 @@ COST = GoldenFact(
     "(610,000 tokens), whereas LightRAG uses fewer than 100 tokens and only one API call. "
     "This concerns retrieval, not total indexing cost; LightRAG's retrieval cost is lower.",
     (("GraphRAG",), ("LightRAG",), ("610",), ("100",), ("API",)),
+)
+
+
+def table1_fact(dataset: str, aliases: tuple[str, ...], light: str, graph: str) -> GoldenFact:
+    direction = "lower" if dataset == "Mix" else "higher"
+    return GoldenFact(
+        f"table1_{dataset.lower()}_overall",
+        "judge",
+        f"Table 1 (p.7): on {dataset}, Overall win rate for LightRAG is {light}, "
+        f"{direction} than GraphRAG's {graph}. "
+        "Values, comparison baseline and direction are correct.",
+        (aliases, ("Overall", "整體", "總體"), ("LightRAG",), (light,), ("GraphRAG",), (graph,)),
+        value_bindings=(NumericBinding(("LightRAG",), light), NumericBinding(("GraphRAG",), graph)),
+    )
+
+
+TABLE1_FACTS = (
+    table1_fact("Agriculture", ("Agriculture", "農業"), "54.8%", "45.2%"),
+    table1_fact("CS", ("CS", "電腦", "計算機"), "52.0%", "48.0%"),
+    table1_fact("Legal", ("Legal", "法律"), "52.8%", "47.2%"),
+    table1_fact("Mix", ("Mix", "混合"), "49.6%", "50.4%"),
 )
 
 LIGHTRAG_CASES = (
@@ -79,9 +110,9 @@ LIGHTRAG_CASES = (
             semantic(
                 "experiments",
                 "Section 4: evaluation on Agriculture, CS, Legal and Mix compares baselines "
-                "and shows stronger answer quality, especially diversity; does not claim "
-                "universal superiority.",
+                "and shows stronger answer quality, especially diversity.",
             ),
+            NOT_ALL_BEST,
             semantic(
                 "conclusion",
                 "Section 6: conclusion combines effective, efficient graph-based retrieval "
@@ -105,32 +136,11 @@ LIGHTRAG_CASES = (
                 "Section 4.5: GraphRAG rebuilds communities on new text; LightRAG "
                 "incrementally updates its graph without rebuilding everything.",
             ),
-            GoldenFact(
-                "table1_overall",
-                "judge",
-                "Table 1 (p.7): Overall win rates against GraphRAG: LightRAG Agriculture "
-                "54.8%, CS 52.0%, Legal 52.8%; on Mix GraphRAG 50.4% exceeds LightRAG "
-                "49.6%. Values are win rates and the Mix direction is correct.",
-                (
-                    ("GraphRAG",),
-                    ("LightRAG",),
-                    ("Overall", "整體", "總體"),
-                    ("Agriculture", "農業"),
-                    ("54.8%",),
-                    ("CS", "電腦", "計算機"),
-                    ("52.0%",),
-                    ("Legal", "法律"),
-                    ("52.8%",),
-                    ("Mix", "混合"),
-                    ("50.4%",),
-                    ("49.6%",),
-                ),
-            ),
+            *TABLE1_FACTS,
             semantic(
                 "table3_case_study",
                 "Table 3 / Section 4.4 (p.8-9): case study LLM judge favors LightRAG on "
-                "comprehensiveness, diversity, empowerment and overall, with richer metrics "
-                "such as MAPK, AUC and engagement.",
+                "comprehensiveness, diversity, empowerment and overall.",
             ),
             GoldenFact(
                 "not_all_datasets",
@@ -164,6 +174,8 @@ LIGHTRAG_CASES = (
             NOT_ALL_BEST,
         ),
         "Lookup",
+        required_citation_page=8,
+        required_citation_term="Table 2",
     ),
     EvaluationCase(
         "ZH_COST",
@@ -226,7 +238,7 @@ LIGHTRAG_CASES = (
                 "fixed_reply",
                 "judge",
                 "Only the Chinese fixed refusal, with no invented content.",
-                exact_answer="文件中未提及",
+                exact_answer=FIXED_REFUSALS["zh"],
             ),
         ),
         "Lookup",
@@ -239,7 +251,7 @@ LIGHTRAG_CASES = (
                 "fixed_reply",
                 "judge",
                 "Only the English fixed refusal, with no invented content.",
-                exact_answer="Not mentioned in the document.",
+                exact_answer=FIXED_REFUSALS["en"],
             ),
         ),
         "Lookup",
@@ -252,7 +264,7 @@ LIGHTRAG_CASES = (
                 "fixed_reply",
                 "judge",
                 "Only the Chinese fixed refusal, with no invented content.",
-                exact_answer="文件中未提及",
+                exact_answer=FIXED_REFUSALS["zh"],
             ),
         ),
         "Lookup",

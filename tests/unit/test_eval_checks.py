@@ -140,28 +140,6 @@ async def test_judge_evaluates_answer_properties_without_requiring_self_descript
     ).passed
 
 
-async def test_fixed_reply_judge_receives_the_exact_expected_sentence():
-    from chat_document.llm_adapter import LLMFrame
-
-    class ExpectedReplyJudge:
-        async def stream(self, request):
-            payload = json.loads(request.messages[-1]["content"])
-            matched = payload.get("expected_answer") == payload["answer"]
-            yield LLMFrame(
-                content=json.dumps(
-                    {
-                        "matched": matched,
-                        "asserted": matched,
-                        "evidence": payload["answer"] if matched else "",
-                    }
-                )
-            )
-            yield LLMFrame(done=True, done_reason="stop")
-
-    fact = GoldenFact("refusal", "judge", "Only the fixed refusal.", exact_answer="文件中未提及")
-    assert (await check_fact("文件中未提及", fact, LLMGateway(ExpectedReplyJudge()))).passed
-
-
 async def test_exact_refusal_cannot_assert_a_forbidden_claim():
     fact = GoldenFact("invented_limit", "forbidden", "The document reports privacy violations.")
     llm = ScriptedLLM(
@@ -173,3 +151,87 @@ async def test_exact_refusal_cannot_assert_a_forbidden_claim():
     )
     assert (await check_fact("Not mentioned in the document.", fact, LLMGateway(llm))).passed
     assert llm.calls == []
+
+
+async def test_verbatim_evidence_tolerates_hard_breaks_and_typographic_spacing():
+    answer = "Experiments show gains [C5].  \n\nMix uses ‑Low with 64.8\u202f%."
+    evidence = "Experiments show gains [C5].\n\nMix uses -Low with 64.8 %."
+    llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": evidence})])
+    assert (
+        await check_fact(
+            answer, GoldenFact("spacing", "judge", "Experimental results"), LLMGateway(llm)
+        )
+    ).passed
+
+
+async def test_typography_normalization_never_accepts_an_invented_word():
+    answer = "Mix ‑Low wins at 64.8\u202f% [C5].  \n\nMore evidence."
+    evidence = "Mix -High wins at 64.8 % [C5]. More evidence."
+    llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": evidence})])
+    assert not (
+        await check_fact(answer, GoldenFact("invented", "judge", "A claim"), LLMGateway(llm))
+    ).passed
+
+
+async def test_numeric_evidence_does_not_swap_values_when_both_variants_are_present():
+    from eval.golden_facts import MIX_LOW
+
+    answer = "On Mix Overall: -Low 61.2%, -High 64.8%, LightRAG 60.0%."
+    llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+    assert not (await check_fact(answer, MIX_LOW, LLMGateway(llm))).passed
+
+
+async def test_full_model_anchor_does_not_match_a_suffixed_variant():
+    from eval.golden_facts import MIX_LOW
+
+    answer = "Mix Overall: -Low 64.8%, higher than LightRAG-High 60.0%."
+    llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+    assert not (await check_fact(answer, MIX_LOW, LLMGateway(llm))).passed
+
+
+async def test_fixed_refusals_pass_without_judge_calls_and_accept_one_final_period():
+    from chat_document.llm_adapter import LLMFrame
+
+    for expected, answer in (
+        ("文件中未提及", "文件中未提及。"),
+        ("Not mentioned in the document.", "Not mentioned in the document."),
+    ):
+        llm = ScriptedLLM([[LLMFrame(done=True, done_reason="length")]])
+        fact = GoldenFact("refusal", "judge", "Only fixed reply", exact_answer=expected)
+        assert (await check_fact(answer, fact, LLMGateway(llm))).passed
+        assert llm.calls == []
+
+
+async def test_budget_failure_is_a_harness_bug_not_a_quality_result():
+    result = await check_fact(
+        "token " * 9000, GoldenFact("budget", "judge", "A claim"), LLMGateway(ScriptedLLM([]))
+    )
+    assert getattr(result, "status", None) == "HARNESS_BUG"
+
+
+async def test_table1_datasets_are_independently_judged_with_their_numeric_context():
+    from eval.golden_facts import TABLE1_FACTS
+
+    for fact, answer in zip(
+        TABLE1_FACTS,
+        (
+            "Agriculture Overall: LightRAG 54.8%, higher than GraphRAG 45.2%.",
+            "CS Overall: LightRAG 52.0%, higher than GraphRAG 48.0%.",
+            "Legal Overall: LightRAG 52.8%, higher than GraphRAG 47.2%.",
+            "Mix Overall: LightRAG 49.6%, lower than GraphRAG 50.4%.",
+        ),
+        strict=True,
+    ):
+        llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+        assert (await check_fact(answer, fact, LLMGateway(llm))).passed
+
+
+async def test_numeric_binding_uses_table_columns_without_swapping_variants():
+    from eval.golden_facts import MIX_LOW
+
+    for answer, expected in (
+        ("Mix Overall\n| -Low | -High | LightRAG |\n|---|---|---|\n|64.8%|61.2%|60.0%|", True),
+        ("Mix Overall\n| -Low | -High | LightRAG |\n|---|---|---|\n|61.2%|64.8%|60.0%|", False),
+    ):
+        llm = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+        assert (await check_fact(answer, MIX_LOW, LLMGateway(llm))).passed == expected

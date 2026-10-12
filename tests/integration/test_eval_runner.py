@@ -85,3 +85,48 @@ async def test_upload_error_still_reports_every_expected_fact(tmp_path):
     assert len(report.runs) == 3 and not report.passed
     assert "0/3 (0.0%)" in (tmp_path / "upload_failure.md").read_text()
     assert gateway.calls == []
+
+
+async def test_ask_latency_excludes_judge_latency(tmp_path, monkeypatch):
+    import chat_document.llm_gateway
+    import eval.runner
+
+    clock = [0.0]
+    monkeypatch.setattr(eval.runner, "perf_counter", lambda: clock[0])
+    monkeypatch.setattr(chat_document.llm_gateway, "perf_counter", lambda: clock[0])
+
+    class TimedLLM(ScriptedLLM):
+        async def stream(self, request):
+            clock[0] += 5 if request.think == "low" else 1
+            async for frame in super().stream(request):
+                yield frame
+
+    path = tmp_path / "document.pdf"
+    path.write_bytes(text_pdf())
+    llm = TimedLLM(
+        ["A claim [C1]", json.dumps({"matched": True, "asserted": True, "evidence": "A claim"})]
+    )
+    gateway = RecordingGateway(llm)
+    case = EvaluationCase("timing", "What does it say?", (GoldenFact("claim", "judge", "A claim"),))
+    report = await run_evaluation(Application(OllamaEmbedder(), gateway), gateway, path, (case,))
+    run = report.runs[0]
+    assert run.ask_latency_ms == 1000
+    assert run.judge_latency_ms == 5000
+    assert run.latency_ms == 6000
+    write_report(report, tmp_path / "timing.md")
+    text = (tmp_path / "timing.md").read_text()
+    assert "Ask latency_ms: 1000.00" in text and "Judge latency_ms: 5000.00" in text
+
+
+async def test_q3_requires_a_used_citation_to_a_table_source(tmp_path):
+    path = tmp_path / "table.pdf"
+    path.write_bytes(text_pdf("Table 2: ablation results."))
+    gateway = RecordingGateway(ScriptedLLM(["Ablation results [C1]", "Ablation results [C9]"]))
+    case = EvaluationCase(
+        "Q3", "Ablation results?", required_citation_page=8, required_citation_term="Table 2"
+    )
+    report = await run_evaluation(
+        Application(OllamaEmbedder(), gateway), gateway, path, (case,), repeats=2
+    )
+    assert report.runs[0].facts[0].passed
+    assert not report.runs[1].facts[0].passed
