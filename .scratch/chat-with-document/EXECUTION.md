@@ -43,3 +43,21 @@ Status: in-progress
 ## 待使用者決策
 
 - #09 初稿方向確認（issue 明定需要人參與），初稿完成後提出，紀錄於 `.lat/decisions/`。
+
+## QA 草稿缺口的歸屬（`test-list.md` 附錄）
+
+已確認需求的補足，直接併入對應票的驗收，不另開票：
+
+| 缺口 | 歸屬 |
+|---|---|
+| 1. 未 `ready` 就送出提問時後端拒絕；上傳新文件時重置狀態 | #04 |
+| 2. 壞檔或非 PDF 上傳回報錯誤 | #02；處理到一半失敗時不留半成品快取、回答不快取 → #04 |
+| 3. Section 超過 8,500 tokens 時，先切開再摘要 | #05 |
+| 4. `thinking` 事件（思考內容放 Trace、預設收合） | #07（後端事件）、#09（收合元件） |
+| 5. 問題過長的拒絕事件寫進事件契約 | #06 |
+| 7. 中文提問（user story 20）、「有什麼限制」（user story 10）的 eval 題 | #08 |
+| 8. top-k 與 think 等級可設定（user story 47） | #06（top-k）、#11（think 實驗） |
+| 9. eval 防呆：數字不得用 `contains`、forbidden 對否定句不誤判、預設 `pytest` 排除 eval | #08 |
+| 10. 來源查詢遇到不存在的編號 | #01 |
+
+需要使用者決定：缺口 6，紀錄於 `.lat/decisions/D01-unverified-and-fixed-reply.md`。
