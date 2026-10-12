@@ -50,6 +50,8 @@ class QuestionRun:
     expected_question_type: str | None = None
     plan_source: str | None = None
     fallback_reason: str | None = None
+    rewrite_language_mismatch: bool = False
+    router_standalone_question: str | None = None
     standalone_question: str = ""
     sub_queries: list[str] = field(default_factory=list)
     facts: list[FactResult] = field(default_factory=list)
@@ -209,6 +211,12 @@ async def run_evaluation(
                             run.question_type = event.question_type
                             run.plan_source = getattr(event, "plan_source", None)
                             run.fallback_reason = getattr(event, "fallback_reason", None)
+                            run.rewrite_language_mismatch = getattr(
+                                event, "rewrite_language_mismatch", False
+                            )
+                            run.router_standalone_question = getattr(
+                                event, "router_standalone_question", None
+                            )
                             run.standalone_question = event.standalone_question
                             run.sub_queries = event.sub_queries
                         elif isinstance(event, FinalEvent):
@@ -256,13 +264,15 @@ async def run_evaluation(
                             "standalone_rewrite",
                             "events",
                             run.plan_source == "router"
+                            and not run.rewrite_language_mismatch
                             and rewritten
                             and bool(case.standalone_terms)
                             and not missing_terms,
                             f"Changed question={rewritten}; "
                             f"missing referents/context={missing_terms}; "
                             f"criteria supplied={bool(case.standalone_terms)}; "
-                            f"plan_source={run.plan_source}",
+                            f"plan_source={run.plan_source}; "
+                            f"rewrite_language_mismatch={run.rewrite_language_mismatch}",
                             run.standalone_question,
                             fallback=run.plan_source == "fallback",
                         )

@@ -102,3 +102,38 @@ async def test_follow_up_must_change_and_resolve_the_canonical_referents(tmp_pat
     ]
     assert [fact.passed for fact in rewrite_results] == [False, False, True, False, True]
     assert all(f.fact_id != "history_supported" for run in cost_report.runs for f in run.facts)
+
+
+async def test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite(tmp_path):
+    from eval.golden_facts import router_cases
+
+    class ProvenancePlan(PlanEvent):
+        plan_source: str = "router"
+        fallback_reason: str | None = None
+        rewrite_language_mismatch: bool = True
+        router_standalone_question: str | None = "What is LightRAG's retrieval cost?"
+
+    class ScriptedApplication:
+        async def upload_document(self, content, name):
+            yield ReadyEvent(document_id="d", name=name, chunk_count=0)
+
+        async def ask(self, question, *, history):
+            yield ProvenancePlan(
+                question_type="Lookup",
+                standalone_question="LightRAG 的檢索成本是多少？",
+                sub_queries=[],
+            )
+            yield FinalEvent(answer="Evidence", citations=[])
+
+    path = tmp_path / "document.pdf"
+    path.write_bytes(b"scripted Document")
+    report = await run_evaluation(
+        ScriptedApplication(), RecordingGateway(ScriptedLLM([])), path, (router_cases()[10],)
+    )
+    rewrite = next(f for f in report.runs[0].facts if f.fact_id == "standalone_rewrite")
+    assert not rewrite.passed
+    assert report.runs[0].rewrite_language_mismatch
+    write_report(report, tmp_path / "report.md")
+    text = (tmp_path / "report.md").read_text()
+    assert "Rewrite language mismatch: True" in text
+    assert "LightRAG&#x27;s retrieval cost" in text

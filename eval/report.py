@@ -55,7 +55,7 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
         "Router classification requires plan_source=router. Fallback plans fail "
         "with status FALLBACK, even when their Question Type matches. "
         "Follow-up checks require a changed Standalone Question resolving the case referents; "
-        "accepting a history argument is not a pass condition.",
+        "language-mismatch rewrites fail. Accepting a history argument is not a pass condition.",
         "",
     ]
     for key, value in report.metadata.items():
@@ -90,6 +90,10 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
                 f"Plan source: {cell(run.plan_source)}",
                 "",
                 f"Fallback reason: {cell(run.fallback_reason)}",
+                "",
+                f"Rewrite language mismatch: {run.rewrite_language_mismatch}",
+                "",
+                f"Raw Router Standalone Question: {cell(run.router_standalone_question)}",
                 "",
                 f"Standalone Question: {cell(run.standalone_question)}",
                 "",

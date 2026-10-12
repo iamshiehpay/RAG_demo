@@ -41,6 +41,9 @@ Question Type. A fallback Lookup never earns a classification pass; its fact row
 shows `FALLBACK`, and each run records `fallback_reason`. Missing provenance fails
 closed. Follow-up checks replace the old “history accepted” check: the Standalone
 Question must differ from the input and resolve the canonical referents/context.
+`rewrite_language_mismatch=True` fails the follow-up rewrite check, even when
+the visible question contains the expected terms. Reports show the flag and
+`router_standalone_question` so the raw mismatched rewrite remains reviewable.
 `router_regression.FOLLOW_UP_STANDALONE_TERMS` defines case 11's LightRAG retrieval
 cost and case 12's LightRAG/GraphRAG comparison. Report headers state this policy.
 
