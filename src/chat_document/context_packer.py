@@ -71,18 +71,22 @@ class ContextPacker:
         self.gateway = gateway
         self.settings = settings
 
-    def fits(self, question: str, chunks: list[Chunk]) -> bool:
+    def fits(
+        self, question: str, chunks: list[Chunk], *, current_question: str | None = None
+    ) -> bool:
         ordered = sorted(chunks, key=lambda chunk: chunk.order)
         context = "\n\n".join(
             f"[{citation.id}] {chunk.context}"
             for chunk, citation in zip(ordered, citation_map(ordered), strict=True)
         )
         return count_tokens(context) <= CONTEXT_EVIDENCE_TOKEN_LIMIT and (
-            message_tokens(answer_messages(question, context))
+            message_tokens(answer_messages(question, context, current_question=current_question))
             <= BUDGET_TABLE["answer"].prompt_limit
         )
 
-    async def retrieve(self, index: Index, plan: PlanEvent) -> list[RetrievedChunk]:
+    async def retrieve(
+        self, index: Index, plan: PlanEvent, *, current_question: str | None = None
+    ) -> list[RetrievedChunk]:
         if plan.question_type == "Lookup":
             retrieved = await index.retrieve(plan.standalone_question, self.settings.lookup_top_k)
         else:
@@ -104,7 +108,11 @@ class ContextPacker:
             # Small Synthesis contexts also fit by construction when a long question uses space.
             fitted = []
             for item in sorted(items, key=lambda item: -item.score):
-                if self.fits(plan.standalone_question, [i.chunk for i in fitted] + [item.chunk]):
+                if self.fits(
+                    plan.standalone_question,
+                    [i.chunk for i in fitted] + [item.chunk],
+                    current_question=current_question,
+                ):
                     fitted.append(item)
             items = fitted
         return sorted(items, key=lambda item: item.chunk.order)
@@ -115,6 +123,8 @@ class ContextPacker:
         chunks: list[Chunk],
         citations: list[Citation],
         calls: list[LLMCallTrace],
+        *,
+        current_question: str | None = None,
     ) -> str:
         question = plan.standalone_question
         units = [
@@ -127,14 +137,14 @@ class ContextPacker:
             plan.question_type != "Synthesis"
             or count_tokens(context) <= CONTEXT_EVIDENCE_TOKEN_LIMIT
         ):
-            if not self.fits(question, chunks):
+            if not self.fits(question, chunks, current_question=current_question):
                 raise LLMFailure("Retrieved Chunks do not fit the answer Context Budget.")
             return context
         # The question and answer instructions consume some of the nominal 6K evidence allowance.
         context_limit = min(
             CONTEXT_EVIDENCE_TOKEN_LIMIT,
             answer_limit
-            - message_tokens(answer_messages(question, ""))
+            - message_tokens(answer_messages(question, "", current_question=current_question))
             - PACKING_JOIN_TOKEN_ALLOWANCE,
         )
         if context_limit <= 0:
@@ -154,7 +164,8 @@ class ContextPacker:
         )
         # Repeat only while meaningful compression makes progress; do not silently truncate facts.
         while count_tokens(context) > context_limit or (
-            message_tokens(answer_messages(question, context)) > answer_limit
+            message_tokens(answer_messages(question, context, current_question=current_question))
+            > answer_limit
         ):
             bounded_units = []
             for unit in units:

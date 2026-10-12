@@ -22,7 +22,7 @@ from .test_router_synthesis import router_script
 async def test_schema_valid_router_plan_preserves_follow_up_rewrite(
     question_type, queries, expected
 ):
-    standalone = "Compare LightRAG with GraphRAG."
+    standalone = "比較 LightRAG 與 GraphRAG。"
     llm = ScriptedLLM([router_script(question_type, standalone, queries), "Evidence [C1]."])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"

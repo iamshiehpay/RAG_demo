@@ -69,3 +69,9 @@
 - **原本的追問檢查太弱：** 「那 LightRAG 呢？」本來就含 LightRAG，單比名字不會抓到遺失的檢索成本主題。新增成本／API 等歷史主題檢查，也以 dev-only OpenCC s2t 標記簡體轉換；「检索成本」現在會使 smoke 失敗，共用字無法判定字體的限制明載於報告。
 - **保留失敗，避免繼續對 Golden Facts 調 prompt：** 第一個 neutral 瀏覽器 Q2 的分類與 incremental-update 證據正確，但沒有檢索到含 `610` 的成本段落；這個失敗已通知協調者，沒有把 token／API-call 等特定驗收詞放回 prompt。最終貨運範例的瀏覽器結果另列於 follow-up 報告。
 - **小型 smoke 過關，不代表完整聊天流程過關：** 最終通用貨運範例在 canonical 12/12、held-out 8/8 通過，且歷史主題／繁體檢查都過。但瀏覽器 Q2 沒取回成本與增量更新段落；先聊完兩輪再問英文 Q3 時，模型改判 Synthesis 並改寫成中文。這些案例保留為 FAIL，沒有用 smoke 分數代替實際驗收；後續需改善通用計畫／歷史處理與檢索品質。
+
+## 2026-10-13：#06 回答語言不能由改寫問題決定
+
+- **真人把檢索品質與 #06 bug 分開：** Levi #2066 接受歧義時選 Synthesis，並將 Q2 的成本／增量更新檢索 FAIL 留給 #11，在真實 Section 與 neighbor/table links 整合後調整；不把 Golden Facts 詞彙寫回 Router prompt。
+- **AI 的語言契約漏了應用層：** 回答原本只收到 Standalone Question，模型把英文 Q3 改成中文後，回答也跟著中文。補四個先失敗的回歸案例，讓回答收到目前問題作為語言依據，並把同一份提示納入 Context Packer 額度估算。中英 script 不一致時保留 type／queries、使用目前問題並在 Trace 保留警示與原始改寫，不再呼叫一次 Router；依賴歷史的追問可能因此留下未解參照，警示明確暴露此限制。
+- **真實聊天再驗證：** Q2 → 中文成本追問 → 英文 Q3，Standalone Question 與回答均為英文，Router 95 tokens 正常結束。這次模型本身沒有輸出跨語言改寫，強制錯誤分支由確定性測試證明。保留原先失敗 tapes，另存新證據；68 項測試通過，前端重新 build。這次只驗收語言，沒有宣稱表格數字或 Golden Facts 已通過。

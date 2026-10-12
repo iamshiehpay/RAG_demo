@@ -37,13 +37,18 @@ Upload processes synchronously in the request. Each page is a virtual Section, p
 
 Section detection, table reconstruction, background ingestion/cache, Summary Tree, automatic retries/Citation validation, Golden Facts eval and the final Tufte design are later tickets. Q3 currently demonstrates the complete streaming/Citation flow; precise Table 2 interpretation is not an acceptance claim for this slice. A truncated or interrupted answer fails without becoming final; the UI clears provisional text and provides a retry button.
 
-Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question and evidence. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
+Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question, evidence and current question as its language reference. The current question controls answer language. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
 
 Router names the JSON keys in its prompt and also sends the schema through Ollama `format`.
 It tolerates the observed `type` alias and extra keys. A missing Standalone Question uses the
 original question only without history; with history it records a failed rewrite. Trace shows
 `plan_source` (`router` or `fallback`) and any `fallback_reason`, so fallback Lookup is visible.
 The output reservation remains 600 tokens including thinking.
+If a rewrite switches between Chinese and non-Chinese script, the current question is used
+while preserving Question Type and Sub-queries. Trace records `rewrite_language_mismatch`
+and the original `router_standalone_question`; no second Router call or translation is made.
+For a dependent follow-up this may leave its reference unresolved, which the flag makes
+visible. This script check does not distinguish languages using the same script.
 
 Retrieval counts can be configured using `LOOKUP_TOP_K`, `SYNTHESIS_TOP_K`, and `SUB_QUERY_TOP_K` environment variables (defaults 5, 3, and 2), or by passing `RetrievalSettings` to `Application` for eval. Values must be positive integers.
 

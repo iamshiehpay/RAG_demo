@@ -33,7 +33,10 @@ async def test_router_plan_drives_answer_and_is_recorded_with_json_schema():
         "sub_queries",
     ]
     assert "What does this Document say?" in llm.calls[-1].messages[-1]["content"]
-    assert "What about it?" not in llm.calls[-1].messages[-1]["content"]
+    assert (
+        "Current user question (language reference): What about it?"
+        in (llm.calls[-1].messages[-1]["content"])
+    )
 
 
 async def test_malformed_router_json_falls_back_to_lookup_with_original_question():
@@ -308,7 +311,7 @@ async def test_successful_turns_supply_history_to_later_follow_up():
         [
             router_script(question="LightRAG incremental updates"),
             "Incremental updates [C1].",
-            router_script(question="GraphRAG incremental updates"),
+            router_script(question="GraphRAG 如何進行增量更新？"),
             "GraphRAG updates [C1].",
         ]
     )
@@ -316,7 +319,7 @@ async def test_successful_turns_supply_history_to_later_follow_up():
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     assert any(e.type == "final" for e in [e async for e in app.ask("How does LightRAG update?")])
     events = [e async for e in app.ask("那 GraphRAG 呢？")]
-    assert events[0].standalone_question == "GraphRAG incremental updates"
+    assert events[0].standalone_question == "GraphRAG 如何進行增量更新？"
     assert llm.calls[2].messages[1:3] == [
         dict(role="user", content="How does LightRAG update?"),
         dict(role="assistant", content="Incremental updates [C1]."),

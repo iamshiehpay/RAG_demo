@@ -29,6 +29,8 @@ class PlanEvent(BaseModel):
     sub_queries: list[str]
     plan_source: Literal["router", "fallback"] = "router"
     fallback_reason: FallbackReason | None = None
+    rewrite_language_mismatch: bool = False
+    router_standalone_question: str | None = None
 
 
 class RejectedEvent(BaseModel):

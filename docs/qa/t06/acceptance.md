@@ -70,6 +70,12 @@ Independent live QA on main `79aac57` found that the original scripted checks hi
 and silent Lookup fallback. [Live Router follow-up](live-router-followup.md) documents the repair,
 exact raw fixtures, opt-in 12-case smoke, fallback provenance, and real-cloud browser evidence.
 Review #1974 found that the earlier 12/12 and browser results used a prompt tuned to the cases.
-The current neutral prompt scores 12/12 canonical and 8/8 held-out, but live browser acceptance
-is **FAIL**: Q2 misses cost/update passages; Q3 after history is Synthesis and changes language.
-The linked follow-up report records both scores and failures. The 600-token reservation is unchanged.
+The neutral prompt scores 12/12 canonical and 8/8 held-out. Levi #2066 deferred Q2's live
+cost/update retrieval **FAIL to #11** and accepted Q3 Synthesis under the ambiguity rule.
+The remaining #06 language bug is fixed: answers follow the current question; cross-script
+rewrites retain type and expose their raw text/flag in Trace. Four new deterministic cases
+pass, and the repeated real browser Q2 → Chinese follow-up → English Q3 produces an English
+Standalone Question and answer. **68 passed**, 1 eval deselected, 66.74s; formatting, event
+parity, frontend typecheck/build pass. The linked report retains the original failures and
+separate new evidence. The 600-token Router reservation is unchanged. Golden Facts answer
+quality is still not accepted by this repair.

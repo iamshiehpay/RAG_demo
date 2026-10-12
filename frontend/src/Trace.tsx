@@ -10,6 +10,10 @@ export function Trace({ calls, chunks, plan }: {
         <div><dt>Standalone Question</dt><dd>{plan.standalone_question}</dd></div>
         <div><dt>Plan source</dt><dd>{plan.plan_source}</dd></div>
         {plan.fallback_reason && <div><dt>Fallback reason</dt><dd>{plan.fallback_reason}</dd></div>}
+        {plan.rewrite_language_mismatch && <>
+          <div><dt>Rewrite language mismatch</dt><dd>Original question retained; Question Type preserved.</dd></div>
+          <div><dt>Router rewrite</dt><dd>{plan.router_standalone_question}</dd></div>
+        </>}
       </dl>
       {plan.sub_queries.length > 0 && <><h4>Sub-queries</h4>
         <ol>{plan.sub_queries.map((query, i) => <li key={i}>{query}</li>)}</ol></>}

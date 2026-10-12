@@ -34,7 +34,9 @@ async def test_known_extra_key_with_valid_follow_up_rewrite_is_ignored():
     history = [ConversationTurn(question="Summarize LightRAG.", answer="LightRAG is a RAG system.")]
     plan = await Router(LLMGateway(ScriptedLLM([raw]))).plan("那它跟 GraphRAG 比呢？", history, [])
     assert plan.plan_source == "router"
-    assert plan.standalone_question == "Compare LightRAG with GraphRAG."
+    assert plan.standalone_question == "那它跟 GraphRAG 比呢？"
+    assert plan.rewrite_language_mismatch
+    assert plan.router_standalone_question == "Compare LightRAG with GraphRAG."
 
 
 @pytest.mark.parametrize(

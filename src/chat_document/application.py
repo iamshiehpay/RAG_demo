@@ -112,15 +112,23 @@ class Application:
                 if plan.question_type == "Global"
                 else plan
             )
-            retrieved = await self.context_packer.retrieve(index, context_plan)
+            retrieved = await self.context_packer.retrieve(
+                index, context_plan, current_question=question
+            )
             yield RetrievalEvent(chunks=retrieved)
             chunks = sorted((item.chunk for item in retrieved), key=lambda chunk: chunk.order)
             citations = citation_map(chunks)
             yield CitationMapEvent(citations=citations)
-            context = await self.context_packer.pack(context_plan, chunks, citations, calls)
+            context = await self.context_packer.pack(
+                context_plan, chunks, citations, calls, current_question=question
+            )
             answer = ""
             async for event in self.answer_generator.generate(
-                plan.standalone_question, chunks, citations, context=context
+                plan.standalone_question,
+                chunks,
+                citations,
+                context=context,
+                current_question=question,
             ):
                 if isinstance(event, DeltaEvent):
                     answer += event.text

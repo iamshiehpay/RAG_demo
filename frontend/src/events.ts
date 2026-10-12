@@ -56,6 +56,8 @@ export type LLMCallTrace = {
   discarded_fact_lines: number;
   plan_source: "router" | "fallback" | null;
   fallback_reason: "length" | "invalid_json" | "invalid_plan" | "missing_rewrite" | null;
+  rewrite_language_mismatch: boolean;
+  router_standalone_question: string | null;
 };
 
 export type PlanEvent = {
@@ -65,6 +67,8 @@ export type PlanEvent = {
   sub_queries: Array<string>;
   plan_source: "router" | "fallback";
   fallback_reason: "length" | "invalid_json" | "invalid_plan" | "missing_rewrite" | null;
+  rewrite_language_mismatch: boolean;
+  router_standalone_question: string | null;
 };
 
 export type ReadyEvent = {

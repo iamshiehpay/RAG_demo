@@ -73,6 +73,8 @@ def test_ask_http_sse_order_and_citation_source():
             sub_queries=["hello", "Document"],
             plan_source="router",
             fallback_reason=None,
+            rewrite_language_mismatch=False,
+            router_standalone_question=None,
         )
         assert result[3]["text"] + result[4]["text"] == result[5]["answer"]
         citation = result[5]["citations"][0]

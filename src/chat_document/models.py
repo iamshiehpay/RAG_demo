@@ -69,3 +69,5 @@ class LLMCallTrace(BaseModel):
     discarded_fact_lines: int = 0
     plan_source: Literal["router", "fallback"] | None = None
     fallback_reason: FallbackReason | None = None
+    rewrite_language_mismatch: bool = False
+    router_standalone_question: str | None = None

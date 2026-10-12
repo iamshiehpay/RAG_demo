@@ -73,6 +73,8 @@ class Router:
             for call in calls[call_start:]:
                 call.plan_source = plan.plan_source
                 call.fallback_reason = plan.fallback_reason
+                call.rewrite_language_mismatch = plan.rewrite_language_mismatch
+                call.router_standalone_question = plan.router_standalone_question
             return plan
 
         def fallback(reason: FallbackReason) -> PlanEvent:
@@ -128,6 +130,16 @@ class Router:
                 if plan.question_type == "Synthesis"
                 else []
             )
-            return recorded(PlanEvent(**plan.model_dump()))
+            event = PlanEvent(**plan.model_dump())
+            # Detect Chinese/non-Chinese script switches without another LLM call.
+            # Keep the valid classification and queries, but do not silently use a
+            # translated rewrite. The raw rewrite remains visible for diagnosis.
+            if bool(re.search(r"[\u4e00-\u9fff]", question)) != bool(
+                re.search(r"[\u4e00-\u9fff]", plan.standalone_question)
+            ):
+                event.rewrite_language_mismatch = True
+                event.router_standalone_question = plan.standalone_question
+                event.standalone_question = question
+            return recorded(event)
         except (ValidationError, ValueError):
             return fallback("invalid_plan")

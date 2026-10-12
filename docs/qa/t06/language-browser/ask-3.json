@@ -1,0 +1,549 @@
+{
+  "question": "Performance of ablated versions of LightRAG",
+  "events": [
+    {
+      "type": "plan",
+      "question_type": "Synthesis",
+      "standalone_question": "What is the performance of ablated versions of LightRAG?",
+      "sub_queries": [],
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "type": "retrieval",
+      "chunks": [
+        {
+          "chunk": {
+            "id": "01dbd5760b2048029922107ac4ef6ea8:chunk-1",
+            "section_id": "page-1",
+            "section": "Virtual Section 1",
+            "page_start": 1,
+            "page_end": 1,
+            "text": "LIGHTRAG: SIMPLE AND FAST\nRETRIEVAL-AUGMENTED GENERATION\n\nZirui Guo1,2, Lianghao Xia2, Yanhua Yu1,∗, Tu Ao1, Chao Huang2∗\n\nBeijing University of Posts and Telecommunications1\n\nUniversity of Hong Kong2\n\nzrguo101@hku.hk aka_xia@foxmail.com chaohuang75@gmail.com\n\nABSTRACT\n\nRetrieval-Augmented Generation (RAG) systems enhance large language models\n(LLMs) by integrating external knowledge sources, enabling more accurate and\ncontextually relevant responses tailored to user needs. However, existing RAG\nsystems have significant limitations, including reliance on flat data representa-\ntions and inadequate contextual awareness, which can lead to fragmented answers\nthat fail to capture complex inter-dependencies. To address these challenges, we\npropose LightRAG, which incorporates graph structures into text indexing and\nretrieval processes. This innovative framework employs a dual-level retrieval sys-\ntem that enhances comprehensive information retrieval from both low-level and\nhigh-level knowledge discovery. Additionally, the integration of graph structures\nwith vector representations facilitates efficient retrieval of related entities and their\nrelationships, significantly improving response times while maintaining contextual\nrelevance. This capability is further enhanced by an incremental update algorithm\nthat ensures the timely integration of new data, allowing the system to remain\neffective and responsive in rapidly changing data environments. Extensive experi-\nmental validation demonstrates considerable improvements in retrieval accuracy\nand efficiency compared to existing approaches. We have made our LightRAG\nopen-source and available at the link: https://github.com/HKUDS/LightRAG.\n\n1\nINTRODUCTION\n\narXiv:2410.05779v3  [cs.IR]  28 Apr 2025",
+            "order": 0
+          },
+          "score": 0.5655499696731567
+        },
+        {
+          "chunk": {
+            "id": "01dbd5760b2048029922107ac4ef6ea8:chunk-16",
+            "section_id": "page-7",
+            "section": "Virtual Section 7",
+            "page_start": 7,
+            "page_end": 7,
+            "text": "Comprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nThe Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora When handling large\ntoken counts and complex queries that require a thorough understanding of the dataset’s context,\ngraph-based RAG systems like LightRAG and GraphRAG consistently outperform purely chunk-\nbased retrieval methods such as NaiveRAG, HyDE, and RQRAG. This performance gap becomes\nparticularly pronounced as the dataset size increases. For instance, in the largest dataset (Legal), the\ndisparity widens significantly, with baseline methods achieving only about 20% win rates compared\nto the dominance of LightRAG. This trend underscores the advantages of graph-enhanced RAG\nsystems in capturing complex semantic dependencies within large-scale corpora, facilitating a more\ncomprehensive understanding of knowledge and leading to improved generalization performance.",
+            "order": 15
+          },
+          "score": 0.5781786441802979
+        },
+        {
+          "chunk": {
+            "id": "01dbd5760b2048029922107ac4ef6ea8:chunk-18",
+            "section_id": "page-8",
+            "section": "Virtual Section 8",
+            "page_start": 8,
+            "page_end": 8,
+            "text": "Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference.\n\nAgriculture\nCS\nLegal\nMix\n\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\n\nComprehensiveness\n32.4%\n67.6%\n38.4%\n61.6%\n16.4%\n83.6%\n38.8%\n61.2%\nDiversity\n23.6%\n76.4%\n38.0%\n62.0%\n13.6%\n86.4%\n32.4%\n67.6%\nEmpowerment\n32.4%\n67.6%\n38.8%\n61.2%\n16.4%\n83.6%\n42.8%\n57.2%\nOverall\n32.4%\n67.6%\n38.8%\n61.2%\n15.2%\n84.8%\n40.0%\n60.0%\n\nNaiveRAG\n-High\nNaiveRAG\n-High\nNaiveRAG\n-High\nNaiveRAG\n-High\n\nComprehensiveness\n34.8%\n65.2%\n42.8%\n57.2%\n23.6%\n76.4%\n40.4%\n59.6%\nDiversity\n27.2%\n72.8%\n36.8%\n63.2%\n16.8%\n83.2%\n36.0%\n64.0%\nEmpowerment\n36.0%\n64.0%\n42.4%\n57.6%\n22.8%\n77.2%\n47.6%\n52.4%\nOverall\n35.2%\n64.8%\n44.0%\n56.0%\n22.0%\n78.0%\n42.4%\n57.6%\n\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low",
+            "order": 17
+          },
+          "score": 0.6937470436096191
+        }
+      ]
+    },
+    {
+      "type": "citation_map",
+      "citations": [
+        {
+          "id": "C1",
+          "source_id": "01dbd5760b2048029922107ac4ef6ea8:chunk-1",
+          "section": "Virtual Section 1",
+          "page_start": 1,
+          "page_end": 1
+        },
+        {
+          "id": "C2",
+          "source_id": "01dbd5760b2048029922107ac4ef6ea8:chunk-16",
+          "section": "Virtual Section 7",
+          "page_start": 7,
+          "page_end": 7
+        },
+        {
+          "id": "C3",
+          "source_id": "01dbd5760b2048029922107ac4ef6ea8:chunk-18",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
+        }
+      ]
+    },
+    {
+      "type": "delta",
+      "text": "The paper"
+    },
+    {
+      "type": "delta",
+      "text": " reports"
+    },
+    {
+      "type": "delta",
+      "text": " the results"
+    },
+    {
+      "type": "delta",
+      "text": " of several"
+    },
+    {
+      "type": "delta",
+      "text": " ab"
+    },
+    {
+      "type": "delta",
+      "text": "lated Light"
+    },
+    {
+      "type": "delta",
+      "text": "RAG configurations"
+    },
+    {
+      "type": "delta",
+      "text": " ("
+    },
+    {
+      "type": "delta",
+      "text": "using"
+    },
+    {
+      "type": "delta",
+      "text": " NaiveRAG as"
+    },
+    {
+      "type": "delta",
+      "text": " the reference) on"
+    },
+    {
+      "type": "delta",
+      "text": " four test"
+    },
+    {
+      "type": "delta",
+      "text": " sets"
+    },
+    {
+      "type": "delta",
+      "text": ":\n\n"
+    },
+    {
+      "type": "delta",
+      "text": "**"
+    },
+    {
+      "type": "delta",
+      "text": "Standard"
+    },
+    {
+      "type": "delta",
+      "text": " ab"
+    },
+    {
+      "type": "delta",
+      "text": "lation (Table"
+    },
+    {
+      "type": "delta",
+      "text": " 2,"
+    },
+    {
+      "type": "delta",
+      "text": " first"
+    },
+    {
+      "type": "delta",
+      "text": " block"
+    },
+    {
+      "type": "delta",
+      "text": ")**  \n"
+    },
+    {
+      "type": "delta",
+      "text": "- **Agriculture** –"
+    },
+    {
+      "type": "delta",
+      "text": " Comprehensiveness"
+    },
+    {
+      "type": "delta",
+      "text": " 67.6 %,"
+    },
+    {
+      "type": "delta",
+      "text": " Diversity 76.4"
+    },
+    {
+      "type": "delta",
+      "text": " %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 67.6 "
+    },
+    {
+      "type": "delta",
+      "text": "%, Overall 67."
+    },
+    {
+      "type": "delta",
+      "text": "6 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]  \n- **Computer‑"
+    },
+    {
+      "type": "delta",
+      "text": "Science (CS)** – Com"
+    },
+    {
+      "type": "delta",
+      "text": "prehensiveness"
+    },
+    {
+      "type": "delta",
+      "text": " 61.6 %,"
+    },
+    {
+      "type": "delta",
+      "text": " Diversity 62"
+    },
+    {
+      "type": "delta",
+      "text": ".0 %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 61.2"
+    },
+    {
+      "type": "delta",
+      "text": " %, Overall 61"
+    },
+    {
+      "type": "delta",
+      "text": ".2 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]  \n- **"
+    },
+    {
+      "type": "delta",
+      "text": "Legal** – Comprehens"
+    },
+    {
+      "type": "delta",
+      "text": "iveness 83"
+    },
+    {
+      "type": "delta",
+      "text": ".6 %, Diversity "
+    },
+    {
+      "type": "delta",
+      "text": "86.4 %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 83.6"
+    },
+    {
+      "type": "delta",
+      "text": " %, Overall 84"
+    },
+    {
+      "type": "delta",
+      "text": ".8 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]  \n- **Mix"
+    },
+    {
+      "type": "delta",
+      "text": "** – Comprehensiveness"
+    },
+    {
+      "type": "delta",
+      "text": " 61.2"
+    },
+    {
+      "type": "delta",
+      "text": " %, Diversity 67"
+    },
+    {
+      "type": "delta",
+      "text": ".6 %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 57.2 "
+    },
+    {
+      "type": "delta",
+      "text": "%, Overall 60."
+    },
+    {
+      "type": "delta",
+      "text": "0 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]\n\n"
+    },
+    {
+      "type": "delta",
+      "text": "**High‑resource ab"
+    },
+    {
+      "type": "delta",
+      "text": "lation (Naive"
+    },
+    {
+      "type": "delta",
+      "text": "RAG‑High,"
+    },
+    {
+      "type": "delta",
+      "text": " second"
+    },
+    {
+      "type": "delta",
+      "text": " block)**  \n- **"
+    },
+    {
+      "type": "delta",
+      "text": "Agriculture** – Compreh"
+    },
+    {
+      "type": "delta",
+      "text": "ensiveness"
+    },
+    {
+      "type": "delta",
+      "text": " 65"
+    },
+    {
+      "type": "delta",
+      "text": ".2 %, Diversity "
+    },
+    {
+      "type": "delta",
+      "text": "72.8 %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 64.0"
+    },
+    {
+      "type": "delta",
+      "text": " %, Overall 64"
+    },
+    {
+      "type": "delta",
+      "text": ".8 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]  \n- **Computer"
+    },
+    {
+      "type": "delta",
+      "text": "‑Science ("
+    },
+    {
+      "type": "delta",
+      "text": "CS)** – Comprehens"
+    },
+    {
+      "type": "delta",
+      "text": "iveness 57"
+    },
+    {
+      "type": "delta",
+      "text": ".2 %, Diversity"
+    },
+    {
+      "type": "delta",
+      "text": " 63"
+    },
+    {
+      "type": "delta",
+      "text": ".2 %, Empowerment"
+    },
+    {
+      "type": "delta",
+      "text": " 57.6"
+    },
+    {
+      "type": "delta",
+      "text": " %, Overall 56"
+    },
+    {
+      "type": "delta",
+      "text": ".0 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]  \n- **Legal"
+    },
+    {
+      "type": "delta",
+      "text": "** – Comprehensiveness"
+    },
+    {
+      "type": "delta",
+      "text": " 76.4 %,"
+    },
+    {
+      "type": "delta",
+      "text": " Diversity 83.2"
+    },
+    {
+      "type": "delta",
+      "text": " %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 77.2"
+    },
+    {
+      "type": "delta",
+      "text": " %, Overall 78"
+    },
+    {
+      "type": "delta",
+      "text": ".0 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]  \n- **Mix"
+    },
+    {
+      "type": "delta",
+      "text": "** – Comprehensiveness"
+    },
+    {
+      "type": "delta",
+      "text": " 59"
+    },
+    {
+      "type": "delta",
+      "text": ".6 %, Diversity "
+    },
+    {
+      "type": "delta",
+      "text": "64.0 %, Empower"
+    },
+    {
+      "type": "delta",
+      "text": "ment 52.4 "
+    },
+    {
+      "type": "delta",
+      "text": "%, Overall 57"
+    },
+    {
+      "type": "delta",
+      "text": ".6 %"
+    },
+    {
+      "type": "delta",
+      "text": "[C3]\n\nThe document"
+    },
+    {
+      "type": "delta",
+      "text": " does not provide the numeric"
+    },
+    {
+      "type": "delta",
+      "text": " results"
+    },
+    {
+      "type": "delta",
+      "text": " for the “Na"
+    },
+    {
+      "type": "delta",
+      "text": "iveRAG"
+    },
+    {
+      "type": "delta",
+      "text": "‑Low” ab"
+    },
+    {
+      "type": "delta",
+      "text": "lation variant"
+    },
+    {
+      "type": "delta",
+      "text": "."
+    },
+    {
+      "type": "final",
+      "answer": "The paper reports the results of several ablated LightRAG configurations (using NaiveRAG as the reference) on four test sets:\n\n**Standard ablation (Table 2, first block)**  \n- **Agriculture** – Comprehensiveness 67.6 %, Diversity 76.4 %, Empowerment 67.6 %, Overall 67.6 %[C3]  \n- **Computer‑Science (CS)** – Comprehensiveness 61.6 %, Diversity 62.0 %, Empowerment 61.2 %, Overall 61.2 %[C3]  \n- **Legal** – Comprehensiveness 83.6 %, Diversity 86.4 %, Empowerment 83.6 %, Overall 84.8 %[C3]  \n- **Mix** – Comprehensiveness 61.2 %, Diversity 67.6 %, Empowerment 57.2 %, Overall 60.0 %[C3]\n\n**High‑resource ablation (NaiveRAG‑High, second block)**  \n- **Agriculture** – Comprehensiveness 65.2 %, Diversity 72.8 %, Empowerment 64.0 %, Overall 64.8 %[C3]  \n- **Computer‑Science (CS)** – Comprehensiveness 57.2 %, Diversity 63.2 %, Empowerment 57.6 %, Overall 56.0 %[C3]  \n- **Legal** – Comprehensiveness 76.4 %, Diversity 83.2 %, Empowerment 77.2 %, Overall 78.0 %[C3]  \n- **Mix** – Comprehensiveness 59.6 %, Diversity 64.0 %, Empowerment 52.4 %, Overall 57.6 %[C3]\n\nThe document does not provide the numeric results for the “NaiveRAG‑Low” ablation variant.",
+      "citations": [
+        {
+          "id": "C3",
+          "source_id": "01dbd5760b2048029922107ac4ef6ea8:chunk-18",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
+        }
+      ],
+      "unverified": []
+    },
+    {
+      "type": "trace",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 1214,
+          "prompt_eval_count": 895,
+          "eval_count": 95,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to output classification. It's asking about performance of ablated versions => Synthesis. Provide standalone_question Chinese? The current question is English phrase but user wrote in English. So standalone_question: \"What is the performance of ablated versions of LightRAG?\" sub_queries empty.",
+          "latency_ms": 1488.8185828458518,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "answer",
+          "estimated_prompt_tokens": 1820,
+          "prompt_eval_count": 1595,
+          "eval_count": 1498,
+          "think": "medium",
+          "num_predict": 3000,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to answer using only supplied excerpts. The question: \"What is the performance of ablated versions of LightRAG?\" The relevant info is in C3: Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference. It lists metrics for different domains (Agriculture, CS, Legal, Mix) and also for high and low variants? Let's parse.\n\nFirst part of C3 shows a table with columns: Agriculture, CS, Legal, Mix. Rows: NaiveRAG, LightRAG (presumably performance). Then metrics: Comprehensiveness, Diversity, Empowerment, Overall. Values for LightRAG are given.\n\nSo performance of ablated versions of LightRAG: For each domain, LightRAG values: Agriculture: Comprehensiveness 67.6%, Diversity 76.4%, Empowerment 67.6%, Overall 67.6%. CS: Comprehensiveness 61.6%, Diversity 62.0%, Empowerment 61.2%, Overall 61.2%. Legal: Comprehensiveness 83.6%, Diversity 86.4%, Empowerment 83.6%, Overall 84.8%? Wait check: In Legal column, LightRAG values: Comprehensiveness 83.6%, Diversity 86.4%, Empowerment 83.6%, Overall 84.8% (Yes). Mix: Comprehensiveness 61.2%, Diversity 67.6%, Empowerment 57.2%, Overall 60.0%.\n\nThen second part shows NaiveRAG-High and LightRAG? Actually shows NaiveRAG-High and LightRAG? The rows show LightRAG values for high? The table shows \"NaiveRAG -High\" and \"NaiveRAG -Low\" as headings, but the values under are LightRAG? Actually the second block: \"NaiveRAG -High\" then rows: Comprehensiveness 34.8% (NaiveRAG?), 65.2% (LightRAG?). The pattern: first value is NaiveRAG, second is LightRAG. So LightRAG performance for high variant: Agriculture: Comprehensiveness 65.2%, Diversity 72.8%, Empowerment 64.0%, Overall 64.8%. CS: Comprehensiveness 57.2%, Diversity 63.2%, Empowerment 57.6%, Overall 56.0%. Legal: Comprehensiveness 76.4%, Diversity 83.2%, Empowerment 77.2%, Overall 78.0%. Mix: Comprehensiveness 59.6%, Diversity 64.0%, Empowerment 52.4%, Overall 57.6%.\n\nThird block: NaiveRAG -Low, LightRAG values? Not shown fully; only headings. Probably similar but not needed.\n\nThus answer: Provide performance numbers for ablated LightRAG across domains and variants. Must cite C3 for each claim. Use [C3] for all.\n\nWe need to present the performance. Probably summarize.\n\nLet's craft answer: The ablated LightRAG versions achieve the following scores (compared to NaiveRAG) across four test sets:\n\n- Agriculture: Comprehensiveness 67.6 %, Diversity 76.4 %, Empowerment 67.6 %, Overall 67.6 % [C3].\n- Computer Science (CS): Comprehensiveness 61.6 %, Diversity 62.0 %, Empowerment 61.2 %, Overall 61.2 % [C3].\n- Legal: Comprehensiveness 83.6 %, Diversity 86.4 %, Empowerment 83.6 %, Overall 84.8 % [C3].\n- Mixed: Comprehensiveness 61.2 %, Diversity 67.6 %, Empowerment 57.2 %, Overall 60.0 % [C3].\n\nFor the high‑resource ablation (NaiveRAG‑High) LightRAG scores:\n\n- Agriculture: Comprehensiveness 65.2 %, Diversity 72.8 %, Empowerment 64.0 %, Overall 64.8 % [C3].\n- CS: Comprehensiveness 57.2 %, Diversity 63.2 %, Empowerment 57.6 %, Overall 56.0 % [C3].\n- Legal: Comprehensiveness 76.4 %, Diversity 83.2 %, Empowerment 77.2 %, Overall 78.0 % [C3].\n- Mixed: Comprehensiveness 59.6 %, Diversity 64.0 %, Empowerment 52.4 %, Overall 57.6 % [C3].\n\nThe low‑resource ablation values are not listed in the excerpt. Provide that note? Could mention not provided.\n\nWe must not add info not in doc. So we can say low variant not shown. Use citation.\n\nLet's answer.",
+          "latency_ms": 6434.790625004098,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ]
+    }
+  ]
+}

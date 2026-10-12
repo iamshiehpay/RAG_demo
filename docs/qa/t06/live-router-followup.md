@@ -62,7 +62,7 @@ ambiguous characters are inconclusive. Three deterministic tests through Router 
 name-only follow-up and Simplified rewrite fail the guard while a complete Traditional rewrite
 passes. Smoke is excluded from default pytest. Existing addopts/markers are preserved for #08.
 
-## Browser: remaining acceptance failures
+## Browser: original neutral-prompt failures
 
 Real local bge-m3 and real gpt-oss served the rebuilt frontend at `http://127.0.0.1:8120`.
 The temporary Application records emitted events without changing execution.
@@ -70,25 +70,71 @@ The temporary Application records emitted events without changing execution.
 | Check | Final neutral result | Status |
 | --- | --- | --- |
 | Q2 type/Sub-queries | Genuine Synthesis; architecture, performance, limitations/maintenance queries; 103 Router tokens, stop | PASS |
-| Q2 required retrieval | Neither the paragraph containing `610` nor incremental-update passages appear in retrieved evidence | **FAIL** |
+| Q2 required retrieval | Neither the paragraph containing `610` nor incremental-update passages appear in retrieved evidence | **FAIL — deferred to #11** per Levi #2066; not a #06 blocker |
 | Follow-up `那它的成本呢？` | Lookup; `LightRAG 的成本是多少？` in Traditional Chinese; 78 Router tokens, stop | PASS |
-| Q3 after these two rounds | Synthesis rather than Lookup; English input rewritten as `LightRAG 的消融版本的性能如何？`; 134 tokens, stop, no fallback | **FAIL type/language**, PASS completion/budget |
+| Q3 after these two rounds | Synthesis; English input rewritten as `LightRAG 的消融版本的性能如何？`; 134 tokens, stop, no fallback | **FAIL language**, PASS completion/budget; Synthesis accepted by Levi #2066 under the ambiguity rule |
 
 The first solar-example browser run found incremental-update text but missed cost. The final
 freight-example run missed both; these results were reported to Levi without restoring
 Golden-Fact-specific prompt instructions. The direct canonical Q3 has no history and passes,
-but the actual browser history context does not. Overall browser acceptance remains **FAIL**;
-the 20-case smoke score is not substituted for these failed checks. Golden Facts answer quality
-is not accepted by this repair.
+but the actual browser history context did not preserve language. These failures remain
+historical evidence; the language repair below supersedes that #06 failure. The 20-case smoke
+score is not substituted for the browser checks. Golden Facts answer quality is not accepted
+by this repair; live Q2 retrieval tuning waits for real Sections and neighbor/table links in #11.
 
 Current event tapes: [Q2](live-browser/ask-1.json), [follow-up](live-browser/ask-2.json),
 [Q3](live-browser/ask-3.json). Inspected screenshots: [Q2](live-browser/q2-trace.png),
 [follow-up](live-browser/followup-trace.png), [Q3](live-browser/q3-trace.png).
 No browser errors were reported. Browser/backend were stopped; no Vite process was started.
 
-## Final deterministic checks
+## Prior deterministic checks
 
 - `uv run pytest -q`: **64 passed, 1 eval deselected, 6 existing warnings, 67.49s**.
 - Scoped ruff check/format (`src tests scripts/generate_event_types.py`): PASS, 31 files.
 - Event type parity, frontend typecheck/production build and `git diff --check`: PASS.
 - Frontend build is unchanged: the Literal refinement only changes generated source types.
+
+## Current-question language repair (#2066)
+
+Answer Generator now receives the current user question independently of the Standalone
+Question. Its prompt explicitly gives the current question control over answer language;
+Context Packer uses exactly the same messages for selection and recursive capacity checks.
+The added language reference is counted, including when a long current question would make
+an otherwise fitting context exceed the prompt cap.
+
+When the Router rewrite switches between Chinese and non-Chinese script, the backend retains
+Question Type, plan source and Sub-queries, uses the current question for retrieval, and records
+`rewrite_language_mismatch=true` plus `router_standalone_question` in both plan and call Trace.
+The UI displays the warning and raw rewrite. No second Router call or translation is used.
+A dependent follow-up can lose its resolved reference when the current question replaces the
+rewrite; the explicit flag exposes this limitation. Languages sharing a script are not detected.
+
+Four new deterministic cases first failed, then passed: both cross-script directions with one
+Router call and preserved type; Chinese history + English Q3 with an English language reference;
+and a context that only exceeds capacity after the current-question reference is counted.
+Older tests that expected English rewrites of Chinese questions now use same-language fixtures
+for their original purpose, or explicitly assert the flag and retained raw rewrite.
+
+The live browser sequence used real bge-m3 and gpt-oss again: Q2 → `那它的成本呢？` → English Q3.
+The prior event tapes above were preserved; new events are in a separate directory.
+
+| Check | New live result | Status |
+| --- | --- | --- |
+| Chinese follow-up | Lookup, `LightRAG 的成本是多少？`; 72 Router tokens, stop | PASS |
+| Q3 standalone/type | `What is the performance of ablated versions of LightRAG?`; genuine Synthesis, 95 Router tokens, stop | PASS; Synthesis accepted |
+| Q3 answer language | English answer, no Chinese characters; 1,498 generated tokens, stop | PASS |
+| Q3 call budgets | Router 1,814/10,000, answer 4,820/10,000 estimated + reservation | PASS |
+
+This live run did not trigger the mismatch branch; the deterministic tests force that failure
+and verify its recorded correction. It proves the original browser history sequence now
+answers in English, not that every future model rewrite will be valid. Answer/table accuracy
+remains outside this repair's acceptance claim.
+
+New event tapes: [Q2](language-browser/ask-1.json), [follow-up](language-browser/ask-2.json),
+[Q3](language-browser/ask-3.json). The inspected [Q3 screenshot](language-browser/q3-trace.png)
+shows the English answer and expanded Router Trace budget. Browser errors: none. The task's
+browser and backend were stopped; no Vite process was started.
+
+Final checks: **68 passed, 1 eval deselected, 6 existing warnings, 66.74s**; ruff check/format
+(32 files), generated event parity, frontend typecheck/build and `git diff --check` pass.
+The frontend was rebuilt and its changed `dist/` is included.
