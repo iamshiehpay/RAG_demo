@@ -13,6 +13,12 @@ class ConversationTurn(BaseModel):
 
 
 class Section(BaseModel):
+    """A heading and its direct text, including heading-only parent metadata.
+
+    Sections with zero Chunks are excluded from Summary Tree input; builders
+    must skip them and summarize only Sections containing source Chunks.
+    """
+
     id: str
     title: str
     page_start: int

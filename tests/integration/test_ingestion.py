@@ -51,6 +51,8 @@ async def test_lightrag_sections_exclude_references_and_keep_appendix():
     # Table headers remain content of their actual Section, not artificial headings.
     assert not any(s.title.casefold().endswith("— mix") for s in document.sections)
     assert "Statistics" in "\n".join(c.text for c in appendix)
+    assert any(s.title.startswith("Appendix — 7.2 ") for s in document.sections)
+    assert any(s.title.startswith("Appendix — 7.4 ") for s in document.sections)
     assert document.sections[0].title == "LIGHTRAG: SIMPLE AND FAST RETRIEVAL-AUGMENTED GENERATION"
     ablation = [c for c in document.chunks if c.section.startswith("4.3 ")]
     assert ablation and any(c.page_start == c.page_end == 8 for c in ablation)
@@ -324,3 +326,45 @@ async def test_settings_from_env_control_real_and_virtual_chunk_bounds(monkeypat
     assert events[-1].type == "ready"
     assert all(count_tokens(c.text) <= 80 for c in app.document.chunks)
     assert all(count_tokens("\n\n".join(s.paragraphs)) <= 80 for s in app.document.sections)
+
+
+async def test_shaded_prose_above_a_figure_caption_preserves_every_line():
+    from .fixtures import shaded_prose_pdf
+
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(shaded_prose_pdf(), "shaded.pdf")]
+    assert events[-1].type == "ready"
+    assert [s.title for s in app.document.sections] == ["1 Introduction"]
+    text = "\n".join(c.text for c in app.document.chunks)
+    assert all(f"PROSE_{word}" in text for word in ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX"])
+
+
+async def test_page_frame_does_not_remove_the_section_heading():
+    from .fixtures import page_frame_pdf
+
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(page_frame_pdf(), "frame.pdf")]
+    assert events[-1].type == "ready"
+    assert [s.title for s in app.document.sections] == ["1 Introduction"]
+    assert not app.document.sections[0].is_virtual
+    assert "FRAME_BODY" in app.document.chunks[0].text
+
+
+async def test_numbered_all_caps_period_headings_keep_their_own_appendix_content():
+    from .fixtures import review_pdf
+
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(review_pdf("period-headings"), "period.pdf")]
+    assert events[-1].type == "ready"
+    assert [s.title for s in app.document.sections] == [
+        "7 Appendix",
+        "Appendix — 7.2 CASE EXAMPLE OF LIGHTRAG.",
+        "Appendix — 7.4 CASE STUDY OF NAIVERAG.",
+    ]
+    for section, marker in zip(
+        app.document.sections,
+        ["APPENDIX_MAIN", "CASE_EXAMPLE_BODY", "CASE_STUDY_BODY"],
+        strict=True,
+    ):
+        assert marker in "\n".join(section.paragraphs)
+        assert all(c.section == section.title for c in app.document.chunks if marker in c.text)

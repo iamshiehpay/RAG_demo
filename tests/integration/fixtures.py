@@ -154,9 +154,56 @@ def review_pdf(case):
             page.insert_text(
                 (50, 460), "TABLE_PARAGRAPH compares the variants in Table 2.", fontsize=10
             )
+        elif case == "period-headings":
+            page.insert_text((50, 60), "7 Appendix", fontsize=14)
+            page.insert_text(
+                (50, 100), "APPENDIX_MAIN describes the supplementary evidence.", fontsize=10
+            )
+            page.insert_text((50, 180), "7.2 CASE EXAMPLE OF LIGHTRAG.", fontsize=10)
+            page.insert_text(
+                (50, 220),
+                "CASE_EXAMPLE_BODY keeps the example under the right Section.",
+                fontsize=10,
+            )
+            page.insert_text((50, 300), "7.4", fontsize=10)
+            page.insert_text((80, 300), "CASE STUDY OF NAIVERAG.", fontsize=10)
+            page.insert_text(
+                (50, 340), "CASE_STUDY_BODY keeps the study under the right Section.", fontsize=10
+            )
         elif case == "references-only":
             page.insert_text((50, 60), "References", fontsize=14)
             page.insert_text((50, 100), "Only a bibliography entry exists here.", fontsize=10)
         else:
             raise AssertionError(case)
+        return document.tobytes()
+
+
+def shaded_prose_pdf():
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.insert_text((50, 60), "1 Introduction", fontsize=14)
+        page.draw_rect(pymupdf.Rect(50, 130, 500, 270), fill=(0.95, 0.95, 0.95))
+        page.insert_text(
+            (60, 155),
+            "PROSE_ONE The system keeps every line of evidence\n"
+            "PROSE_TWO when a paragraph wraps inside a shaded box\n"
+            "PROSE_THREE even if the line does not end in punctuation\n"
+            "PROSE_FOUR because the sentence continues on the next line\n"
+            "PROSE_FIVE and every part belongs to this Section\n"
+            "PROSE_SIX until the final sentence ends here.",
+            fontsize=10,
+        )
+        page.insert_text((50, 290), "Figure 1: A separate diagram caption.", fontsize=10)
+        return document.tobytes()
+
+
+def page_frame_pdf():
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.draw_rect(pymupdf.Rect(25, 25, 570, 790))
+        page.insert_text((50, 60), "1 Introduction", fontsize=14)
+        page.insert_text(
+            (50, 130), "FRAME_BODY is real evidence inside the decorative page border.", fontsize=10
+        )
+        page.insert_text((50, 270), "Figure 1: A caption inside the same page frame.", fontsize=10)
         return document.tobytes()

@@ -47,12 +47,11 @@ class Application:
         chunk_token_target: int | None = None,
     ):
         settings = settings or RetrievalSettings()
-        chunk_token_target = (
-            settings.chunk_token_target if chunk_token_target is None else chunk_token_target
-        )
-        if chunk_token_target < 1:
-            raise ValueError("Chunk token target must be positive.")
-        self.chunk_token_target = chunk_token_target
+        if chunk_token_target is not None:
+            settings = RetrievalSettings(
+                **(settings.model_dump() | {"chunk_token_target": chunk_token_target})
+            )
+        self.chunk_token_target = settings.chunk_token_target
         self.embedder = embedder
         self.answer_generator = AnswerGenerator(gateway)
         self.router = Router(gateway)

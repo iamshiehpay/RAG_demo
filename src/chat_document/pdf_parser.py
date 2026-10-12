@@ -120,10 +120,11 @@ def _figure_regions(page: pymupdf.Page, blocks: list[dict]) -> list[pymupdf.Rect
 def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
     lines = []
     sizes: Counter[int] = Counter()
+    regions_by_page = {}
     for page_number, page in enumerate(pdf, 1):
         page_lines = []
         blocks, two_columns = _ordered_blocks(page)
-        figure_regions = _figure_regions(page, blocks)
+        regions_by_page[page_number] = _figure_regions(page, blocks)
         for block_number, block in enumerate(blocks):
             for line in block.get("lines", []):
                 if line["dir"] != (1.0, 0.0):
@@ -135,12 +136,6 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                 bbox = tuple(line["bbox"])
                 if all(char.isspace() or ord(char) < 32 for char in text):
                     continue  # Font-mapped control glyphs; retain mathematical/table symbols.
-                if (
-                    len(text.split()) < 15
-                    and not re.search(r"[.!?。！？]$", text)
-                    and any(region.contains(pymupdf.Rect(bbox)) for region in figure_regions)
-                ):
-                    continue  # Positively located figure labels, never arbitrary short prose.
                 if text.isdigit() and bbox[1] > page.rect.height * 0.9:
                     continue  # Page numbers are not paragraphs or Section numbers.
                 for span in spans:
@@ -169,7 +164,41 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                 for other in page_lines
             )
         lines.extend(page_lines)
-    return lines, sizes.most_common(1)[0][0] if sizes else 0
+    body_size = sizes.most_common(1)[0][0] if sizes else 0
+    for page_number, regions in regions_by_page.items():
+        page_lines = [line for line in lines if line.page == page_number]
+        regions_by_page[page_number] = [
+            region for region in regions if not _contains_prose(region, page_lines, body_size)
+        ]
+    return [
+        line
+        for line in lines
+        if not (
+            len(line.text.split()) < 15
+            and not _heading(line, body_size, numbered=True)
+            and not _NUMBER.fullmatch(line.text)
+            and not re.search(r"[.!?。！？]$", line.text)
+            and any(
+                region.contains(pymupdf.Rect(line.bbox)) for region in regions_by_page[line.page]
+            )
+        )
+    ], body_size
+
+
+def _contains_prose(region: pymupdf.Rect, lines: list[_Line], body_size: float) -> bool:
+    contained = [line for line in lines if region.contains(pymupdf.Rect(line.bbox))]
+    if any(_heading(line, body_size, numbered=True) for line in contained):
+        return True  # A page frame or text box containing a heading is not a figure.
+    body_lines = [line for line in contained if abs(line.size - body_size) < 0.5]
+    for block in {line.block for line in body_lines}:
+        paragraph = [line for line in body_lines if line.block == block]
+        if len(paragraph) >= 2 and (
+            any(re.search(r"[.!?。！？]$", line.text) for line in paragraph)
+            or sum(line.bbox[2] - line.bbox[0] > region.width * 0.55 for line in paragraph)
+            > len(paragraph) / 2
+        ):
+            return True
+    return False
 
 
 def _heading(line: _Line, body_size: float, *, numbered: bool = False) -> bool:
@@ -188,7 +217,10 @@ def _heading(line: _Line, body_size: float, *, numbered: bool = False) -> bool:
         and len(text) <= 160
         and not line.shared_row
         and not re.match(r"(?:Table|Figure)\s+\d|[•●]|\(?[ivx]+\)", text, re.I)
-        and not re.search(r"[.!?。！？;；]$", text)
+        and (
+            not re.search(r"[.!?。！？;；]$", text)
+            or (text.endswith(".") and text.isupper() and (numbered or _NUMBERED_TITLE.match(text)))
+        )
     )
 
 
