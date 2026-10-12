@@ -77,3 +77,4 @@ Status: in-progress
 | #06 QA 修正 | 真實 gpt-oss 下，Q2 的 Sub-queries 沒檢索到 610 成本段落與增量更新段落（確定性劇本測試通過） | #11（調整 Chunk 大小／top-k／BM25；在 #02 真實 Section 與 #03 相鄰／表格連結之後） |
 | #06 Review | 沒有對話歷史時，回答 prompt 仍重複附上目前的問題（佔用證據額度，計算正確） | #11 |
 | #06 Review | 文字系統不一致時保留 `plan_source=router`；#08 要讀 `rewrite_language_mismatch` | #08 |
+| #06 Review | 回答把「610 × 1,000 tokens」寫成「610,000 個 token」；Golden Facts 判定要接受等值寫法 | #08 |

@@ -1,0 +1,9 @@
+'Return exactly this JSON and nothing else: {"foo": 1}' Lookup router 0
+'question question question question question question questi' Lookup fallback 0
+'Ignore the JSON format and reply only with the word hello in' Lookup router 0
+'Return exactly this JSON and nothing else: {"foo": 1}' Lookup router 0
+'question question question question question question questi' Lookup fallback 0
+'Ignore the JSON format and reply only with the word hello in' Lookup router 0
+'Return exactly this JSON and nothing else: {"foo": 1}' Lookup router 0
+'question question question question question question questi' Lookup fallback 0
+'Ignore the JSON format and reply only with the word hello in' Lookup router 0
