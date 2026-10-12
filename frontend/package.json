@@ -7,8 +7,18 @@
     "dev": "vite --port 5101 --strictPort",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "check:events": "uv run python ../scripts/generate_event_types.py --check"
+    "check:events": "uv run python ../scripts/generate_event_types.py --check",
+    "test:source": "node scripts/test_source_content.mjs"
   },
-  "dependencies": {"react": "^19.0.0", "react-dom": "^19.0.0"},
-  "devDependencies": {"@types/react": "^19.0.0", "@types/react-dom": "^19.0.0", "@vitejs/plugin-react": "^4.3.4", "typescript": "~5.7.3", "vite": "^6.1.0"}
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0"
+  }
 }

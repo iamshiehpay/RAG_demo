@@ -34,7 +34,7 @@ def _paired_grid(rows):
     """Repeated model subheaders beneath dataset headers, with paired percentage cells."""
     if len(rows) < 3:
         return None
-    datasets = [line.text for line in rows[0]]
+    datasets = [_clean(line.text) for line in rows[0]]
     count = len(datasets)
     if count < 2 or len(rows[1]) != count * 2:
         return None
@@ -42,7 +42,7 @@ def _paired_grid(rows):
     headings = None
     output = []
     for row in rows[1:]:
-        texts = [line.text for line in row]
+        texts = [_clean(line.text) for line in row]
         if len(row) == count * 2 and not any("%" in text for text in texts):
             headings = texts
             continue
@@ -91,79 +91,180 @@ def _paired_grid(rows):
     headers = [
         "Comparison",
         "Metric",
-        *[f"{dataset} (baseline / variant win rate %)" for dataset in datasets],
+        *[
+            f"{dataset} (baseline / {'variant' if len(baselines) == 1 else 'candidate'} win rate %)"
+            for dataset in datasets
+        ],
     ]
     return headers, output, meaning
 
 
-def reconstruct_tables(lines) -> list[TableRegion]:
+def _clean(text: str) -> str:
+    # Stray math-italic underscores are separators/suffixes, not identifier underscores.
+    return re.sub(r"(?<![A-Za-z0-9])_|_(?![A-Za-z0-9])|(?<=\d)_(?=\d)", "", text)
+
+
+def _column_bounds(caption, page_lines, page_width):
+    left = min(line.bbox[0] for line in page_lines)
+    right = max(line.bbox[2] for line in page_lines)
+    middle = page_width / 2
+    # Centred/full-width captions use the whole text region. Narrow side captions
+    # share a column only when there is separate text in the opposite half.
+    if caption.bbox[2] <= middle and any(
+        line.bbox[0] >= middle and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
+        for line in page_lines
+    ):
+        return left, middle
+    if caption.bbox[0] >= middle and any(
+        line.bbox[0] < middle
+        and line.bbox[2] <= caption.bbox[0] - 2
+        and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
+        for line in page_lines
+    ):
+        return middle, right
+    return left, right
+
+
+def _prose(line, width):
+    words = line.text.split()
+    if (
+        not words
+        or sum(bool(re.search(r"[A-Za-z\u4e00-\u9fff]", word)) for word in words) < len(words) * 0.7
+    ):
+        return False
+    return (len(words) >= 7 and line.bbox[2] - line.bbox[0] >= width * 0.72) or (
+        len(words) >= 4 and bool(re.search(r"[.!?。！？](?:\s|$)", line.text))
+    )
+
+
+def _collect(candidates, caption_edge, width, *, above=False):
+    rows = _rows([line for _, line in candidates])
+    if above:
+        rows.reverse()
+    indices = {id(line): j for j, line in candidates}
+    chosen = []
+    edge = caption_edge
+    first_size = None
+    height = None
+    text_cell_x = None
+    for row in rows:
+        top, bottom = min(line.bbox[1] for line in row), max(line.bbox[3] for line in row)
+        h = median(line.bbox[3] - line.bbox[1] for line in row)
+        gap = edge - bottom if above else top - edge
+        if gap > 2.2 * (height or h):
+            break
+        if any(CAPTION.match(line.text) for line in row):
+            break
+        if first_size is not None and any(line.size > first_size * 1.2 for line in row):
+            break
+        prose = [line for line in row if _prose(line, width)]
+        if prose:
+            # A labelled prose cell is source table content, but plain paragraph
+            # lines (including aligned lines from two body columns) never start a grid.
+            labelled = len(row) >= 2 and not _prose(row[0], width)
+            continuation = (
+                text_cell_x is not None
+                and all(line.bbox[0] >= text_cell_x - 2 for line in row)
+                and all(abs(line.size - first_size) < 0.5 for line in row)
+            )
+            if not labelled and not continuation:
+                break
+            if labelled:
+                text_cell_x = prose[0].bbox[0]
+        chosen.extend((indices[id(line)], line) for line in row)
+        edge = top if above else bottom
+        height = h
+        if first_size is None:
+            first_size = max(line.size for line in row)
+    return chosen
+
+
+def _numeric(text):
+    return bool(re.search(r"\d", text)) and not re.search(r"[A-Za-z]", text)
+
+
+def _rectangular_grid(rows):
+    if len(rows) < 2 or len(rows[0]) < 2 or any(len(row) != len(rows[0]) for row in rows):
+        return None
+    # Each column needs a consistent left edge, centre, or right edge; cell counts
+    # alone do not identify a grid. Numeric data needs a nonnumeric row-label cell.
+    for column in zip(*rows, strict=True):
+        tolerance = max(line.size for line in column) * 1.5
+        anchors = [
+            (line.bbox[0], (line.bbox[0] + line.bbox[2]) / 2, line.bbox[2]) for line in column
+        ]
+        if not any(
+            max(a[k] for a in anchors) - min(a[k] for a in anchors) <= tolerance for k in range(3)
+        ):
+            return None
+    texts = [[_clean(line.text) for line in row] for row in rows]
+    if not any(_numeric(cell) for row in texts[1:] for cell in row[1:]):
+        return None
+    if any(_numeric(row[0]) for row in texts[1:]):
+        return None
+    return texts[0], texts[1:], ""
+
+
+def reconstruct_tables(lines, *, page_widths=None) -> list[TableRegion]:
     regions = []
     used = set()
     for i, caption in enumerate(lines):
         match = CAPTION.match(caption.text)
         if not match or i in used:
             continue
+        page_lines = [line for line in lines if line.page == caption.page]
+        page_width = (page_widths or {}).get(caption.page, max(line.bbox[2] for line in page_lines))
+        left, right = _column_bounds(caption, page_lines, page_width)
         caption_lines = [
             (j, line)
             for j, line in enumerate(lines)
-            if line.page == caption.page and line.block == caption.block
+            if line.page == caption.page
+            and line.block == caption.block
+            and line.bbox[0] >= left - 2
+            and line.bbox[2] <= right + 2
         ]
+        caption_top = min(line.bbox[1] for _, line in caption_lines)
         caption_bottom = max(line.bbox[3] for _, line in caption_lines)
-        # PDF blocks are in reading order, but cells are grouped in geometric rows.
-        candidates = [
+        available = [
             (j, line)
             for j, line in enumerate(lines)
             if line.page == caption.page
-            and line.bbox[1] >= caption_bottom
-            and line.bbox[0] >= caption.bbox[0] - 40
             and j not in used
+            and line.bbox[0] >= left - 2
+            and line.bbox[2] <= right + 2
+            and line.block != caption.block
         ]
-        candidates.sort(key=lambda item: (item[1].bbox[1], item[1].bbox[0]))
-        chosen = []
-        bottom = caption_bottom
-        height = None
-        for j, line in candidates:
-            h = line.bbox[3] - line.bbox[1]
-            if line.bbox[1] - bottom > 2.2 * (height or h):
-                break
-            if chosen and (line.size > chosen[0][1].size * 1.2 or CAPTION.match(line.text)):
-                break
-            chosen.append((j, line))
-            bottom = max(bottom, line.bbox[3])
-            height = median([cell.bbox[3] - cell.bbox[1] for _, cell in chosen])
-        if not chosen:
-            continue
-        rows = _rows([line for _, line in chosen])
-        if match.group(1).lower().startswith("figure") and not (
-            len(rows) >= 2 and len(rows[0]) >= 2 and len(rows[1]) >= 2
-        ):
-            continue
-        grid = _paired_grid(rows)
-        if (
-            grid is None
-            and len(rows) >= 2
-            and len(rows[0]) >= 2
-            and all(len(row) == len(rows[0]) for row in rows)
-        ):
-            grid = (
-                [line.text for line in rows[0]],
-                [[line.text for line in row] for row in rows[1:]],
-                "",
+        chosen = _collect(
+            [(j, line) for j, line in available if line.bbox[1] >= caption_bottom],
+            caption_bottom,
+            right - left,
+        )
+        # Captions below a table must not swallow the following body paragraph.
+        if not any(len(row) >= 2 for row in _rows([line for _, line in chosen])):
+            chosen = _collect(
+                [(j, line) for j, line in available if line.bbox[3] <= caption_top],
+                caption_top,
+                right - left,
+                above=True,
             )
-        raw = "\n".join(" ".join(line.text for line in row) for row in rows)
+        rows = _rows([line for _, line in chosen])
+        if len(rows) < 2 or not any(len(row) >= 2 for row in rows):
+            continue
+        grid = _paired_grid(rows) or _rectangular_grid(rows)
+        raw = "\n".join(" ".join(_clean(line.text) for line in row) for row in rows)
         table = Table(
             label=match.group(1),
             caption=" ".join(line.text for _, line in caption_lines),
             page_start=caption.page,
             page_end=caption.page,
-            raw_text=raw.replace("_", "") if match.group(1).lower().startswith("figure") else raw,
+            raw_text=raw,
         )
         if grid:
             table.headers, table.rows, table.meaning = grid
             table.reconstructed = True
         indices = {*(j for j, _ in caption_lines), *(j for j, _ in chosen)}
         used.update(indices)
-        regions.append(TableRegion(table, indices, i))
+        regions.append(TableRegion(table, indices, min(indices)))
     return regions
 
 
@@ -199,6 +300,25 @@ def split_table(table: Table) -> list[tuple[str, list[list[str]]]]:
             return table_text(table, rows)
         return table_text(table.model_copy(update={"raw_text": "\n".join(row[0] for row in rows)}))
 
+    if not table.reconstructed:
+        bounded = []
+        for row in units:
+            remaining = row[0]
+            while count_tokens(render([[remaining]])) > TABLE_TOKEN_LIMIT:
+                low, high = 0, len(remaining)
+                while low < high:
+                    middle = (low + high + 1) // 2
+                    if count_tokens(render([[remaining[:middle]]])) <= TABLE_TOKEN_LIMIT:
+                        low = middle
+                    else:
+                        high = middle - 1
+                if not low:
+                    raise ValueError("Table caption leaves no room for raw source text.")
+                bounded.append([remaining[:low]])
+                remaining = remaining[low:]
+            if remaining:
+                bounded.append([remaining])
+        units = bounded
     for row in units:
         if current and count_tokens(render([*current, row])) > TABLE_TOKEN_LIMIT:
             result.append((render(current), current if table.reconstructed else []))

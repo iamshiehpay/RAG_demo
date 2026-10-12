@@ -127,7 +127,12 @@ async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_orde
     text = "\n".join(c.text for c in chunks).lower()
     assert "610" in text and "incremental" in text
     assert any("community" in c.text.lower() and "update" in c.text.lower() for c in chunks)
-    assert len(chunks) <= 7 + sum(bool(c.linked_chunk_ids) for c in app.document.chunks)
+    selected = await app.index.retrieve(plan.standalone_question, 3)
+    for query in plan.sub_queries:
+        selected.extend(await app.index.retrieve(query, 2))
+    allowed_ids = {item.chunk.id for item in selected}
+    allowed_ids.update(link for item in selected for link in item.chunk.linked_chunk_ids)
+    assert {c.id for c in chunks} <= allowed_ids
     assert len({c.id for c in chunks}) == len(chunks)
     # Semantic Sections may already put cost in the top three. Sub-queries must
     # still expand that evidence, preserve the baseline, and cover both required topics.

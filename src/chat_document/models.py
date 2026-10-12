@@ -58,7 +58,7 @@ class Chunk(BaseModel):
     table_meaning: str = ""
     table_headers: list[str] = Field(default_factory=list)
     table_rows: list[list[str]] = Field(default_factory=list)
-    table_reconstructed: bool = True
+    table_reconstructed: bool = False
     linked_chunk_ids: list[str] = Field(default_factory=list)
 
     @property

@@ -89,6 +89,8 @@ async def test_table1_preserves_every_labelled_cell_and_cost_grid_removes_noise(
         e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "LightRAG.pdf")
     ]
     assert events[-1].type == "ready"
+    table1 = next(c for c in app.document.chunks if c.table_label == "Table 1")
+    assert all("baseline / candidate" in header for header in table1.table_headers[2:])
     rows = [row for c in app.document.chunks if c.table_label == "Table 1" for row in c.table_rows]
     assert len(rows) == 16
     for i, (row, expected) in enumerate(zip(rows, TABLE1_VALUES, strict=True)):
@@ -156,7 +158,7 @@ async def test_uncertain_table_retains_source_text_and_answer_limitation_rule():
     )
     asked = [e async for e in app.ask("What does Table 7 show?")]
     assert asked[-1].type == "trace"
-    assert "結構未能可靠重建" in llm.calls[-1].messages[0]["content"]
+    assert tables[0].text in llm.calls[-1].messages[-1]["content"]
 
 
 async def test_large_table_splits_only_between_rows_and_repeats_caption_and_headers():
@@ -269,3 +271,161 @@ async def test_synthesis_small_evidence_budget_drops_are_counted():
     assert retrieval.dropped_chunk_count == 5 - len(retrieval.chunks) > 0
     assert trace.dropped_chunk_count == retrieval.dropped_chunk_count
     assert [c.call_type for c in trace.calls] == ["router", "answer"]
+
+
+def layout_pdf(layout):
+    import pymupdf
+
+    with pymupdf.open() as pdf:
+        page = pdf.new_page(width=600, height=800)
+        page.insert_text((50, 45), "1 Results", fontsize=14)
+        if layout == "centred":
+            page.insert_text((213, 85), "Table 4: Dataset statistics.", fontsize=10)
+            rows = [
+                ["Statistics", "Agriculture", "CS", "Legal", "Mix"],
+                ["Total Documents", "12", "10", "94", "61"],
+                ["Total Tokens", "2,017,886", "2,306,535", "5,081,069", "619,009"],
+            ]
+            for i, row in enumerate(rows):
+                for x, text in zip([140, 260, 340, 420, 500], row, strict=True):
+                    page.insert_text((x, 115 + i * 18), text, fontsize=10)
+            page.insert_text((50, 190), "Body discussion remains outside the table.", fontsize=10)
+        elif layout == "below":
+            for i, row in enumerate([["Experiment", "Count"], ["alpha", "12"], ["beta", "94"]]):
+                for x, text in zip([50, 240], row, strict=True):
+                    page.insert_text((x, 100 + i * 18), text, fontsize=10)
+            page.insert_text((80, 165), "Table 3: Counts by experiment.", fontsize=10)
+            page.insert_textbox(
+                pymupdf.Rect(50, 180, 550, 250),
+                "The body discussion after the caption is ordinary prose. "
+                "It must remain available as a paragraph in the Results Section.",
+                fontsize=10,
+            )
+        elif layout in {"Table", "Figure"}:
+            for x in [50, 330]:
+                page.insert_text((x, 90), f"{layout} 3: Column illustration.", fontsize=10)
+                page.insert_textbox(
+                    pymupdf.Rect(x, 105, x + 220, 220),
+                    f"The {'left' if x == 50 else 'right'} column contains ordinary body prose. "
+                    "These sentences must remain paragraphs instead of a reconstructed grid. "
+                    "The continued discussion preserves the reading order of the document.",
+                    fontsize=10,
+                )
+        elif layout == "misaligned":
+            page.insert_text((50, 85), "Table 8: Misaligned measurements.", fontsize=10)
+            for i, row in enumerate([["Experiment", "Count"], ["alpha", "12"], ["beta", "94"]]):
+                for x, text in zip([50, 240 if i != 2 else 350], row, strict=True):
+                    page.insert_text((x, 110 + i * 18), text, fontsize=10)
+        elif layout == "math":
+            page.insert_text((50, 85), "Table 8: Token measurements.", fontsize=10)
+            for i, row in enumerate(
+                [["Experiment", "Tokens"], ["experiment_0", "1_000_"], ["beta", "2_000_"]]
+            ):
+                for x, text in zip([50, 240], row, strict=True):
+                    page.insert_text((x, 110 + i * 18), text, fontsize=10)
+        return pdf.tobytes()
+
+
+async def uploaded_chunks(data):
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(data, "layout.pdf")]
+    assert events[-1].type == "ready"
+    return app.document.chunks
+
+
+async def test_centred_caption_keeps_row_labels_in_aligned_table():
+    chunks = await uploaded_chunks(layout_pdf("centred"))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_reconstructed
+    assert table.table_headers == ["Statistics", "Agriculture", "CS", "Legal", "Mix"]
+    assert table.table_rows == [
+        ["Total Documents", "12", "10", "94", "61"],
+        ["Total Tokens", "2,017,886", "2,306,535", "5,081,069", "619,009"],
+    ]
+    prose = "\n".join(c.text for c in chunks if c.kind == "text")
+    assert "Body discussion" in prose and "Total Documents" not in prose
+
+
+async def test_lightrag_table4_preserves_statistics_and_row_labels():
+    chunks = await uploaded_chunks(Path("data/lightrag.pdf").read_bytes())
+    table = next(c for c in chunks if c.table_label == "Table 4")
+    assert table.table_reconstructed and "7.1" in table.section
+    assert table.table_headers == ["Statistics", "Agriculture", "CS", "Legal", "Mix"]
+    assert table.table_rows == [
+        ["Total Documents", "12", "10", "94", "61"],
+        ["Total Tokens", "2,017,886", "2,306,535", "5,081,069", "619,009"],
+    ]
+    assert not any(c.text.strip() == "Total Documents" for c in chunks if c.kind == "text")
+
+
+async def test_caption_below_grid_preserves_table_and_following_body_prose():
+    chunks = await uploaded_chunks(layout_pdf("below"))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_reconstructed and table.table_label == "Table 3"
+    assert table.table_rows == [["alpha", "12"], ["beta", "94"]]
+    assert "body discussion" not in table.text
+    assert "body discussion after" in "\n".join(c.text for c in chunks if c.kind == "text")
+
+
+async def test_two_column_caption_pairs_do_not_turn_body_prose_into_a_table():
+    for label in ["Table", "Figure"]:
+        chunks = await uploaded_chunks(layout_pdf(label))
+        assert all(c.kind == "text" for c in chunks)
+        prose = "\n".join(c.text for c in chunks)
+        assert "left column" in prose and "right column" in prose
+
+
+async def test_equal_cell_counts_require_column_alignment():
+    chunks = await uploaded_chunks(layout_pdf("misaligned"))
+    table = next(c for c in chunks if c.kind == "table")
+    assert not table.table_reconstructed
+    assert "alpha 12" in table.text and "beta 94" in table.text
+
+
+async def test_math_italic_artifact_is_cleaned_in_table_cells_without_changing_identifiers():
+    chunks = await uploaded_chunks(layout_pdf("math"))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_reconstructed
+    assert table.table_rows == [["experiment_0", "1000"], ["beta", "2000"]]
+
+
+async def test_oversized_unreconstructed_physical_line_is_split_without_losing_text():
+    import pymupdf
+
+    from chat_document.tokens import count_tokens
+
+    raw_line = "123456789 " * 1100
+    with pymupdf.open() as pdf:
+        page = pdf.new_page(width=100000, height=800)
+        page.insert_text((50, 45), "1 Results", fontsize=14)
+        page.insert_text((50, 85), "Table 9: Uncertain long row.", fontsize=10)
+        for x, text in [(50, "Experiment"), (250, "Tokens"), (400, "Cost")]:
+            page.insert_text((x, 110), text, fontsize=10)
+        page.insert_text((50, 135), "alpha", fontsize=10)
+        page.insert_text((250, 135), raw_line, fontsize=10)
+        data = pdf.tobytes()
+    chunks = await uploaded_chunks(data)
+    tables = [c for c in chunks if c.kind == "table"]
+    assert len(tables) > 1
+    assert all(not c.table_reconstructed and count_tokens(c.text) <= 2000 for c in tables)
+    raw_parts = [c.text.split("結構未能可靠重建\n", 1)[1] for c in tables]
+    assert "".join(raw_parts).count("123456789") == 1100
+
+
+async def test_virtual_sections_keep_duplicate_labels_attached_to_their_own_source():
+    import pymupdf
+
+    with pymupdf.open() as pdf:
+        for name in ["First", "Second"]:
+            page = pdf.new_page(width=600, height=800)
+            page.insert_text((50, 85), f"Table 7: {name} measurements.", fontsize=10)
+            for i, row in enumerate([["Experiment", "Count"], [name, "12"]]):
+                for x, text in zip([50, 240], row, strict=True):
+                    page.insert_text((x, 110 + i * 18), text, fontsize=10)
+        data = pdf.tobytes()
+    chunks = await uploaded_chunks(data)
+    tables = [c for c in chunks if c.kind == "table"]
+    assert [(c.page_start, c.table_caption, c.table_rows) for c in tables] == [
+        (1, "Table 7: First measurements.", [["First", "12"]]),
+        (2, "Table 7: Second measurements.", [["Second", "12"]]),
+    ]

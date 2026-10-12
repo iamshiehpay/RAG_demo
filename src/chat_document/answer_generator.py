@@ -6,6 +6,7 @@ from .events import DeltaEvent, RetryEvent, ThinkingEvent, TraceEvent
 from .llm_gateway import LLMGateway, LLMTruncated
 from .models import Chunk, Citation
 from .policy import FIXED_REFUSALS
+from .tables import LIMITATION
 
 SYSTEM_PROMPT = f"""Answer only from the supplied Document excerpts. Do not use outside knowledge.
 Attach a supplied [C#] Citation to EVERY factual claim. Never invent Citation IDs.
@@ -19,7 +20,7 @@ When comparing table rows, identify the supplied reference/full-system row and i
 in the comparison. Compare values only on the SAME metric and dataset/column, and explicitly
 mention cells that contradict the overall trend. Never assume the full system wins everywhere.
 Use the source definitions of row labels; do not guess what a named variant retains or removes.
-If you cite a table marked 「結構未能可靠重建」, explicitly state that limitation in the answer
+If you cite a table marked 「{LIMITATION}」, explicitly state that limitation in the answer
 and do not infer missing row/column associations from its unstructured text.
 If the supplied Document does not answer the question, reply ONLY with the fixed sentence
 in the current user's language: Chinese '{FIXED_REFUSALS["zh"]}'; English '{FIXED_REFUSALS["en"]}'

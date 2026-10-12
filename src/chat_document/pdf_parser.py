@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import pymupdf
 
 from .chunker import chunk_sections
-from .models import Section
+from .models import Section, Table
 from .policy import CHUNK_TOKEN_TARGET
 from .tables import LIMITATION, TableRegion, reconstruct_tables
 
@@ -382,18 +382,24 @@ def _virtual_sections(section: Section, target: int) -> list[Section]:
     for i, chunk in enumerate(chunks, 1):
         tables = []
         if chunk.kind == "table":
-            original = next(t for t in section.tables if t.label == chunk.table_label)
+            # Rebuild directly from this Chunk's source fields: repeated labels on
+            # different pages must not select another Table's caption or data.
+            prefix = f"{chunk.table_caption}\n{chunk.table_meaning}".strip()
             tables = [
-                original.model_copy(
-                    update={
-                        "paragraph_index": 0,
-                        "rows": chunk.table_rows,
-                        "raw_text": (
-                            chunk.text.split(LIMITATION + "\n", 1)[-1]
-                            if not chunk.table_reconstructed
-                            else original.raw_text
-                        ),
-                    }
+                Table(
+                    label=chunk.table_label,
+                    caption=chunk.table_caption,
+                    page_start=chunk.page_start,
+                    page_end=chunk.page_end,
+                    headers=chunk.table_headers,
+                    rows=chunk.table_rows,
+                    meaning=chunk.table_meaning,
+                    reconstructed=chunk.table_reconstructed,
+                    raw_text=(
+                        chunk.text.removeprefix(f"{prefix}\n{LIMITATION}\n")
+                        if not chunk.table_reconstructed
+                        else ""
+                    ),
                 )
             ]
         output.append(
@@ -600,6 +606,13 @@ def parse_pdf(content: bytes, *, chunk_token_target: int = CHUNK_TOKEN_TARGET) -
                 raise DocumentError(
                     "This Document has no text layer; scanned PDFs are not supported."
                 )
-            return _sections(lines, body_size, chunk_token_target, reconstruct_tables(lines))
+            return _sections(
+                lines,
+                body_size,
+                chunk_token_target,
+                reconstruct_tables(
+                    lines, page_widths={i: page.rect.width for i, page in enumerate(pdf, 1)}
+                ),
+            )
     except (pymupdf.FileDataError, pymupdf.EmptyFileError) as exc:
         raise DocumentError("Please upload a valid PDF Document.") from exc
