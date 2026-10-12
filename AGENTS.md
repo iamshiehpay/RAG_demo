@@ -227,3 +227,17 @@ Budget guard 只負責攔截超額。把內容安排到放得下，是上游的�
 - **TDD：** 每個模組先寫一個會失敗的測試，再實作到通過。測試框架用 `pytest`。
 - **Checkpoint：** 每完成一個里程碑就 commit 一次。
 - **AI 協作紀錄：** 遇到以下任一情況，就在 `docs/ai-log.md` 追加一筆：AI 的建議被實測推翻、AI 寫錯並被修正、人改變了方向。這是簡報的主要素材。
+
+## Agent skills
+
+### Issue tracker
+
+Issue 和 PRD 以 markdown 檔案的形式存放在 `.scratch/`，跟著 repo 一起 commit；不使用 GitHub Issues。詳見 `docs/agents/issue-tracker.md`。
+
+### Triage labels
+
+沿用預設的 5 種狀態（`needs-triage`、`needs-info`、`ready-for-agent`、`ready-for-human`、`wontfix`），寫在每個 issue 檔開頭的 `Status:` 那一行。詳見 `docs/agents/triage-labels.md`。
+
+### Domain docs
+
+單一領域：根目錄的 `CONTEXT.md`，加上 `docs/adr/`。詳見 `docs/agents/domain.md`。
