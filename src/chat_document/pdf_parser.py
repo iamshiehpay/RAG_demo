@@ -18,9 +18,11 @@ _SENTENCE_END = re.compile(r"[.!?。！？;；]$")
 _FIGURE_LABEL_WORD_LIMIT = 15
 _PROSE_LINE_WIDTH_RATIO = 0.55
 _PAGE_FRAME_COVERAGE_RATIO = 0.8
+_LINE_WRAP_WIDTH_RATIO = 0.9
 _CJK_CHARACTERS = r"\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af\U00020000-\U000323af"
 _CJK_TEXT = re.compile(f"[{_CJK_CHARACTERS}]")
 _CJK_LINE_WRAP = re.compile(rf"(?<=[{_CJK_CHARACTERS}\d])\n(?=[{_CJK_CHARACTERS}\d])")
+_NUMERIC_LINE = re.compile(r"[\d.,%+\-−]+")
 
 
 class DocumentError(ValueError):
@@ -33,6 +35,7 @@ class _Line:
     page: int
     block: int
     bbox: tuple[float, float, float, float]
+    block_bbox: tuple[float, float, float, float]
     size: float
     bold: bool
     fonts: tuple[str, ...]
@@ -162,6 +165,7 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                         page=page_number,
                         block=block_number,
                         bbox=bbox,
+                        block_bbox=tuple(block["bbox"]),
                         size=max_size,
                         bold=all(s["flags"] & 16 for s in spans),
                         fonts=tuple(sorted({s["font"] for s in spans})),
@@ -329,6 +333,37 @@ def _virtual_sections(section: Section, target: int) -> list[Section]:
     ]
 
 
+def _continues_on_next_page(previous: _Line, following: _Line) -> bool:
+    # Called for adjacent source lines; a new Section heading already flushed the paragraph.
+    return (
+        following.page == previous.page + 1
+        and not _SENTENCE_END.search(previous.text)
+        and not _NUMERIC_LINE.fullmatch(previous.text)
+        and abs(following.size - previous.size) < 0.5
+        and following.fonts == previous.fonts
+        and following.bold == previous.bold
+        and abs(following.bbox[0] - previous.bbox[0]) <= previous.size * 2
+    )
+
+
+def _wraps_line(previous: _Line, following: _Line) -> bool:
+    right_edge = previous.block_bbox[2]
+    block_width = right_edge - previous.block_bbox[0]
+    return (
+        (
+            (
+                previous.page == following.page
+                and previous.block == following.block
+                and following.bbox[1] > previous.bbox[1]
+            )
+            or _continues_on_next_page(previous, following)
+        )
+        and previous.bbox[2] - previous.bbox[0] >= block_width * _LINE_WRAP_WIDTH_RATIO
+        and not _NUMERIC_LINE.fullmatch(previous.text)
+        and not _NUMERIC_LINE.fullmatch(following.text)
+    )
+
+
 def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section]:
     sections: list[Section] = []
     current = Section(
@@ -339,16 +374,24 @@ def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section
         paragraphs=[],
         paragraph_pages=[],
     )
-    pending: list[str] = []
+    pending: list[_Line] = []
     pending_start = pending_end = lines[0].page
     previous: _Line | None = None
     excluded = appendix = detected = False
 
     def flush_paragraph():
         if pending:
-            paragraph = "\n".join(pending)
-            if _CJK_TEXT.search(paragraph):
-                paragraph = _CJK_LINE_WRAP.sub("", paragraph)
+            has_cjk = any(_CJK_TEXT.search(line.text) for line in pending)
+            paragraph = pending[0].text
+            for previous_line, following in zip(pending, pending[1:], strict=False):
+                separator = (
+                    ""
+                    if has_cjk
+                    and _wraps_line(previous_line, following)
+                    and _CJK_LINE_WRAP.search(previous_line.text[-1:] + "\n" + following.text[:1])
+                    else "\n"
+                )
+                paragraph += separator + following.text
             current.paragraphs.append(paragraph)
             current.paragraph_pages.append((pending_start, pending_end))
             current.page_end = pending_end
@@ -402,12 +445,15 @@ def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section
             index += consumed
             continue
         if not excluded:
-            if previous and (line.page != previous.page or line.block != previous.block):
+            if previous and (
+                (line.page != previous.page and not _continues_on_next_page(previous, line))
+                or (line.page == previous.page and line.block != previous.block)
+            ):
                 flush_paragraph()
             if not pending:
                 pending_start = line.page
             pending_end = line.page
-            pending.append(line.text)
+            pending.append(line)
             previous = line
         index += 1
     if not excluded:

@@ -180,3 +180,8 @@
 - **通過既有測試仍漏了等號邊界：** 獨立 QA 以換行中文 PDF 重現，句尾剛好落在 token 上限時，AI 把 `end == hard_end` 當成沒有句界，退回 PDF 行尾空白而切斷句子。相同 160 句玄武岩資料的 upload 測試先失敗，再用明確的「找到句界／未找到」分支，保留剛好等於上限的句尾。
 - **約 10% overlap 不能犧牲完整短句：** 舊邏輯要求 sentence overlap 至少占一半額度，會跳過窗口內只有 3 tokens 的「完成1！」，讓下一塊從前一句中間開始。獨立短句 upload 回歸先失敗，再讓 。！？ 後的句首優先，即使重疊較短；窗口內沒有句首時，中文維持完整字元備援，英文維持完整單字。
 - **PDF 排版換行不該拆開中文數字：** `區域1\n4` 與 `4\n9` 的 source／Chunk 測試先失敗。只在包含 CJK 的同一段落內，將 CJK／數字字元之間的排版 newline 移除；`Sample 14\nstayed stable.` 與 `Sample\n14` 保留英文分隔，不修改純英文表格數字。#04 已確認 source-derived processing identity 會使這次 parser／chunker 修改自動失效舊快取。
+
+## 2026-10-13：#02 中文斷行修正把數值欄合併
+
+- **Reviewer 抓到 AI 修正的資料毀損：** 含中文表頭的同一 block 只要碰到 digit-to-digit newline 就移除，讓 `1.2`、`3.4`、`2023`、`2024` 變成一串數字。stacked-value upload 測試先重現完整錯誤，再保留每行所屬 block 的 bbox，只有前一行占 block 寬度至少 90% 且下一行往下延續時才當作排版換行；純數值行即使滿寬也保留分隔。正向數字斷行 fixture 改成真正靠近 block 右緣的長行，保留英文分隔檢查。
+- **跨頁不是段落邊界：** 中英文兩頁 upload 測試先在未完成句子的案例失敗；改成上一頁最後一行沒有句尾標點、下一頁第一段樣式與左緣一致且仍在同一 Section 時接續同一段落，保留 `(1, 2)` 的 paragraph／Chunk 頁碼。已結束的句子維持兩個段落；原有 whole-paragraph packing fixture 加上本來就意圖結束段落的句點，不放寬測試斷言。

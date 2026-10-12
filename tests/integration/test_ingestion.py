@@ -442,8 +442,12 @@ async def test_wrapped_chinese_paragraph_splits_only_between_complete_sentences(
 
 
 async def test_cjk_line_wraps_keep_numbers_intact_and_preserve_latin_spacing():
+    prefix = "觀察記錄" * 8
+    measurement = "測量記錄" * 8
+    continuation = "測量記錄" * 7
     text = (
-        "月球區域1\n4中含量為4\n9個單位，觀察持續穩\n定。\n"
+        f"{prefix}月球區域1\n4中含量為{measurement}4\n"
+        f"9個單位，{continuation}觀察持續穩\n定。\n"
         "Sample 14\nstayed stable.\n英文版本Sample\n14也保留分隔。"
     )
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
@@ -454,9 +458,56 @@ async def test_cjk_line_wraps_keep_numbers_intact_and_preserve_latin_spacing():
     source = "\n\n".join(p for s in app.document.sections for p in s.paragraphs)
     chunks = "\n\n".join(c.text for c in app.document.chunks)
     for extracted in (source, chunks):
-        assert "月球區域14中含量為49個單位，觀察持續穩定。" in extracted
+        assert f"月球區域14中含量為{measurement}49個單位，{continuation}觀察持續穩定。" in extracted
         assert "Sample 14\nstayed stable." in extracted
         assert "Sample\n14也保留分隔。" in extracted
+
+
+@pytest.mark.parametrize(
+    "text", ["區域 數值\n1.2\n3.4\n2023\n2024", "數值\n" + "\n".join(["2023", "2024"] * 4)]
+)
+async def test_stacked_numeric_values_in_a_cjk_block_keep_their_separators(text):
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "values.pdf")]
+    assert events[-1].type == "ready"
+    assert app.document.sections[0].paragraphs == [text]
+    assert app.document.chunks[0].text == text
+
+
+@pytest.mark.parametrize("cjk", [False, True], ids=["english", "chinese"])
+@pytest.mark.parametrize("finished", [False, True], ids=["continues", "new-paragraph"])
+async def test_page_break_only_ends_a_paragraph_when_the_sentence_has_finished(cjk, finished):
+    from .fixtures import page_continuation_pdf
+
+    first, second = (
+        ("第一頁的段落延續到", "第二頁才結束。")
+        if cjk
+        else (
+            "The first page describes the lunar rocks and continues",
+            "onto the next page with the same paragraph.",
+        )
+    )
+    if finished:
+        first += "。" if cjk else "."
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [
+        e
+        async for e in app.upload_document(
+            page_continuation_pdf(first, second, cjk=cjk), "pages.pdf"
+        )
+    ]
+    assert events[-1].type == "ready"
+    section = app.document.sections[0]
+    assert (section.page_start, section.page_end) == (1, 2)
+    if finished:
+        assert section.paragraphs == [first, second]
+        assert section.paragraph_pages == [(1, 1), (2, 2)]
+    else:
+        assert len(section.paragraphs) == 1
+        assert first in section.paragraphs[0] and second in section.paragraphs[0]
+        assert section.paragraph_pages == [(1, 2)]
+        assert "\n\n" not in app.document.chunks[0].text
+    assert (app.document.chunks[0].page_start, app.document.chunks[0].page_end) == (1, 2)
 
 
 async def test_short_cjk_sentence_overlap_starts_with_a_complete_sentence():

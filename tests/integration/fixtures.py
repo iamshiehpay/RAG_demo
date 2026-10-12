@@ -34,6 +34,24 @@ def paragraph_pdf(text, *, cjk=False):
         return document.tobytes()
 
 
+def page_continuation_pdf(first, second, *, cjk=False):
+    with pymupdf.open() as document:
+        for number, text in enumerate([first, second]):
+            page = document.new_page()
+            if number == 0:
+                page.insert_text((72, 60), "1 Results", fontsize=14)
+            assert (
+                page.insert_textbox(
+                    pymupdf.Rect(72, 100 if number == 0 else 60, 540, 740),
+                    text,
+                    fontsize=10,
+                    fontname="china-t" if cjk else "helv",
+                )
+                >= 0
+            )
+        return document.tobytes()
+
+
 def structured_pdf(body_size=10):
     """Separate/stacked Section numbers, relative-size and same-size bold headings."""
     with pymupdf.open() as document:
@@ -44,7 +62,9 @@ def structured_pdf(body_size=10):
             pymupdf.Rect(72, 110, 540, 180), "INTRO_ONLY " + "alpha " * 20, fontsize=body_size
         )
         page.insert_textbox(
-            pymupdf.Rect(72, 190, 540, 260), "INTRO_SECOND " + "beta " * 20, fontsize=body_size
+            pymupdf.Rect(72, 190, 540, 260),
+            "INTRO_SECOND " + "beta " * 20 + ".",
+            fontsize=body_size,
         )
         page = document.new_page()
         page.insert_textbox(
