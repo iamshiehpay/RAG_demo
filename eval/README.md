@@ -25,15 +25,16 @@ Options: `--eval-document PATH`, `--eval-report PATH`, `--eval-label NAME`,
 report still says FAIL. It does not certify answer quality.
 
 ```sh
-uv run pytest -m eval -s --eval-record-only --eval-label lookup-skeleton \
-  --eval-report eval/reports/lookup-skeleton-baseline.md
+uv run pytest -m eval -s --eval-record-only --eval-label router-integrated \
+  --eval-report eval/reports/router-integrated-baseline.md
 ```
 
-The baseline measures the #01 Lookup-only application. Missing Global/Synthesis
-routing and history remain failures. After integration, the harness prefers
-#06's canonical `router_regression.CASES`, supports `ConversationTurn` history,
-and supplies empty history for independent questions. It preserves retrieval
-and answer generation. Git provenance falls back to `unknown` for zip delivery.
+The integrated harness uses #06's canonical `router_regression.CASES` directly,
+converts role/content pairs to `ConversationTurn` history, and supplies empty
+history for independent questions. Evaluation history does not change session
+history. Global currently follows #06's transitional Synthesis context path until
+#05 provides Summary Tree support. Git provenance falls back to `unknown` for zip
+delivery. Historical Lookup-only reports describe the earlier #01 application.
 
 `GoldenFact` rejects numeric `contains` definitions. Term matching normalizes
 Unicode hyphens, whitespace, full-width characters and percent spacing. Judge
@@ -72,8 +73,9 @@ and Judge so all calls are accounted for.
 
 ## Report provenance
 
-`lookup-skeleton-baseline.md` is the authoritative baseline regenerated after
-review request #1370 from committed source with clean provenance. Every earlier
+`router-integrated-baseline.md` is the current baseline for Q1–Q3 and the 12
+canonical Router cases, collected after review request #1560 and integration
+onto main `79aac57` from committed source with clean provenance. Every earlier
 report below is **superseded** and preserved only as measurement/history evidence:
 
 | Report | Why superseded |
@@ -82,5 +84,6 @@ report below is **superseded** and preserved only as measurement/history evidenc
 | lookup-skeleton-property-intermediate.md | Judge lacked the exact expected refusal sentence. |
 | lookup-skeleton-refusal-intermediate.md | Judge falsely treated an exact refusal as a forbidden assertion. |
 | lookup-skeleton-prereview.md | Pre-review whitespace check, overly broad Table 1 fact and other findings. |
+| lookup-skeleton-baseline.md | Clean post-#1370 Lookup-only measurement; predates compound-variant fix and #06 integration. |
 | lookup-q3-n3.md | N=3 evidence at the original harness checkpoint; includes one failed truncated Judge call. |
 | refusal-checker-probe.md | Older successful real refusal probe; refusals now use deterministic checks. |

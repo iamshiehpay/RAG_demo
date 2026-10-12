@@ -9,6 +9,10 @@ from eval.runner import RecordingGateway, run_evaluation
 
 from .fixtures import text_pdf
 
+LOOKUP_PLAN = json.dumps(
+    {"question_type": "Lookup", "standalone_question": "What does it say?", "sub_queries": []}
+)
+
 
 async def test_operations_report_all_calls_and_three_run_fact_rates(tmp_path):
     document_path = tmp_path / "document.pdf"
@@ -16,10 +20,13 @@ async def test_operations_report_all_calls_and_three_run_fact_rates(tmp_path):
     answer = "Graph indexing. [C1]"
     llm = ScriptedLLM(
         [
+            LOOKUP_PLAN,
             answer,
             json.dumps({"matched": True, "asserted": True, "evidence": "Graph indexing."}),
+            LOOKUP_PLAN,
             answer,
             json.dumps({"matched": False, "asserted": False, "evidence": ""}),
+            LOOKUP_PLAN,
             answer,
             json.dumps({"matched": True, "asserted": True, "evidence": "Graph indexing."}),
         ]
@@ -39,11 +46,12 @@ async def test_operations_report_all_calls_and_three_run_fact_rates(tmp_path):
     content = path.read_text()
     assert "2/3 (66.7%)" in content
     assert len(report.runs) == 3
-    assert len(llm.calls) == 6
-    assert all(len(run.calls) == 2 for run in report.runs)
+    assert len(llm.calls) == 9
+    assert all(len(run.calls) == 3 for run in report.runs)
     assert "prompt_eval_count" in content and "eval_count" in content
     assert "latency_ms" in content and "done_reason" in content
     assert content.count("| judge | low |") == 3 and content.count("| answer | medium |") == 3
+    assert content.count("| router | low |") == 3
     assert all(run.answer == answer for run in report.runs)
     assert all(call.estimated_prompt_tokens + call.num_predict <= 10000 for call in gateway.calls)
 
@@ -54,7 +62,10 @@ async def test_failed_ask_records_failed_call_without_judging_provisional_answer
     path = tmp_path / "document.pdf"
     path.write_bytes(text_pdf())
     llm = ScriptedLLM(
-        [[LLMFrame(content="Unfinished claim"), LLMFrame(done=True, done_reason="length")]]
+        [
+            LOOKUP_PLAN,
+            [LLMFrame(content="Unfinished claim"), LLMFrame(done=True, done_reason="length")],
+        ]
     )
     gateway = RecordingGateway(llm)
     case = EvaluationCase(
@@ -65,7 +76,8 @@ async def test_failed_ask_records_failed_call_without_judging_provisional_answer
     run = report.runs[0]
     assert run.answer == "" and run.error
     assert not run.facts[0].passed
-    assert len(llm.calls) == 1 and run.calls[0].done_reason == "length"
+    assert len(llm.calls) == 2 and run.calls[-1].done_reason == "length"
+    assert [call.call_type for call in run.calls] == ["router", "answer"]
     write_report(report, tmp_path / "failure.md")
     assert "length" in (tmp_path / "failure.md").read_text()
 
@@ -97,14 +109,18 @@ async def test_ask_latency_excludes_judge_latency(tmp_path, monkeypatch):
 
     class TimedLLM(ScriptedLLM):
         async def stream(self, request):
-            clock[0] += 5 if request.think == "low" else 1
+            clock[0] += 0 if request.format else (5 if request.think == "low" else 1)
             async for frame in super().stream(request):
                 yield frame
 
     path = tmp_path / "document.pdf"
     path.write_bytes(text_pdf())
     llm = TimedLLM(
-        ["A claim [C1]", json.dumps({"matched": True, "asserted": True, "evidence": "A claim"})]
+        [
+            LOOKUP_PLAN,
+            "A claim [C1]",
+            json.dumps({"matched": True, "asserted": True, "evidence": "A claim"}),
+        ]
     )
     gateway = RecordingGateway(llm)
     case = EvaluationCase("timing", "What does it say?", (GoldenFact("claim", "judge", "A claim"),))
@@ -121,7 +137,9 @@ async def test_ask_latency_excludes_judge_latency(tmp_path, monkeypatch):
 async def test_q3_requires_a_used_citation_to_a_table_source(tmp_path):
     path = tmp_path / "table.pdf"
     path.write_bytes(text_pdf("Table 2: ablation results."))
-    gateway = RecordingGateway(ScriptedLLM(["Ablation results [C1]", "Ablation results [C9]"]))
+    gateway = RecordingGateway(
+        ScriptedLLM([LOOKUP_PLAN, "Ablation results [C1]", LOOKUP_PLAN, "Ablation results [C9]"])
+    )
     case = EvaluationCase(
         "Q3", "Ablation results?", required_citation_page=8, required_citation_term="Table 2"
     )
@@ -130,3 +148,44 @@ async def test_q3_requires_a_used_citation_to_a_table_source(tmp_path):
     )
     assert report.runs[0].facts[0].passed
     assert not report.runs[1].facts[0].passed
+
+
+async def test_canonical_router_cases_convert_history_and_isolate_independent_questions(tmp_path):
+    from chat_document.router_regression import CASES
+    from eval.golden_facts import router_cases
+
+    cases = router_cases()
+    assert len(cases) == 12
+    assert [
+        (list(case.history), case.question, case.expected_question_type) for case in cases
+    ] == CASES
+    selected = (cases[10], cases[11], cases[7])
+    scripts = []
+    for case in selected:
+        scripts.extend(
+            [
+                json.dumps(
+                    {
+                        "question_type": case.expected_question_type,
+                        "standalone_question": "LightRAG retrieval cost?",
+                        "sub_queries": [],
+                    }
+                ),
+                "Evidence [C1]",
+            ]
+        )
+    llm = ScriptedLLM(scripts)
+    gateway = RecordingGateway(llm)
+    application = Application(OllamaEmbedder(), gateway)
+    path = tmp_path / "document.pdf"
+    path.write_bytes(text_pdf())
+    report = await run_evaluation(application, gateway, path, selected)
+    assert report.passed
+    assert application.history == []
+    requests = [request for request in llm.calls if request.format]
+    assert len(requests) == 3
+    for request, case in zip(requests, selected, strict=True):
+        assert request.messages[1:-1] == [
+            {"role": role, "content": content} for role, content in case.history
+        ]
+        assert request.messages[-1] == {"role": "user", "content": case.question}

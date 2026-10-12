@@ -273,13 +273,8 @@ LIGHTRAG_CASES = (
 
 
 def router_cases() -> tuple[EvaluationCase, ...]:
-    # #06 exports the canonical cases when integrated; baseline uses the unchanged spike.
-    try:
-        from chat_document.router_regression import CASES
-    except ModuleNotFoundError as exc:
-        if exc.name != "chat_document.router_regression":
-            raise
-        from spikes.think_level_probe import CASES
+    from chat_document.router_regression import CASES
+
     return tuple(
         EvaluationCase(
             f"ROUTER_{index:02}", question, expected_question_type=expected, history=tuple(history)

@@ -45,7 +45,7 @@ async def test_golden_facts_live(pytestconfig):
             "LLM": "gpt-oss:120b-cloud",
             "Embedder": "bge-m3",
             "Execution": "Application.upload_document / Application.ask; Gateway judge calls",
-            "Router case source": "#06 exported cases if available; otherwise fixed spike cases",
+            "Router case source": "chat_document.router_regression.CASES (#06 canonical 12 cases)",
         },
         progress=print,
     )

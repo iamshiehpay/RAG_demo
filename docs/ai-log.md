@@ -98,3 +98,5 @@
 - **Reviewer 修正 AI 把 Judge 當成唯一判準的設計：** 固定拒答改成 deterministic 比對，允許一個句末句號，不再浪費 Judge 呼叫或因 Judge 截斷誤判；拒答文字集中到 policy。報告區分 ask／Judge 時間、把 budget 超額標為 harness/upstream bug、把 live Judge probes 從 Golden Facts 結果分離；Q3 增加可追溯到 p.8／Table 2 Chunk 的 Citation 檢查。先前報告全部標示 superseded，重新量測基準。
 
 - **第二次審查抓到 numeric anchor 修正引入的假陰性：** 單字邊界讓正確的 `LightRAG‑Low`／`LightRAG‑Origin` 無法匹配 `-Low`／`-Origin`。先用完整變體名的兩個數字 fact 重現失敗，再接受獨立、連字號和空白前綴寫法，同時保留完整版不能匹配變體的反向測試。`60%` 與 `60.0%` 的回歸也先失敗再通過。Citation 檢查在 Table Chunk kind／label 可用時優先要求它；沒有該 metadata 時保留明示的 p.8／Table 2 fallback。
+
+- **整合測試抓到舊 fixture 的呼叫次序假設：** #08 rebase 到含 #06 的 main 後，四個應用測試仍只供應 answer／Judge 腳本；真實 Router 先取走腳本，導致耗盡、錯誤的 Citation 和時間斷言。先跑完整測試重現，再為每次 ask 加入 Router JSON，將 Trace／呼叫數與時間驗證納入 Router。新增 canonical 12-case 對應及两個追問的應用層測試，確認 role/content 轉成 ConversationTurn 後實際進入 Router request，獨立題目傳空歷史且不污染 session。
