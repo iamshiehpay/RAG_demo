@@ -119,3 +119,10 @@
 - **相同正規化程式也要帶對資料：** 分批抽取事實的 CitationText 沒有 map，合法 `[C1–C3]` 因此被丟掉。新增真實 bge-m3、oversized Synthesis 的回歸測試先重現，再傳該 batch 的 allowed Citations；句子切分也補 vs.、e.g.、i.e.、et al.，移除無效編號後收斂多餘空格。
 - **錯誤與重試狀態仍有小缺漏：** 審查指出 Router／query embedding 共用 answer_failed，重試第一個 delta 蓋掉「重新產生中」，較早的失敗 Turn 可在後續成功 Turn 前被原地替換。改為 stage-specific connection error、維持 retrying 狀態，且只讓最後一個 Turn 提供 Retry。半有效範圍整段拒絕的 fail-closed 規則經 reviewer 確認接受，保留 README 原有「全部編號都存在才展開」規則。
 - **整合測試也要反映一次 low 重試：** rebase 到含 #08 的 main 後，eval runner 的失敗 fixture 只供應第一次截斷，低思考重試因此耗盡腳本。補第二次截斷並驗證 Router／answer／answer 三次呼叫、最後一次 low、無 Judge；AI 初次漏刪相鄰的舊兩次呼叫斷言，targeted test 抓到後修正。最終完整測試 138 passed、2 deselected，eval 正式程式沒有更動。
+
+## 2026-10-12 — #02 repaired PDF misclassified as scanned
+
+- A generated no-text PDF truncated by 100 bytes still opened because PyMuPDF repaired its structure. The #01 parser reported “no text layer”, incorrectly suggesting OCR was the issue.
+- Regression: `uv run pytest tests/integration/test_ingestion.py -q` at base cf49802: 1 failed, 2 passed; the truncated case reproduced the wrong message.
+- Correction: reject non-PDF and `Document.is_repaired` inputs before text extraction. The same command now passes all three cases. Valid scanned PDFs retain their distinct no-text error.
+- PyMuPDF documents `is_repaired` as major structural repair, not exhaustive PDF validation: https://pymupdf.readthedocs.io/en/latest/document.html#Document.is_repaired .

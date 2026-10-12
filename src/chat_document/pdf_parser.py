@@ -12,6 +12,8 @@ class DocumentError(ValueError):
 def parse_pdf(content: bytes) -> list[Section]:
     try:
         with pymupdf.open(stream=content, filetype="pdf") as pdf:
+            if not pdf.is_pdf or pdf.is_repaired:
+                raise DocumentError("Please upload a valid PDF Document; this PDF is damaged.")
             if pdf.needs_pass:
                 raise DocumentError("Password-protected PDFs are not supported.")
             sections = []

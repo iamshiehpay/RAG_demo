@@ -1,6 +1,16 @@
 import pymupdf
 
 
+def scanned_pdf():
+    """A real image-only PDF, rather than an empty page."""
+    with pymupdf.open() as document:
+        page = document.new_page()
+        pixmap = pymupdf.Pixmap(pymupdf.csRGB, pymupdf.IRect(0, 0, 20, 20), False)
+        pixmap.clear_with(240)
+        page.insert_image(pymupdf.Rect(72, 72, 400, 500), pixmap=pixmap)
+        return document.tobytes()
+
+
 def text_pdf(text="hello Document"):
     with pymupdf.open() as document:
         page = document.new_page()
