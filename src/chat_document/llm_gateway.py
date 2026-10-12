@@ -69,7 +69,9 @@ class LLMGateway:
                 f"({self.context_budget}); prompt limit is {policy.prompt_limit}."
             )
         effective_think = think or policy.think
-        request = LLMRequest(messages, effective_think, policy.num_predict, estimated, format)
+        request = LLMRequest(
+            messages, effective_think, policy.num_predict, estimated, format, call_type
+        )
         started = perf_counter()
         thinking = ""
         terminal = None

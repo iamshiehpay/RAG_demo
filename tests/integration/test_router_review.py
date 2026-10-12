@@ -46,7 +46,7 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
         async def stream(self, request):
             if request.format is not None:
                 script = router_script("Synthesis", "Compare costs.", ["cost", "update"])
-            elif request.num_predict == 1000:
+            elif request.call_type == "fact_extraction":
                 self.batches += 1
                 script = (
                     "Facts\nBoth [C1, C3]\nOther 【C3†L1-L4】\n"

@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
@@ -136,6 +138,36 @@ async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_orde
         assert f"[C{number}] {chunk.context}" in answer_prompt
 
 
+@pytest.mark.parametrize(
+    "query,required",
+    [
+        ("LightRAG GraphRAG retrieval cost token consumption 610 1000 API calls", ["610", "token"]),
+        (
+            "LightRAG GraphRAG incremental updates new data community reconstruction",
+            ["incremental", "community", "update"],
+        ),
+    ],
+    ids=["cost", "incremental-update"],
+)
+async def test_each_q2_sub_query_retrieves_its_required_evidence_in_its_own_top_two(
+    query, required
+):
+    from pathlib import Path
+
+    from chat_document.settings import RetrievalSettings
+
+    llm = ScriptedLLM([router_script("Lookup", query), "Evidence [C1]."])
+    app = Application(OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(lookup_top_k=2))
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
+    ][-1].type == "ready"
+    events = [e async for e in app.ask(query, history=[])]
+    chunks = next(e for e in events if e.type == "retrieval").chunks
+    assert len(chunks) == 2
+    assert any(all(term in item.chunk.text.lower() for term in required) for item in chunks)
+    assert any(e.type == "final" for e in events)
+
+
 async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_sources():
     import re
     from pathlib import Path
@@ -156,7 +188,7 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
                     "Compare costs and incremental updates.",
                     ["retrieval costs", "incremental updates"],
                 )
-            elif request.num_predict == 1000:
+            elif request.call_type == "fact_extraction":
                 evidence = request.messages[-1]["content"].split("Evidence:\n", 1)[1]
                 citation_id = re.findall(r"\[(C\d+)\]", evidence)[0]
                 self.fact_ids.append(citation_id)
@@ -217,7 +249,7 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
         async def stream(self, request):
             if request.format is not None:
                 script = router_script("Synthesis", "Compare costs and incremental updates.", [])
-            elif request.num_predict == 1000:
+            elif request.call_type == "fact_extraction":
                 evidence = request.messages[-1]["content"].split("Evidence:\n", 1)[1]
                 ids = list(dict.fromkeys(re.findall(r"\[C\d+\]", evidence)))
                 if "retrieval cost incremental updates." in evidence:
@@ -293,7 +325,7 @@ async def test_configurable_top_k_counts_and_global_temporarily_uses_synthesis()
         assert len(events[1].chunks) == expected_count
         assert any(e.type == "final" for e in events)
     assert RetrievalSettings().model_dump() == dict(
-        lookup_top_k=5, synthesis_top_k=3, sub_query_top_k=2
+        lookup_top_k=5, synthesis_top_k=3, sub_query_top_k=2, chunk_token_target=500
     )
 
 

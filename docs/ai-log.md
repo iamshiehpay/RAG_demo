@@ -120,23 +120,28 @@
 - **錯誤與重試狀態仍有小缺漏：** 審查指出 Router／query embedding 共用 answer_failed，重試第一個 delta 蓋掉「重新產生中」，較早的失敗 Turn 可在後續成功 Turn 前被原地替換。改為 stage-specific connection error、維持 retrying 狀態，且只讓最後一個 Turn 提供 Retry。半有效範圍整段拒絕的 fail-closed 規則經 reviewer 確認接受，保留 README 原有「全部編號都存在才展開」規則。
 - **整合測試也要反映一次 low 重試：** rebase 到含 #08 的 main 後，eval runner 的失敗 fixture 只供應第一次截斷，低思考重試因此耗盡腳本。補第二次截斷並驗證 Router／answer／answer 三次呼叫、最後一次 low、無 Judge；AI 初次漏刪相鄰的舊兩次呼叫斷言，targeted test 抓到後修正。最終完整測試 138 passed、2 deselected，eval 正式程式沒有更動。
 
-## 2026-10-12 — #02 repaired PDF misclassified as scanned
+## 2026-10-12：#02 損壞 PDF 被誤判成掃描檔
 
-- A generated no-text PDF truncated by 100 bytes still opened because PyMuPDF repaired its structure. The #01 parser reported “no text layer”, incorrectly suggesting OCR was the issue.
-- Regression: `uv run pytest tests/integration/test_ingestion.py -q` at base cf49802: 1 failed, 2 passed; the truncated case reproduced the wrong message.
-- Correction: reject non-PDF and `Document.is_repaired` inputs before text extraction. The same command now passes all three cases. Valid scanned PDFs retain their distinct no-text error.
-- PyMuPDF documents `is_repaired` as major structural repair, not exhaustive PDF validation: https://pymupdf.readthedocs.io/en/latest/document.html#Document.is_repaired .
+- **AI 的錯誤分類被合成 PDF 抓到：** 沒有文字的 PDF 截掉最後 100 bytes 後，PyMuPDF 仍能修復並開啟；#01 解析器卻回報「沒有文字層」，讓人誤以為需要 OCR。基底 cf49802 的上傳回歸為 1 failed、2 passed，明確重現錯誤原因。
+- **第一版修正採取保守拒絕：** 先拒絕非 PDF 與 `Document.is_repaired`，三個案例都通過；正常掃描 PDF 仍回報不同的 no-text 原因。PyMuPDF 說明此欄位代表重大結構修復，並非完整有效性檢查。後續審查要求放行修復後仍可讀的文字，見下方 #02 獨立審查修正。
 
-## 2026-10-12 — #02 typography and overlap regressions
+## 2026-10-12：#02 字型與重疊的回歸
 
-- Real LightRAG inspection exposed an AI parser mistake: a bold Table 4 header (`Mix`) became an artificial Appendix Section, removing table labels from content. A failing upload regression now requires the table headers to remain content. The parser uses shared baseline geometry to suppress bold table-cell headings; no table reconstruction is added.
-- The #01 oversized-paragraph overlap could start inside `encyclopediawordnumber103`, yielding `opediawordnumber103`. `test_long_paragraph_overlap_starts_on_a_complete_word` reproduced it (1 failed); overlap now snaps to a nearby sentence or complete Latin word, and sentence-less CJK keeps Unicode character boundaries.
-- During that fix, the AI incorrectly passed start/end positions to module-level `re.finditer`; application tests caught processing errors. Compiled-pattern `finditer` corrected the calls; the five paragraph/overlap regressions passed.
-- The configurable-size fixture initially clipped single-line text at the page edge, failing to create enough tokens to exercise packing. Text boxes now retain the complete fixture text, and the 35/60-token packing tests verify whole paragraphs and precise page ranges.
+- **實際文件抓到 AI 的標題誤判：** LightRAG 的 Table 4 粗體表頭 `Mix` 被當成 Appendix Section。先加上傳回歸，確認表頭必須留在內容，再依同一基線上的文字座標抑制表格儲存格標題；表格重建仍由 #03 處理。
+- **AI 的 overlap 從單字中間開始：** #01 長段落會把 `encyclopediawordnumber103` 切成 `opediawordnumber103`。完整單字的上傳測試先失敗，再把 overlap 起點移到附近句子或完整英文單字；沒有句子的中文仍保留完整 Unicode 字元。
+- **修正時又被測試抓到 API 用錯：** AI 把 start/end 傳給模組層級的 `re.finditer`，造成處理錯誤。改用已編譯 pattern 的 `finditer`，五個段落／overlap 回歸通過。
+- **測試資料也要確認沒有被裁切：** 固定大小 fixture 的單行文字超過頁面邊界，沒有產生足夠 tokens。改成文字框後，35／60-token 測試能驗證完整段落裝箱與精確頁碼。
 
-## 2026-10-13 — #02 integration with #06
+## 2026-10-13：#02 與 #06 整合
 
-- Rebased #02 from cf49802 onto main b005721 as requested. Preserved both keyword-only Application settings, Router/history behavior, and both tickets' AI log entries. The default HTTP factory now reads `CHUNK_TOKEN_TARGET` alongside RetrievalSettings.
-- Real Section packing changed the extraction corpus from exactly two batches to three. The #06 scripted fixtures exhausted their queues, causing unrelated ingestion/answer errors; the old C20 assumption was also tied to Chunk ordering. Fixtures now respond to every extraction batch and choose Citation IDs from its supplied evidence. Assertions still require multiple batches, original-source provenance, valid final Citations, filtering, and Context Budget compliance.
-- Q2 coverage now additionally requires Synthesis retrieval to strictly expand and preserve baseline evidence, while retaining the cost/incremental/community, deduplication, Document order, and prompt-source checks. It no longer requires a particular numeric fact to be absent from a changing top-three embedding result.
-- The #02 heading-free ask fixture now includes the scripted Router response required by #06; the tested parser/chunker and local bge-m3 remain real.
+- **保留兩張票的介面與紀錄：** 依指示從 cf49802 rebase 到 main b005721，保留 Application 的兩個 keyword-only 設定、Router／history 與兩張票的 AI log。HTTP factory 當時同時讀取 `CHUNK_TOKEN_TARGET` 與 RetrievalSettings。
+- **真實 Section 改變批次数量，揭露 fixture 假設：** 分批抽取從兩批變成三批，#06 的腳本佇列耗盡；固定 C20 也依賴舊 Chunk 排序。改成每批從實際 evidence 選 Citation ID，仍驗證多批、來源追溯、有效引用、過濾與 Context Budget。
+- **Q2 的固定排名假設太脆弱：** 真實 Section 可能讓成本段落進入前三名，因此不再要求 baseline 一定沒有 `610`。保留 Synthesis 擴充且包含 baseline、成本／增量更新／community、去重、原文順序與 prompt 來源檢查；獨立審查另要求每個 Sub-query 自己的 top-2 證據，見下節。
+- **追問測試補上正式 Router 路徑：** heading-free fixture 加入 #06 所需的 Router 腳本回應；PDF 解析、切塊與本機 bge-m3 都維持真實執行。
+
+## 2026-10-13：#02 獨立審查補足解析邊界
+
+- **另一個模型抓到單份文件驗收的盲點：** 原版遺失換行標題、References 後沒有 Appendix 字樣的附錄，以及雙欄的閱讀順序；本文大小的 small-caps 小節也沒有成為 Section。11 個合成 PDF 上傳案例先重現 10 failed、1 passed，再修正相鄰同樣式標題合併、字母／補充附錄、依欄與座標排序，以及帶編號的小節樣式判斷；沒有寫死字體大小。
+- **表格與圖內文字不能一起刪：** PyMuPDF 的 drawing rectangle 也可能代表表格。只依 Figure caption 找圖形候選區域，再移除其中短標籤；合成圖表同頁案例保留真實短句、Table caption、表頭和數值，LightRAG 的 `Beekeeper`、`Query + LLM` 與控制字元碎片不再進入段落。
+- **修復不代表不可讀：** 審查推翻第一版一律拒絕 `is_repaired` 的策略。修復後有文字的 PDF 會記錄 warning 並正常上傳；修復後仍沒有可讀文字，回報損壞 PDF 原因，正常掃描檔仍回報沒有文字層。
+- **測試與設定改用明確來源：** 分批抽取替身依 Gateway 提供的 `call_type` 判斷，不再用輸出額度猜用途；`CHUNK_TOKEN_TARGET` 由 RetrievalSettings 驗證，虛擬 Section 與 Chunk 共用同一目標。Q2 加上每個 Sub-query 自己的 top-2 成本／增量更新證據檢查。

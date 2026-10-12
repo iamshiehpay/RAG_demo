@@ -72,3 +72,91 @@ def heading_free_pdf():
                     fontsize=10,
                 )
         return document.tobytes()
+
+
+def review_pdf(case):
+    """Small authored Documents expose layout regressions through real PDF extraction."""
+    with pymupdf.open() as document:
+        page = document.new_page(width=600, height=800)
+        if case == "wrapped":
+            page.insert_text((50, 60), "1. A Very Long Section Title That", fontsize=14)
+            page.insert_text((50, 78), "Wraps Onto Two Lines", fontsize=14)
+            page.insert_text(
+                (50, 115), "WRAPPED_BODY is genuine paragraph evidence. " * 3, fontsize=10
+            )
+        elif case == "number":
+            page.insert_text((50, 60), "1.", fontsize=14)
+            page.insert_text((50, 78), "Introduction", fontsize=14)
+            page.insert_text(
+                (50, 115), "NUMBER_BODY is genuine paragraph evidence. " * 3, fontsize=10
+            )
+        elif case in {"lettered", "supplementary", "chinese"}:
+            page.insert_text((50, 60), "1 Introduction", fontsize=14)
+            page.insert_text((50, 100), "MAIN_BODY describes the theorem.", fontsize=10)
+            page.insert_text((50, 180), "References", fontsize=14)
+            page.insert_text(
+                (50, 210), "BIBLIOGRAPHY_ONLY entry should not enter the Index.", fontsize=10
+            )
+            title = {
+                "lettered": "A Proof of Theorem",
+                "supplementary": "Supplementary Material",
+                "chinese": "補充資料",
+            }[case]
+            page.insert_text(
+                (50, 300), title, fontsize=14, fontname="china-t" if case == "chinese" else "helv"
+            )
+            page.insert_text((50, 340), "APPENDIX_BODY proves the theorem completely.", fontsize=10)
+        elif case == "columns":
+            # Deliberately row-interleaved content streams require geometric column ordering.
+            page.insert_text((40, 60), "1 Introduction", fontsize=14)
+            page.insert_text((330, 60), "3 Results", fontname="hebo", fontsize=10)
+            page.insert_textbox(
+                pymupdf.Rect(40, 95, 275, 175),
+                "LEFT_INTRO " + "The introduction explains the question. " * 3,
+                fontsize=10,
+            )
+            page.insert_textbox(
+                pymupdf.Rect(330, 95, 565, 175),
+                "RIGHT_RESULTS " + "The results explain the measurements. " * 3,
+                fontsize=10,
+            )
+            page.insert_text((40, 210), "2 Methods", fontname="hebo", fontsize=10)
+            page.insert_textbox(
+                pymupdf.Rect(40, 245, 275, 310),
+                "LEFT_METHOD " + "The methods explain the experiment. " * 3,
+                fontsize=10,
+            )
+            page.insert_textbox(
+                pymupdf.Rect(330, 245, 565, 310),
+                "RIGHT_CONTINUED " + "The results continue on this column. " * 3,
+                fontsize=10,
+            )
+        elif case == "subsection":
+            page.insert_text((50, 60), "4 Evaluation", fontsize=14)
+            page.insert_text(
+                (50, 100), "EVALUATION_BODY describes the experimental setting.", fontsize=10
+            )
+            page.insert_text((50, 180), "4.3", fontsize=10)
+            page.insert_text((80, 180), "ABLATION STUDY", fontsize=10)
+            page.insert_text(
+                (50, 220), "ABLATION_BODY contains Table 2 and the variant results.", fontsize=10
+            )
+        elif case == "figure":
+            page.insert_text((50, 60), "1 Results", fontsize=14)
+            page.insert_text((50, 100), "SHORT_REAL Yes.", fontsize=10)
+            page.draw_rect(pymupdf.Rect(50, 130, 450, 250))
+            page.insert_text((80, 180), "FIGURE_LABEL Query + LLM", fontsize=8)
+            page.insert_text((50, 270), "Figure 1: Pipeline overview.", fontsize=10)
+            page.draw_rect(pymupdf.Rect(50, 330, 450, 400))
+            page.insert_text((70, 360), "Variant", fontsize=10)
+            page.insert_text((230, 360), "64.8", fontsize=10)
+            page.insert_text((50, 420), "Table 2: Variant results.", fontsize=10)
+            page.insert_text(
+                (50, 460), "TABLE_PARAGRAPH compares the variants in Table 2.", fontsize=10
+            )
+        elif case == "references-only":
+            page.insert_text((50, 60), "References", fontsize=14)
+            page.insert_text((50, 100), "Only a bibliography entry exists here.", fontsize=10)
+        else:
+            raise AssertionError(case)
+        return document.tobytes()
