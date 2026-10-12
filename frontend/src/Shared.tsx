@@ -4,7 +4,7 @@ import type { StageEvent } from './events';
 export function UploadProgress({ stage, busy, ready, name }: {
   stage: StageEvent | null; busy: boolean; ready: boolean; name?: string;
 }) {
-  const labels = { parsing: '解析', chunking: '切塊', embedding: 'Embedding', complete: '完成' };
+  const labels = { parsing: '解析', chunking: '切塊', embedding: 'Embedding', summary: '摘要', complete: '完成' };
   return <div role="status" aria-live="polite">
     {busy ? <>
       <p>{stage ? `${labels[stage.stage]} · ${stage.completed}/${stage.total}` : 'Uploading Document…'}</p>

@@ -2,9 +2,9 @@ import pytest
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import text_pdf
 from .test_router_synthesis import router_script
 
@@ -31,7 +31,7 @@ async def test_schema_valid_router_plan_preserves_follow_up_rewrite(
     assert plan.question_type == question_type
     assert plan.standalone_question == standalone
     assert plan.sub_queries == expected
-    assert standalone in llm.calls[-1].messages[-1]["content"]
+    assert standalone in llm.ask_calls[-1].messages[-1]["content"]
     assert any(e.type == "final" for e in events)
 
 
@@ -44,6 +44,10 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
         batches = 0
 
         async def stream(self, request):
+            if request.call_type.endswith("summary"):
+                async for frame in super().stream(request):
+                    yield frame
+                return
             if request.format is not None:
                 script = router_script("Synthesis", "Compare costs.", ["cost", "update"])
             elif request.call_type == "fact_extraction":
@@ -69,7 +73,7 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
     ][-1].type == "ready"
     events = [e async for e in app.ask("Compare costs.")]
     assert any(e.type == "final" for e in events)
-    prompt = llm.calls[-1].messages[-1]["content"]
+    prompt = llm.ask_calls[-1].messages[-1]["content"]
     assert "Both [C1][C3]" in prompt and "Other [C3]" in prompt
     assert "No supported relevant fact found" not in prompt
     assert "Uncited sentence" not in prompt
@@ -97,7 +101,7 @@ async def test_lookup_with_large_top_k_fits_without_extraction():
     assert any(e.type == "final" for e in events)
     assert [c.call_type for c in events[-1].calls] == ["router", "answer"]
     assert len(events[1].chunks) < 30
-    assert llm.calls[-1].estimated_prompt_tokens + llm.calls[-1].num_predict <= 10000
+    assert llm.ask_calls[-1].estimated_prompt_tokens + llm.ask_calls[-1].num_predict <= 10000
 
 
 async def test_truncated_router_falls_back_but_retains_its_failed_trace():
@@ -138,7 +142,7 @@ async def test_explicit_history_does_not_modify_session_history():
     ]
     assert any(e.type == "final" for e in events)
     assert app.history == before
-    assert llm.calls[2].messages[1]["content"] == "Fixture question"
+    assert llm.ask_calls[2].messages[1]["content"] == "Fixture question"
 
 
 async def test_scripted_llm_honors_output_reservation_including_thinking():
@@ -158,7 +162,7 @@ async def test_scripted_llm_honors_output_reservation_including_thinking():
     assert events[-1].calls[0].done_reason == "length"
     assert events[-1].calls[0].eval_count == 600
     # Explicit frames also count thinking, which shares the same output reservation.
-    request = llm.calls[0]
+    request = llm.ask_calls[0]
     framed = ScriptedLLM(
         [
             [

@@ -1,5 +1,29 @@
 import pymupdf
 
+from chat_document.llm_adapter import ScriptedLLM
+
+
+class SummaryScriptedLLM(ScriptedLLM):
+    """Keep existing ask scripts explicit while supplying upload Summary responses.
+
+    All guarded requests remain in calls; ask_calls isolates assertions about the
+    ask operation. Summary Tree tests use ScriptedLLM directly to control upload.
+    """
+
+    @property
+    def ask_calls(self):
+        return [c for c in self.calls if not c.call_type.endswith("summary")]
+
+    async def stream(self, request):
+        if request.call_type.endswith("summary"):
+            self.calls.append(request)
+            scripted = ScriptedLLM(["A faithful Document summary."])
+            async for frame in scripted.stream(request):
+                yield frame
+            return
+        async for frame in super().stream(request):
+            yield frame
+
 
 def scanned_pdf():
     """A real image-only PDF, rather than an empty page."""

@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 from collections.abc import AsyncIterator
 from contextlib import suppress
 from uuid import uuid4
@@ -31,11 +32,18 @@ from .events import (
 from .index import Index
 from .ingestion import IngestionJob, UploadBusy
 from .llm_gateway import BudgetExceeded, LLMFailure, LLMGateway
-from .models import Chunk, ConversationTurn, Document, LLMCallTrace
+from .models import Chunk, ConversationTurn, Document, LLMCallTrace, Summary
 from .pdf_parser import DocumentError, parse_pdf
-from .policy import EMBEDDING_BATCH_CHUNKS, HISTORY_ROUND_LIMIT, QUESTION_TOKEN_LIMIT
+from .policy import (
+    EMBEDDING_BATCH_CHUNKS,
+    HISTORY_ROUND_LIMIT,
+    QUESTION_TOKEN_LIMIT,
+    SUMMARY_CONCURRENCY,
+)
 from .router import Router
 from .settings import RetrievalSettings
+from .summary_context import select_summary_context
+from .summary_tree import SummaryTreeBuilder
 from .tokens import count_tokens
 
 logger = logging.getLogger(__name__)
@@ -50,6 +58,7 @@ class Application:
         settings: RetrievalSettings | None = None,
         chunk_token_target: int | None = None,
         cache: ProcessingCache | None = None,
+        summary_concurrency: int | None = None,
     ):
         settings = settings or RetrievalSettings()
         if chunk_token_target is not None:
@@ -62,6 +71,12 @@ class Application:
         self.answer_generator = AnswerGenerator(gateway)
         self.router = Router(gateway)
         self.context_packer = ContextPacker(gateway, settings)
+        self.summary_builder = SummaryTreeBuilder(
+            gateway,
+            concurrency=summary_concurrency
+            if summary_concurrency is not None
+            else int(os.environ.get("SUMMARY_CONCURRENCY", SUMMARY_CONCURRENCY)),
+        )
         self.document: Document | None = None
         self.index: Index | None = None
         self.history: list[ConversationTurn] = []
@@ -88,7 +103,12 @@ class Application:
         self.index = index
         self.history = []
         return ReadyEvent(
-            document_id=document.id, name=document.name, chunk_count=len(document.chunks)
+            document_id=document.id,
+            name=document.name,
+            chunk_count=len(document.chunks),
+            document_summary=document.summary_tree.document_summary.text
+            if document.summary_tree
+            else None,
         )
 
     async def close(self):
@@ -139,6 +159,7 @@ class Application:
             config = {
                 "embedding_model": getattr(self.embedder, "model", "bge-m3"),
                 "chunk_token_target": self.chunk_token_target,
+                "summary_model": getattr(self.summary_builder.gateway.adapter, "model", "scripted"),
             }
             cached = (
                 await asyncio.to_thread(self.cache.load, content, config) if self.cache else None
@@ -173,6 +194,12 @@ class Application:
                 yield StageEvent(stage="embedding", completed=completed, total=len(chunks))
             index = Index(chunks, np.concatenate(vectors), self.embedder)
             document = Document(id=document_id, name=name, sections=sections, chunks=chunks)
+            stage = "summary"
+            async for item in self.summary_builder.build(document):
+                if isinstance(item, StageEvent):
+                    yield item
+                else:
+                    document.summary_tree = item
             if self.cache:
                 try:
                     await asyncio.to_thread(
@@ -210,17 +237,27 @@ class Application:
                 message="Unexpected Document processing failure. Please retry.",
             )
 
-    def source(self, source_id: str) -> Chunk:
+    def source(self, source_id: str) -> Chunk | Summary:
         if self.document:
             for chunk in self.document.chunks:
                 if chunk.id == source_id:
                     return chunk
+            tree = self.document.summary_tree
+            if tree:
+                for summary in (
+                    tree.section_summaries
+                    + [s for level in tree.group_levels for s in level]
+                    + [tree.document_summary]
+                ):
+                    if summary.id == source_id:
+                        return summary
         raise KeyError(source_id)
 
     async def ask(
         self, question: str, *, history: list[ConversationTurn] | None = None
     ) -> AsyncIterator[Event]:
         calls: list[LLMCallTrace] = []
+        summary_level: str | None = None
         stage = "router"
         self._asking += 1
         dropped_chunk_count = 0
@@ -247,26 +284,32 @@ class Application:
                 question, self.history if history is None else history, calls
             )
             yield plan
-            # Until #05, Global uses the Synthesis path while the visible plan stays Global.
-            context_plan = (
-                plan.model_copy(update={"question_type": "Synthesis"})
-                if plan.question_type == "Global"
-                else plan
-            )
-            stage = "embedding"
-            retrieved = await self.context_packer.retrieve(
-                index, context_plan, current_question=question
-            )
-            dropped_chunk_count = retrieved.dropped_chunk_count
-            yield retrieved
-            retrieved = retrieved.chunks
-            chunks = sorted((item.chunk for item in retrieved), key=lambda chunk: chunk.order)
-            citations = citation_map(chunks)
-            yield CitationMapEvent(citations=citations)
-            stage = "answer"
-            context = await self.context_packer.pack(
-                context_plan, chunks, citations, calls, current_question=question
-            )
+            if plan.question_type == "Global":
+                stage = "answer"
+                if self.document is None or self.document.summary_tree is None:
+                    raise LLMFailure("Document has no Summary Tree. Please upload it again.")
+                context, citations, summary_level = select_summary_context(
+                    self.document.summary_tree,
+                    plan.standalone_question,
+                    current_question=question,
+                )
+                chunks = []
+                yield RetrievalEvent(chunks=[])
+                yield CitationMapEvent(citations=citations)
+            else:
+                stage = "embedding"
+                retrieved = await self.context_packer.retrieve(
+                    index, plan, current_question=question
+                )
+                dropped_chunk_count = retrieved.dropped_chunk_count
+                yield retrieved
+                chunks = sorted((item.chunk for item in retrieved.chunks), key=lambda chunk: chunk.order)
+                citations = citation_map(chunks)
+                yield CitationMapEvent(citations=citations)
+                stage = "answer"
+                context = await self.context_packer.pack(
+                    plan, chunks, citations, calls, current_question=question
+                )
             answer = ""
             async for event in self.answer_generator.generate(
                 plan.standalone_question,
@@ -301,6 +344,7 @@ class Application:
                     calls=calls,
                     invalid_citation_count=validated.invalid_citation_count,
                     dropped_chunk_count=dropped_chunk_count,
+                    summary_level=summary_level,
                 )
         except BudgetExceeded as exc:
             if calls:

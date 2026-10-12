@@ -272,6 +272,31 @@ LIGHTRAG_CASES = (
 )
 
 
+LIGHTRAG_CASES += (
+    EvaluationCase(
+        "Q1_ZH_THREE_SENTENCES",
+        "用三句話、中文總結這份文件",
+        LIGHTRAG_CASES[0].facts
+        + (
+            GoldenFact(
+                "chinese_summary",
+                "judge",
+                "The entire answer is in Chinese, allowing English proper nouns and Citations.",
+                answer_property=True,
+            ),
+            GoldenFact(
+                "three_sentences",
+                "judge",
+                "The answer contains exactly three complete sentences, no extra headings, "
+                "introductory sentence or closing sentence. Citation markers are not sentences.",
+                answer_property=True,
+            ),
+        ),
+        "Global",
+    ),
+)
+
+
 def router_cases() -> tuple[EvaluationCase, ...]:
     from chat_document.router_regression import CASES, FOLLOW_UP_STANDALONE_TERMS
 

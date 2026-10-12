@@ -7,7 +7,7 @@ Run the application operations and Judge with local Ollama (`bge-m3`) and
 uv run pytest -m eval -s
 ```
 
-This uploads `data/lightrag.pdf` and asks Q1–Q3, a Chinese cost question, a
+This uploads `data/lightrag.pdf` and asks Q1–Q3, a three-sentence Chinese Global summary, a Chinese cost question, a
 Synthesis limitations question, three unanswerable questions and the 12 Router
 regression questions. Reports go to `eval/reports/` before asserting the Golden
 Facts result. Default `uv run pytest` excludes live eval and uses scripted LLMs.
@@ -32,8 +32,8 @@ uv run pytest -m eval -s --eval-record-only --eval-label router-provenance \
 The integrated harness uses #06's canonical `router_regression.CASES` directly,
 converts role/content pairs to `ConversationTurn` history, and supplies empty
 history for independent questions. Evaluation history does not change session
-history. Global currently follows #06's transitional Synthesis context path until
-#05 provides Summary Tree support. Git provenance falls back to `unknown` for zip
+history. Global uses the best-fitting complete Summary Tree level and performs no Chunk retrieval.
+Select `--eval-cases Q1,Q1_ZH_THREE_SENTENCES` for summary coverage, language and format. Git provenance falls back to `unknown` for zip
 delivery. Historical Lookup-only reports describe the earlier #01 application.
 
 Classification passes only for `PlanEvent.plan_source="router"` and the expected

@@ -41,8 +41,18 @@ def answer_messages(
             "\nPreserve the CURRENT USER QUESTION's Traditional/Simplified Chinese script; "
             "when ambiguous, use Traditional Chinese (繁體中文), even after English history."
         )
+    system = SYSTEM_PROMPT
+    if re.search(r"\[S\d+\]", context):
+        system = system.replace("C#", "S#").replace("C1", "S1").replace("C3", "S3")
+        system += (
+            "\nThese are Summary Tree sources covering the whole Document. "
+            "Follow the CURRENT USER QUESTION's requested format and length as well as language. "
+            "For a whole-Document summary cover motivation, methods, incremental updates, "
+            "experimental settings and measured results, and conclusions. "
+            "Cite each supplied summary using its [S#] ID."
+        )
     return [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": system},
         {
             "role": "user",
             "content": (

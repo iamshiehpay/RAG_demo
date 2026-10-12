@@ -4,10 +4,11 @@ import pytest
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.policy import CONTEXT_BUDGET, QUESTION_TOKEN_LIMIT, SAFETY_MARGIN
 from chat_document.tokens import count_tokens
+
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 
 
 @pytest.mark.asyncio
@@ -41,8 +42,8 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
     assert events[4].citations[0].id == "C1"
     source = app.source(events[4].citations[0].source_id)
     assert source.text and source.page_start >= 1
-    assert llm.calls
-    for call in llm.calls:
+    assert llm.ask_calls
+    for call in llm.ask_calls:
         prompt_tokens = sum(count_tokens(m["content"]) for m in call.messages) + SAFETY_MARGIN
         assert prompt_tokens + call.num_predict <= CONTEXT_BUDGET
         if call.format is not None:
@@ -50,7 +51,7 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
 
             prompt_tokens += count_tokens(json.dumps(call.format, ensure_ascii=False))
         assert prompt_tokens == call.estimated_prompt_tokens
-        if call is llm.calls[0]:
+        if call is llm.ask_calls[0]:
             assert call.think == "low" and call.num_predict == 600
             continue
         system = call.messages[0]["content"]
@@ -60,20 +61,21 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
     trace = events[-1].calls[0]
     assert trace.safety_margin == SAFETY_MARGIN
     assert trace.prompt_eval_count == 100
-    assert trace.estimated_prompt_tokens == llm.calls[0].estimated_prompt_tokens
+    assert trace.estimated_prompt_tokens == llm.ask_calls[0].estimated_prompt_tokens
 
 
 async def test_guard_emits_error_without_final_or_llm_call():
     from .fixtures import text_pdf
 
     llm = ScriptedLLM(["Should never run"])
-    app = Application(OllamaEmbedder(), LLMGateway(llm, context_budget=1))
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    app.router.gateway.context_budget = 1
     result = [e async for e in app.ask("What does the Document say?")]
     assert result[-1].type == "error"
     assert result[-1].code == "budget_exceeded"
     assert "final" not in [e.type for e in result]
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_scanned_document_is_rejected_before_embedding_or_llm():
@@ -86,7 +88,7 @@ async def test_scanned_document_is_rejected_before_embedding_or_llm():
     assert result[-1].code == "invalid_document"
     assert "text layer" in result[-1].message
     assert app.document is None
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_questions_over_1000_tokens_never_call_llm():
@@ -98,7 +100,7 @@ async def test_questions_over_1000_tokens_never_call_llm():
     result = [e async for e in app.ask("question " * (QUESTION_TOKEN_LIMIT + 1))]
     assert [e.type for e in result] == ["rejected"]
     assert result[0].code == "question_too_long"
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_truncated_answer_never_becomes_final():

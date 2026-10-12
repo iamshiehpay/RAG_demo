@@ -3,9 +3,10 @@ import pytest
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import LLMFrame, ScriptedLLM
+from chat_document.llm_adapter import LLMFrame
 from chat_document.llm_gateway import LLMGateway
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import text_pdf
 
 
@@ -37,9 +38,9 @@ async def test_length_with_content_retries_low_once_and_finalizes_only_replaceme
     ]
     assert events[-2].answer == "Replacement [C1]."
     assert app.history[-1].answer == "Replacement [C1]."
-    assert [c.think for c in llm.calls] == ["low", "medium", "low"]
-    assert llm.calls[1].messages == llm.calls[2].messages
-    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+    assert [c.think for c in llm.ask_calls] == ["low", "medium", "low"]
+    assert llm.ask_calls[1].messages == llm.ask_calls[2].messages
+    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.ask_calls)
     assert [c.done_reason for c in events[-1].calls] == ["stop", "length", "stop"]
 
 
@@ -58,7 +59,7 @@ async def test_two_lengths_end_in_error_without_final_or_successful_history():
     assert app.history == []
     trace = next(e for e in events if e.type == "trace")
     assert [c.done_reason for c in trace.calls] == ["stop", "length", "length"]
-    assert len(llm.calls) == 3
+    assert len(llm.ask_calls) == 3
 
 
 @pytest.mark.parametrize(
@@ -77,7 +78,7 @@ async def test_failed_low_retry_never_finalizes_first_or_second_attempt(second):
     assert [e.type for e in events].count("retry") == 1
     assert not any(e.type == "final" for e in events)
     assert app.history == []
-    assert len(llm.calls) == 3
+    assert len(llm.ask_calls) == 3
 
 
 async def test_invalid_citation_flags_only_its_sentence_and_counts_in_trace():
@@ -215,6 +216,10 @@ async def test_synthesis_extraction_range_uses_each_batch_citation_map():
             self.extracted_ids = []
 
         async def stream(self, request):
+            if request.call_type.endswith("summary"):
+                async for frame in super().stream(request):
+                    yield frame
+                return
             if request.format is not None:
                 script = json.dumps(
                     dict(
@@ -248,7 +253,7 @@ async def test_synthesis_extraction_range_uses_each_batch_citation_map():
     assert any(e.type == "final" for e in events), [
         e.model_dump() for e in events if e.type == "error"
     ]
-    prompt = llm.calls[-1].messages[-1]["content"]
+    prompt = llm.ask_calls[-1].messages[-1]["content"]
     assert "Range fact [C1][C2][C3]." in prompt
     assert all(f"[{id}]" in prompt for id in llm.extracted_ids)
     assert all(c.discarded_fact_lines == 0 for c in events[-1].calls)
@@ -286,7 +291,7 @@ async def test_transport_failure_stops_downstream_work_and_same_question_can_ret
     assert "local Ollama daemon" in events[-1].message
     assert not any(e.type in {"retry", "final"} for e in events)
     assert app.history == []
-    assert len(llm.calls) == (2 if failure_stage == "answer" else 1)
+    assert len(llm.ask_calls) == (2 if failure_stage == "answer" else 1)
     assert len(embedder.calls) == (1 if failure_stage == "router" else 2)
     if failure_stage != "answer":
         assert not any(e.type in {"retrieval", "citation_map", "delta"} for e in events)

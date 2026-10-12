@@ -9,7 +9,7 @@ from .models import Citation, FallbackReason, LLMCallTrace, RetrievedChunk, Unve
 
 class StageEvent(BaseModel):
     type: Literal["stage"] = "stage"
-    stage: Literal["parsing", "chunking", "embedding", "complete"]
+    stage: Literal["parsing", "chunking", "embedding", "summary", "complete"]
     completed: int
     total: int
 
@@ -79,6 +79,7 @@ class TraceEvent(BaseModel):
     calls: list[LLMCallTrace]
     invalid_citation_count: int = 0
     dropped_chunk_count: int = 0
+    summary_level: str | None = None
 
 
 class ErrorEvent(BaseModel):

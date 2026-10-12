@@ -2,9 +2,9 @@ import json
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import text_pdf
 
 
@@ -26,16 +26,16 @@ async def test_router_plan_drives_answer_and_is_recorded_with_json_schema():
     assert events[0].question_type == "Lookup"
     assert events[0].sub_queries == []
     assert [c.call_type for c in events[-1].calls] == ["router", "answer"]
-    assert llm.calls[0].think == "low" and llm.calls[0].num_predict == 600
-    assert llm.calls[0].format["required"] == [
+    assert llm.ask_calls[0].think == "low" and llm.ask_calls[0].num_predict == 600
+    assert llm.ask_calls[0].format["required"] == [
         "question_type",
         "standalone_question",
         "sub_queries",
     ]
-    assert "What does this Document say?" in llm.calls[-1].messages[-1]["content"]
+    assert "What does this Document say?" in llm.ask_calls[-1].messages[-1]["content"]
     assert (
         "Current user question (language reference): What about it?"
-        in (llm.calls[-1].messages[-1]["content"])
+        in (llm.ask_calls[-1].messages[-1]["content"])
     )
 
 
@@ -66,7 +66,7 @@ async def test_too_long_question_has_explicit_rejection_event_and_zero_calls():
     assert event.token_limit == 1000 and event.question_tokens > 1000
     assert "1,000" in event.message
     assert EVENT_ADAPTER.validate_json(event.model_dump_json()) == event
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_router_history_keeps_only_two_rounds_each_at_most_500_tokens():
@@ -82,12 +82,12 @@ async def test_router_history_keeps_only_two_rounds_each_at_most_500_tokens():
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     events = [e async for e in app.ask("那 GraphRAG 呢？", history=history)]
     assert any(e.type == "final" for e in events)
-    messages = llm.calls[0].messages[1:-1]
+    messages = llm.ask_calls[0].messages[1:-1]
     assert [m["role"] for m in messages] == ["user", "assistant", "user", "assistant"]
     for user, assistant in zip(messages[::2], messages[1::2], strict=True):
         assert count_tokens(user["content"]) + count_tokens(assistant["content"]) <= 500
     assert "Round 2" in messages[0]["content"] and "Round 3" in messages[2]["content"]
-    answer_prompt = "\n".join(m["content"] for m in llm.calls[-1].messages)
+    answer_prompt = "\n".join(m["content"] for m in llm.ask_calls[-1].messages)
     assert "Round 2" not in answer_prompt and "Answer 3" not in answer_prompt
 
 
@@ -138,7 +138,7 @@ async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_orde
     # still expand that evidence, preserve the baseline, and cover both required topics.
     assert baseline_ids < {c.id for c in chunks}
     assert [c.order for c in chunks] == sorted(c.order for c in chunks)
-    answer_prompt = llm.calls[-1].messages[-1]["content"]
+    answer_prompt = llm.ask_calls[-1].messages[-1]["content"]
     for number, chunk in enumerate(chunks, 1):
         assert f"[C{number}] {chunk.context}" in answer_prompt
 
@@ -194,6 +194,10 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
             self.facts = []
 
         async def stream(self, request):
+            if request.call_type.endswith("summary"):
+                async for frame in super().stream(request):
+                    yield frame
+                return
             if request.format is not None:
                 script = router_script(
                     "Synthesis",
@@ -236,10 +240,10 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
     for citation in final.citations:
         assert citation == next(c for c in citation_map if c.id == citation.id)
         assert app.source(citation.source_id).text
-    answer_prompt = llm.calls[-1].messages[-1]["content"]
+    answer_prompt = llm.ask_calls[-1].messages[-1]["content"]
     assert all(fact in answer_prompt for fact in llm.facts)
     assert count_tokens(answer_prompt) < 6700
-    for call in llm.calls:
+    for call in llm.ask_calls:
         assert call.estimated_prompt_tokens + call.num_predict <= 10000
 
 
@@ -259,6 +263,10 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
             self.first_pass_facts = []
 
         async def stream(self, request):
+            if request.call_type.endswith("summary"):
+                async for frame in super().stream(request):
+                    yield frame
+                return
             if request.format is not None:
                 script = router_script("Synthesis", "Compare costs and incremental updates.", [])
             elif request.call_type == "fact_extraction":
@@ -303,11 +311,11 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
     final = next(e for e in events if e.type == "final")
     assert final.citations[0].id == "C1"
     assert app.source(final.citations[0].source_id).text
-    assert "Compressed cost [C1]" in llm.calls[-1].messages[-1]["content"]
-    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+    assert "Compressed cost [C1]" in llm.ask_calls[-1].messages[-1]["content"]
+    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.ask_calls)
 
 
-async def test_configurable_top_k_counts_and_global_temporarily_uses_synthesis():
+async def test_configurable_top_k_counts_and_global_uses_summary_tree():
     from pathlib import Path
 
     from chat_document.settings import RetrievalSettings
@@ -320,7 +328,7 @@ async def test_configurable_top_k_counts_and_global_temporarily_uses_synthesis()
             router_script("Synthesis", question, [question, question]),
             "Synthesis [C1].",
             router_script("Global", question),
-            "Global [C1].",
+            "Global [S1].",
         ]
     )
     app = Application(
@@ -331,7 +339,7 @@ async def test_configurable_top_k_counts_and_global_temporarily_uses_synthesis()
     assert [
         e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
     ][-1].type == "ready"
-    for expected_type, expected_count in [("Lookup", 2), ("Synthesis", 4), ("Global", 1)]:
+    for expected_type, expected_count in [("Lookup", 2), ("Synthesis", 4), ("Global", 0)]:
         events = [e async for e in app.ask(question, history=[])]
         assert events[0].question_type == expected_type
         assert len(events[1].chunks) >= expected_count
@@ -362,7 +370,7 @@ async def test_router_transport_failure_stops_before_query_embedding():
     events = [e async for e in app.ask("What does this say?")]
     assert [e.type for e in events] == ["trace", "error"]
     assert events[-2].calls[0].call_type == "router"
-    assert len(llm.calls) == 1 and len(embedder.calls) == 1
+    assert len(llm.ask_calls) == 1 and len(embedder.calls) == 1
 
 
 async def test_successful_turns_supply_history_to_later_follow_up():
@@ -379,7 +387,7 @@ async def test_successful_turns_supply_history_to_later_follow_up():
     assert any(e.type == "final" for e in [e async for e in app.ask("How does LightRAG update?")])
     events = [e async for e in app.ask("那 GraphRAG 呢？")]
     assert events[0].standalone_question == "GraphRAG 如何進行增量更新？"
-    assert llm.calls[2].messages[1:3] == [
+    assert llm.ask_calls[2].messages[1:3] == [
         dict(role="user", content="How does LightRAG update?"),
         dict(role="assistant", content="Incremental updates [C1]."),
     ]
@@ -399,7 +407,7 @@ async def test_query_embedding_failure_does_not_start_answer_generation():
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     events = [e async for e in app.ask("What does this say?")]
     assert [e.type for e in events] == ["plan", "trace", "error"]
-    assert len(llm.calls) == 1
+    assert len(llm.ask_calls) == 1
     assert [c.call_type for c in events[-2].calls] == ["router"]
 
 
@@ -410,6 +418,10 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
 
     class UncitedExtractionScript(ScriptedLLM):
         async def stream(self, request):
+            if request.call_type.endswith("summary"):
+                async for frame in super().stream(request):
+                    yield frame
+                return
             self.scripts.append(
                 router_script("Synthesis", "Compare costs.", ["cost", "update"])
                 if request.format is not None
@@ -432,5 +444,5 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
     assert events[-2].calls[0].call_type == "router"
     assert len(events[-2].calls[1:]) >= 2
     assert all(c.call_type == "fact_extraction" for c in events[-2].calls[1:])
-    assert len(llm.calls) == len(events[-2].calls)
+    assert len(llm.ask_calls) == len(events[-2].calls)
     assert all(c.discarded_fact_lines == 1 for c in events[-2].calls[1:])

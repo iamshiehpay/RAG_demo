@@ -6,12 +6,12 @@ import pytest
 from chat_document.answer_generator import answer_messages
 from chat_document.application import Application
 from chat_document.context_packer import ContextPacker
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.models import Chunk, ConversationTurn
 from chat_document.router import Router
 from chat_document.settings import RetrievalSettings
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import text_pdf
 
 
@@ -38,7 +38,7 @@ async def test_cross_language_rewrite_keeps_type_and_records_original_without_re
     assert plan.router_standalone_question == rewrite
     assert calls[0].rewrite_language_mismatch is True
     assert calls[0].router_standalone_question == rewrite
-    assert len(llm.calls) == 1
+    assert len(llm.ask_calls) == 1
 
 
 class FixedEmbedder:
@@ -70,10 +70,10 @@ async def test_english_current_question_after_chinese_history_controls_answer_la
     ]
     assert events[0].standalone_question == question
     assert events[0].rewrite_language_mismatch
-    messages = llm.calls[-1].messages
+    messages = llm.ask_calls[-1].messages
     assert "CURRENT USER QUESTION controls the answer language" in messages[0]["content"]
     assert f"Current user question (language reference): {question}" in messages[-1]["content"]
-    assert len(llm.calls) == 2
+    assert len(llm.ask_calls) == 2
     assert events[-1].calls[0].rewrite_language_mismatch
     assert any(e.type == "final" for e in events)
 

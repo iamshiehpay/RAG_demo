@@ -113,7 +113,7 @@ export type RetryEvent = {
 
 export type StageEvent = {
   type: "stage";
-  stage: "parsing" | "chunking" | "embedding" | "complete";
+  stage: "parsing" | "chunking" | "embedding" | "summary" | "complete";
   completed: number;
   total: number;
 };
@@ -128,6 +128,7 @@ export type TraceEvent = {
   calls: Array<LLMCallTrace>;
   invalid_citation_count: number;
   dropped_chunk_count: number;
+  summary_level: string | null;
 };
 
 export type UnverifiedSpan = {

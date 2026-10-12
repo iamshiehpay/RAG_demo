@@ -4,7 +4,6 @@ import pytest
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
@@ -17,6 +16,7 @@ from .fixtures import (
     structured_pdf,
     text_pdf,
 )
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .test_router_synthesis import router_script
 
 
@@ -31,7 +31,7 @@ async def test_invalid_document_has_a_distinct_error_from_missing_text_layer(con
     assert events[-1].code == "invalid_document"
     assert "valid PDF" in events[-1].message
     assert "text layer" not in events[-1].message
-    assert app.document is None and llm.calls == []
+    assert app.document is None and llm.ask_calls == []
 
 
 async def test_lightrag_sections_exclude_references_and_keep_appendix():
@@ -90,7 +90,7 @@ async def test_image_only_document_reports_missing_text_layer_before_embedding()
     assert events[-1].code == "invalid_document"
     assert "no text layer" in events[-1].message
     assert "scanned PDFs" in events[-1].message
-    assert app.document is None and llm.calls == []
+    assert app.document is None and llm.ask_calls == []
 
 
 @pytest.mark.parametrize("body_size", [8, 13])

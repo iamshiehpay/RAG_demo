@@ -2,11 +2,11 @@ import json
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from eval.models import EvaluationCase, GoldenFact
 from eval.report import write_report
 from eval.runner import RecordingGateway, run_evaluation
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import text_pdf
 
 LOOKUP_PLAN = json.dumps(
@@ -46,7 +46,7 @@ async def test_operations_report_all_calls_and_three_run_fact_rates(tmp_path):
     content = path.read_text()
     assert "2/3 (66.7%)" in content
     assert len(report.runs) == 3
-    assert len(llm.calls) == 9
+    assert len(llm.ask_calls) == 9
     assert all(len(run.calls) == 3 for run in report.runs)
     assert "prompt_eval_count" in content and "eval_count" in content
     assert "latency_ms" in content and "done_reason" in content
@@ -77,8 +77,8 @@ async def test_failed_ask_records_failed_call_without_judging_provisional_answer
     run = report.runs[0]
     assert run.answer == "" and run.error
     assert not run.facts[0].passed
-    assert len(llm.calls) == 3 and run.calls[-1].done_reason == "length"
-    assert llm.calls[-1].think == "low"
+    assert len(llm.ask_calls) == 3 and run.calls[-1].done_reason == "length"
+    assert llm.ask_calls[-1].think == "low"
     assert [call.call_type for call in run.calls] == ["router", "answer", "answer"]
     write_report(report, tmp_path / "failure.md")
     assert "length" in (tmp_path / "failure.md").read_text()
@@ -192,7 +192,7 @@ async def test_canonical_router_cases_convert_history_and_isolate_independent_qu
     report = await run_evaluation(application, gateway, path, selected)
     assert report.passed
     assert application.history == []
-    requests = [request for request in llm.calls if request.format]
+    requests = [request for request in llm.ask_calls if request.format]
     assert len(requests) == 3
     for request, case in zip(requests, selected, strict=True):
         assert request.messages[1:-1] == [

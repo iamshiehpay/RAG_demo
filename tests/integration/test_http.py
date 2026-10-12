@@ -6,9 +6,10 @@ from fastapi.testclient import TestClient
 from chat_document.api import create_app
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import LLMFrame, ScriptedLLM
+from chat_document.llm_adapter import LLMFrame
 from chat_document.llm_gateway import LLMGateway
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import structured_pdf, text_pdf
 from .test_ingestion_jobs import RecordingEmbedder
 
@@ -37,7 +38,7 @@ def test_upload_http_emits_ready_or_error_and_serves_committed_frontend():
         create_app(Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([]))))
     ) as client:
         result = upload(client)
-        assert [event["type"] for event in result] == ["stage"] * 5 + ["ready"]
+        assert [event["type"] for event in result] == ["stage"] * 7 + ["ready"]
         assert result[-1]["chunk_count"] == 1
         failed = upload(client, text_pdf(""))
         assert [event["type"] for event in failed] == ["stage", "error"]
@@ -53,7 +54,8 @@ def test_upload_http_emits_ready_or_error_and_serves_committed_frontend():
 
 
 def test_default_app_reads_chunk_size_from_environment_and_anchors_cache(monkeypatch, tmp_path):
-    # The real factory/Embedder path is exercised; upload does not call the cloud LLM.
+    # The real factory/Embedder path is exercised with a scripted external LLM.
+    monkeypatch.setattr("chat_document.api.OllamaLLM", lambda *args: ScriptedLLM([]))
     monkeypatch.setenv("CHUNK_TOKEN_TARGET", "35")
     monkeypatch.setenv("LOOKUP_TOP_K", "1")
     monkeypatch.chdir(tmp_path)
@@ -128,7 +130,7 @@ def test_rejected_http_sse_is_terminal_without_final_or_model_call():
         assert [event["type"] for event in result] == ["rejected"]
         assert result[0]["token_limit"] == 1000 and result[0]["question_tokens"] > 1000
         assert result[0]["code"] == "question_too_long"
-        assert llm.calls == []
+        assert llm.ask_calls == []
 
 
 async def test_upload_http_returns_202_while_embedding_is_pending_and_blocks_ask():
@@ -155,4 +157,4 @@ async def test_upload_http_returns_202_while_embedding_is_pending_and_blocks_ask
         embedder.release.set()
         result = events(await client.get(accepted.json()["events_url"]))
         assert result[-1]["type"] == "ready"
-        assert llm.calls == []
+        assert llm.ask_calls == []

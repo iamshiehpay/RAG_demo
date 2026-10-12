@@ -71,6 +71,29 @@ class Document(BaseModel):
     name: str
     sections: list[Section]
     chunks: list[Chunk]
+    summary_tree: "SummaryTree | None" = None
+
+
+class Summary(BaseModel):
+    """Summary source with Section-level provenance, shared with source UI."""
+
+    id: str
+    kind: Literal["section", "group", "document"]
+    section: str
+    page_start: int
+    page_end: int
+    text: str
+    section_ids: list[str]
+    section_titles: list[str]
+    chunk_ids: list[str]
+    target_tokens: int
+
+
+class SummaryTree(BaseModel):
+    section_summaries: list[Summary]
+    group_levels: list[list[Summary]] = Field(default_factory=list)
+    document_summary: Summary
+    calls: list["LLMCallTrace"] = Field(default_factory=list)
 
 
 class RetrievedChunk(BaseModel):

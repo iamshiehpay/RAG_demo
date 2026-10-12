@@ -12,6 +12,11 @@ interface Turn {
   chunks: RetrievedChunk[]; calls: LLMCallTrace[]; status: string; final: boolean; error: string;
   plan: PlanEvent | null; rejected: boolean;
   thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; droppedChunkCount: number; retrying: boolean;
+  summaryLevel: string | null;
+}
+interface SummarySource {
+  id: string; kind: 'section' | 'group' | 'document'; section: string;
+  page_start: number; page_end: number; text: string; section_titles: string[];
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
 async function responseMessage(response: Response, fallback: string) {
@@ -28,7 +33,7 @@ export function App() {
   const [uploadStage, setUploadStage] = useState<StageEvent | null>(null);
   const [uploadEventsUrl, setUploadEventsUrl] = useState('');
   const [error, setError] = useState('');
-  const [source, setSource] = useState<Chunk | null>(null);
+  const [source, setSource] = useState<Chunk | SummarySource | null>(null);
   const updateTurn = (id: number, update: (turn: Turn) => Turn) => setTurns(previous => previous.map(
     turn => turn.id === id ? update(turn) : turn,
   ));
@@ -82,7 +87,7 @@ export function App() {
     setBusy(true); setError(''); setSource(null); setQuestion('');
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
-      thinking: '', unverified: [], invalidCitationCount: 0, droppedChunkCount: 0, retrying: false,
+      thinking: '', unverified: [], invalidCitationCount: 0, droppedChunkCount: 0, retrying: false, summaryLevel: null,
       status: '判斷問題類型', final: false, error: '' };
     setTurns(previous => retryId === undefined ? [...previous, freshTurn] :
       previous.map(turn => turn.id === retryId ? freshTurn : turn));
@@ -104,7 +109,7 @@ export function App() {
             case 'final': return { ...turn, answer: event.answer, citations: event.citations,
               unverified: event.unverified, retrying: false, final: true, status: 'Answer complete' };
             case 'trace': return { ...turn, calls: event.calls,
-              invalidCitationCount: event.invalid_citation_count, droppedChunkCount: event.dropped_chunk_count };
+              invalidCitationCount: event.invalid_citation_count, droppedChunkCount: event.dropped_chunk_count, summaryLevel: event.summary_level };
             case 'rejected': return { ...turn, answer: '', error: event.message,
               rejected: true, status: '問題過長，請縮短問題', final: false };
             case 'error': return { ...turn, answer: '', error: event.message, status: 'Answer failed', final: false };
@@ -121,7 +126,7 @@ export function App() {
     try {
       const response = await fetch(`/api/sources/${encodeURIComponent(citation.source_id)}`);
       if (!response.ok) throw new Error(response.status === 404 ? 'Source not found.' : 'Could not load source.');
-      setSource(await response.json() as Chunk);
+      setSource(await response.json() as Chunk | SummarySource);
     } catch (error) { setError(message(error)); }
   }
 
@@ -138,6 +143,10 @@ export function App() {
         <button onClick={() => void reconnectUpload()}>Reconnect upload progress</button>}
     </section>
     {error && <p className="error" role="alert">{error}</p>}
+    {document?.document_summary && <section className="overview" aria-label="文件概覽">
+      <h2>文件概覽</h2>
+      <Answer text={document.document_summary} citations={[]} provisional={false} onSource={() => {}} />
+    </section>}
     <section className="conversation" aria-label="Conversation">
       {!turns.length && <p className="empty">{document ? 'Your Document is ready. What would you like to know?' : 'Questions will be available when your Document is ready.'}</p>}
       {turns.map(turn => <article key={turn.id}>
@@ -150,13 +159,18 @@ export function App() {
             <button disabled={busy || uploading} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
         {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0) &&
           <Trace plan={turn.plan} chunks={turn.chunks} calls={turn.calls}
-            thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} droppedChunkCount={turn.droppedChunkCount} />}
+            thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount}
+            summaryLevel={turn.summaryLevel} droppedChunkCount={turn.droppedChunkCount} />}
       </article>)}
     </section>
     {source && <section className="source" aria-label="Citation source">
-      <div className="source-heading"><h2>Source · p.{source.page_start} · {source.section}</h2>
+      <div className="source-heading"><h2>Source · p.{source.page_start}{source.page_end !== source.page_start ? `–${source.page_end}` : ''} · {source.section}</h2>
         <button onClick={() => setSource(null)}>Close source</button></div>
-      <SourceContent source={source} />
+      {'section_titles' in source && <>
+        <p>{source.kind === 'group' ? 'Group Summary' : source.kind === 'document' ? 'Document Summary' : 'Section Summary'}</p>
+        <ul aria-label="Covered Sections">{source.section_titles.map((title, i) => <li key={i}>{title}</li>)}</ul>
+      </>}
+      {'section_titles' in source ? <pre>{source.text}</pre> : <SourceContent source={source} />}
     </section>}
     <form onSubmit={submit}>
       <label htmlFor="question">Question</label>

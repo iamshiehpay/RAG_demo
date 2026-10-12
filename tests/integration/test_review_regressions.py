@@ -2,10 +2,10 @@ import pytest
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import paragraph_pdf
 
 
@@ -57,7 +57,7 @@ async def test_real_10k_budget_rejects_prompt_one_token_over_answer_cap():
         async for event in gateway.generate("answer", [{"role": "user", "content": prompt}]):
             observed.append(event)
     assert observed == []  # No delta, final or Trace: the adapter was never called.
-    assert llm.calls == []
+    assert llm.ask_calls == []
     # The exact cap remains legal: reserved usage reaches, but never exceeds, 10K.
     accepted = [
         e async for e in gateway.generate("answer", [{"role": "user", "content": prompt.rstrip()}])
@@ -121,7 +121,7 @@ async def test_ask_accumulates_traces_from_every_gateway_call(over_budget_second
     assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
     result = [e async for e in app.ask("What does this say?")]
     expected = 2 if over_budget_second_call else 3
-    assert len(llm.calls) == expected
+    assert len(llm.ask_calls) == expected
     assert len(next(e for e in result if e.type == "trace").calls) == expected
     if over_budget_second_call:
         assert result[-1].type == "error" and result[-1].code == "budget_exceeded"
@@ -158,6 +158,10 @@ async def test_real_10k_prompt_cap_failure_is_an_application_error_without_final
     class OversizedPromptGateway(LLMGateway):
         # Control only upstream prompt text; keep the real Gateway budget policy and guard.
         async def generate(self, call_type, messages, **kwargs):
+            if call_type.endswith("summary"):
+                async for event in super().generate(call_type, messages, **kwargs):
+                    yield event
+                return
             prompt = "x " * BUDGET_TABLE[call_type].prompt_limit
             async for event in super().generate(call_type, [{"role": "user", "content": prompt}]):
                 yield event
@@ -170,7 +174,7 @@ async def test_real_10k_prompt_cap_failure_is_an_application_error_without_final
     result = [e async for e in app.ask("What does this say?")]
     assert result[-1].type == "error" and result[-1].code == "budget_exceeded"
     assert not any(e.type == "final" for e in result)
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_unexpected_upload_exception_emits_generic_error():
@@ -187,7 +191,7 @@ async def test_unexpected_upload_exception_emits_generic_error():
     assert result[-1].type == "error" and result[-1].code == "ingestion_failed"
     assert "Internal details" not in result[-1].message
     assert not any(e.type == "ready" for e in result)
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_unexpected_llm_exception_emits_generic_error_and_trace():

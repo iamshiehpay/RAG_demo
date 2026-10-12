@@ -266,3 +266,8 @@ checks a CJK number continuing across pages before a Table Chunk, followed by a
 close same-size heading: exact number 14 and p.1–2 prose provenance, p.2 table
 cells, and the following Section are retained together. Its pre-rebase source
 failure and integrated pass are recorded under ticket-03/post-issue02.
+
+## 2026-10-13：#05 Summary Tree 與 Global
+
+- **AI 初版的長度基準會被 Chunk overlap 放大：** Section Summary 的 15% 最初用全部 Chunk 文字計數；改成原始 Section 段落加 Table Chunk 文字計算，摘要依據仍包含所有 Chunk，來源記錄不變。單一超長段落的 500-token 上限、分段摘要後合併與零 Chunk parent 排除，都由公開 upload 操作驗證。
+- **既有假 LLM 不能把 Router 腳本吃成上傳摘要：** 加入 Summary Tree 後，所有上傳都會先呼叫摘要；舊測試只有 ask 腳本。測試 adapter 明確提供摘要回應、完整記錄 calls，並用 ask_calls 分開斷言提問；客製抽取 adapter 的 summary 分支先回到相同 seam，避免留下多餘腳本。正式 ScriptedLLM 不改動。

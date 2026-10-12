@@ -6,9 +6,9 @@ import pytest
 from chat_document.application import Application
 from chat_document.cache import ProcessingCache
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import paragraph_pdf, structured_pdf, text_pdf
 
 
@@ -39,13 +39,14 @@ async def test_upload_returns_job_before_embedding_and_progress_replays_to_ready
     assert app.document is None
     rejected = [event async for event in app.ask("What does the Document say?")]
     assert [event.code for event in rejected] == ["document_not_ready"]
-    assert llm.calls == []
+    assert llm.ask_calls == []
     embedder.release.set()
     result = [event async for event in app.upload_events(job_id)]
     assert list(dict.fromkeys(event.stage for event in result if event.type == "stage")) == [
         "parsing",
         "chunking",
         "embedding",
+        "summary",
         "complete",
     ]
     assert result[-1].type == "ready"
@@ -71,7 +72,7 @@ async def test_same_document_uses_persisted_cache_without_embedding_or_llm(tmp_p
     assert [event.type for event in result] == ["ready"]
     assert second.document.chunks == chunks
     assert second.document.name == "renamed.pdf"
-    assert second_embedder.calls == llm.calls == []
+    assert second_embedder.calls == llm.ask_calls == []
     assert second.index.vectors.tolist() == app.index.vectors.tolist()
 
 
@@ -89,10 +90,11 @@ async def test_pipeline_version_and_content_changes_reprocess_the_document(tmp_p
             "parsing",
             "chunking",
             "embedding",
+            "summary",
             "complete",
         ]
     assert len(embedder.calls) == 3
-    assert llm.calls == []
+    assert llm.ask_calls == []
 
 
 async def test_effective_chunk_target_invalidates_cache_and_preserves_section_metadata(tmp_path):
@@ -198,7 +200,7 @@ async def test_embedding_failure_is_stage_specific_and_leaves_no_cache_then_reco
     app.embedder = RecordingEmbedder()
     recovered = [event async for event in app.upload_document(content, "sample.pdf")]
     assert recovered[-1].type == "ready"
-    assert len(app.embedder.calls) == 1 and llm.calls == []
+    assert len(app.embedder.calls) == 1 and llm.ask_calls == []
 
 
 async def test_disconnected_progress_subscriber_does_not_cancel_background_ingestion():
@@ -223,7 +225,7 @@ async def test_answers_are_never_cached_even_for_a_cached_document(tmp_path):
     entries_before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
     first = [e async for e in app.ask("What does this say?")]
     second = [e async for e in app.ask("What does this say?")]
-    assert len(llm.calls) == 4
+    assert len(llm.ask_calls) == 4
     assert next(e.answer for e in first if e.type == "final") == "Unique first answer. [C1]"
     assert next(e.answer for e in second if e.type == "final") == "Unique second. [C1]"
     assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == entries_before

@@ -21,6 +21,10 @@ PIPELINE_SOURCES = (
     "cache.py",
     "tokens.py",
     "policy.py",
+    "summary_tree.py",
+    "summary_context.py",
+    "context_packer.py",
+    "llm_gateway.py",
 )
 
 
@@ -71,6 +75,7 @@ class ProcessingCache:
             vectors = np.asarray(record.embeddings, dtype=np.float32)
             if (
                 not record.document.chunks
+                or record.document.summary_tree is None
                 or vectors.ndim != 2
                 or vectors.shape[0] != len(record.document.chunks)
                 or vectors.shape[1] == 0
