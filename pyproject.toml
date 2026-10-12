@@ -22,9 +22,10 @@ packages = ["src/chat_document"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["tests/integration"]
+testpaths = ["tests", "eval"]
+pythonpath = ["."]
 addopts = "-m 'not eval'"
-markers = ["eval: opt-in live LLM evaluation (requires local Ollama and cloud access)"]
+markers = ["eval: opt-in live Router smoke and Golden Facts evaluation (requires local Ollama and cloud access)"]
 
 [tool.ruff]
 line-length = 100
