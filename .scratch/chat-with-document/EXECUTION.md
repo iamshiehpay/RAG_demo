@@ -23,7 +23,7 @@ Status: in-progress
 | 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | done（9ba4327；Review APPROVE；QA 7/7 PASS）|
 | 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | dispatched（levi-t02-vida）|
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
-| 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | merged 11968fd（Review APPROVE），QA 中 |
+| 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
 | 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | dispatched 初稿（levi-t09-dune）|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | todo |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | todo |
@@ -79,6 +79,9 @@ Status: in-progress
 | #06 Review | 文字系統不一致時保留 `plan_source=router`；#08 要讀 `rewrite_language_mismatch` | #08 |
 | #06 Review | 回答把「610 × 1,000 tokens」寫成「610,000 個 token」；Golden Facts 判定要接受等值寫法 | #08 |
 | #06 QA | 簡體中文提問時，Router 的 Standalone Question 變成繁體（回答仍是簡體，不影響結果） | #11（觀察，不阻擋） |
+| #08 QA | 「用三句話、中文總結」沒有 eval 題（QA-02） | #05 |
+| #08 QA | Ollama 停止時的錯誤訊息（EV-05） | #07（連線失敗事件） |
+| #08 QA | `-m eval` 會一併跑 router smoke、忽略 `--eval-cases`；`contains` 讓 "NaiveRAG-High" 算成 "-High"；judge 判 matched=false 時沒有記錄理由；最高相似度分數在 Trace 的呈現（TR-04） | #11 |
 
 ## 中斷點（2026-10-13，Orchestrator 額度用盡）
 
