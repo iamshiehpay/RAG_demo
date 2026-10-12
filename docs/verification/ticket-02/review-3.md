@@ -1,5 +1,7 @@
 # Ticket #02 — second review fixes (#3351)
 
+> Historical candidate at `c0ff36b`. Independent review #3699 found that blanket heading protection retained Figure labels and that the period exception accepted numbered body sentences. See [third review fixes](review-4.md) for the corrections and current verification.
+
 Base: `109bab3` (main with #08 eval harness). Implementation checkpoint after rebase: `1466714`. Final evidence head is supplied in the HCOM re-review request. Previous [review report](review-fixes.md) and browser tapes describe the earlier candidate; no new browser/cloud run is claimed here.
 
 ## N1 — prose and headings inside drawings
