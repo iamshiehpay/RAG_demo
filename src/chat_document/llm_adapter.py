@@ -15,6 +15,7 @@ class LLMRequest:
     think: Literal["low", "medium"]
     num_predict: int
     estimated_prompt_tokens: int
+    format: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,7 @@ class OllamaLLM:
                     "messages": request.messages,
                     "think": request.think,
                     "stream": True,
+                    **({"format": request.format} if request.format is not None else {}),
                     "options": {"num_predict": request.num_predict, "temperature": 0},
                 },
             ) as response:

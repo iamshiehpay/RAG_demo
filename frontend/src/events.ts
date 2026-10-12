@@ -70,6 +70,14 @@ export type ReadyEvent = {
   document_summary: string | null;
 };
 
+export type RejectedEvent = {
+  type: "rejected";
+  code: "question_too_long";
+  message: string;
+  question_tokens: number;
+  token_limit: number;
+};
+
 export type RetrievalEvent = {
   type: "retrieval";
   chunks: Array<RetrievedChunk>;
@@ -102,4 +110,4 @@ export type TraceEvent = {
   calls: Array<LLMCallTrace>;
 };
 
-export type Event = StageEvent | ReadyEvent | PlanEvent | RetrievalEvent | CitationMapEvent | ThinkingEvent | DeltaEvent | RetryEvent | FinalEvent | TraceEvent | ErrorEvent;
+export type Event = StageEvent | ReadyEvent | PlanEvent | RejectedEvent | RetrievalEvent | CitationMapEvent | ThinkingEvent | DeltaEvent | RetryEvent | FinalEvent | TraceEvent | ErrorEvent;

@@ -29,6 +29,14 @@ class PlanEvent(BaseModel):
     sub_queries: list[str]
 
 
+class RejectedEvent(BaseModel):
+    type: Literal["rejected"] = "rejected"
+    code: Literal["question_too_long"] = "question_too_long"
+    message: str
+    question_tokens: int
+    token_limit: int
+
+
 class RetrievalEvent(BaseModel):
     type: Literal["retrieval"] = "retrieval"
     chunks: list[RetrievedChunk]
@@ -76,6 +84,7 @@ Event = Annotated[
     StageEvent
     | ReadyEvent
     | PlanEvent
+    | RejectedEvent
     | RetrievalEvent
     | CitationMapEvent
     | ThinkingEvent

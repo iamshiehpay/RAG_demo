@@ -1,5 +1,6 @@
 """Every LLM call crosses this guard; numeric policies mirror AGENTS.md."""
 
+import json
 from collections.abc import AsyncIterator
 from contextlib import aclosing
 from dataclasses import dataclass
@@ -45,10 +46,12 @@ class LLMGateway:
         self.context_budget = context_budget
 
     async def generate(
-        self, call_type: str, messages: list[dict[str, str]]
+        self, call_type: str, messages: list[dict[str, str]], *, format: dict | None = None
     ) -> AsyncIterator[DeltaEvent | TraceEvent]:
         policy = BUDGET_TABLE[call_type]
         raw_tokens = sum(count_tokens(message["content"]) for message in messages)
+        if format is not None:
+            raw_tokens += count_tokens(json.dumps(format, ensure_ascii=False))
         estimated = raw_tokens + SAFETY_MARGIN
         if raw_tokens > policy.prompt_limit or estimated + policy.num_predict > self.context_budget:
             raise BudgetExceeded(
@@ -56,7 +59,7 @@ class LLMGateway:
                 f"{policy.num_predict} output reservation > permitted budget "
                 f"({self.context_budget}); prompt limit is {policy.prompt_limit}."
             )
-        request = LLMRequest(messages, policy.think, policy.num_predict, estimated)
+        request = LLMRequest(messages, policy.think, policy.num_predict, estimated, format)
         started = perf_counter()
         thinking = ""
         terminal = None

@@ -3,6 +3,11 @@
 from pydantic import BaseModel
 
 
+class ConversationTurn(BaseModel):
+    question: str
+    answer: str
+
+
 class Section(BaseModel):
     id: str
     title: str

@@ -1,7 +1,17 @@
-import type { LLMCallTrace, RetrievedChunk } from './events';
+import type { LLMCallTrace, PlanEvent, RetrievedChunk } from './events';
 
-export function Trace({ calls, chunks }: { calls: LLMCallTrace[]; chunks: RetrievedChunk[] }) {
+export function Trace({ calls, chunks, plan }: {
+  calls: LLMCallTrace[]; chunks: RetrievedChunk[]; plan: PlanEvent | null;
+}) {
   return <details className="trace"><summary>Trace · {calls.length} LLM call{calls.length === 1 ? '' : 's'}</summary>
+    {plan && <section aria-label="Question plan"><h4>Question plan</h4>
+      <dl className="metrics">
+        <div><dt>Question Type</dt><dd>{plan.question_type}</dd></div>
+        <div><dt>Standalone Question</dt><dd>{plan.standalone_question}</dd></div>
+      </dl>
+      {plan.sub_queries.length > 0 && <><h4>Sub-queries</h4>
+        <ol>{plan.sub_queries.map((query, i) => <li key={i}>{query}</li>)}</ol></>}
+    </section>}
     {calls.map((call, i) => <section key={i} aria-label={`LLM call ${i + 1}`}>
       <h4>{call.call_type} · think={call.think}</h4>
       <label>Context Budget: {call.estimated_prompt_tokens + call.num_predict} / {call.context_budget}
