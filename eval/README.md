@@ -67,3 +67,8 @@ then `write_report(report, path)`. The application and judge must share the
 Chinese/fixed-reply properties were mistaken for self-asserted factual claims).
 `lookup-skeleton-baseline.md` supersedes it after the checker regression fix.
 `lookup-q3-n3.md` records three real Q3 runs at the original harness checkpoint.
+`lookup-skeleton-property-intermediate.md` records the next probe, which identified
+that the judge also needed the explicit expected fixed sentence. The final baseline
+supplies it; `refusal-checker-probe.md` verifies all three refusals with the real LLM.
+The N=3 report includes one truncated Judge call, marked as a failed fact; this is
+not an answer-generation success claim.

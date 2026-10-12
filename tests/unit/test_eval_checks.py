@@ -138,3 +138,25 @@ async def test_judge_evaluates_answer_properties_without_requiring_self_descript
     assert (
         await check_fact("LightRAG 的成本較低。", language_fact, LLMGateway(PropertyJudge()))
     ).passed
+
+
+async def test_fixed_reply_judge_receives_the_exact_expected_sentence():
+    from chat_document.llm_adapter import LLMFrame
+
+    class ExpectedReplyJudge:
+        async def stream(self, request):
+            payload = json.loads(request.messages[-1]["content"])
+            matched = payload.get("expected_answer") == payload["answer"]
+            yield LLMFrame(
+                content=json.dumps(
+                    {
+                        "matched": matched,
+                        "asserted": matched,
+                        "evidence": payload["answer"] if matched else "",
+                    }
+                )
+            )
+            yield LLMFrame(done=True, done_reason="stop")
+
+    fact = GoldenFact("refusal", "judge", "Only the fixed refusal.", exact_answer="文件中未提及")
+    assert (await check_fact("文件中未提及", fact, LLMGateway(ExpectedReplyJudge()))).passed

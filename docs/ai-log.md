@@ -88,3 +88,4 @@
 - **AI 修正自己的報告測試：** 第一版以整份 markdown 中的 `judge` 欄位出現次數驗證呼叫數，誤把 fact 的檢查方式欄位也算進去。真實 bge-m3／scripted LLM 的三次操作測試抓到失敗後，改成只比對 LLM 呼叫列，並同時斷言 recording Gateway 的六筆呼叫與 2/3 通過率。教訓：報告文字的斷言要對準使用者要核對的紀錄。
 
 - **真實模型抓到 AI 的 Judge prompt 寫錯：** Lookup-only 第一輪評估裡，中文回答與三個正確固定拒答都被判失敗。檢查報告後發現 prompt 把所有條件都當成「回答必須自行宣稱的事實」，所以不會把中文文字視為「回答用中文」，也不會把拒答本身视為符合格式。先加會失敗的 adaptive fake judge 回歸，修正成區分 factual claim 與 answer property，再重跑真實基準；保留初次報告 `lookup-skeleton-initial.md` 作為錯誤證據。逐字摘錄仍嚴格驗證，包含 Citation 與空白，沒有放寬為近似比對。
+- **第二輪量測補上缺少的 Judge 輸入：** answer property 的分類已讓中文答案正確通過，但固定拒答仍被判失敗。Judge 只收到「固定句」的描述，沒有收到 D01 要求的確切句子。先加缺少 expected sentence 就失敗的回歸，再把 `exact_answer` 一起傳給 Judge，並明定拒答本身是格式條件；程式仍先拒絕任何額外內容。中間報告保留為 `lookup-skeleton-property-intermediate.md`，後續基準以完整修正後的報告為準。

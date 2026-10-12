@@ -25,6 +25,8 @@ Preserve ALL Citation markers, Markdown, punctuation and whitespace inside the e
 If target=answer_property, the criterion describes the answer itself (language or fixed reply).
 Evaluate that property directly; the answer need not claim to be Chinese or describe itself.
 For a satisfied property, return matched=true, asserted=true, and quote supporting answer text.
+If expected_answer is provided, evaluate whether the entire answer equals that fixed sentence.
+An exact fixed refusal IS a satisfied property even though it states no Document facts.
 For matched=false, return asserted=false and evidence="". Do not infer missing facts."""
 
 
@@ -57,6 +59,7 @@ async def check_fact(answer: str, fact: GoldenFact, gateway: LLMGateway) -> Fact
                     if fact.answer_property or fact.exact_answer is not None
                     else "claim",
                     "claim": fact.requirement,
+                    "expected_answer": fact.exact_answer,
                     "answer": answer,
                 },
                 ensure_ascii=False,
