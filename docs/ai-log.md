@@ -173,3 +173,5 @@
 - **Reviewer 修正 AI 把快取失敗當成文件失敗：** 第一版已完成 parsing、Chunking、embedding，卻因快取寫入失敗丟掉可用 Document；測試也鎖住了這個行為。依審查先改成會失敗的 ready 驗收，再把 cache write 改為記 warning 並繼續發布；atomic replace 的 temp cleanup 及既有快取保留仍受測試保護。
 - **進度與錯誤也補上可觀察的界線：** 真實 bge-m3 的進度測試先重現只停在 0/N，再改成每批 8 個 Chunk 並逐批發 n/N；invalid／zero-vector 的 ValueError 測試先重現 generic ingestion_failed，修成 embedding_failed。404 reconnect 解除上傳 pending，409 顯示後端 detail；快取目錄固定到 repo root。
 - **Rebase 保留兩邊的意圖：** #02 與 #04 都新增 test_ingestion.py；將 #04 工作測試移到 test_ingestion_jobs.py，完整保留 #02 測試、設定驗證和 parser/chunker 呼叫，同時保留 #04 背景處理與 swap-on-success。由源碼重新產生 event types 與 dist，沒有手合併 build 產物。
+
+- **瀏覽器 QA 編排也曾漏等背景命令：** 一次 exec_command 回傳 session_id 後，AI 提前執行下一個快取比較，導致 before 檔案尚未建立及額外的 409。改為等外部 ingestion 的 ready、命令完成與 UI ready 後才比較；正式證據使用完整 before/after call counts，並另外以新 server 的零呼叫 cache hit 確認，不把等待腳本的錯誤當成產品失敗。
