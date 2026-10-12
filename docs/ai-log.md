@@ -151,3 +151,9 @@
 - **AI 把「靠近 Figure caption」誤當成足夠證據：** 第一版圖內文字過濾會把陰影框裡的換行段落當成圖形標籤，也會讓頁框裡的標題消失。陰影框與頁框的上傳測試分別先失敗；改成先取得全文的內文字體與標題樣式，再排除包含段落句子流或標題的候選區域。逐行過濾也明確保留標題與章節編號，LightRAG Figure 1 的短標籤仍被過濾，表格數字仍保留。
 - **句點不一定代表內文：** `7.2 CASE EXAMPLE … IN LIGHTRAG.` 與 `7.4 CASE STUDY: … NAIVERAG.` 被句尾規則擋掉，內容掛到前一節。合成 PDF 的同列與拆開編號案例先失敗，再允許帶編號且全大寫／small-caps 的標題以句點結尾，並以真實 LightRAG 檢查這兩節。
 - **空 Section 的用途要寫成契約：** 主節標題若緊接小節，會保留零段落／零 Chunk 的 metadata；Summary Tree 輸入排除這些 Section，#05 builder 必須跳過，只摘要有來源 Chunk 的 Section。契約記在 Section docstring 與驗證報告，不在 #02 新增摘要行為。
+
+## 2026-10-13：#02 保護標題的修正反而讓圖內標籤變成 Section
+
+- **審查抓到 AI 修正引入的回歸：** 為了保護陰影框與頁框，AI 讓任何像標題的文字都保護整個圖形區域。結果粗體 `LLM`、本文大小的 `LLM AGENT` 留在內容，較大字的 `Dual-level Retrieval` 更把 caption 與後面的 Introduction 段落搶成新 Section。合成 PDF 上傳先失敗，再將保護限於頁框大小的區域、真正帶編號的 Section 與段落句子流；確定是圖內的短標籤則先過濾，不因粗體或大字保留。
+- **全大寫加句點仍不足以辨識標題：** `2 GPU HOURS.` 和 `3. THE SOFTWARE IS PROVIDED AS IS.` 會搶走後續段落；同列與拆開編號兩個回歸先失敗。現在句點例外還要有粗體、small-caps、字體變化或較大字級。LightRAG §7.2／§7.4 的 mixed-size small-caps 保留；標題的句末句點去除。正向合成案例分別使用粗體與不同字體，與真正內文樣式的反向案例分開。
+- **減少重複的判斷規則：** 句末標點共用一個 regex，短標籤字數與寬行比例改成具名常數，逐行圖形標籤判斷集中到 helper。陰影框、帶／不帶編號的頁框與 LightRAG Figure 1 回歸持續保留。

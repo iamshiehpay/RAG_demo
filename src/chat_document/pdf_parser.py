@@ -14,6 +14,10 @@ from .policy import CHUNK_TOKEN_TARGET
 logger = logging.getLogger(__name__)
 _NUMBER = re.compile(r"(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\.?")
 _NUMBERED_TITLE = re.compile(r"^(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\.?\s+\S")
+_SENTENCE_END = re.compile(r"[.!?。！？;；]$")
+_FIGURE_LABEL_WORD_LIMIT = 15
+_PROSE_LINE_WIDTH_RATIO = 0.55
+_PAGE_FRAME_COVERAGE_RATIO = 0.8
 
 
 class DocumentError(ValueError):
@@ -29,6 +33,8 @@ class _Line:
     size: float
     bold: bool
     fonts: tuple[str, ...]
+    small_caps: bool = False
+    font_change: bool = False
     shared_row: bool = False
 
 
@@ -109,6 +115,10 @@ def _figure_regions(page: pymupdf.Page, blocks: list[dict]) -> list[pymupdf.Rect
                     or region.contains(caption_rect)
                 )
                 and not any(region.contains(table) for table in table_captions)
+                and not (
+                    region.width >= page.rect.width * _PAGE_FRAME_COVERAGE_RATIO
+                    and region.height >= page.rect.height * _PAGE_FRAME_COVERAGE_RATIO
+                )
             ):
                 # Some figure backgrounds extend through the caption into the next paragraph.
                 regions.append(
@@ -120,6 +130,7 @@ def _figure_regions(page: pymupdf.Page, blocks: list[dict]) -> list[pymupdf.Rect
 def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
     lines = []
     sizes: Counter[int] = Counter()
+    font_sizes: Counter[tuple[int, str]] = Counter()
     regions_by_page = {}
     for page_number, page in enumerate(pdf, 1):
         page_lines = []
@@ -140,15 +151,22 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                     continue  # Page numbers are not paragraphs or Section numbers.
                 for span in spans:
                     sizes[round(span["size"])] += len(span["text"].strip())
+                    font_sizes[(round(span["size"]), span["font"])] += len(span["text"].strip())
+                max_size = max(s["size"] for s in spans)
                 page_lines.append(
                     _Line(
                         text=text,
                         page=page_number,
                         block=block_number,
                         bbox=bbox,
-                        size=max(s["size"] for s in spans),
+                        size=max_size,
                         bold=all(s["flags"] & 16 for s in spans),
                         fonts=tuple(sorted({s["font"] for s in spans})),
+                        small_caps=text.isupper()
+                        and any(
+                            s["size"] < max_size * 0.9 and any(char.isalpha() for char in s["text"])
+                            for s in spans
+                        ),
                     )
                 )
         for line in page_lines:
@@ -165,40 +183,59 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
             )
         lines.extend(page_lines)
     body_size = sizes.most_common(1)[0][0] if sizes else 0
+    body_fonts = Counter(
+        {font: weight for (size, font), weight in font_sizes.items() if size == body_size}
+    )
+    body_font = body_fonts.most_common(1)[0][0] if body_fonts else ""
+    for line in lines:
+        line.font_change = bool(body_font and body_font not in line.fonts)
     for page_number, regions in regions_by_page.items():
         page_lines = [line for line in lines if line.page == page_number]
         regions_by_page[page_number] = [
             region for region in regions if not _contains_prose(region, page_lines, body_size)
         ]
     return [
-        line
-        for line in lines
-        if not (
-            len(line.text.split()) < 15
-            and not _heading(line, body_size, numbered=True)
-            and not _NUMBER.fullmatch(line.text)
-            and not re.search(r"[.!?。！？]$", line.text)
-            and any(
-                region.contains(pymupdf.Rect(line.bbox)) for region in regions_by_page[line.page]
-            )
-        )
+        line for line in lines if not _is_figure_label(line, regions_by_page[line.page])
     ], body_size
+
+
+def _is_figure_label(line: _Line, regions: list[pymupdf.Rect]) -> bool:
+    return (
+        len(line.text.split()) < _FIGURE_LABEL_WORD_LIMIT
+        and not _SENTENCE_END.search(line.text)
+        and any(region.contains(pymupdf.Rect(line.bbox)) for region in regions)
+    )
 
 
 def _contains_prose(region: pymupdf.Rect, lines: list[_Line], body_size: float) -> bool:
     contained = [line for line in lines if region.contains(pymupdf.Rect(line.bbox))]
-    if any(_heading(line, body_size, numbered=True) for line in contained):
-        return True  # A page frame or text box containing a heading is not a figure.
+    if any(
+        region.contains(pymupdf.Rect(line.bbox))
+        and _opens_numbered_section(lines, index, body_size)
+        for index, line in enumerate(lines)
+    ):
+        return True
     body_lines = [line for line in contained if abs(line.size - body_size) < 0.5]
     for block in {line.block for line in body_lines}:
         paragraph = [line for line in body_lines if line.block == block]
         if len(paragraph) >= 2 and (
-            any(re.search(r"[.!?。！？]$", line.text) for line in paragraph)
-            or sum(line.bbox[2] - line.bbox[0] > region.width * 0.55 for line in paragraph)
+            any(_SENTENCE_END.search(line.text) for line in paragraph)
+            or sum(
+                line.bbox[2] - line.bbox[0] > region.width * _PROSE_LINE_WIDTH_RATIO
+                for line in paragraph
+            )
             > len(paragraph) / 2
         ):
             return True
     return False
+
+
+def _opens_numbered_section(lines: list[_Line], index: int, body_size: float) -> bool:
+    text = lines[index].text
+    if not (_NUMBERED_TITLE.match(text) or _NUMBER.fullmatch(text)):
+        return False
+    title, _ = _section_title(lines, index, body_size)
+    return bool(_NUMBERED_TITLE.match(title))
 
 
 def _heading(line: _Line, body_size: float, *, numbered: bool = False) -> bool:
@@ -218,8 +255,15 @@ def _heading(line: _Line, body_size: float, *, numbered: bool = False) -> bool:
         and not line.shared_row
         and not re.match(r"(?:Table|Figure)\s+\d|[•●]|\(?[ivx]+\)", text, re.I)
         and (
-            not re.search(r"[.!?。！？;；]$", text)
-            or (text.endswith(".") and text.isupper() and (numbered or _NUMBERED_TITLE.match(text)))
+            not _SENTENCE_END.search(text)
+            or (
+                text.endswith(".")
+                and text.isupper()
+                and (numbered or _NUMBERED_TITLE.match(text))
+                and (
+                    line.bold or line.small_caps or line.font_change or line.size > body_size + 0.5
+                )
+            )
         )
     )
 
@@ -263,7 +307,7 @@ def _section_title(lines: list[_Line], index: int, body_size: float) -> tuple[st
         title += f" {following.text}"
         line = following
         consumed += 1
-    return title, consumed
+    return title.removesuffix("."), consumed
 
 
 def _virtual_sections(section: Section, target: int) -> list[Section]:

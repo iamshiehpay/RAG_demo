@@ -159,14 +159,16 @@ def review_pdf(case):
             page.insert_text(
                 (50, 100), "APPENDIX_MAIN describes the supplementary evidence.", fontsize=10
             )
-            page.insert_text((50, 180), "7.2 CASE EXAMPLE OF LIGHTRAG.", fontsize=10)
+            page.insert_text(
+                (50, 180), "7.2 CASE EXAMPLE OF LIGHTRAG.", fontsize=10, fontname="hebo"
+            )
             page.insert_text(
                 (50, 220),
                 "CASE_EXAMPLE_BODY keeps the example under the right Section.",
                 fontsize=10,
             )
             page.insert_text((50, 300), "7.4", fontsize=10)
-            page.insert_text((80, 300), "CASE STUDY OF NAIVERAG.", fontsize=10)
+            page.insert_text((80, 300), "CASE STUDY OF NAIVERAG.", fontsize=10, fontname="tiro")
             page.insert_text(
                 (50, 340), "CASE_STUDY_BODY keeps the study under the right Section.", fontsize=10
             )
@@ -197,13 +199,67 @@ def shaded_prose_pdf():
         return document.tobytes()
 
 
-def page_frame_pdf():
+def page_frame_pdf(title="1 Introduction"):
     with pymupdf.open() as document:
         page = document.new_page()
         page.draw_rect(pymupdf.Rect(25, 25, 570, 790))
-        page.insert_text((50, 60), "1 Introduction", fontsize=14)
+        page.insert_text((50, 60), title, fontsize=14)
         page.insert_text(
             (50, 130), "FRAME_BODY is real evidence inside the decorative page border.", fontsize=10
         )
         page.insert_text((50, 270), "Figure 1: A caption inside the same page frame.", fontsize=10)
+        return document.tobytes()
+
+
+def styled_figure_labels_pdf():
+    with pymupdf.open() as document:
+        page = document.new_page(width=600, height=800)
+        page.insert_text((50, 60), "1 Introduction", fontsize=14)
+        assert (
+            page.insert_textbox(
+                pymupdf.Rect(50, 90, 550, 150),
+                "REAL_BEFORE The introduction describes how the system works and why every "
+                "paragraph must remain assigned to its original Section.",
+                fontsize=10,
+            )
+            >= 0
+        )
+        page.draw_rect(pymupdf.Rect(50, 180, 500, 320))
+        page.insert_text((70, 220), "LLM", fontsize=10, fontname="hebo")
+        page.insert_text((70, 245), "LLM AGENT", fontsize=10)
+        page.insert_text((70, 275), "Dual-level Retrieval", fontsize=12)
+        page.insert_text((50, 340), "Figure 1: System overview.", fontsize=10)
+        assert (
+            page.insert_textbox(
+                pymupdf.Rect(50, 380, 550, 460),
+                "REAL_CONTINUED The introduction continues after the diagram and still belongs "
+                "to the same Section. Every statement has an identifiable original location.",
+                fontsize=10,
+            )
+            >= 0
+        )
+        return document.tobytes()
+
+
+def numbered_sentences_pdf(*, split=False):
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.insert_text((50, 60), "1 Introduction", fontsize=14)
+        page.insert_text(
+            (50, 100), "BODY_BEFORE describes the experiment and its expected costs.", fontsize=10
+        )
+        if split:
+            page.insert_text((50, 170), "2", fontsize=10)
+            page.insert_text((65, 170), "GPU HOURS.", fontsize=10)
+        else:
+            page.insert_text((50, 170), "2 GPU HOURS.", fontsize=10)
+        page.insert_text(
+            (50, 210),
+            "BODY_AFTER_COST continues the Introduction without a new heading.",
+            fontsize=10,
+        )
+        page.insert_text((50, 280), "3. THE SOFTWARE IS PROVIDED AS IS.", fontsize=10)
+        page.insert_text(
+            (50, 320), "BODY_AFTER_LICENSE also belongs to the Introduction Section.", fontsize=10
+        )
         return document.tobytes()

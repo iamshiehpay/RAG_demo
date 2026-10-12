@@ -53,6 +53,11 @@ async def test_lightrag_sections_exclude_references_and_keep_appendix():
     assert "Statistics" in "\n".join(c.text for c in appendix)
     assert any(s.title.startswith("Appendix — 7.2 ") for s in document.sections)
     assert any(s.title.startswith("Appendix — 7.4 ") for s in document.sections)
+    assert all(
+        not s.title.endswith(".")
+        for s in document.sections
+        if s.title.startswith(("Appendix — 7.2 ", "Appendix — 7.4 "))
+    )
     assert document.sections[0].title == "LIGHTRAG: SIMPLE AND FAST RETRIEVAL-AUGMENTED GENERATION"
     ablation = [c for c in document.chunks if c.section.startswith("4.3 ")]
     assert ablation and any(c.page_start == c.page_end == 8 for c in ablation)
@@ -339,13 +344,16 @@ async def test_shaded_prose_above_a_figure_caption_preserves_every_line():
     assert all(f"PROSE_{word}" in text for word in ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX"])
 
 
-async def test_page_frame_does_not_remove_the_section_heading():
+@pytest.mark.parametrize(
+    "title", ["1 Introduction", "Introduction"], ids=["numbered", "unnumbered"]
+)
+async def test_page_frame_does_not_remove_the_section_heading(title):
     from .fixtures import page_frame_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
-    events = [e async for e in app.upload_document(page_frame_pdf(), "frame.pdf")]
+    events = [e async for e in app.upload_document(page_frame_pdf(title), "frame.pdf")]
     assert events[-1].type == "ready"
-    assert [s.title for s in app.document.sections] == ["1 Introduction"]
+    assert [s.title for s in app.document.sections] == [title]
     assert not app.document.sections[0].is_virtual
     assert "FRAME_BODY" in app.document.chunks[0].text
 
@@ -358,8 +366,8 @@ async def test_numbered_all_caps_period_headings_keep_their_own_appendix_content
     assert events[-1].type == "ready"
     assert [s.title for s in app.document.sections] == [
         "7 Appendix",
-        "Appendix — 7.2 CASE EXAMPLE OF LIGHTRAG.",
-        "Appendix — 7.4 CASE STUDY OF NAIVERAG.",
+        "Appendix — 7.2 CASE EXAMPLE OF LIGHTRAG",
+        "Appendix — 7.4 CASE STUDY OF NAIVERAG",
     ]
     for section, marker in zip(
         app.document.sections,
@@ -368,3 +376,40 @@ async def test_numbered_all_caps_period_headings_keep_their_own_appendix_content
     ):
         assert marker in "\n".join(section.paragraphs)
         assert all(c.section == section.title for c in app.document.chunks if marker in c.text)
+
+
+async def test_bold_and_larger_figure_labels_do_not_create_sections_or_enter_prose():
+    from .fixtures import styled_figure_labels_pdf
+
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(styled_figure_labels_pdf(), "styled-figure.pdf")]
+    assert events[-1].type == "ready"
+    assert [s.title for s in app.document.sections] == ["1 Introduction"]
+    text = "\n".join(c.text for c in app.document.chunks)
+    assert all(value in text for value in ["REAL_BEFORE", "REAL_CONTINUED", "Figure 1"])
+    assert "LLM" not in text and "Dual-level Retrieval" not in text
+    assert all(c.section == "1 Introduction" for c in app.document.chunks)
+
+
+@pytest.mark.parametrize("split", [False, True], ids=["inline", "split-number"])
+async def test_numbered_uppercase_body_sentences_do_not_open_sections(split):
+    from .fixtures import numbered_sentences_pdf
+
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [
+        e async for e in app.upload_document(numbered_sentences_pdf(split=split), "sentences.pdf")
+    ]
+    assert events[-1].type == "ready"
+    assert [s.title for s in app.document.sections] == ["1 Introduction"]
+    text = "\n".join(c.text for c in app.document.chunks)
+    assert all(
+        value in text
+        for value in [
+            "BODY_BEFORE",
+            "GPU HOURS.",
+            "3. THE SOFTWARE IS PROVIDED AS IS.",
+            "BODY_AFTER_COST",
+            "BODY_AFTER_LICENSE",
+        ]
+    )
+    assert all(c.section == "1 Introduction" for c in app.document.chunks)
