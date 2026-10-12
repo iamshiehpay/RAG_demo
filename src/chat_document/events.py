@@ -44,6 +44,7 @@ class RejectedEvent(BaseModel):
 class RetrievalEvent(BaseModel):
     type: Literal["retrieval"] = "retrieval"
     chunks: list[RetrievedChunk]
+    dropped_chunk_count: int = 0
 
 
 class CitationMapEvent(BaseModel):
@@ -77,6 +78,7 @@ class TraceEvent(BaseModel):
     type: Literal["trace"] = "trace"
     calls: list[LLMCallTrace]
     invalid_citation_count: int = 0
+    dropped_chunk_count: int = 0
 
 
 class ErrorEvent(BaseModel):

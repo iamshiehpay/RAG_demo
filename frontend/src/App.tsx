@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
 import { Trace } from './Trace';
+import { SourceContent } from './SourceContent';
 import { consumeEvents } from './sse';
 import { UploadProgress } from './Shared';
 
@@ -10,7 +11,7 @@ interface Turn {
   id: number; question: string; answer: string; citations: Citation[];
   chunks: RetrievedChunk[]; calls: LLMCallTrace[]; status: string; final: boolean; error: string;
   plan: PlanEvent | null; rejected: boolean;
-  thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; retrying: boolean;
+  thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; droppedChunkCount: number; retrying: boolean;
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
 async function responseMessage(response: Response, fallback: string) {
@@ -81,7 +82,7 @@ export function App() {
     setBusy(true); setError(''); setSource(null); setQuestion('');
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
-      thinking: '', unverified: [], invalidCitationCount: 0, retrying: false,
+      thinking: '', unverified: [], invalidCitationCount: 0, droppedChunkCount: 0, retrying: false,
       status: '判斷問題類型', final: false, error: '' };
     setTurns(previous => retryId === undefined ? [...previous, freshTurn] :
       previous.map(turn => turn.id === retryId ? freshTurn : turn));
@@ -93,7 +94,7 @@ export function App() {
         updateTurn(id, turn => {
           switch (event.type) {
             case 'plan': return { ...turn, plan: event, status: '檢索' };
-            case 'retrieval': return { ...turn, chunks: event.chunks, status: '思考中' };
+            case 'retrieval': return { ...turn, chunks: event.chunks, droppedChunkCount: event.dropped_chunk_count, status: '思考中' };
             case 'citation_map': return { ...turn, citations: event.citations };
             case 'thinking': return { ...turn, thinking: turn.thinking + event.text };
             case 'delta': return { ...turn, answer: turn.answer + event.text,
@@ -103,7 +104,7 @@ export function App() {
             case 'final': return { ...turn, answer: event.answer, citations: event.citations,
               unverified: event.unverified, retrying: false, final: true, status: 'Answer complete' };
             case 'trace': return { ...turn, calls: event.calls,
-              invalidCitationCount: event.invalid_citation_count };
+              invalidCitationCount: event.invalid_citation_count, droppedChunkCount: event.dropped_chunk_count };
             case 'rejected': return { ...turn, answer: '', error: event.message,
               rejected: true, status: '問題過長，請縮短問題', final: false };
             case 'error': return { ...turn, answer: '', error: event.message, status: 'Answer failed', final: false };
@@ -149,13 +150,13 @@ export function App() {
             <button disabled={busy || uploading} onClick={() => void ask(turn.question, turn.id)}>Retry question</button>}</div>}
         {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0) &&
           <Trace plan={turn.plan} chunks={turn.chunks} calls={turn.calls}
-            thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} />}
+            thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} droppedChunkCount={turn.droppedChunkCount} />}
       </article>)}
     </section>
     {source && <section className="source" aria-label="Citation source">
       <div className="source-heading"><h2>Source · p.{source.page_start} · {source.section}</h2>
         <button onClick={() => setSource(null)}>Close source</button></div>
-      <pre>{source.text}</pre>
+      <SourceContent source={source} />
     </section>}
     <form onSubmit={submit}>
       <label htmlFor="question">Question</label>

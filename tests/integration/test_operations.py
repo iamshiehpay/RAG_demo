@@ -35,7 +35,9 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
         "final",
         "trace",
     ]
-    assert len(events[1].chunks) == 5
+    assert len(events[1].chunks) >= 5
+    primary = await app.index.retrieve("Performance of ablated versions of LightRAG", 5)
+    assert {item.chunk.id for item in primary} <= {item.chunk.id for item in events[1].chunks}
     assert events[4].citations[0].id == "C1"
     source = app.source(events[4].citations[0].source_id)
     assert source.text and source.page_start >= 1

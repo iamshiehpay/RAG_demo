@@ -11,6 +11,7 @@ export type Chunk = {
   kind: "text" | "table";
   table_label: string | null;
   table_caption: string | null;
+  table_meaning: string;
   table_headers: Array<string>;
   table_rows: Array<Array<string>>;
   table_reconstructed: boolean;
@@ -97,6 +98,7 @@ export type RejectedEvent = {
 export type RetrievalEvent = {
   type: "retrieval";
   chunks: Array<RetrievedChunk>;
+  dropped_chunk_count: number;
 };
 
 export type RetrievedChunk = {
@@ -125,6 +127,7 @@ export type TraceEvent = {
   type: "trace";
   calls: Array<LLMCallTrace>;
   invalid_citation_count: number;
+  dropped_chunk_count: number;
 };
 
 export type UnverifiedSpan = {

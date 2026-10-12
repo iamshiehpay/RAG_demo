@@ -177,3 +177,92 @@ async def test_large_table_splits_only_between_rows_and_repeats_caption_and_head
         [f"experiment_{i}", f"{i}.25%", f"{i}.75"] for i in range(230)
     ]
     assert not any("experiment_" in c.text for c in app.document.chunks if c.kind == "text")
+
+
+async def test_q3_prompt_includes_table2_and_linked_ablation_discussion_in_document_order():
+    from chat_document.settings import RetrievalSettings
+    from chat_document.tokens import count_tokens
+
+    llm = ScriptedLLM(["not JSON", "The comparisons use NaiveRAG. [C1]"])
+    app = Application(OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(lookup_top_k=1))
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "LightRAG.pdf")
+    ][-1].type == "ready"
+    table = next(c for c in app.document.chunks if c.table_label == "Table 2")
+    discussion = [
+        c
+        for c in app.document.chunks
+        if c.kind == "text" and c.section.startswith("4.3") and "Table 2" in c.text
+    ]
+    assert discussion and all(
+        c.id in table.linked_chunk_ids and table.id in c.linked_chunk_ids for c in discussion
+    )
+    ranked = await app.index.retrieve("Performance of ablated versions of LightRAG", 5)
+    assert any(c.chunk.table_label == "Table 2" for c in ranked)
+    asked = [e async for e in app.ask("Performance of ablated versions of LightRAG")]
+    assert not any(e.type == "error" for e in asked)
+    retrieved = next(e for e in asked if e.type == "retrieval").chunks
+    prompt = llm.calls[-1].messages[-1]["content"]
+    assert "Table 2: Performance" in prompt
+    assert all(c.text in prompt for c in discussion)
+    assert "Semantic Graph Excels in RAG" in prompt
+    assert [item.chunk.order for item in retrieved] == sorted(
+        item.chunk.order for item in retrieved
+    )
+    assert len({item.chunk.id for item in retrieved}) == len(retrieved)
+    assert count_tokens(prompt) + llm.calls[-1].num_predict + 300 <= 10000
+
+
+async def test_lookup_budget_drops_are_counted_in_retrieval_and_trace():
+    from chat_document.settings import RetrievalSettings
+
+    llm = ScriptedLLM(["not JSON", "Supported evidence [C1]."])
+    app = Application(
+        OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(lookup_top_k=100)
+    )
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "LightRAG.pdf")
+    ][-1].type == "ready"
+    events = [e async for e in app.ask("Performance of ablated versions of LightRAG")]
+    retrieval = next(e for e in events if e.type == "retrieval")
+    trace = next(e for e in events if e.type == "trace")
+    assert retrieval.dropped_chunk_count == len(app.document.chunks) - len(retrieval.chunks) > 0
+    assert trace.dropped_chunk_count == retrieval.dropped_chunk_count
+    assert [c.call_type for c in trace.calls] == ["router", "answer"]
+
+
+async def test_synthesis_small_evidence_budget_drops_are_counted():
+    import pymupdf
+
+    from chat_document.settings import RetrievalSettings
+
+    from .test_router_synthesis import router_script
+
+    with pymupdf.open() as pdf:
+        page = pdf.new_page(width=1000, height=8000)
+        page.insert_text((50, 50), "1 Measurements", fontsize=14)
+        for i in range(5):
+            assert (
+                page.insert_textbox(
+                    pymupdf.Rect(50, 100 + i * 1400, 950, 1300 + i * 1400),
+                    f"Measurement {i}. " + "cost " * 950,
+                    fontsize=10,
+                )
+                >= 0
+            )
+        data = pdf.tobytes()
+    question = "cost " * 900
+    llm = ScriptedLLM([router_script("Synthesis", question), "Supported cost [C1]."])
+    app = Application(
+        OllamaEmbedder(),
+        LLMGateway(llm),
+        settings=RetrievalSettings(synthesis_top_k=5, chunk_token_target=1000),
+    )
+    assert [e async for e in app.upload_document(data, "measurements.pdf")][-1].type == "ready"
+    events = [e async for e in app.ask(question)]
+    assert not any(e.type == "error" for e in events)
+    retrieval = next(e for e in events if e.type == "retrieval")
+    trace = next(e for e in events if e.type == "trace")
+    assert retrieval.dropped_chunk_count == 5 - len(retrieval.chunks) > 0
+    assert trace.dropped_chunk_count == retrieval.dropped_chunk_count
+    assert [c.call_type for c in trace.calls] == ["router", "answer"]

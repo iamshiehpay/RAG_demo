@@ -4,10 +4,10 @@ import re
 
 from .answer_generator import answer_messages
 from .citation import CitationText, citation_map
-from .events import DeltaEvent, PlanEvent, TraceEvent
+from .events import DeltaEvent, PlanEvent, RetrievalEvent, TraceEvent
 from .index import Index
 from .llm_gateway import BUDGET_TABLE, LLMFailure, LLMGateway
-from .models import Chunk, Citation, LLMCallTrace, RetrievedChunk
+from .models import Chunk, Citation, LLMCallTrace
 from .policy import (
     CONTEXT_EVIDENCE_TOKEN_LIMIT,
     PACKING_JOIN_TOKEN_ALLOWANCE,
@@ -86,36 +86,64 @@ class ContextPacker:
 
     async def retrieve(
         self, index: Index, plan: PlanEvent, *, current_question: str | None = None
-    ) -> list[RetrievedChunk]:
-        if plan.question_type == "Lookup":
-            retrieved = await index.retrieve(plan.standalone_question, self.settings.lookup_top_k)
-        else:
-            # Global uses Synthesis until the Summary Tree ticket (#05) is integrated.
-            retrieved = await index.retrieve(
-                plan.standalone_question, self.settings.synthesis_top_k
-            )
+    ) -> RetrievalEvent:
+        # Keep actual cosine scores for linked/adjacent Chunks, rather than copying seed scores.
+        ranked = await index.retrieve(plan.standalone_question, len(index.chunks))
+        scores = {item.chunk.id: item for item in ranked}
+        retrieved = ranked[
+            : self.settings.lookup_top_k
+            if plan.question_type == "Lookup"
+            else self.settings.synthesis_top_k
+        ]
+        if plan.question_type != "Lookup":
             for query in plan.sub_queries:
-                retrieved.extend(await index.retrieve(query, self.settings.sub_query_top_k))
-        unique: dict[str, RetrievedChunk] = {}
-        for item in retrieved:
-            previous = unique.get(item.chunk.id)
-            if previous is None or item.score > previous.score:
-                unique[item.chunk.id] = item
-        items = list(unique.values())
-        context = "\n\n".join(f"[C{i}] {item.chunk.context}" for i, item in enumerate(items, 1))
+                query_ranked = await index.retrieve(query, len(index.chunks))
+                retrieved.extend(query_ranked[: self.settings.sub_query_top_k])
+                for item in query_ranked:
+                    if item.score > scores[item.chunk.id].score:
+                        scores[item.chunk.id] = item
+        unique = {item.chunk.id: scores[item.chunk.id] for item in retrieved}
+        seeds = sorted(unique.values(), key=lambda item: -item.score)
+        linked = []
+        for item in seeds:
+            for chunk_id in item.chunk.linked_chunk_ids:
+                if chunk_id not in unique and chunk_id in scores:
+                    unique[chunk_id] = scores[chunk_id]
+                    linked.append(scores[chunk_id])
+        # Primary hits first, then explicit table/paragraph links, then neighbors by seed rank.
+        candidates = [*seeds, *linked]
+        if plan.question_type == "Lookup":
+            by_order = sorted(index.chunks, key=lambda chunk: chunk.order)
+            positions = {chunk.id: i for i, chunk in enumerate(by_order)}
+            for item in seeds:
+                position = positions[item.chunk.id]
+                for neighbor in (position - 1, position + 1):
+                    if 0 <= neighbor < len(by_order):
+                        chunk_id = by_order[neighbor].id
+                        if chunk_id not in unique:
+                            unique[chunk_id] = scores[chunk_id]
+                            candidates.append(scores[chunk_id])
+        context = "\n\n".join(
+            f"[C{i}] {item.chunk.context}" for i, item in enumerate(candidates, 1)
+        )
+        dropped = 0
         if plan.question_type == "Lookup" or count_tokens(context) <= CONTEXT_EVIDENCE_TOKEN_LIMIT:
-            # Lookup never extracts facts: retain highest-ranked whole Chunks that fit.
-            # Small Synthesis contexts also fit by construction when a long question uses space.
             fitted = []
-            for item in sorted(items, key=lambda item: -item.score):
+            for item in candidates:
                 if self.fits(
                     plan.standalone_question,
                     [i.chunk for i in fitted] + [item.chunk],
                     current_question=current_question,
                 ):
                     fitted.append(item)
-            items = fitted
-        return sorted(items, key=lambda item: item.chunk.order)
+                else:
+                    dropped += 1
+            candidates = fitted
+        # Larger Synthesis evidence is retained for fact extraction, so none is counted as dropped.
+        return RetrievalEvent(
+            chunks=sorted(candidates, key=lambda item: item.chunk.order),
+            dropped_chunk_count=dropped,
+        )
 
     async def pack(
         self,

@@ -51,3 +51,11 @@ dd { margin: 0; font-variant-numeric: tabular-nums; }
   .metrics { grid-template-columns: 1fr; }
   .source-heading { display: block; }
 }
+
+.source-table-scroll { max-width: 100%; overflow-x: auto; }
+.source-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 15px; }
+.source-table caption { text-align: left; padding: 12px 0; font-weight: bold; }
+.source-table th, .source-table td { padding: 8px; text-align: left; border-bottom: 1px solid var(--line); }
+.source-table th { font-weight: bold; }
+.source-table td { white-space: nowrap; }
+.table-limitation { color: var(--danger); }

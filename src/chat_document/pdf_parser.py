@@ -10,7 +10,7 @@ import pymupdf
 from .chunker import chunk_sections
 from .models import Section
 from .policy import CHUNK_TOKEN_TARGET
-from .tables import TableRegion, reconstruct_tables
+from .tables import LIMITATION, TableRegion, reconstruct_tables
 
 logger = logging.getLogger(__name__)
 _NUMBER = re.compile(r"(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\.?")
@@ -385,7 +385,15 @@ def _virtual_sections(section: Section, target: int) -> list[Section]:
             original = next(t for t in section.tables if t.label == chunk.table_label)
             tables = [
                 original.model_copy(
-                    update={"paragraph_index": 0, "rows": chunk.table_rows, "raw_text": chunk.text}
+                    update={
+                        "paragraph_index": 0,
+                        "rows": chunk.table_rows,
+                        "raw_text": (
+                            chunk.text.split(LIMITATION + "\n", 1)[-1]
+                            if not chunk.table_reconstructed
+                            else original.raw_text
+                        ),
+                    }
                 )
             ]
         output.append(

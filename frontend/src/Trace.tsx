@@ -1,12 +1,13 @@
 import type { LLMCallTrace, PlanEvent, RetrievedChunk } from './events';
 import { ThinkingContent } from './Shared';
 
-export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount = 0 }: {
+export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount = 0, droppedChunkCount = 0 }: {
   calls: LLMCallTrace[]; chunks: RetrievedChunk[]; plan: PlanEvent | null;
-  thinking?: string; invalidCitationCount?: number;
+  thinking?: string; invalidCitationCount?: number; droppedChunkCount?: number;
 }) {
   return <details className="trace"><summary>Trace · {calls.length} LLM call{calls.length === 1 ? '' : 's'}</summary>
     <p>Invalid Citations: {invalidCitationCount}</p>
+    <p>Chunks dropped because of Context Budget: {droppedChunkCount}</p>
     {calls.length === 0 && <ThinkingContent text={thinking} />}
     {plan && <section aria-label="Question plan"><h4>Question plan</h4>
       <dl className="metrics">

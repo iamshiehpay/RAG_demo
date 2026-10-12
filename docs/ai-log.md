@@ -203,3 +203,7 @@
 ## 2026-10-13 — #03 Table 2 Golden Facts fixture corrected
 
 AI initially transcribed three -Origin rows incorrectly in the deterministic fixture. The coordinate-extracted source cells disagreed; the fixture was corrected against the fixed PDF before treating its test as evidence. Numeric acceptance must compare every labelled cell, not infer values from the overall result.
+
+## 2026-10-13 — #03 Q2 retrieval assertion aligned with the requirement
+
+After table text was removed from prose, the §4.5 cost and GraphRAG update paragraphs packed into a valid 494-token Chunk. The incremental Sub-query top two then ranked the §3.1 incremental-update paragraph and Abstract. The previous assertion required all cost/update/community terms in one particular Sub-query's top two. Levi clarified (#4395) that AGENTS requires coverage from the Sub-queries collectively. The regression now proves that their top-two union covers 610 costs, incremental updates, and GraphRAG community regeneration, that the Standalone Question top three lacks the 610 paragraph, and that the final Synthesis prompt includes all three. Chunk size and retrieval counts remain unchanged.

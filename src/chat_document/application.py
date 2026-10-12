@@ -23,7 +23,6 @@ from .events import (
     FinalEvent,
     ReadyEvent,
     RejectedEvent,
-    RetrievalEvent,
     RetryEvent,
     StageEvent,
     ThinkingEvent,
@@ -224,6 +223,7 @@ class Application:
         calls: list[LLMCallTrace] = []
         stage = "router"
         self._asking += 1
+        dropped_chunk_count = 0
         try:
             index = self.index
             if self._active_upload is not None or index is None:
@@ -257,7 +257,9 @@ class Application:
             retrieved = await self.context_packer.retrieve(
                 index, context_plan, current_question=question
             )
-            yield RetrievalEvent(chunks=retrieved)
+            dropped_chunk_count = retrieved.dropped_chunk_count
+            yield retrieved
+            retrieved = retrieved.chunks
             chunks = sorted((item.chunk for item in retrieved), key=lambda chunk: chunk.order)
             citations = citation_map(chunks)
             yield CitationMapEvent(citations=citations)
@@ -296,15 +298,17 @@ class Application:
             )
             if calls:
                 yield TraceEvent(
-                    calls=calls, invalid_citation_count=validated.invalid_citation_count
+                    calls=calls,
+                    invalid_citation_count=validated.invalid_citation_count,
+                    dropped_chunk_count=dropped_chunk_count,
                 )
         except BudgetExceeded as exc:
             if calls:
-                yield TraceEvent(calls=calls)
+                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
             yield ErrorEvent(code="budget_exceeded", message=str(exc))
         except httpx.HTTPError as exc:
             if calls:
-                yield TraceEvent(calls=calls)
+                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
             reason = "timed out" if isinstance(exc, httpx.TimeoutException) else "connection failed"
             yield ErrorEvent(
                 code=f"{stage}_failed",
@@ -313,12 +317,12 @@ class Application:
             )
         except ValueError as exc:
             if calls:
-                yield TraceEvent(calls=calls)
+                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
             yield ErrorEvent(code="answer_failed", message=f"Answer failed: {exc}")
         except Exception:
             logger.exception("Unexpected answer failure")
             if calls:
-                yield TraceEvent(calls=calls)
+                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
             yield ErrorEvent(
                 code="answer_failed", message="Unexpected answer failure. Please retry."
             )

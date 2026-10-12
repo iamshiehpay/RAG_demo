@@ -134,6 +134,7 @@ def chunk_sections(
                             kind="table",
                             table_label=table.label,
                             table_caption=table.caption,
+                            table_meaning=table.meaning,
                             table_headers=table.headers,
                             table_rows=rows,
                             table_reconstructed=table.reconstructed,
@@ -154,4 +155,10 @@ def chunk_sections(
                 current_pages.append(pages)
         flush()
         add_tables(len(section.paragraphs))
+    for table in (chunk for chunk in chunks if chunk.kind == "table"):
+        label = re.compile(r"\b" + re.escape(table.table_label) + r"\b", re.I)
+        for paragraph in (chunk for chunk in chunks if chunk.kind == "text"):
+            if label.search(paragraph.text):
+                table.linked_chunk_ids.append(paragraph.id)
+                paragraph.linked_chunk_ids.append(table.id)
     return chunks

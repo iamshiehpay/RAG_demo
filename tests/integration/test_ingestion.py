@@ -182,7 +182,10 @@ async def test_configured_chunk_size_packs_whole_paragraphs_without_overlap(targ
             assert chunk.page_start == min(section.paragraph_pages[i][0] for i in contained)
             assert chunk.page_end == max(section.paragraph_pages[i][1] for i in contained)
     answer = [e async for e in app.ask("Introduction")]
-    assert len(next(e for e in answer if e.type == "retrieval").chunks) == 1
+    retrieved = next(e for e in answer if e.type == "retrieval").chunks
+    primary = await app.index.retrieve("Introduction", 1)
+    assert {item.chunk.id for item in primary} <= {item.chunk.id for item in retrieved}
+    assert 1 <= len(retrieved) <= 3
     assert any(e.type == "final" for e in answer)
 
 

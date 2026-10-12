@@ -55,6 +55,7 @@ class Chunk(BaseModel):
     kind: Literal["text", "table"] = "text"
     table_label: str | None = None
     table_caption: str | None = None
+    table_meaning: str = ""
     table_headers: list[str] = Field(default_factory=list)
     table_rows: list[list[str]] = Field(default_factory=list)
     table_reconstructed: bool = True
