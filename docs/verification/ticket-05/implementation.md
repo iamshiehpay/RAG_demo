@@ -27,3 +27,16 @@ Full suite, live eval, Cloud concurrency measurement and browser evidence will b
 - Asked Q1, received Global `[S#]` answer, opened S5: Source title `p.3–4 · 3.1 GRAPH-BASED TEXT INDEXING`, Section Summary and covered title visible. Overview remained present after answer and source open; `global-summary-source.png` captures the complete page.
 - DOM checks at 1440×900 and 1280×720: overview/source present, no horizontal overflow. Browser errors and console empty. Source/ask HTTP calls returned 200, upload 202.
 - Browser and backend process were stopped after checks. UI acceptance exercised the Summary Tree/provenance flow; no final #09 design claim.
+
+## Final live evaluation
+
+`uv run pytest -q -m eval eval/test_live.py --eval-cases Q1,Q1_ZH_THREE_SENTENCES --eval-label summary-tree-global-final --eval-report eval/reports/summary-tree-global-q1.md` ran from clean code revision `8ec7093`. The command exits 1 because the truthful Golden Facts report is FAIL. Q1: 6/8 checks pass (dual_level rejected because Judge inserted an ellipsis in its excerpt; conclusion matched=false). Chinese case: 9/10 pass (conclusion matched=false); Chinese language and exactly-three-sentence format pass. Both are correctly classified Global and have S Citations. 48 recorded LLM calls all end with stop, with maximum estimated prompt + output reservation 8,045/10,000. No clipping, retries or budget failures. AC6 is the requirement to record per-fact outcomes, which this satisfies; uniformly passing semantic quality is not claimed. Earlier format-intermediate report has Q1 8/8. Checker/Router logic is unchanged.
+
+## Final deterministic / static verification
+
+- `uv run pytest -q` → **203 passed, 2 eval tests deselected**, 209.40s; scripted LLM, real local bge-m3.
+- `uv run ruff check src tests scripts/generate_event_types.py scripts/measure_summary_concurrency.py eval/golden_facts.py` → PASS.
+- `uv run ruff format --check src tests scripts/generate_event_types.py scripts/measure_summary_concurrency.py eval/golden_facts.py` → PASS (48 files).
+- `uv run python scripts/generate_event_types.py --check` → backend/frontend event types match.
+- `npm run typecheck --prefix frontend` and `npm run build --prefix frontend` → PASS; dist is committed.
+- Expanded summary tests all pass within the full suite, including min/proportional/max targets, configured/default concurrency and summary-failure replacement/cache protection. All six ticket criteria are implemented and evidenced; AC6 quality results remain mixed as reported above.
