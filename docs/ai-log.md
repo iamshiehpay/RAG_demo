@@ -41,3 +41,7 @@
 - **AI 的 Citation 格式正規化仍不完整：** `[C1, C3]` 和 `【C3†L1-L4】` 仍無法點擊。用分散在多個 frame 的腳本重現，再正規化成 `[C1][C3]` 與 `[C3]`，prompt 也明定多引用寫法。無效編號的驗證仍留給 #07。
 - **AI 對資源生命週期與 Trace 集合處理不完整：** 第一版只保留最後一筆 Trace，而且遇到 terminal frame 時 break 不會立即 close adapter。回歸測試重現兩個問題，改成累積全部 calls 並用 `aclosing`；連下一次呼叫被 guard 擋住的情況，也會保留前一次的 Trace。
 - **AI 漏掉非預期例外的事件與共用常數：** 原版 RuntimeError 會直接中止 SSE；在審查版本上重現後，兩個操作改成發出通用 error、伺服器記錄例外、LLM 失敗仍有 Trace。問題長度、安全邊際和切塊規則改用 policy 常數，安全邊際由 Trace 欄位提供給前端。
+
+## 2026-10-12：#06 的拒絕事件與前端串流終止
+
+- **AI 寫錯，瀏覽器驗收抓到：** 新增 `rejected` 事件後，後端的「問題超過 1,000 tokens、LLM 呼叫為 0」測試已通過，但 AI 漏改前端 SSE reader 的 terminal 清單。瀏覽器收到拒絕原因後，又被 `Stream ended before completion` 蓋掉。修正 reader，把 `rejected` 視為正常終止；重新 build 並再次在瀏覽器送出超長問題，確認保留原因、提示縮短問題、不顯示重試同一問題的按鈕。教訓：事件模型與生成型別一致，還不能保證串流消費端正確處理新的終止事件。

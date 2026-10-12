@@ -284,3 +284,47 @@ async def test_successful_turns_supply_history_to_later_follow_up():
         dict(role="user", content="How does LightRAG update?"),
         dict(role="assistant", content="Incremental updates [C1]."),
     ]
+
+
+async def test_query_embedding_failure_does_not_start_answer_generation():
+    import httpx
+
+    class FailingQueryEmbedder(OllamaEmbedder):
+        async def embed(self, texts):
+            if texts == ["Standalone question"]:
+                raise httpx.ConnectError("Embedding unavailable")
+            return await super().embed(texts)
+
+    llm = ScriptedLLM([router_script(), "Must not run"])
+    app = Application(FailingQueryEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+    events = [e async for e in app.ask("What does this say?")]
+    assert [e.type for e in events] == ["plan", "error", "trace"]
+    assert len(llm.calls) == 1
+    assert [c.call_type for c in events[-1].calls] == ["router"]
+
+
+async def test_extraction_losing_citation_ids_fails_without_final_answer():
+    from pathlib import Path
+
+    from chat_document.settings import RetrievalSettings
+
+    llm = ScriptedLLM(
+        [
+            router_script("Synthesis", "Compare costs.", ["cost", "update"]),
+            "An uncited extracted fact.",
+            "Must not run",
+        ]
+    )
+    app = Application(
+        OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(synthesis_top_k=30)
+    )
+    assert [
+        e async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "lightrag.pdf")
+    ][-1].type == "ready"
+    events = [e async for e in app.ask("Compare costs.")]
+    assert not any(e.type == "final" for e in events)
+    assert not any(e.type == "delta" for e in events)  # Extraction text is not answer text.
+    assert "Citation IDs" in next(e.message for e in events if e.type == "error")
+    assert [c.call_type for c in events[-1].calls] == ["router", "fact_extraction"]
+    assert len(llm.calls) == 2

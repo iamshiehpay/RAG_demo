@@ -54,22 +54,25 @@ export function App() {
     try {
       await consumeEvents(await fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: askedQuestion }),
-      }), event => updateTurn(id, turn => {
-        switch (event.type) {
-          case 'plan': return { ...turn, plan: event, status: '檢索' };
-          case 'retrieval': return { ...turn, chunks: event.chunks, status: '思考中' };
-          case 'citation_map': return { ...turn, citations: event.citations };
-          case 'delta': return { ...turn, answer: turn.answer + event.text, status: '回答中 · 暫定' };
-          case 'retry': return { ...turn, answer: '', status: 'Regenerating…' };
-          case 'final': return { ...turn, answer: event.answer, citations: event.citations,
-            final: true, status: 'Answer complete' };
-          case 'trace': return { ...turn, calls: event.calls };
-          case 'rejected': return { ...turn, answer: '', error: event.message,
-            rejected: true, status: '問題過長，請縮短問題', final: false };
-          case 'error': return { ...turn, answer: '', error: event.message, status: 'Answer failed', final: false };
-          default: return turn;
-        }
-      }));
+      }), event => {
+        if (event.type === 'rejected') setQuestion(askedQuestion);
+        updateTurn(id, turn => {
+          switch (event.type) {
+            case 'plan': return { ...turn, plan: event, status: '檢索' };
+            case 'retrieval': return { ...turn, chunks: event.chunks, status: '思考中' };
+            case 'citation_map': return { ...turn, citations: event.citations };
+            case 'delta': return { ...turn, answer: turn.answer + event.text, status: '回答中 · 暫定' };
+            case 'retry': return { ...turn, answer: '', status: 'Regenerating…' };
+            case 'final': return { ...turn, answer: event.answer, citations: event.citations,
+              final: true, status: 'Answer complete' };
+            case 'trace': return { ...turn, calls: event.calls };
+            case 'rejected': return { ...turn, answer: '', error: event.message,
+              rejected: true, status: '問題過長，請縮短問題', final: false };
+            case 'error': return { ...turn, answer: '', error: event.message, status: 'Answer failed', final: false };
+            default: return turn;
+          }
+        });
+      });
     } catch (error) {
       updateTurn(id, turn => ({ ...turn, answer: turn.final ? turn.answer : '', error: message(error), status: 'Connection interrupted' }));
     } finally { setBusy(false); }
@@ -97,7 +100,7 @@ export function App() {
     <section className="conversation" aria-label="Conversation">
       {!turns.length && <p className="empty">{document ? 'Your Document is ready. What would you like to know?' : 'Questions will be available when your Document is ready.'}</p>}
       {turns.map(turn => <article key={turn.id}>
-        <h2>{turn.question}</h2>
+        <h2>{turn.rejected ? '問題過長' : turn.question}</h2>
         <p className={turn.final ? 'status' : 'status provisional'} role="status">{turn.status}</p>
         <Answer text={turn.answer} citations={turn.citations} onSource={citation => void showSource(citation)} />
         {turn.error && <div className="error" role="alert"><p>{turn.error}</p>

@@ -15,7 +15,7 @@ export async function consumeEvents(response: Response, onEvent: (event: Event) 
     const event = JSON.parse(data) as Event;
     const name = lines.find(line => line.startsWith('event:'))?.slice(6).trim();
     if (name && name !== event.type) throw new Error('Inconsistent event response.');
-    if (['final', 'ready', 'error'].includes(event.type)) terminal = true;
+    if (['final', 'ready', 'error', 'rejected'].includes(event.type)) terminal = true;
     onEvent(event);
   };
   try {

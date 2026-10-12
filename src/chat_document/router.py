@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from .events import DeltaEvent, PlanEvent, TraceEvent
 from .llm_gateway import LLMGateway
 from .models import ConversationTurn, LLMCallTrace
+from .policy import QUESTION_TOKEN_LIMIT
 from .tokens import TOKENIZER, count_tokens, encode
 
 SYSTEM_PROMPT = """Plan how to answer a question about ONE uploaded Document.
@@ -65,12 +66,13 @@ class Router:
             plan = RouterPlan.model_validate_json(text)
             if (
                 not plan.standalone_question.strip()
-                or count_tokens(plan.standalone_question) > 1000
+                or count_tokens(plan.standalone_question) > QUESTION_TOKEN_LIMIT
             ):
                 raise ValueError("Invalid Standalone Question")
             if plan.question_type == "Synthesis":
                 if not 2 <= len(plan.sub_queries) <= 5 or any(
-                    not query.strip() or count_tokens(query) > 1000 for query in plan.sub_queries
+                    not query.strip() or count_tokens(query) > QUESTION_TOKEN_LIMIT
+                    for query in plan.sub_queries
                 ):
                     raise ValueError("Invalid Sub-queries")
             elif plan.sub_queries:
