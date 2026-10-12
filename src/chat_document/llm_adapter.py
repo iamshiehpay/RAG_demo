@@ -18,6 +18,7 @@ class LLMRequest:
     num_predict: int
     estimated_prompt_tokens: int
     format: dict | None = None
+    call_type: str = ""
 
 
 @dataclass(frozen=True)

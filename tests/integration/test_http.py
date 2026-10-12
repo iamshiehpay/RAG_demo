@@ -8,7 +8,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import LLMFrame, ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 
-from .fixtures import text_pdf
+from .fixtures import structured_pdf, text_pdf
 
 
 def events(response):
@@ -35,6 +35,18 @@ def test_upload_http_emits_ready_and_serves_committed_frontend():
         missing = client.get("/api/sources/unknown-id")
         assert missing.status_code == 404
         assert missing.json()["detail"] == "Source not found."
+
+
+def test_default_app_reads_chunk_size_from_environment(monkeypatch):
+    # The real factory/Embedder path is exercised; upload does not call the cloud LLM.
+    monkeypatch.setenv("CHUNK_TOKEN_TARGET", "35")
+    monkeypatch.setenv("LOOKUP_TOP_K", "1")
+    with TestClient(create_app()) as client:
+        result = events(
+            client.post("/api/documents", files={"document": ("structure.pdf", structured_pdf())})
+        )
+        assert result[-1]["type"] == "ready"
+        assert result[-1]["chunk_count"] == 5
 
 
 def test_ask_http_sse_order_and_citation_source():

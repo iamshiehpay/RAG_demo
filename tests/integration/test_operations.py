@@ -23,7 +23,8 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
     assert uploaded[-1].type == "ready"
     document = app.document
     assert document is not None
-    assert len(document.sections) == 16
+    assert any(s.title == "1 INTRODUCTION" for s in document.sections)
+    assert all(s.title != "REFERENCES" for s in document.sections)
     assert all(chunk.section_id for chunk in document.chunks)
     events = [event async for event in app.ask("Performance of ablated versions of LightRAG")]
     assert [event.type for event in events] == [

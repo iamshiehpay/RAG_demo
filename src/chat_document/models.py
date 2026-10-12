@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 FallbackReason = Literal["length", "invalid_json", "invalid_plan", "missing_rewrite"]
 
@@ -13,11 +13,21 @@ class ConversationTurn(BaseModel):
 
 
 class Section(BaseModel):
+    """A heading and its direct text, including heading-only parent metadata.
+
+    Sections with zero Chunks are excluded from Summary Tree input; builders
+    must skip them and summarize only Sections containing source Chunks.
+    """
+
     id: str
     title: str
     page_start: int
     page_end: int
     paragraphs: list[str]
+    # Parallel to paragraphs; optional so callers constructing #01 Sections remain compatible.
+    paragraph_pages: list[tuple[int, int]] = Field(default_factory=list)
+    is_appendix: bool = False
+    is_virtual: bool = False
 
 
 class Chunk(BaseModel):

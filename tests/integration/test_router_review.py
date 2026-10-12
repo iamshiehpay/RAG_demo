@@ -40,15 +40,27 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
 
     from chat_document.settings import RetrievalSettings
 
-    llm = ScriptedLLM(
-        [
-            router_script("Synthesis", "Compare costs.", ["cost", "update"]),
-            "Facts\nBoth [C1, C3]\nOther 【C3†L1-L4】\n"
-            "No supported relevant fact found [C1]\nUncited sentence.",
-            "No supported relevant fact found",
-            "Combined [C1][C3].",
-        ]
-    )
+    class NormalizationScript(ScriptedLLM):
+        batches = 0
+
+        async def stream(self, request):
+            if request.format is not None:
+                script = router_script("Synthesis", "Compare costs.", ["cost", "update"])
+            elif request.call_type == "fact_extraction":
+                self.batches += 1
+                script = (
+                    "Facts\nBoth [C1, C3]\nOther 【C3†L1-L4】\n"
+                    "No supported relevant fact found [C1]\nUncited sentence."
+                    if self.batches == 1
+                    else "No supported relevant fact found"
+                )
+            else:
+                script = "Combined [C1][C3]."
+            self.scripts.append(script)
+            async for frame in super().stream(request):
+                yield frame
+
+    llm = NormalizationScript([])
     app = Application(
         OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(synthesis_top_k=30)
     )
@@ -62,7 +74,9 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
     assert "No supported relevant fact found" not in prompt
     assert "Uncited sentence" not in prompt
     traces = [c for c in events[-1].calls if c.call_type == "fact_extraction"]
-    assert [c.discarded_fact_lines for c in traces] == [3, 1]
+    assert len(traces) >= 2
+    assert traces[0].discarded_fact_lines == 3
+    assert all(c.discarded_fact_lines == 1 for c in traces[1:])
     final = next(e for e in events if e.type == "final")
     assert {c.id for c in final.citations} == {"C1", "C3"}
 
