@@ -1,13 +1,15 @@
-import { useCallback, useRef, useState } from 'react';
-import type { FormEvent } from 'react';
-import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
+import { useCallback, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
-import { Trace } from './Trace';
+import { AnswerProcess } from './AnswerProcess';
+import { Composer } from './Composer';
+import { DocumentPane } from './DocumentPane';
+import { EMBEDDING_MODEL, LLM_MODEL } from './models';
 import { consumeEvents } from './sse';
-import { ErrorState, StageIndicator, UploadProgress } from './Shared';
+import { ErrorState, StageIndicator } from './Shared';
 import type { AskStage } from './Shared';
-import { SourceDialog } from './SourceDialog';
-import type { SummarySource } from './SourceDialog';
+import { SourcePane } from './SourcePane';
+import type { SourceContentData } from './SourcePane';
 
 interface Turn {
   id: number; question: string; answer: string; citations: Citation[];
@@ -16,10 +18,26 @@ interface Turn {
   thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; retrying: boolean;
   droppedChunkCount: number; summaryLevel: string | null;
 }
-const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
+const message = (error: unknown) => error instanceof Error ? error.message : '請求失敗，請重試。';
 async function responseMessage(response: Response, fallback: string) {
   const payload = await response.json().catch(() => null) as { detail?: unknown } | null;
   return typeof payload?.detail === 'string' ? payload.detail : fallback;
+}
+
+function useMediaQuery(query: string) {
+  return useSyncExternalStore(
+    notify => { const list = window.matchMedia(query); list.addEventListener('change', notify); return () => list.removeEventListener('change', notify); },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
+}
+
+function PaneIcon({ side, open }: { side: 'left' | 'right'; open: boolean }) {
+  // The chevron points toward where the pane will go: an open pane collapses toward its own edge.
+  const chevron = side === 'left' ? (open ? 'M15 10l-2 2 2 2' : 'M13 10l2 2-2 2') : (open ? 'M9 10l2 2-2 2' : 'M11 10l-2 2 2 2');
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="16" rx="2" /><path d={side === 'left' ? 'M9 4v16' : 'M15 4v16'} /><path d={chevron} />
+  </svg>;
 }
 
 export function App() {
@@ -31,28 +49,47 @@ export function App() {
   const [uploadStage, setUploadStage] = useState<StageEvent | null>(null);
   const [uploadEventsUrl, setUploadEventsUrl] = useState('');
   const [error, setError] = useState('');
-  const [source, setSource] = useState<Chunk | SummarySource | null>(null);
-  const [sourceOpen, setSourceOpen] = useState(false);
+  const [source, setSource] = useState<SourceContentData | null>(null);
   const [sourceLoading, setSourceLoading] = useState(false);
   const [sourceError, setSourceError] = useState('');
-  const [sourceKind, setSourceKind] = useState<'Chunk' | 'Section Summary'>('Chunk');
+  const [sourceCitation, setSourceCitation] = useState('');
   const sourceRequest = useRef(0);
-  const closeSource = useCallback(() => {
+  // null = follow the screen-size default; a boolean records the person's own choice.
+  const [leftPref, setLeftPref] = useState<boolean | null>(null);
+  const [rightPref, setRightPref] = useState<boolean | null>(null);
+  const narrow = useMediaQuery('(max-width: 900px)');
+  const roomy = useMediaQuery('(min-width: 1200px)');
+  const leftOpen = leftPref ?? (narrow ? !document : true);
+  const rightOpen = rightPref ?? (narrow ? false : roomy);
+
+  const clearSource = useCallback(() => {
     sourceRequest.current++;
-    setSourceOpen(false); setSourceLoading(false);
+    setSource(null); setSourceError(''); setSourceLoading(false); setSourceCitation('');
   }, []);
   const updateTurn = (id: number, update: (turn: Turn) => Turn) => setTurns(previous => previous.map(
     turn => turn.id === id ? update(turn) : turn,
   ));
 
+  // The conversation scrolls on its own; follow new content unless the person scrolled up.
+  const scroller = useRef<HTMLDivElement>(null);
+  const following = useRef(true);
+  const onScroll = () => {
+    const element = scroller.current;
+    if (element) following.current = element.scrollHeight - element.scrollTop - element.clientHeight < 120;
+  };
+  useLayoutEffect(() => {
+    const element = scroller.current;
+    if (element && following.current) element.scrollTop = element.scrollHeight;
+  }, [turns]);
+
   async function upload(file: File) {
-    closeSource(); setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
+    clearSource(); setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
     const form = new FormData(); form.append('document', file);
     let eventsUrl = '';
     try {
       const response = await fetch('/api/documents', { method: 'POST', body: form });
       if (!response.ok) throw new Error(await responseMessage(response,
-        `Upload failed (${response.status}). Please retry.`));
+        `上傳失敗（${response.status}），請重試。`));
       const accepted = await response.json() as { job_id: string; events_url: string };
       eventsUrl = accepted.events_url;
       setUploadEventsUrl(eventsUrl);
@@ -68,14 +105,14 @@ export function App() {
     if (!response.ok) {
       setUploading(false); setUploadEventsUrl(''); setUploadStage(null);
       if (response.status === 404) {
-        setDocument(null); setTurns([]); setQuestion(''); setSource(null); closeSource();
+        setDocument(null); setTurns([]); setQuestion(''); clearSource();
       }
-      throw new Error(`${await responseMessage(response, 'Upload progress is unavailable.')} Choose the PDF again.`);
+      throw new Error(`${await responseMessage(response, '無法取得上傳進度。')} 請重新選擇 PDF。`);
     }
     await consumeEvents(response, event => {
       if (event.type === 'stage') setUploadStage(event);
       else if (event.type === 'ready') {
-        setDocument(event); setTurns([]); setSource(null); closeSource(); setQuestion(''); setError('');
+        setDocument(event); setTurns([]); clearSource(); setQuestion(''); setError('');
         setUploading(false); setUploadEventsUrl('');
       } else if (event.type === 'error') {
         setError(event.message); setUploading(false); setUploadEventsUrl('');
@@ -94,7 +131,8 @@ export function App() {
     if (!askedQuestion.trim() || !document || busy || uploading) return;
     if (retryId !== undefined && turns.at(-1)?.id !== retryId) return;
     const id = retryId ?? Date.now();
-    setBusy(true); setError(''); closeSource(); setSource(null); setQuestion('');
+    following.current = true;
+    setBusy(true); setError(''); setQuestion('');
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
       thinking: '', unverified: [], invalidCitationCount: 0, retrying: false,
@@ -137,12 +175,12 @@ export function App() {
 
   const showSource = useCallback(async (citation: Citation) => {
     const request = ++sourceRequest.current;
-    setSource(null); setSourceError(''); setSourceLoading(true); setSourceOpen(true);
-    setSourceKind(citation.id.startsWith('S') ? 'Section Summary' : 'Chunk');
+    setSource(null); setSourceError(''); setSourceLoading(true); setSourceCitation(citation.id);
+    setRightPref(true);
     try {
       const response = await fetch(`/api/sources/${encodeURIComponent(citation.source_id)}`);
-      if (!response.ok) throw new Error(response.status === 404 ? 'Source not found.' : 'Could not load source.');
-      const content = await response.json() as Chunk | SummarySource;
+      if (!response.ok) throw new Error(response.status === 404 ? '找不到這段來源。' : '無法載入來源，請再點一次。');
+      const content = await response.json() as SourceContentData;
       if (request === sourceRequest.current) setSource(content);
     } catch (error) {
       if (request === sourceRequest.current) setSourceError(message(error));
@@ -151,61 +189,69 @@ export function App() {
     }
   }, []);
 
-  function submit(event: FormEvent) { event.preventDefault(); void ask(question); }
+  const unavailableReason = uploading ? '文件處理中，完成後即可提問。' : !document ? '請先在「文件」欄上傳有文字層的 PDF，完成後即可提問。' : busy ? '回答產生中，請稍候。' : '回答以文件為依據；點回答中的編號可查看原文。';
+  const placeholder = uploading ? '文件處理中…' : !document ? '上傳文件後即可提問' : busy ? '回答產生中…' : '輸入問題，Enter 送出、Shift+Enter 換行';
+  const disabled = !document || busy || uploading;
+  const status = uploading ? '處理中' : document ? '可提問' : '尚未上傳';
 
-  const unavailableReason = uploading ? '文件處理中，完成後即可提問。' : !document ? '請先上傳有文字層的 PDF，完成後即可提問。' : busy ? '回答產生中，請稍候。' : '';
-
-  return <main>
-    <header className="page-header"><div><p className="eyebrow">Chat with Document</p><h1>與文件對話</h1></div>
-      <p className="header-note">讓每個回答，<br />都有出處可循。</p></header>
-    <div className="page-layout">
-      <aside className="document-sidebar">
-        <section className="upload" aria-label="Upload Document">
-          <p className="eyebrow">01 / Document</p><h2>閱讀的起點</h2>
-          <p className="muted">上傳一份 PDF，從文件內容開始提問。</p>
-          <label className="upload-label" htmlFor="document">選擇 PDF Document</label>
-          <input id="document" type="file" accept="application/pdf,.pdf" disabled={busy || uploading}
-            onChange={event => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ''; }} />
-          <p className="file-help">支援有文字層的 PDF</p>
-          <UploadProgress stage={uploadStage} busy={uploading} ready={!!document} name={document?.name} />
-          {document && !uploading && <p className="document-meta">{document.chunk_count} Chunks · 可提問</p>}
-          {uploading && !busy && uploadEventsUrl && <button className="secondary-button" onClick={() => void reconnectUpload()}>Reconnect upload progress</button>}
-          {error && <ErrorState message={error} />}
-        </section>
-        <section className="document-overview" aria-label="Document Summary" tabIndex={0}>
-          <p className="eyebrow">Document Summary</p><h2>文件概覽</h2>
-          {document?.document_summary ? <Answer text={document.document_summary} citations={[]} onSource={() => {}} /> :
-            <p className="muted">{document ? '此版本尚未提供文件概覽。' : '處理完成後，文件概覽會顯示在這裡。'}</p>}
-        </section>
-      </aside>
-      <div className="reading-workspace">
-        <section className="conversation" aria-label="Conversation">
-          <div className="section-heading"><p className="eyebrow">02 / Conversation</p><span className="margin-heading">Citation / 來源旁註</span></div>
-          {!turns.length && <div className="empty"><h2>{document ? '想從哪個問題開始？' : '先讀文件，再循證據。'}</h2>
-            <p>{document ? '提問後，回答與來源會並列呈現。點一下 Citation，即可核對原文。' : '完成上傳後即可提問。回答的 Citation 會放在頁邊，方便一邊閱讀、一邊查證。'}</p></div>}
-          {turns.map((turn, i) => <article key={turn.id}>
-            <p className="turn-number">Question {String(i + 1).padStart(2, '0')}</p><h2 className="question-heading">{turn.rejected ? '問題過長' : turn.question}</h2>
-            <StageIndicator stage={turn.stage} />
-            <Answer text={turn.answer} citations={turn.citations} provisional={!turn.final && !turn.error && !turn.rejected}
-              unverified={turn.unverified} onSource={showSource} />
-            {turn.error && <ErrorState message={turn.error} disabled={busy || uploading}
-              onRetry={!turn.rejected && turn.id === turns.at(-1)?.id ? () => void ask(turn.question, turn.id) : undefined} />}
-            {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0 || turn.thinking) && <Trace chunks={turn.chunks}
-              calls={turn.calls} plan={turn.plan} thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount}
-              droppedChunkCount={turn.droppedChunkCount} summaryLevel={turn.summaryLevel} />}
-          </article>)}
-        </section>
-        <form className="composer" onSubmit={submit}>
-          <label htmlFor="question">你的問題 <span className="label-note">Question</span></label>
-          <textarea id="question" rows={3} value={question} onChange={event => setQuestion(event.target.value)}
-            aria-describedby={unavailableReason ? 'question-help' : undefined} disabled={!document || busy || uploading}
-            placeholder={document ? 'Ask about your Document…' : 'Upload a Document first'} />
-          <div className="composer-footer"><p id="question-help" className="muted">{unavailableReason || '回答以文件為依據；點 Citation 查看原文。'}</p>
-            <button type="submit" disabled={!document || busy || uploading || !question.trim()}>{busy && document && !uploading ? '回答中…' : '提問 · Ask'}</button></div>
-        </form>
+  return <div className="app">
+    <header className="app-header">
+      <div className="header-title">
+        <h1>與文件對話</h1>
+        <span className="eyebrow">Chat with Document</span>
+        <span className="header-status" role="status">{document ? `${document.name} · ${status}` : status}</span>
       </div>
+      <div className="header-right">
+        <span className="header-models">回答模型 {LLM_MODEL} · 檢索模型 {EMBEDDING_MODEL}</span>
+        <div className="header-toggles">
+          <button className="secondary-button" aria-expanded={leftOpen} onClick={() => setLeftPref(!leftOpen)}>文件</button>
+          <button className="secondary-button" aria-expanded={rightOpen} onClick={() => setRightPref(!rightOpen)}>來源</button>
+        </div>
+      </div>
+    </header>
+    <div className="workspace">
+      {leftOpen ? <aside className="pane pane-left" aria-label="文件" data-open="true">
+        <div className="pane-head"><span className="label">文件</span>
+          <button className="icon-button" aria-label="收合文件欄" onClick={() => setLeftPref(false)}><PaneIcon side="left" open /></button></div>
+        <DocumentPane document={document} uploading={uploading} busy={busy} uploadStage={uploadStage}
+          canReconnect={uploading && !busy && !!uploadEventsUrl} error={error}
+          onUpload={file => void upload(file)} onReconnect={() => void reconnectUpload()} />
+      </aside> : <aside className="rail rail-left" aria-label="文件（已收合）" data-open="false">
+        <button className="icon-button" aria-label="展開文件欄" onClick={() => setLeftPref(true)}><PaneIcon side="left" open={false} /></button>
+      </aside>}
+
+      <main className="chat">
+        <div className="messages" ref={scroller} onScroll={onScroll} role="log" aria-label="對話">
+          <div className="messages-inner">
+            {!turns.length && <div className="empty"><h2>{document ? '想從哪個問題開始？' : '先上傳文件，再提問。'}</h2>
+              <p>{document ? '提問後，回答裡的來源編號可以點開，在右側核對原文。' : '在左側「文件」欄選擇一份有文字層的 PDF，處理完成後即可提問。'}</p>
+              {!document && !leftOpen && <button className="secondary-button" onClick={() => setLeftPref(true)}>開啟「文件」欄</button>}</div>}
+            {turns.map(turn => <article className="turn" key={turn.id}>
+              <div className="user-bubble">{turn.rejected ? '問題過長（未送出）' : turn.question}</div>
+              <div className="assistant">
+                <StageIndicator stage={turn.stage} />
+                <Answer text={turn.answer} citations={turn.citations} provisional={!turn.final && !turn.error && !turn.rejected}
+                  unverified={turn.unverified} onSource={showSource} />
+                {turn.error && <ErrorState message={turn.error} disabled={busy || uploading}
+                  onRetry={!turn.rejected && turn.id === turns.at(-1)?.id ? () => void ask(turn.question, turn.id) : undefined} />}
+                {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0 || turn.thinking) && <AnswerProcess chunks={turn.chunks}
+                  calls={turn.calls} plan={turn.plan} thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount}
+                  droppedChunkCount={turn.droppedChunkCount} summaryLevel={turn.summaryLevel} />}
+              </div>
+            </article>)}
+          </div>
+        </div>
+        <Composer value={question} onChange={setQuestion} onSubmit={() => void ask(question)} disabled={disabled}
+          canSubmit={!disabled && !!question.trim()} busy={busy} help={unavailableReason} placeholder={placeholder} />
+      </main>
+
+      {rightOpen ? <aside className="pane pane-right" aria-label="來源" data-open="true">
+        <div className="pane-head"><span className="label">來源</span>
+          <button className="icon-button" aria-label="收合來源欄" onClick={() => setRightPref(false)}><PaneIcon side="right" open /></button></div>
+        <SourcePane source={source} citationId={sourceCitation} loading={sourceLoading} error={sourceError} />
+      </aside> : <aside className="rail rail-right" aria-label="來源（已收合）" data-open="false">
+        <button className="icon-button" aria-label="展開來源欄" onClick={() => setRightPref(true)}><PaneIcon side="right" open={false} /></button>
+      </aside>}
     </div>
-    {sourceOpen && <SourceDialog source={source} kind={sourceKind} loading={sourceLoading}
-      error={sourceError} onClose={closeSource} />}
-  </main>;
+  </div>;
 }

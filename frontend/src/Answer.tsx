@@ -1,28 +1,12 @@
 import { useMemo } from 'react';
-import type { ReactNode } from 'react';
 import Markdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { decodeString } from 'micromark-util-decode-string';
 import { visit } from 'unist-util-visit';
 import type { Root, RootContent as MarkdownContent, PhrasingContent, Parents } from 'mdast';
-import type { Element, RootContent } from 'hast';
 import type { Citation, UnverifiedSpan } from './events';
 import { pageRange, UnverifiedMark } from './Shared';
-
-export function MarginCitation({ citation, onSource }: { citation: Citation; onSource: (citation: Citation) => void }) {
-  return <button className="margin-citation" onClick={event => { event.currentTarget.focus(); onSource(citation); }}
-    aria-label={`View ${citation.id}, ${pageRange(citation)}, ${citation.section}`}>
-    <span className="citation-location">[{citation.id}] · {pageRange(citation)}</span>
-    <span className="citation-section">{citation.section}</span>
-  </button>;
-}
-
-function nodeText(node: Element | RootContent | undefined): string {
-  if (!node) return '';
-  if (node.type === 'text') return node.value;
-  return 'children' in node ? node.children.map(nodeText).join('') : '';
-}
 
 /** Align raw Markdown positions with a decoded text node without moving sentence marks. */
 function sourceValueOffsets(source: string, value: string): number[] | undefined {
@@ -82,7 +66,7 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
       for (const [node, { parent, marks }] of targets) {
         const marker = (): PhrasingContent => ({ type: 'link', url: '#unverified',
           data: { hProperties: { 'data-unverified': true } },
-          children: [{ type: 'text', value: '未驗證 · Unverified' }] });
+          children: [{ type: 'text', value: '未驗證' }] });
         const replacements: MarkdownContent[] = [];
         const from = node.position?.start.offset ?? 0;
         const to = node.position?.end.offset ?? from;
@@ -131,26 +115,16 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
     };
   }
 
-  function row(children: ReactNode, node?: Element) {
-    const content = nodeText(node);
-    const ids = [...new Set(Array.from(content.matchAll(/\[([CS]\d+)\]/g), match => match[1]))];
-    const notes = ids.flatMap(id => byId.has(id) ? [byId.get(id)!] : []);
-    return <div className="answer-row"><div className="answer-paragraph">{children}</div><aside className="margin-citations" aria-label="Citation margin notes">
-      {notes.map(citation => <MarginCitation key={citation.id} citation={citation} onSource={onSource} />)}
-    </aside></div>;
-  }
-
-  // Stable renderers keep Citation triggers mounted during source-dialog updates.
+  // Stable renderers keep Citation triggers mounted while the source pane updates.
   const components = useMemo<Components>(() => ({
-      p: ({ children, node }) => row(children, node),
-      li: ({ children, node }) => <li>{node?.children.some(child => child.type === 'element' && child.tagName === 'p')
-        ? children : row(children, node)}</li>,
-      table: ({ children, node }) => row(<div className="source-table-scroll"><table>{children}</table></div>, node),
+      table: ({ children }) => <div className="table-scroll" tabIndex={0} role="region" aria-label="表格，可左右捲動">
+        <table>{children}</table></div>,
       a: ({ children, href, node }) => {
         if (node?.properties['data-unverified']) return <UnverifiedMark />;
         const citation = href?.startsWith('#citation-') ? byId.get(href.slice(10)) : undefined;
         return citation ? <button className="inline-citation" onClick={event => { event.currentTarget.focus(); onSource(citation); }}
-          aria-label={`View ${citation.id}, ${pageRange(citation)}, ${citation.section}`}>{children}</button> :
+          aria-label={`查看來源 ${citation.id}，${pageRange(citation)}，${citation.section}`}
+          title={`${pageRange(citation)} · ${citation.section}`}>{citation.id}</button> :
           <a href={href} rel="noreferrer">{children}</a>;
       },
     }), [citations, onSource, unverified]);
