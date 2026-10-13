@@ -16,8 +16,8 @@
 
 - Task outputs live under `/private/tmp/claude-501/-Users-shiehpay-Desktop-resume-rag/206d3598-8358-4a3e-98df-6b18252ec1a4/tasks/`. They are temporary files and are not committed.
 - The user's later conversation continued in transcript `b9ac5768-6334-4812-bb21-2905b25bf430`.
-- **Effort:** the transcript does not echo effort. The only evidence for `high` is the spawn parameter.
-- **Permissions:** subagents inherit levi's session permission mode. Their briefs added three limits:
+- **Effort (Main independently verified):** response metadata contains `effort` and `perTurnEffort`: all 207 implementer responses are `high`; all 63 first-review and 46 scoped-review responses are `medium`. The earlier summary incorrectly said effort was not echoed.
+- **Permissions:** parent human-message metadata during this work reports `permissionMode=auto`; child outputs do not contain a separate permission field. Inheritance is reported by the runtime, not independently echoed in each child. Their briefs added three limits:
   - work only inside the worktree;
   - use ports 8121 (implementer) and 8122 (reviewers); never touch 8101;
   - make no commits outside `lat/12-chat-layout`.
@@ -101,3 +101,7 @@ All six findings were addressed. Finding 6 (the backend warning) is out of scope
 - Temp PDF copies under `/tmp` were used for agent-browser uploads.
 - Servers on 8121 and 8122 are stopped. 8101 (the user's) was never touched.
 - The mockup lives in `.lat/layout-mockup/` (ignored).
+
+## Main integration audit
+
+Main directly verified D13 human UUID72ef3e0c (15:07:34Z) accepting the Opus5.5 review and D15 UUID5e4e0e03 (15:11:33Z) approving only two AGENTS table-cell edits. Candidate af6b9f3 exists, is clean and descends from b956247; its production tree is unchanged from reviewed1c274e4. Main read both review reports/path coverage, counted36 final UI runs with1289 passing assertions and inspected final desktop/narrow evidence. Announced then ff-only merged af6b9f3. Integrated fullsuite and D09 human UI checks remain separate gates.

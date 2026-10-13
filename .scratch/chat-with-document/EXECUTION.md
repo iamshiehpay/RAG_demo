@@ -2,7 +2,7 @@
 
 Status: in-progress
 
-依據：`PRD.md`（ready-for-agent）、`issues/01`～`11`、`AGENTS.md`（數值的唯一來源）、`CONTEXT.md`（術語）。
+依據：`PRD.md`（ready-for-agent）、`issues/01`～`13`、`AGENTS.md`（數值的唯一來源）、`CONTEXT.md`（術語）。
 需求與 Spec 已由使用者確認，本輪略過討論與重寫 Spec，只依既有 issues 推進。
 
 **現行驗收／流程：D05（2026-10-13 15:43 真人核准，Main直接核對原對話）。** #10品質調整到17:45；#11調參＋最終eval時限為18:33:01–21:33:01（已正式開工）。Q1–Q3與第二份文件每題N=3、報告每fact通過率與失敗原因，含forbidden的品質缺陷不阻擋交付。10K、Citation、固定拒答、確定性測試、獨立Review維持。剩餘QA只在#10合併後及交付前；改查commit與測試，不逐檔byte/hash比對；新證據保留結論與最終run，既有歷史保留。下方歷史嚴格品質gate／每trial保存／byte比對要求均以D05覆蓋。
@@ -35,7 +35,9 @@ Status: in-progress
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | done（ca66429＋#09整合3432aa09；Review APPROVE；QA265tests／R01–R06複驗PASS；品質仍#11）|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | done（3bb0c64／Main7cf9185；限定Review兩軸PASS／整合316PASS／獨立QA功能PASS；N3品質FAIL與已知限制按D05/D06保留） |
-| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09人工QA待回） |
+| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL，D14待決） |
+| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | in progress（af6b9f3已整合；D13/D15已直接核准，完整測試／新版人工QA接續） |
+| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | in progress（D14 B；soho實作actualGPT6.1 high已核對，provider等#12suite） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -47,7 +49,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷作為已知限制整合；D09 最終人工 QA 結果待回。D11 已收到排版方向紀錄，實作時間／負責人仍待真人決定，不在本次收尾中排程。
+D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷作為已知限制整合；D09真人回報其餘正常、Q3短表格可接受；A9限制題已補充「回答找不到文件」，正做有界分類。D11/D12已核准今晚由levi協調#12前端改版，nova負責整合；D13僅Reviewer模型替代待確認；D14是A9兩項新觀察的處置，未答前不新增後端品質修正。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -285,3 +287,15 @@ D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷�
 - #11 Main db64d84 整合驗證：327 passed／3 eval deselected／zero skipped／263.68s；Main Python與imports、500/dense/5-3-2/medium/4及58005fcc pipeline已核對。兩份named current cache已移交Main `.cache/`，公開上傳均Ready、0 LLM/embedding/guarded calls。已核對完整log及環境／cache證據；不重跑N3、不把D10缺陷改判PASS。D09人工網站QA尚未執行，接續HTTP readiness與已合併資源收尾。
 
 - #11 資源收尾完成：meme/Bela recorded tags 已停止，已合併50eab20 worktree及分支安全移除；8份歷史cache與9份工作context保留在ignored archive，開發暫存已移至Trash。Main兩份current cache、使用者8101服務、Ollama及無關8201保留。首頁／JS／CSS／字型HTTP200僅證明可載入，最終人工QA仍待D09回覆，#11維持ready-for-human；D11未派工。
+
+- Main同session恢復：native01a134c5，latestturn01a135a6-f96a-76a2-91d3-87c771720414 actualgpt-6-astra/high/workspace-write/on-request已核對。#11整合與清理checkpoint b956247，無remote故push未成功。D11/D12已直接核對真人原文，#12正式建票；獨立前端實作由levi協調，Main不重複派工。D13未答，僅擋未核准Reviewer替代。D09原版人工回饋已直接核對user msg_01a13599及msg_01a1359e：Q3短表格接受、其餘正常；A9回答不出來尚無症狀細節，不自行歸因或改判全PASS。
+
+- #12中間候選d7fd1d7（7441dbb／0e3619d／d7fd1d7）已由Main從Git核對存在且worktree clean，前端驗證證據已保存；levi尚未正式交付。native14:30顯示已啟動opus別名Reviewer，D13尚無直接真人答覆，Main已請levi核對／取得核准；不採未核准Review合併。既有Sonnet實作不阻擋，actual child metadata及最終修正待回。原版A9症狀仍待答，不重複提問或重跑品質eval。
+
+- A9真人補充msg_01a135ba（14:46:13Z）直接核對為「回答找不到文件」，非已確認固定拒答；依既有diagnosing-bugs流程放行獨立nova-a9-dino在b956247分支做有界分類／重現，actualGPT6.1high/wswrite/onrequest已核對。不更動Main／8101、不重開N3或消融品質調整；#12／D13獨立推進。
+
+- A9有界診斷完成：真人精確回答「文件中未提及」與9段Trace已核對；p.8 §4.3原文雜訊警語可支持回答，原拒答FAIL、原因UNPROVEN。一次獨立無歷史重跑未重現拒答，另發現系統重建警告被當成論文限制，grounding FAIL；2calls守10K、無source改動。報告已保存在docs/verification/ticket-11/manual-a9/；8330已關、工作樹clean。D14已先記pending並向真人詢問接受兩項明列限制或一輪有界修正；#12獨立推進，D13仍待答。
+
+- D14 B真人「好，改」（msg_01a135cc／15:06:09Z）已直接核對preceding單一提案，核准一輪有界A9修正與回歸／真實模型／獨立Review；#13建票，不改消融、不寫死答案、不擴大調參。D13仍pending，不由本次答覆推定Reviewer替代同意。
+
+- #12 D13/D15真人已直接核對，Main讀完整兩輪Review／paths並核對actualSonnet5.5high、Opus5.5medium及parentauto。af6b9f3已公告後ff-only整合、production與已審1c274e4不變；Main文件與A9診斷隨此checkpoint保存，接續一次Main完整suite及D09新版人工QA。#13freshsoho actual01a135d1-74a6 GPT6.1high/wswrite/onrequest已核對並放行local工作，provider暫候。

@@ -30,8 +30,8 @@
 | Summary | 上傳時就建好 Summary Tree；Global 問題依其中一層產生回答，細節見下方的「摘要規則」 | Q1 必須涵蓋全文 |
 | 問題分流 | 用一次 LLM 呼叫（router）同時產出三樣東西：Question Type（Global / Synthesis / Lookup）、Standalone Question、Sub-queries（只有 Synthesis 需要）。Router 用 `think="low"`；prompt 規定「不確定是 Lookup 還是 Synthesis 時，選 Synthesis」；JSON 輸出壞掉時退回 Lookup。`spikes/think_level_probe.py` 的 12 題要轉成 router 的回歸測試 | 關鍵字規則判斷不了換句話說的問句（例如「這篇在講什麼？」）；把追問改寫合併在同一次呼叫，多輪對話不必多花一次呼叫；`low` 最快、token 用量最穩定，而把 Lookup 誤判成 Synthesis 只是多檢索一些，反方向誤判則會漏掉散在其他 Section 的內容 |
 | 後端 / 前端 | Python + FastAPI；前端用 React + Vite + TypeScript。build 好的 `frontend/dist/` 一起 commit，由 FastAPI 直接提供；開發時由 Vite 開發伺服器把 `/api` 轉送給 FastAPI。設計前先載入 `web-design-engineer` skill | React 的元件寫法讓多狀態的介面（串流、引用、Trace、上傳進度）比較好維護，AI 寫 React 也最熟練；TypeScript 能抓出前後端資料格式對不上的問題。commit `dist/` 是為了讓評審只裝 Python 就能跑，**所以前端改完要重新 build** |
-| 視覺設計 | `web-design-engineer` skill 的 `tufte-dataink` recipe：Citation 放在頁邊旁註；Trace 用迷你長條顯示每次 LLM 呼叫的 token 用量，以 10K 為滿格。因為要分享螢幕 demo，內文放大到 15～16px；中文字型用 Noto Serif TC，字型檔放進 repo；互動只保留功能必要的部分，不加裝飾性動畫 | 這個產品的核心是「拿得出證據的回答」，Tufte 的風格就是為了呈現證據而設計；而且跟常見的深色 AI 聊天介面有明顯區隔。這個 recipe 本身不建議用在互動介面，所以把互動壓到最少 |
-| 串流 | 回答用 SSE 串流，依序顯示：判斷問題類型 → 檢索 → 思考中 → 回答逐字出現。開始產生回答前，先傳「編號 → 頁碼與 Section」對照表，讓 `[C3]` 能即時變成可點的引用；回答結束後再送出驗證過的引用清單。模型的思考內容放在 Trace 面板，預設收合 | 不串流的話，每個問題要對著空白畫面等 5～10 秒 |
+| 視覺設計 | `web-design-engineer` skill 的 `tufte-dataink` recipe：三欄可收合：句中引用編號，點了在右欄顯示原文；Trace 用迷你長條顯示每次 LLM 呼叫的 token 用量，以 10K 為滿格。因為要分享螢幕 demo，內文放大到 15～16px；中文字型用 Noto Serif TC，字型檔放進 repo；互動只保留功能必要的部分，不加裝飾性動畫 | 這個產品的核心是「拿得出證據的回答」，Tufte 的風格就是為了呈現證據而設計；而且跟常見的深色 AI 聊天介面有明顯區隔。這個 recipe 本身不建議用在互動介面，所以把互動壓到最少 |
+| 串流 | 回答用 SSE 串流，依序顯示：判斷問題類型 → 檢索 → 思考中 → 回答逐字出現。開始產生回答前，先傳「編號 → 頁碼與 Section」對照表，讓 `[C3]` 能即時變成可點的引用；回答結束後再送出驗證過的引用清單。模型的思考內容放在「回答過程」的技術細節（開發用）裡，預設收合 | 不串流的話，每個問題要對著空白畫面等 5～10 秒 |
 
 ## 切塊規則
 
