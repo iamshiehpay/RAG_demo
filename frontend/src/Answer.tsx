@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import Markdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { decodeString } from 'micromark-util-decode-string';
 import { visit } from 'unist-util-visit';
 import type { Root, RootContent as MarkdownContent, PhrasingContent, Parents } from 'mdast';
 import type { Element, RootContent } from 'hast';
@@ -21,6 +22,32 @@ function nodeText(node: Element | RootContent | undefined): string {
   if (!node) return '';
   if (node.type === 'text') return node.value;
   return 'children' in node ? node.children.map(nodeText).join('') : '';
+}
+
+/** Align raw Markdown positions with a decoded text node without moving sentence marks. */
+function sourceValueOffsets(source: string, value: string): number[] | undefined {
+  const offsets = [0];
+  let raw = 0;
+  let rendered = 0;
+  let linePrefix = true;
+  while (raw < source.length) {
+    const reference = /^(?:\\[!-/:-@[-`{-~]|&(?:#(?:\d{1,7}|[xX][\da-fA-F]{1,6})|[\da-zA-Z]{1,31});)/.exec(source.slice(raw));
+    const token = reference?.[0] ?? (source.startsWith('\r\n', raw) ? '\r\n' : source[raw]);
+    const decoded = reference ? decodeString(token) : token === '\r\n' || token === '\r' ? '\n' : token;
+    if (value.startsWith(decoded, rendered)) {
+      for (let i = 1; i <= token.length; i++) offsets[raw + i] = rendered + decoded.length;
+      raw += token.length;
+      rendered += decoded.length;
+      if (decoded === '\n') linePrefix = true;
+      else if (!/^[ \t]*$/.test(decoded)) linePrefix = false;
+    } else if (linePrefix && /[ \t>]/.test(source[raw])) {
+      // List indentation and blockquote prefixes are absent from mdast text values.
+      offsets[++raw] = rendered;
+    } else {
+      return undefined;
+    }
+  }
+  return rendered === value.length ? offsets : undefined;
 }
 
 export function Answer({ text, citations, onSource, provisional = false, unverified = [] }: {
@@ -58,16 +85,17 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
         const replacements: MarkdownContent[] = [];
         const from = node.position?.start.offset ?? 0;
         const to = node.position?.end.offset ?? from;
-        if (node.type === 'text' && text.slice(from, to) === node.value) {
+        const valueOffsets = node.type === 'text' ? sourceValueOffsets(text.slice(from, to), node.value) : undefined;
+        if (node.type === 'text' && valueOffsets) {
           let offset = 0;
           for (const end of marks.sort((a, b) => a - b)) {
-            const next = Math.min(node.value.length, end - from);
+            const next = valueOffsets[Math.max(0, Math.min(to - from, end - from))];
             replacements.push({ type: 'text', value: node.value.slice(offset, next) }, marker());
             offset = next;
           }
           replacements.push({ type: 'text', value: node.value.slice(offset) });
         } else {
-          // Code/HTML/escaped text remains intact. Put the label beside its node,
+          // Code/HTML or unalignable text remains intact. Put the label beside its node,
           // rather than injecting Markdown into a code span, link, or table syntax.
           replacements.push(node);
           for (const _end of marks) replacements.push(parent.type === 'root'

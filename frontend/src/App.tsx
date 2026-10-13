@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import type { Chunk, Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
@@ -34,12 +34,17 @@ export function App() {
   const [sourceLoading, setSourceLoading] = useState(false);
   const [sourceError, setSourceError] = useState('');
   const [sourceKind, setSourceKind] = useState<'Chunk' | 'Section Summary'>('Chunk');
+  const sourceRequest = useRef(0);
+  const closeSource = useCallback(() => {
+    sourceRequest.current++;
+    setSourceOpen(false); setSourceLoading(false);
+  }, []);
   const updateTurn = (id: number, update: (turn: Turn) => Turn) => setTurns(previous => previous.map(
     turn => turn.id === id ? update(turn) : turn,
   ));
 
   async function upload(file: File) {
-    setSourceOpen(false); setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
+    closeSource(); setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
     const form = new FormData(); form.append('document', file);
     let eventsUrl = '';
     try {
@@ -60,12 +65,15 @@ export function App() {
     const response = await fetch(eventsUrl);
     if (!response.ok) {
       setUploading(false); setUploadEventsUrl(''); setUploadStage(null);
+      if (response.status === 404) {
+        setDocument(null); setTurns([]); setQuestion(''); setSource(null); closeSource();
+      }
       throw new Error(`${await responseMessage(response, 'Upload progress is unavailable.')} Choose the PDF again.`);
     }
     await consumeEvents(response, event => {
       if (event.type === 'stage') setUploadStage(event);
       else if (event.type === 'ready') {
-        setDocument(event); setTurns([]); setSource(null); setSourceOpen(false); setQuestion(''); setError('');
+        setDocument(event); setTurns([]); setSource(null); closeSource(); setQuestion(''); setError('');
         setUploading(false); setUploadEventsUrl('');
       } else if (event.type === 'error') {
         setError(event.message); setUploading(false); setUploadEventsUrl('');
@@ -84,7 +92,7 @@ export function App() {
     if (!askedQuestion.trim() || !document || busy || uploading) return;
     if (retryId !== undefined && turns.at(-1)?.id !== retryId) return;
     const id = retryId ?? Date.now();
-    setBusy(true); setError(''); setSourceOpen(false); setSource(null); setQuestion('');
+    setBusy(true); setError(''); closeSource(); setSource(null); setQuestion('');
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
       thinking: '', unverified: [], invalidCitationCount: 0, retrying: false,
@@ -123,14 +131,19 @@ export function App() {
   }
 
   const showSource = useCallback(async (citation: Citation) => {
+    const request = ++sourceRequest.current;
     setSource(null); setSourceError(''); setSourceLoading(true); setSourceOpen(true);
     setSourceKind(citation.id.startsWith('S') ? 'Section Summary' : 'Chunk');
     try {
       const response = await fetch(`/api/sources/${encodeURIComponent(citation.source_id)}`);
       if (!response.ok) throw new Error(response.status === 404 ? 'Source not found.' : 'Could not load source.');
-      setSource(await response.json() as Chunk);
-    } catch (error) { setSourceError(message(error)); }
-    finally { setSourceLoading(false); }
+      const content = await response.json() as Chunk;
+      if (request === sourceRequest.current) setSource(content);
+    } catch (error) {
+      if (request === sourceRequest.current) setSourceError(message(error));
+    } finally {
+      if (request === sourceRequest.current) setSourceLoading(false);
+    }
   }, []);
 
   function submit(event: FormEvent) { event.preventDefault(); void ask(question); }
@@ -187,6 +200,6 @@ export function App() {
       </div>
     </div>
     {sourceOpen && <SourceDialog source={source} kind={sourceKind} loading={sourceLoading}
-      error={sourceError} onClose={() => setSourceOpen(false)} />}
+      error={sourceError} onClose={closeSource} />}
   </main>;
 }
