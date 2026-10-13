@@ -52,7 +52,7 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
 | SM-01 | AGENTS「摘要規則」；Story 3 | LightRAG 上傳；假 LLM 記錄呼叫；另以真 LLM 跑一次 | 檢視 Summary Tree 與每次摘要呼叫 | 假 LLM：每個 Section Summary 呼叫的長度要求為原文 15%，夾在 80～500 tokens（短章節取 80、長章節取 500）、`think=low`、預留 1,200；真 LLM（EVAL）：實際輸出長度落在合理範圍且保留數字；總和約 3K，因此不產生 Group Summary，Document Summary 為最頂層 | DET + EVAL | #05 | 配置 target 15%/80/500 PASS；實際語意品質仍 FAIL/#11；不將 scripted summary 視為真模型品質通過。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
-| SM-02 | Story 39；摘要規則「Group Summary」；「Section Summary 加起來超過 6,000 tokens 時建立 Group Summary」 | 程式產生很多 Section、Section Summary 合計 > 6,000 tokens 的 PDF（及第二份真實長文件） | 上傳並提問 Global 題 | 建出至少 1 層 Group Summary（相鄰 Section 分組、逐層合併到放得下）；Group／Document Summary 呼叫為 `low`、預留 2,500、prompt ≤ 7,200；Global 回答使用「放得進額度的最詳細那一層」；所有呼叫 ≤ 10,000；進度顯示「摘要 n/N」含各層 | DET | #05、#10 | 確定性 PASS on0718466；18 Sections 邊界及 supplemental48 Sections 10→2Groups，所有 budget PASS；第二真實文件仍 #10。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
+| SM-02 | Story 39；摘要規則「Group Summary」；「Section Summary 加起來超過 6,000 tokens 時建立 Group Summary」 | 程式產生很多 Section、Section Summary 合計 > 6,000 tokens 的 PDF（及第二份真實長文件） | 上傳並提問 Global 題 | 建出至少 1 層 Group Summary（相鄰 Section 分組、逐層合併到放得下）；Group／Document Summary 呼叫為 `low`、預留 2,500、prompt ≤ 7,200；Global 回答使用「放得進額度的最詳細那一層」；所有呼叫 ≤ 10,000；進度顯示「摘要 n/N」含各層 | DET | #05、#10 | 確定性 PASS on0718466；18 Sections 邊界及 supplemental48 Sections 10→2Groups，所有 budget PASS；第二真實文件已由 #10 驗證：31 個有效 Section Summary 共7777 tokens、1層2個Group；真實UI Trace確認group:1。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | SM-03 | AGENTS「來源要能一路追溯回原文」 | 同 SM-01／SM-02 | 檢查節點 metadata | Section Summary 記錄所屬 Section 的全部 Chunk 編號；Group Summary 記錄涵蓋的 Section；沿 Document → Group → Section 可一路追回 Chunk | DET | #05 | PASS on0718466：各層完整 Chunk/Section provenance 與實際 C/S source 瀏覽器證據。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | SM-04 | AGENTS「Section Summary 平行產生，同時呼叫數預設 4，可調整」 | 假 LLM 對每次呼叫延遲並記錄同時進行數 | 上傳多 Section 文件；再把設定改為 2 | 最大同時呼叫數 ≤ 4（改設定後 ≤ 2）；進度 n/N 隨完成遞增；結果順序與 Section 順序一致、與完成順序無關 | DET | #05（只有文字描述，無驗收項） | PASS on0718466：既有 semaphore4/2、排序／取消回歸與獨立 progress ledger。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 
@@ -140,10 +140,10 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
-| D2-01 | Story 38、39、49；AGENTS「第二份測試文件」 | 下載腳本已加入第二份文件 | 取得文件並檢查條件 | 為 2026 年 arXiv 論文、雙欄、含附錄 ≥ 40 頁、主題非 RAG；版本固定可重現；選擇理由記錄在文件中 | DET + 人工 | #10 | NOT_EXECUTED（實作前草稿） |
-| D2-02 | Story 38、39；#10 驗證四件事 | 第二份文件上傳 | 看進度、報告與 Trace | 章節偵測合理（報告記錄偵測到的 Section 數）；Group Summary 至少 1 層（Section Summary 合計 > 6,000 tokens）；進度顯示摘要 n/N；所有呼叫 ≤ 10K；Global 題使用 Group 層，Trace 可見使用的層級；問題與修正記錄進 ai-log | EVAL + UI | #10 | NOT_EXECUTED（實作前草稿） |
-| D2-03 | AGENTS「為它寫 2～3 條 Golden Facts：一個數字題、一個摘要題」 | 第二份文件 `ready` | 跑其 Golden Facts | 數字題（含上下文，judge）與摘要題通過；無編造；引用頁碼對得上該文件 | EVAL | #10、#08 | NOT_EXECUTED（實作前草稿） |
-| D2-04 | AGENTS「中文 PDF 是加分項」；Story 38 | 一份有文字層的中文 PDF | 上傳後用中文提問 | 斷句在 。！？ 處；Section 偵測合理；回答為中文並附有效引用；若通不過，限制被如實記錄而不影響必做項 | UI + EVAL | #10（加分項） | NOT_EXECUTED（實作前草稿） |
+| D2-01 | Story 38、39、49；AGENTS「第二份測試文件」 | 下載腳本已加入第二份文件 | 取得文件並檢查條件 | 為 2026 年 arXiv 論文、雙欄、含附錄 ≥ 40 頁、主題非 RAG；版本固定可重現；選擇理由記錄在文件中 | DET + 人工 | #10 | PASS：固定2603.06749v1、2026-03-06、109頁雙欄非RAG；下載/provenance由QA10核對。opaque hosted模型訓練排除仍UNPROVEN。 [QA10](../../../docs/verification/ticket-10/qa/takeover-report.md) |
+| D2-02 | Story 38、39；#10 驗證四件事 | 第二份文件上傳 | 看進度、報告與 Trace | 章節偵測合理（報告記錄偵測到的 Section 數）；Group Summary 至少 1 層（Section Summary 合計 > 6,000 tokens）；進度顯示摘要 n/N；所有呼叫 ≤ 10K；Global 題使用 Group 層，Trace 可見使用的層級；問題與修正記錄進 ai-log | EVAL + UI | #10 | 功能PASS：32Sections／149Chunks、31Summaries共7777tokens、1層2Groups；107calls最高9729/10K，兩次length草稿丟棄重試。真實UI Group Citation／Trace／進度通過；既有mixed-font章節配對FAIL保留。 [QA10](../../../docs/verification/ticket-10/qa/takeover-report.md) |
+| D2-03 | AGENTS「為它寫 2～3 條 Golden Facts：一個數字題、一個摘要題」 | 第二份文件 `ready` | 跑其 Golden Facts | 數字題（含上下文，judge）與摘要題通過；無編造；引用頁碼對得上該文件 | EVAL | #10、#08 | 已完成N=3（D05以通過率及原因驗收）：數字expert_agreement 1/3、全文coverage 0/3，品質FAIL；其他route/source/forbidden各3/3。原始率不重判，judge摘錄／shared-F1關聯限制與第三次逐項Citation缺漏照實保留。 [final N3](../../../eval/reports/issue10-d08-final-n3.md)／[QA10](../../../docs/verification/ticket-10/qa/takeover-report.md) |
+| D2-04 | AGENTS「中文 PDF 是加分項」；Story 38 | 一份有文字層的中文 PDF | 上傳後用中文提問 | 斷句在 。！？ 處；Section 偵測合理；回答為中文並附有效引用；若通不過，限制被如實記錄而不影響必做項 | UI + EVAL | #10（加分項） | NOT_EXECUTED：加分項真實中文PDF未執行；既有CJK確定性測試不能替代此live驗收。 [QA10 scenario19](../../../docs/verification/ticket-10/qa/takeover-scenarios.md) |
 | D2-05 | 交付；#11 驗收 | 乾淨 clone，照 README | 啟動後上傳兩份文件各一次 | 兩份文件的 `.cache/` 已預先建好，demo 時重新上傳秒開；Q1～Q3 於 N=3 的通過率（含 forbidden）已列在最終報告 | UI + EVAL | #11 | NOT_EXECUTED（實作前草稿） |
 
 ---
@@ -181,3 +181,5 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 既有需求與實際路徑對照已由獨立QA先備批次再執行；完整逐項結果與限制：[22情境](../../../docs/verification/ticket-09/qa/takeover-scenarios.md)、[最終報告](../../../docs/verification/ticket-09/qa/takeover-report.md)。四項Issue09 AC通過；上傳/來源/Trace/串流失敗/安全Markdown/Unverified/鍵盤/手機為21項PASS，真實Q3內容品質仍FAIL並保留QA-04/#11。UI判定與unchanged backend evidence分列，不覆蓋其他未執行的端到端語意項目。
 
 T09-08處理中整頁reload的job自動續接UNPROVEN。Main核對PRD及Issue09，未有跨reload持久化job身份的既有驗收要求；保留為已知限制供README說明，不將其聲稱為PASS，也不新增endpoint範圍。
+
+#10 最終核對：Main7cf9185／source3bb0c64，限定獨立Review兩軸PASS、整合316PASS／3eval deselected／zeroSKIP、獨立QA19情境（13PASS／4FAIL／1UNPROVEN／1NOT_EXECUTED）。依D05/D06保留品質與既有provenance限制，非全項品質PASS；完整證據見 [QA10報告](../../../docs/verification/ticket-10/qa/takeover-report.md)。#11最終驗收沿用本清單補齊其餘證據。

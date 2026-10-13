@@ -1,4 +1,4 @@
-# Issue11 independent requirements QA batch
+# Issue11 independent requirements QA batch — agent execution cancelled (D09)
 
 Prepared 2026-10-13 by nova-qa11-zoru, session `01a13377-7204-77e2-aba2-34ffbf1a7651`. Requirements-only draft saved before reading implementation preflight. All execution is held for Main's exact reviewed integrated SHA/settings release. Final SHA, effective application settings, cache identities, commands and evidence: pending. Session runtime gate is recorded in `.lat/tasks/2026-10-13-nova-qa11.md`.
 
@@ -87,3 +87,30 @@ P18 observes D07 Main-session handoff after Issue10 integrated QA and before for
 ## Existing known-limit reconciliation — Main request13632
 
 P13/P16/P18 retain Main/scoped Review13622 conclusions as pending final-release evidence audit: mixed-font split heading10pt numeral/14pt title misassociation reproduced identically on pre-D06 `588638d` and final `3bb0c64`, hence preexisting parser/provenance known limitation (FAIL, not PASS); intermediate79d folio source loss repaired. D06 item5 does not authorize a new mandatory correction/quality loop. Final SECOND_NUMBER repetition3 has correct Table9 values and valid precedingC5 but separate bullets/conclusion lack their own markers: Citation-completeness limitation, distinct from invalid-ID/source-map regression. Preserve original final raw N3 number1/3/global0/3; no regrading or new run here. QA10 pending Main merged SHA/full integration suite; QA11 remains NOT_STARTED/HOLD, D07 handoff before release.
+
+## Read-only QA10 reconciliation after Issue11 implementation release — request14085
+
+Formal Issue11 implementation starts2026-10-13 18:33:01.455279Asia/Taipei, tuning/final-eval deadline21:33:01.455279 (clock `.lat/briefs/nova-i11-clock.json`). Release `.lat/briefs/nova-i11-release.md` is for meme, whose cloud/8320–8329/browsernova-i11 ownership is exclusive. QA11 execution remains HOLD;8310–8319/browsernova-qa11 reserved and unlaunched. Read final QA10 report, integration-fullsuite conclusion and updated Main test-list; closed Issue10 is not reopened or re-reviewed.
+
+| Existing QA11 row | Existing accepted evidence / reuse candidate | Remaining final Issue11 check |
+|---|---|---|
+| P06 | QA10 final107calls ≤10K, estimated max9729/reported9462; Section length29/39 discarded, stopped retries33/44 published; all six answers completed/no answerlength. Main integration316PASS/3eval deselected/zeroSKIP, exit0, source7cf91851. | Final changed call policies/settings/report completeness and formal Router600/Answer3000 eval; no duplicate closed-Issue10 fullsuite. |
+| P13/P15/P16 | QA10 actual browser numericC8Table9, GlobalS2Group pp30–109, Trace/thinking collapsed, exact English refusal, scanned error/fullPDF recovery, no overflow/console error; six UIcalls allstop max9575. | Reconcile changed source/settings/paths after final release; independently execute affected final UI paths, reuse unrelated prior evidence transparently. |
+| P16 | Main test-listSM02/D2 rows now recognize32Sections/149Chunks/31summaries7777tokens (81–497), oneGroup/twoNodes, actualgroup:1. Fixed2603.06749v1,109pages/two-column/non-RAG; real AppendixA/B/C/D; References40–70excluded. | No reopen of accepted document choice. Keep opaque hosted-training exclusion UNPROVEN, exhaustiveD5cell associations UNPROVEN, optional liveChinesePDF NOT_EXECUTED. |
+| P05/P16/P18 | QA10 finalN3 numericexpert_agreement1/3, Globalcoverage0/3; source/router/forbidden3/3. PrimaryTable9 AllAcy0.966/InfoFound0.951/sharedF10.762 match all numeric answers; judge three-paper qualifier/shared-F1 binding failures separate from semantic omissions. Split-heading provenance/Citation-completeness rep3 remain knownFAILs. | Preserve original rates/causes; final settings/prompt changes require final applicability decision, not regrading old failures. |
+| P17 | QA10 full real cache/tree pipeline `ingest-v2-02fd2cb4e73f4747cb9137caa5187680561716d41d3edc4ce4fd5a83a5cd7fc7` matched finalN3; cached reupload had0ingestion calls; complete retained cache listed under Main `.lat/retained/issue10/fimo/worktree-cache/issue10-issue10-d08-final-n3/`. | BOTH final pipeline/prompt/settings caches after last Issue11 change, actual hit0embedding/0summary, uncached answers. Old cache only eligible if final identity matches. |
+| P10 | QA10 pinned-script twice on existing fixture; ignored/untracked PDF; missing-file download branch not executed. | Clean local clone/README commands and actual missing-file fixed-download path still pending finalQA11. |
+
+QA10 report conclusions are reused as existing evidence, not claimed as fresh executions by zoru. Test-list SM/D2 dispositions now reflected. No additional plan/scenarios, no test/model/browser/install/download/source-review workload. All P01–P18 final QA statuses remain NOT_EXECUTED until exact reviewed integrated SHA/config release.
+
+## Final correction event locator — Main14947 / Review14900
+
+For existing P13/P16/P18 after release: Main reports confirmed secondNUMBERrep2 hard Citation support failure, original FinalEvent missingTable9 and reconstructedC9Table10 source map. Candidate correction belongs to meme: narrow generic exact Table Chunk instruction, captured ORIGINAL CitationMapEvent/FinalEvent for N3 and held-out numeric smoke, controlled report-link/public-seam matrix correction. No waiver, new validator or regrading. Preserve original failure and distinguish actual captured events from reconstructed maps. Locator only; QA has not read source/reviewed/run this correction. Final QA HOLD until reviewed integrated SHA/config release.
+
+## Final handoff — D09 cancellation
+
+Read answered `.lat/decisions/D09-final-qa-by-user.md`; Main independently verified direct human UUID `a0ea4307-b915-4e8e-9439-2f16d5e5bbd6`. Pending Codex final QA is cancelled and replaced with the user's manual website pass after reviewed merge/integrated tests. All P01–P18 remain **NOT_EXECUTED / cancelled-agent-execution**; no final QA PASS or final runtime/config certification is claimed. Earlier read-only evidence reconciliation is retained as preparation, not new execution.
+
+Handoff target: `docs/verification/final-acceptance/manual-qa-checklist.md`, maintained/explained by levi; user results pending. Nova remains Main and owns review/integration/deterministic tests and final closure. D09 does not waive Citation support or authorize interpreting unexecuted checks as PASS. No new test, source review or manual QA performed by zoru.
+
+Resource inventory: no owned live processes, server listeners, browser sessions, model calls or temporary `/private/tmp/nova-qa11-*` paths were created at any point. Reserved8310–8319/browsernova-qa11 unused and released to Main. Authorized evidence/card edits are the only produced resources and must be retained; no trash cleanup necessary, no global browser/tool cleanup attempted. Main may close this agent after handoff.

@@ -391,3 +391,13 @@ evidence: `docs/verification/ticket-10/`, `.lat/briefs/nova-i10-preflight.md`.
 - UnrelatednumericadjacentTable native smoke N1 answers37samples/meanresidual.42mm withC1actualTable7shoreline row; adjacentinland59/.73 notcited.4callsallstop,maxestimated3914/reported3689. This is bounded actualsource-support evidence, notuniversalstochasticguarantee. Correctedfullsuite327PASS/289.90s,11targeted/ruffPASS. No morequalityloops, defaults/GoldenFacts/model/budgetsunchanged; originalbuild/startup reused because thosepathsunchanged. FreshscopedindependentReviewfrom0c320a8required; D09manualwebsiteacceptancestillpendingMainmerge.
 - Exactsourcecapture also exposes partialprose-supportlimits: numericrep1/3citeC4p30for3papersandtwo-before/one-afterchronology; thatChunkstates3papersbuttimingdetailisinadjacentprovidedp29context. This is not silently counted asallclaimsgroundedbyTable9source3/3. Preserve per-claimsupportlimits for freshReview/Main classification alongsideuniterror/uncitedderivedconclusion; no Citationwaiver or further stochasticqualityloop.
 - Freshindependent scopedBelaReviewf089cae:Standards0;Specobservedhardunsupportedper-claimpopulation/unit/chronology/uncitedconclusionlimits, plusnonobservedGlobalTableChunkinstructionrisk. Specificwrongtableassociationnotobserved3/3correctedoriginalmaps,butnotfullgroundingPASS/waiver. Fullreport/runtimeaxislocatorssavedreview-f089cae.md. Oneboundedcorrectioncomplete; MainD10v1humanchoicepending, nofurtherquality/source/providerwork/merge. D01markerpolicyandD09manualQAdo notwaiveCitationhardlimit. Main15292permitsdocs-onlyretentioncheckpointwithsourcef089unchanged; no extra tests for this documentary save.
+
+### 題目解讀被當成題目原文（levi，2026-10-13）
+
+- levi（Claude）說明 10K 限制時，把題目筆記 `題目：讓 AI 跟文件對話（Chat with Document）.md` 裡「意義」欄的解讀（「必須設計分段處理、檢索或階層式摘要機制」「輸入加輸出都要控制在 10K 以內」），當成題目原文引用，還拿來回答「預先建摘要算不算作弊」。使用者貼出題目原圖指正：原文只有「假定 LLM max context size 為 10K」，以及兩個要說明的設計問題。
+- 同一個錯誤先前也發生在 LangChain：筆記的「意義」欄寫了「不引入 LangChain」，被誤當成題目禁止。
+- 修正：`簡報素材.md` 改寫成「題目原文」和「我們的解讀」分開（輸入加輸出合計是較嚴格的解讀），作弊疑慮的理由改用原文「說明你怎麼處理 summary?」。教訓：引用題目時，只引用原圖或「技術限制」表的第 2 欄，「意義」欄一律標示為解讀。
+
+### D10 最終驗收例外（2026-10-13）
+
+使用者明確選 A：將已列明的評估單位錯誤、相鄰片段時間细節引用與結論缺引用列為本版已知缺陷，停止品質修正，整合後人工 QA。原始 FAIL、獨立 Review 與未觀察到回歸的 Global 提示風險保留；這不是所有 Citation 通過的宣稱。10K、固定拒答、無效 ID 標記及確定性測試仍維持。

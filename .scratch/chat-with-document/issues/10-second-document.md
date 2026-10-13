@@ -1,6 +1,6 @@
 # #10 第二份文件與泛化驗證
 
-Status: ready-for-agent
+Status: done
 
 ## Parent
 
@@ -22,10 +22,10 @@ Status: ready-for-agent
 
 ## Acceptance criteria
 
-- [ ] 下載腳本能取得第二份文件的固定版本。
-- [ ] 處理成功；報告中記錄偵測到的 Section 數量，以及 Group Summary 的層數（至少 1 層）。
-- [ ] eval 報告列出第二份文件 Golden Facts 的通過率（N=3）與失敗原因，而且所有呼叫都 ≤ 10K。品質調整做到 2026-10-13 17:45 為止（使用者決策，2026-10-13）。
-- [ ] 在 ai-log 記錄泛化時遇到的問題和修正。
+- [x] 下載腳本能取得第二份文件的固定版本。
+- [x] 處理成功；報告中記錄偵測到的 Section 數量，以及 Group Summary 的層數（至少 1 層）。
+- [x] eval 報告列出第二份文件 Golden Facts 的通過率（N=3）與失敗原因，而且所有呼叫都 ≤ 10K。品質調整做到 2026-10-13 17:45 為止（使用者決策，2026-10-13）。
+- [x] 在 ai-log 記錄泛化時遇到的問題和修正。
 
 ## Blocked by
 
@@ -46,3 +46,9 @@ Status: ready-for-agent
 ## D08 最小恢復修正（真人核准）
 
 在 D06 限定修正上追加：選文只消費並嚴格驗證 span_ids，丟棄額外模型註解；每次收斂／分批保留足以滿足 80–500 tokens 的原始候選。來源、表格脈絡與 10K guard 維持，不補字、不重複、不降低下限。補必要回歸，完成 fresh N=3，再依 D06 限定複審與整合 QA；未核准 N=3 未完成的驗收豁免。授權原文與定位見 Main 共用 `.lat/decisions/D08-second-document-live-recovery.md`。
+
+## 完成證據（2026-10-13，Main 核對）
+
+已整合 main `7cf91851f9f86527d69c95910f9eadd58cf7b357`（產品版本 `3bb0c64`）。完整 Review＋兩次修正複審，最終 D06＋D08 兩軸通過；Main 整合測試 316 PASS／zero SKIP。獨立 QA 報告與 19 情境見 `docs/verification/ticket-10/qa/takeover-report.md`、`takeover-scenarios.md`；真實 UI 驗證上傳、數字／Group 來源、Trace、英文固定拒答、掃描檔錯誤與快取恢復，6 次新呼叫皆 stop，最高 9,575／10K。
+
+最終 fresh N=3 已完成六次答案：數字主 fact 1/3、全文涵蓋 0/3，其他引用／分流／forbidden 檢查 3/3；7777 tokens 的 Section Summary、1 層 Group，107 calls 全守 10K。依 D05／D06 如實報告，未把品質 FAIL 改判 PASS。保留 mixed-font 章節配對、逐項 Citation 完整性與摘要品質限制；完整 Table D5 關聯、opaque hosted training 排除無法全面證實；live 中文 PDF 加分項未執行。原始報告 `eval/reports/issue10-d08-final-n3.md`；完整修正／來源及原因見 `docs/verification/ticket-10/corrections/FINAL-REPORT.md` 與三份獨立 Review。
