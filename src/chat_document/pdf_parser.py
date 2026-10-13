@@ -50,10 +50,14 @@ class _Line:
     small_caps: bool = False
     font_change: bool = False
     shared_row: bool = False
+    word_boxes: tuple[tuple[str, tuple[float, float, float, float]], ...] = ()
 
 
 def _ordered_blocks(page: pymupdf.Page) -> tuple[list[dict], bool]:
     blocks = page.get_text("dict", sort=False)["blocks"]
+    for block in blocks:
+        for index, line in enumerate(block.get("lines", [])):
+            line["source_line_index"] = index
     midpoint = page.rect.width / 2
     # Require substantial prose on both sides: table cells alone do not define columns.
     prose = [
@@ -141,6 +145,47 @@ def _figure_regions(page: pymupdf.Page, blocks: list[dict]) -> list[pymupdf.Rect
     return regions
 
 
+def _table_boxes(page: pymupdf.Page) -> list[tuple[float, float, float, float]]:
+    """Find closed rule rectangles, including four separately emitted edges."""
+    drawings = page.get_drawings()
+    rectangles = [
+        tuple(item[1]) for drawing in drawings for item in drawing["items"] if item[0] == "re"
+    ]
+    horizontal = [d["rect"] for d in drawings if d["rect"].height < 1 and d["rect"].width > 1]
+    vertical = [d["rect"] for d in drawings if d["rect"].width < 1 and d["rect"].height > 1]
+
+    def joined(rules, *, transpose=False):
+        runs = []
+        coordinates = sorted((r.x0, r.y0, r.y1) if transpose else (r.y0, r.x0, r.x1) for r in rules)
+        for axis, start, end in coordinates:
+            if runs and abs(axis - runs[-1][0]) <= 1 and start <= runs[-1][2] + 1:
+                runs[-1][2] = max(runs[-1][2], end)
+            else:
+                runs.append([axis, start, end])
+        return [
+            pymupdf.Rect(axis, start, axis, end)
+            if transpose
+            else pymupdf.Rect(start, axis, end, axis)
+            for axis, start, end in runs
+        ]
+
+    horizontal = joined(horizontal)
+    vertical = joined(vertical, transpose=True)
+    for top in horizontal:
+        for bottom in horizontal:
+            if bottom.y0 <= top.y0 or abs(top.x0 - bottom.x0) > 1 or abs(top.x1 - bottom.x1) > 1:
+                continue
+            if all(
+                any(
+                    abs(edge.x0 - x) <= 1 and edge.y0 <= top.y0 + 1 and edge.y1 >= bottom.y0 - 1
+                    for edge in vertical
+                )
+                for x in (top.x0, top.x1)
+            ):
+                rectangles.append((top.x0, top.y0, top.x1, bottom.y0))
+    return list(dict.fromkeys(rectangles))
+
+
 def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
     lines = []
     sizes: Counter[int] = Counter()
@@ -149,6 +194,9 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
     for page_number, page in enumerate(pdf, 1):
         page_lines = []
         blocks, two_columns = _ordered_blocks(page)
+        word_boxes = {}
+        for word in page.get_text("words"):
+            word_boxes.setdefault((word[5], word[6]), []).append((word[4], tuple(word[:4])))
         regions_by_page[page_number] = _figure_regions(page, blocks)
         for block_number, block in enumerate(blocks):
             for line in block.get("lines", []):
@@ -177,6 +225,9 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                         size=max_size,
                         bold=all(s["flags"] & 16 for s in spans),
                         fonts=tuple(sorted({s["font"] for s in spans})),
+                        word_boxes=tuple(
+                            word_boxes.get((block["number"], line["source_line_index"]), [])
+                        ),
                         small_caps=text.isupper()
                         and any(
                             s["size"] < max_size * 0.9 and any(char.isalpha() for char in s["text"])
@@ -698,6 +749,7 @@ def parse_pdf(content: bytes, *, chunk_token_target: int = CHUNK_TOKEN_TARGET) -
                     lines,
                     page_widths={i: page.rect.width for i, page in enumerate(pdf, 1)},
                     heading_lines=heading_lines,
+                    boxes_by_page={i: _table_boxes(page) for i, page in enumerate(pdf, 1)},
                 ),
                 titles,
             )

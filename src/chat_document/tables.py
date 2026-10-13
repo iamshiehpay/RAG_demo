@@ -1,7 +1,7 @@
 """Coordinate reconstruction of captioned tables; uncertain layouts retain source text."""
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from statistics import median
 
 from .models import Table
@@ -17,6 +17,7 @@ class TableRegion:
     table: Table
     line_indices: set[int]
     anchor: int
+    bounds: tuple[float, float] | None = None
 
 
 def _rows(lines):
@@ -113,7 +114,12 @@ def _column_bounds(caption, page_lines, page_width):
     other_right = [
         line
         for line in page_lines
-        if line.bbox[0] >= middle and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
+        if line.bbox[0] >= middle
+        and (
+            len(line.text.split()) >= 7
+            or CAPTION.match(line.text)
+            or (getattr(line, "flowing_block", False) and len(line.text.split()) >= 4)
+        )
     ]
     if caption.bbox[2] <= middle and other_right:
         return left, min(line.bbox[0] for line in other_right) - 2
@@ -122,7 +128,11 @@ def _column_bounds(caption, page_lines, page_width):
         for line in page_lines
         if line.bbox[0] < middle
         and line.bbox[2] <= caption.bbox[0] - 2
-        and (len(line.text.split()) >= 7 or CAPTION.match(line.text))
+        and (
+            len(line.text.split()) >= 7
+            or CAPTION.match(line.text)
+            or (getattr(line, "flowing_block", False) and len(line.text.split()) >= 4)
+        )
     ]
     if caption.bbox[0] >= middle and other_left:
         return max(line.bbox[2] for line in other_left) + 2, right
@@ -231,6 +241,78 @@ def _numeric(text):
     return bool(re.search(r"\d", text)) and not re.search(r"[A-Za-z]", text)
 
 
+def _reference_grid(rows):
+    """Wrapped labels in a reference/identifier column define logical rows.
+
+    Numeric model-version text stays in the label column. Every metric cell must
+    align with a printed header and occur exactly once; missing/ambiguous cells
+    return the raw fallback instead of shifting numbers between columns.
+    """
+    if not rows or len(rows[0]) < 4:
+        return None
+    header = rows[0]
+    if _clean(header[0].text).casefold() not in {"ref", "reference", "id", "identifier"}:
+        return None
+    data_rows = [
+        [
+            replace(line, text=text, bbox=box)
+            for line in row
+            if not (
+                re.fullmatch(r"continued(?:\s+on)?\s+(?:the\s+)?next\s+page", line.text, re.I)
+                and line.bbox[0] > header[1].bbox[2]
+            )
+            for text, box in line.word_boxes
+        ]
+        if all(getattr(line, "word_boxes", ()) for line in row)
+        else row
+        for row in rows[1:]
+    ]
+    anchors = [
+        line
+        for row in data_rows
+        for line in row
+        if abs(line.bbox[0] - header[0].bbox[0]) <= line.size * 1.5
+        and re.fullmatch(r"\[\d+\]|\d+", _clean(line.text))
+    ]
+    if not anchors:
+        return None
+    centers = [(line.bbox[1] + line.bbox[3]) / 2 for line in anchors]
+    columns = [(line.bbox[0] + line.bbox[2]) / 2 for line in header]
+    cells = [[[] for _ in header] for _ in anchors]
+    for parts in data_rows:
+        # MuPDF may merge adjacent text and numeric columns into one line.
+        # Use its original word coordinates; never split a number by guessing
+        # character widths or by interpreting a model-version label as a score.
+        for line in parts:
+            y = (line.bbox[1] + line.bbox[3]) / 2
+            if y > max(centers) + line.size * 2.5 and (
+                line.text == str(line.page) or line.text.casefold().startswith("continued")
+            ):
+                continue  # Physical page/continuation metadata outside the data rows.
+            index = min(range(len(anchors)), key=lambda i: abs(y - centers[i]))
+            if abs(y - centers[index]) > line.size * 2.5:
+                return None
+            x = (line.bbox[0] + line.bbox[2]) / 2
+            col = min(range(len(header)), key=lambda i: abs(x - columns[i]))
+            if abs(x - columns[col]) > line.size * 1.5:
+                return None
+            value = _clean(line.text)
+            if col >= 2 and not _numeric(value):
+                return None
+            cells[index][col].append(value)
+    if any(not cell for row in cells for cell in row) or any(
+        len(cell) != 1 for row in cells for cell in [row[0], *row[2:]]
+    ):
+        return None
+    return (
+        [_clean(line.text) for line in header],
+        [[" ".join(cell) for cell in row] for row in cells],
+        "Identifiers and model-version numbers belong to the printed label column; "
+        "only numeric columns contain measurements. Do not infer an aggregation "
+        "formula from a column named Total without its source definition.",
+    )
+
+
 def _rectangular_grid(rows):
     if len(rows) < 2 or len(rows[0]) < 2 or any(len(row) != len(rows[0]) for row in rows):
         return None
@@ -289,6 +371,15 @@ def _continue_tables(regions, lines, heading_lines):
                     for a, b in zip(first, headers, strict=True)
                 ):
                     break
+                if region.bounds:
+                    shift = first[0].bbox[0] - headers[0].bbox[0]
+                    left, right = region.bounds
+                    page_indices = [
+                        i
+                        for i in page_indices
+                        if lines[i].bbox[0] >= left + shift - 2
+                        and lines[i].bbox[2] <= right + shift + 2
+                    ]
                 if any(i in occupied or i in heading_lines for i in page_indices) or any(
                     CAPTION.match(lines[i].text) for i in page_indices
                 ):
@@ -302,6 +393,13 @@ def _continue_tables(regions, lines, heading_lines):
                 if line.page == region.table.page_start
                 and line.bbox[1] >= start_y
                 and i not in heading_lines
+                and (
+                    region.bounds is None
+                    or (
+                        line.bbox[0] >= region.bounds[0] - 2
+                        and line.bbox[2] <= region.bounds[1] + 2
+                    )
+                )
             }
             # Expansion is safe only for a dedicated first table page: another
             # caption or Section after the header ends the region instead.
@@ -321,15 +419,22 @@ def _continue_tables(regions, lines, heading_lines):
                     " ".join(_clean(line.text) for line in row)
                     for row in _rows([lines[i] for i in sorted(first_indices)])
                 )
-                grid = _paired_grid(_rows([lines[i] for i in first_indices])) or _rectangular_grid(
-                    _rows([lines[i] for i in first_indices])
+                first_rows = _rows([lines[i] for i in first_indices])
+                grid = (
+                    _paired_grid(first_rows)
+                    or _rectangular_grid(first_rows)
+                    or _reference_grid(first_rows)
                 )
                 region.table.reconstructed = bool(grid)
                 region.table.headers, region.table.rows, region.table.meaning = grid or ([], [], "")
         result.append(region)
         for indices in continuations:
             page_rows = _rows([lines[i] for i in indices])
-            grid = _paired_grid(page_rows) or _rectangular_grid(page_rows)
+            grid = (
+                _paired_grid(page_rows)
+                or _rectangular_grid(page_rows)
+                or _reference_grid(page_rows)
+            )
             table = region.table.model_copy(
                 update={
                     "page_start": lines[indices[0]].page,
@@ -348,7 +453,9 @@ def _continue_tables(regions, lines, heading_lines):
     return sorted(result, key=lambda region: region.anchor)
 
 
-def reconstruct_tables(lines, *, page_widths=None, heading_lines=frozenset()) -> list[TableRegion]:
+def reconstruct_tables(
+    lines, *, page_widths=None, heading_lines=frozenset(), boxes_by_page=None
+) -> list[TableRegion]:
     regions = []
     used = set()
     for i, caption in enumerate(lines):
@@ -407,8 +514,31 @@ def reconstruct_tables(lines, *, page_widths=None, heading_lines=frozenset()) ->
             )
         rows = _rows([line for _, line in chosen])
         if len(rows) < 2 or not any(len(row) >= 2 for row in rows):
-            continue
-        grid = _paired_grid(rows) or _rectangular_grid(rows)
+            # A captioned closed cell is still a table when it contains one
+            # column (e.g. code/query strings). Geometry bounds the raw fallback;
+            # ordinary neighboring prose must not become an invented grid.
+            boxed = []
+            if match.group(1).casefold().startswith("table"):
+                for box in (boxes_by_page or {}).get(caption.page, []):
+                    x0, y0, x1, y1 = box
+                    gap = min(abs(y0 - caption_bottom), abs(caption_top - y1))
+                    if gap > caption.size * 3 or not (x0 - 2 <= caption.bbox[0] <= x1 + 2):
+                        continue
+                    contained = [
+                        (j, line)
+                        for j, line in available
+                        if line.bbox[0] >= x0 - 1
+                        and line.bbox[2] <= x1 + 1
+                        and line.bbox[1] >= y0 - 1
+                        and line.bbox[3] <= y1 + 1
+                    ]
+                    if contained and not any(j in heading_lines for j, _ in contained):
+                        boxed.append(((x1 - x0) * (y1 - y0), contained))
+            if not boxed:
+                continue
+            chosen = max(boxed, key=lambda value: value[0])[1]
+            rows = _rows([line for _, line in chosen])
+        grid = _paired_grid(rows) or _rectangular_grid(rows) or _reference_grid(rows)
         raw = "\n".join(" ".join(_clean(line.text) for line in row) for row in rows)
         table = Table(
             label=match.group(1),
@@ -422,7 +552,7 @@ def reconstruct_tables(lines, *, page_widths=None, heading_lines=frozenset()) ->
             table.reconstructed = True
         indices = {*(j for j, _ in caption_lines), *(j for j, _ in chosen)}
         used.update(indices)
-        regions.append(TableRegion(table, indices, min(indices)))
+        regions.append(TableRegion(table, indices, min(indices), (left, right)))
     return _continue_tables(regions, lines, heading_lines)
 
 

@@ -1,0 +1,51 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores[False] _
+
+missing_cell = False
+
+    @pytest.mark.parametrize("missing_cell", [False, True])
+    async def test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores(missing_cell):
+        with pymupdf.open() as pdf:
+            page = pdf.new_page()
+            page.insert_text((50, 60), "1 Measurements", fontsize=14)
+            page.insert_text((50, 100), "Table 7: Model measurements.", fontsize=10)
+            for x, text in zip([50, 130, 240, 320], ["Ref", "Model", "Score", "Cost"], strict=True):
+                page.insert_text((x, 130), text, fontsize=10)
+            page.insert_text((130, 158), "Alpha", fontsize=10)
+            page.insert_text((130, 182), "1.7", fontsize=10)
+            for x, text in [(50,"[11]"),(240,"0.25"),(320,"17")]:
+                page.insert_text((x, 170), text, fontsize=10)
+            for x, text in [(50,"[12]"),(130,"Beta"),(240,"0.32"),(320,"19")]:
+                if not (missing_cell and x == 320):
+                    page.insert_text((x, 215), text, fontsize=10)
+            content = pdf.tobytes()
+        app = Application(DeterministicEmbedder(), LLMGateway(SummaryScriptedLLM([])))
+        assert [e async for e in app.upload_document(content, "models.pdf")][-1].type == "ready"
+        table = next(c for c in app.document.chunks if c.table_label == "Table 7")
+        if missing_cell:
+            assert not table.table_reconstructed and "結構未能可靠重建" in table.text
+            assert all(v in table.text for v in ["Alpha","1.7","0.25","Beta","0.32"])
+        else:
+>           assert table.table_reconstructed
+E           AssertionError: assert False
+E            +  where False = Chunk(id='c855dbe65b1e497287037b38393e7602:chunk-1', section_id='section-1', section='1 Measurements', page_start=1, p...odel measurements.', table_meaning='', table_headers=[], table_rows=[], table_reconstructed=False, linked_chunk_ids=[]).table_reconstructed
+
+tests/integration/test_second_document.py:348: AssertionError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_second_document.py::test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores[False]
+1 failed, 1 passed, 12 deselected, 5 warnings in 0.37s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

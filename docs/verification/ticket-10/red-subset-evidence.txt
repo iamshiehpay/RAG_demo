@@ -1,0 +1,20 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_numeric_expert_fact_rejects_an_excerpt_without_the_declared_paper_subset _
+
+    async def test_numeric_expert_fact_rejects_an_excerpt_without_the_declared_paper_subset():
+        answer = (
+            "All accuracy is 0.966, N=447, and positive-class F1 is 0.762. "
+            "InfoFound accuracy is 0.951 (lower), N=304, and F1 remains 0.762."
+        )
+        judged = json.dumps({"matched": True, "asserted": True, "evidence": answer})
+        fact = SECOND_DOCUMENT_CASES[0].facts[0]
+        gateway = LLMGateway(ScriptedLLM([judged]))
+>       assert not (await check_fact(answer, fact, gateway)).passed
+E       AssertionError: assert not True
+E        +  where True = FactResult(fact_id='expert_agreement', method='judge', passed=True, reason='Required claim supported by verbatim evide...ass F1 is 0.762. InfoFound accuracy is 0.951 (lower), N=304, and F1 remains 0.762.', harness_bug=False, fallback=False).passed
+
+tests/unit/test_second_document_facts.py:19: AssertionError
+=========================== short test summary info ============================
+FAILED tests/unit/test_second_document_facts.py::test_numeric_expert_fact_rejects_an_excerpt_without_the_declared_paper_subset
+1 failed, 1 passed in 0.22s

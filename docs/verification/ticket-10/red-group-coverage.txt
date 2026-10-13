@@ -1,0 +1,47 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_global_group_context_identifies_every_covered_section __________
+
+    async def test_global_group_context_identifies_every_covered_section():
+        from .test_summary_tree import summary_pdf
+    
+        class GroupedLLM(ScriptedLLM):
+            async def stream(self, request):
+                self.scripts.append({
+                    "section_summary": "Measurements are supported. " * 100,
+                    "group_summary": "Grouped supported findings.",
+                    "document_summary": "Supported overview.",
+                    "router": json.dumps({"question_type": "Global", "standalone_question": "Summarize",
+                                          "sub_queries": []}),
+                    "answer": "Supported findings. [S1]",
+                }[request.call_type])
+                async for frame in super().stream(request):
+                    yield frame
+    
+        llm = GroupedLLM([])
+        app = Application(DeterministicEmbedder(), LLMGateway(llm))
+        assert [e async for e in app.upload_document(summary_pdf(18), "measurements.pdf")][-1].type == "ready"
+        events = [e async for e in app.ask("Summarize", history=[])]
+        assert next(e for e in events if e.type == "trace").summary_level.startswith("group:")
+        prompt = next(c for c in reversed(llm.calls) if c.call_type == "answer").messages[-1]["content"]
+>       assert "Covered Sections:" in prompt
+E       AssertionError: assert 'Covered Sections:' in 'Document excerpts:\n[S1] Group Summary 1.1 (p.1–14)\nGrouped supported findings.\n\n[S2] Group Summary 1.2 (p.15–18)\nGrouped supported findings.\n\nQuestion: Summarize\n\nCurrent user question (language reference): Summarize'
+
+tests/integration/test_second_document.py:311: AssertionError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_second_document.py::test_global_group_context_identifies_every_covered_section
+1 failed, 11 deselected, 5 warnings in 0.54s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

@@ -325,7 +325,10 @@ async def test_multiple_group_levels_preserve_all_original_sources():
         async def stream(self, request):
             evidence = request.messages[-1]["content"]
             self.scripts.append(
-                "Section " * 1100
+                # Published Section Summaries now enforce the existing 500-token
+                # maximum. Group stress responses remain deliberately long to
+                # exercise recursive complete-level provenance.
+                "Section " * 450
                 if request.call_type == "section_summary"
                 else ("Group " * 2200 if "Section Section " in evidence else "Compressed finding.")
                 if request.call_type == "group_summary"
@@ -464,7 +467,11 @@ async def test_nonreducing_external_summary_response_fails_without_partial_publi
                 yield LLMFrame(content=request.messages[-1]["content"])
                 yield LLMFrame(done=True, done_reason="stop")
             else:
-                async for frame in ScriptedLLM(["Finding " * 1100]).stream(request):
+                # Oversized-Section partials are intermediate merge inputs;
+                # ordinary published Sections must meet the 500-token maximum.
+                async for frame in ScriptedLLM(
+                    ["Finding " * (1100 if oversized_section else 450)]
+                ).stream(request):
                     yield frame
 
     llm = NonReducingLLM([])

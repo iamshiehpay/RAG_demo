@@ -16,7 +16,8 @@ DOCUMENT_URL = "https://arxiv.org/pdf/2603.06749v1"
 SECOND_DOCUMENT_CASES = (
     EvaluationCase(
         "SECOND_NUMBER",
-        "In the expert-validation comparison, how does InfoFound affect overall accuracy "
+        "How many model papers were manually annotated for expert validation? In that comparison, "
+        "how does InfoFound affect overall accuracy "
         "and positive-class F1 relative to All? Include the evaluation counts for both settings.",
         (
             GoldenFact(
@@ -29,6 +30,8 @@ SECOND_DOCUMENT_CASES = (
                 "subset, metric, value and comparison direction correctly.",
                 (
                     ("All",),
+                    ("three", "3"),
+                    ("papers", "paper", "models", "model"),
                     ("InfoFound",),
                     ("accuracy", "Acy"),
                     ("F1",),
@@ -51,14 +54,16 @@ SECOND_DOCUMENT_CASES = (
                 "is forbidden; negating this claim is correct.",
             ),
         ),
-        "Lookup",
+        "Synthesis",
         required_citation_page=31,
         required_citation_term="Table 9",
     ),
     EvaluationCase(
         "SECOND_SUMMARY",
         "Summarize the whole document's motivation, assessment method, main findings "
-        "and limitations, including what the appendices contribute.",
+        "and limitations. Explain how unreported model capabilities affect the assessment "
+        "and the scope of expert validation, "
+        "and give the purpose of each appendix.",
         (
             GoldenFact(
                 "whole_document_coverage",

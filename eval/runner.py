@@ -126,7 +126,7 @@ def check_source_citation(
             source_matches = source.id in table_ids if table_ids else matches(source)
             if source_matches:
                 return FactResult(
-                    "table2_citation",
+                    "required_source_citation",
                     "events",
                     True,
                     "Used Citation resolves to the required Table Chunk"
@@ -135,7 +135,7 @@ def check_source_citation(
                     citation.id,
                 )
     return FactResult(
-        "table2_citation",
+        "required_source_citation",
         "events",
         False,
         "No used Citation resolves to a Chunk on the required page "

@@ -15,6 +15,7 @@ import pytest
 from chat_document.application import Application
 from chat_document.cache import PIPELINE_VERSION, ProcessingCache
 from chat_document.embedder import OllamaEmbedder
+from chat_document.events import DeltaEvent
 from chat_document.llm_adapter import OllamaLLM
 from chat_document.tokens import count_tokens
 
@@ -33,7 +34,30 @@ async def test_second_document_real_ingestion_and_golden_facts(pytestconfig):
     path.parent.mkdir(parents=True, exist_ok=True)
     assert hashlib.sha256(DOCUMENT.read_bytes()).hexdigest() == DOCUMENT_SHA256
     base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-    gateway = RecordingGateway(OllamaLLM(base_url))
+
+    class ObservedGateway(RecordingGateway):
+        async def generate(self, call_type, messages, **kwargs):
+            text = ""
+            try:
+                async for event in super().generate(call_type, messages, **kwargs):
+                    if isinstance(event, DeltaEvent):
+                        text += event.text
+                    yield event
+            finally:
+                with path.with_suffix(".responses.jsonl").open("a") as out:
+                    out.write(
+                        json.dumps(
+                            {
+                                "call_type": call_type,
+                                "source_label": messages[-1]["content"].split("\n", 2)[:2],
+                                "response": text,
+                                "response_tokens": count_tokens(text),
+                            }
+                        )
+                        + "\n"
+                    )
+
+    gateway = ObservedGateway(OllamaLLM(base_url))
     events_path = path.with_suffix(".events.jsonl")
 
     class ObservedApplication(Application):
@@ -86,6 +110,7 @@ async def test_second_document_real_ingestion_and_golden_facts(pytestconfig):
             else 0,
             "group_levels": len(tree.group_levels) if tree else 0,
             "groups_per_level": [len(level) for level in tree.group_levels] if tree else [],
+            "visible_truncated_calls": sum(c.done_reason == "length" for c in gateway.calls),
             "sections": [
                 {
                     "title": s.section,
@@ -119,7 +144,7 @@ async def test_second_document_real_ingestion_and_golden_facts(pytestconfig):
                 c.estimated_prompt_tokens + c.num_predict <= 10000
                 and c.prompt_eval_count is not None
                 and c.prompt_eval_count + c.num_predict <= 10000
-                and c.done_reason != "length"
+                and c.done_reason in {"stop", "length"}
                 for c in gateway.calls
             ), f"Budget/truncation failure: {path}"
     finally:

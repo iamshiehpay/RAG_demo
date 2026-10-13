@@ -14,6 +14,11 @@ from .tokens import count_tokens
 def summary_context(summaries: list[Summary]) -> str:
     return "\n\n".join(
         f"[S{i}] {s.section} (p.{s.page_start}–{s.page_end})\n{s.text}"
+        + (
+            "\nCovered Sections: " + "; ".join(s.section_titles)
+            if s.kind in {"group", "document"}
+            else ""
+        )
         for i, s in enumerate(summaries, 1)
     )
 
