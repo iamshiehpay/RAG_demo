@@ -225,3 +225,18 @@ The independent Claude review (#4830) found that caption-left bounds dropped Tab
 The same review caught a system-prompt-only limitation assertion, mismatched candidate/variant headers, caption-specific underscore cleanup and an oversized raw-line split gap. The regression now checks the actual uncertain Table Chunk in the answer's user message; a frontend static-render check verifies its limitation note and raw text. Math-italic artifact cleanup preserves identifier underscores, oversized raw lines split with the limitation repeated, and virtual Sections rebuild from their own Chunk fields instead of looking up duplicate labels. Early column inference also mistook isolated table cells for an opposite prose column; the targeted upload tests exposed that and the detection now requires opposite prose or a caption. No Q3 quality prompt tuning or additional cloud evaluation was performed.
 
 Rebased #03 onto main d56e092 including #04. Resolutions preserve embedding batches plus the table token limit, both AI logs, background upload lifecycle/ask guards plus request-local retrieval drop counts, and both README scopes. Frontend dist was rebuilt from the combined source. The cache-source regression failed until tables.py and embedder.py joined PIPELINE_SOURCES, then verifies source changes cause upload reprocessing and table metadata round-trips. An additional two-column upload case showed the physical page midpoint can clip an edge cell; the region now follows the opposite text gutter. The earlier rebased suite passed 207 tests; the final suite and final-backend Table 2 source UI acceptance are recorded in docs/verification/ticket-03/review-corrections/.
+
+### 2026-10-13 — #03 independent re-review catches table boundary regressions
+
+Independent reviewer nova-r03-hazu found that a close 10pt numbered heading below
+9pt table rows disappeared into raw Table evidence, while a wrapped prose line
+starting `Table 1.` stole its entire paragraph as the caption. Authored PDFs
+through public upload reproduced both findings; a stolen paragraph above 2K
+combined with a damaged numeric row ended upload in Error instead of Ready.
+The parser now supplies its own heading indices to table reconstruction. A
+formed grid stops at unrelated nonnumeric list/equation lines, but malformed
+numeric rows remain uncertain source evidence. Captions require block-leading
+or distinct typography and consume only lines from the actual caption onward.
+New RED→GREEN logs and the 421-token LightRAG preservation comparison are in
+`docs/verification/ticket-03/review-round2/`. Independent re-review and #02
+integration verification remain required; no cloud quality/prompt tuning ran.

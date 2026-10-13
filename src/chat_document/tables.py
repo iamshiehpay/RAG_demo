@@ -141,7 +141,7 @@ def _prose(line, width):
     )
 
 
-def _collect(candidates, caption_edge, width, *, above=False):
+def _collect(candidates, caption_edge, width, *, above=False, heading_lines=frozenset()):
     rows = _rows([line for _, line in candidates])
     if above:
         rows.reverse()
@@ -152,6 +152,8 @@ def _collect(candidates, caption_edge, width, *, above=False):
     height = None
     text_cell_x = None
     for row in rows:
+        if any(indices[id(line)] in heading_lines for line in row):
+            break
         top, bottom = min(line.bbox[1] for line in row), max(line.bbox[3] for line in row)
         h = median(line.bbox[3] - line.bbox[1] for line in row)
         gap = edge - bottom if above else top - edge
@@ -161,6 +163,16 @@ def _collect(candidates, caption_edge, width, *, above=False):
             break
         if first_size is not None and any(line.size > first_size * 1.2 for line in row):
             break
+        # Once numeric cells form a reliable grid, a trailing list/equation is
+        # body content. A damaged numeric row is still table evidence: retain it
+        # and mark the whole region uncertain instead of silently losing cells.
+        if chosen and not any(_numeric(line.text) for line in row):
+            formed = _rows([line for _, line in chosen])
+            extended = _rows([*(line for _, line in chosen), *row])
+            if (_paired_grid(formed) or _rectangular_grid(formed)) and not (
+                _paired_grid(extended) or _rectangular_grid(extended)
+            ):
+                break
         prose = [line for line in row if _prose(line, width)]
         if prose:
             # A labelled prose cell is source table content, but plain paragraph
@@ -209,7 +221,7 @@ def _rectangular_grid(rows):
     return texts[0], texts[1:], ""
 
 
-def reconstruct_tables(lines, *, page_widths=None) -> list[TableRegion]:
+def reconstruct_tables(lines, *, page_widths=None, heading_lines=frozenset()) -> list[TableRegion]:
     regions = []
     used = set()
     for i, caption in enumerate(lines):
@@ -217,6 +229,18 @@ def reconstruct_tables(lines, *, page_widths=None) -> list[TableRegion]:
         if not match or i in used:
             continue
         page_lines = [line for line in lines if line.page == caption.page]
+        preceding = [
+            line for line in lines[:i] if line.page == caption.page and line.block == caption.block
+        ]
+        # A wrapped body sentence beginning "Table N." is not a caption.
+        # Distinct caption typography can still open a caption within a block.
+        if preceding and all(
+            abs(line.size - caption.size) < 0.5
+            and line.bold == caption.bold
+            and line.fonts == caption.fonts
+            for line in preceding
+        ):
+            continue
         page_width = (page_widths or {}).get(caption.page, max(line.bbox[2] for line in page_lines))
         left, right = _column_bounds(caption, page_lines, page_width)
         caption_lines = [
@@ -224,6 +248,7 @@ def reconstruct_tables(lines, *, page_widths=None) -> list[TableRegion]:
             for j, line in enumerate(lines)
             if line.page == caption.page
             and line.block == caption.block
+            and j >= i
             and line.bbox[0] >= left - 2
             and line.bbox[2] <= right + 2
         ]
@@ -242,6 +267,7 @@ def reconstruct_tables(lines, *, page_widths=None) -> list[TableRegion]:
             [(j, line) for j, line in available if line.bbox[1] >= caption_bottom],
             caption_bottom,
             right - left,
+            heading_lines=heading_lines,
         )
         # Captions below a table must not swallow the following body paragraph.
         if not any(len(row) >= 2 for row in _rows([line for _, line in chosen])):
@@ -250,6 +276,7 @@ def reconstruct_tables(lines, *, page_widths=None) -> list[TableRegion]:
                 caption_top,
                 right - left,
                 above=True,
+                heading_lines=heading_lines,
             )
         rows = _rows([line for _, line in chosen])
         if len(rows) < 2 or not any(len(row) >= 2 for row in rows):

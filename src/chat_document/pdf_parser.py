@@ -606,12 +606,24 @@ def parse_pdf(content: bytes, *, chunk_token_target: int = CHUNK_TOKEN_TARGET) -
                 raise DocumentError(
                     "This Document has no text layer; scanned PDFs are not supported."
                 )
+            # Table detection precedes Section construction. Share the exact same
+            # heading decisions, including split/wrapped titles, without importing
+            # the parser from the table module or duplicating typography rules.
+            heading_lines = set()
+            index = 0
+            while index < len(lines):
+                title, consumed = _section_title(lines, index, body_size)
+                if title:
+                    heading_lines.update(range(index, index + consumed))
+                index += consumed
             return _sections(
                 lines,
                 body_size,
                 chunk_token_target,
                 reconstruct_tables(
-                    lines, page_widths={i: page.rect.width for i, page in enumerate(pdf, 1)}
+                    lines,
+                    page_widths={i: page.rect.width for i, page in enumerate(pdf, 1)},
+                    heading_lines=heading_lines,
                 ),
             )
     except (pymupdf.FileDataError, pymupdf.EmptyFileError) as exc:

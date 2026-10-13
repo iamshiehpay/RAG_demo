@@ -1,0 +1,59 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[wrapped-prose] _
+
+long = False
+
+    @pytest.mark.parametrize("long", [False, True], ids=["wrapped-prose", "over-2000-tokens"])
+    async def test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds(long):
+        chunks = await uploaded_chunks(wrapped_table_reference_pdf(long=long))
+        table = next(c for c in chunks if c.kind == "table")
+>       assert table.table_caption == "Table 1: Measured accuracy."
+E       AssertionError: assert 'The numbers ...eeds of runs.' == 'Table 1: Measured accuracy.'
+E         
+E         - Table 1: Measured accuracy.
+E         + The numbers below are drawn from independent evaluations of our measured systems. Table 1. Every value is averaged over three independent seeds of runs.
+
+tests/integration/test_tables.py:581: AssertionError
+_ test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[over-2000-tokens] _
+
+long = True
+
+    @pytest.mark.parametrize("long", [False, True], ids=["wrapped-prose", "over-2000-tokens"])
+    async def test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds(long):
+>       chunks = await uploaded_chunks(wrapped_table_reference_pdf(long=long))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_tables.py:579: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = b'%PDF-1.7\n%\xc2\xb5\xc2\xb6\n% Written by MuPDF 1.28.2\n\n1 0 obj\n<</Type/Catalog/Pages 2 0 R/Info<</Producer(MuPDF...e 258/Root 1 0 R/ID[<C3A5C38C4C7C49C3B06AC39365C39FC3><A4EF9490823EA3913D58F3326903678A>]>>\nstartxref\n56469\n%%EOF\n'
+
+    async def uploaded_chunks(data):
+        app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+        events = [e async for e in app.upload_document(data, "layout.pdf")]
+>       assert events[-1].type == "ready"
+E       AssertionError: assert 'error' == 'ready'
+E         
+E         - ready
+E         + error
+
+tests/integration/test_tables.py:345: AssertionError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_tables.py::test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[wrapped-prose]
+FAILED tests/integration/test_tables.py::test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[over-2000-tokens]
+2 failed, 20 deselected, 5 warnings in 0.96s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
@@ -489,3 +491,137 @@ async def test_column_table_uses_the_text_gutter_instead_of_clipping_at_page_mid
     assert table.table_rows == [["alpha", "19,999,999"]]
     assert "right column" not in table.text
     assert "right column" in "\n".join(c.text for c in chunks if c.kind == "text")
+
+
+def table_boundary_pdf(following):
+    """Reviewer shape: table font 9pt, close following body/heading font 10pt."""
+    import pymupdf
+
+    with pymupdf.open() as pdf:
+        page = pdf.new_page()
+        page.insert_text((72, 60), "1 Introduction", fontsize=14, fontname="tibo")
+        for i in range(8):
+            page.insert_text(
+                (72, 90 + i * 12),
+                "The experiments measure accuracy on several datasets and report their results.",
+                fontsize=10,
+                fontname="tiro",
+            )
+        page.insert_text((150, 210), "Table 1: Measured accuracy.", fontsize=9, fontname="tiro")
+        for i, row in enumerate(
+            [["Method", "Alpha", "Beta"], ["Base", "10.5", "20.1"], ["Ours", "11.7", "22.3"]]
+        ):
+            for x, cell in zip([72, 220, 320], row, strict=True):
+                page.insert_text((x, 224 + i * 12), cell, fontsize=9, fontname="tiro")
+        page.insert_text(
+            (72, 274),
+            following,
+            fontsize=10,
+            fontname="tibo" if following.startswith("2 ") else "tiro",
+        )
+        page.insert_text(
+            (72, 294),
+            "The following discussion belongs to its own Section.",
+            fontsize=10,
+            fontname="tiro",
+        )
+        return pdf.tobytes()
+
+
+async def test_heading_immediately_after_table_keeps_section_and_reconstructed_cells():
+    chunks = await uploaded_chunks(table_boundary_pdf("2 METHOD DETAILS"))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_reconstructed
+    assert table.table_rows == [["Base", "10.5", "20.1"], ["Ours", "11.7", "22.3"]]
+    assert table.section == "1 Introduction"
+    assert "METHOD DETAILS" not in table.text
+    discussion = next(c for c in chunks if "following discussion" in c.text)
+    assert discussion.kind == "text" and discussion.section == "2 METHOD DETAILS"
+
+
+@pytest.mark.parametrize("following", ["(a) Alpha subset", "x = 2 + y"])
+async def test_short_list_or_equation_after_grid_stays_in_section_prose(following):
+    chunks = await uploaded_chunks(table_boundary_pdf(following))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_reconstructed
+    assert table.table_rows == [["Base", "10.5", "20.1"], ["Ours", "11.7", "22.3"]]
+    assert following not in table.text
+    assert any(c.kind == "text" and following in c.text for c in chunks)
+
+
+def wrapped_table_reference_pdf(*, long=False):
+    import pymupdf
+
+    with pymupdf.open() as pdf:
+        count = 240 if long else 1
+        page = pdf.new_page(width=600, height=max(800, count * 12 + 300))
+        page.insert_text((72, 60), "1 Results", fontsize=14, fontname="tibo")
+        for i in range(count):
+            page.insert_text(
+                (72, 90 + i * 12),
+                "The numbers below are drawn from independent evaluations of our measured systems.",
+                fontsize=10,
+                fontname="tiro",
+            )
+        y = 90 + count * 12
+        page.insert_text(
+            (72, y),
+            "Table 1. Every value is averaged over three independent seeds of runs.",
+            fontsize=10,
+            fontname="tiro",
+        )
+        for i, row in enumerate(
+            [["Method", "Alpha", "Beta"], ["Base", "10.5", "20.1"], ["Ours", "11.7", "22.3"]]
+        ):
+            for x, cell in zip([72, 220, 320], row, strict=True):
+                if long and i == 2 and x == 320:
+                    continue  # A damaged numeric row must remain uncertain raw evidence.
+                page.insert_text((x, y + 25 + i * 12), cell, fontsize=9, fontname="tiro")
+        page.insert_text(
+            (150, y + 68),
+            "Table 1: Measured accuracy.",
+            fontsize=9,
+            fontname="tiro",
+        )
+        return pdf.tobytes()
+
+
+@pytest.mark.parametrize("long", [False, True], ids=["wrapped-prose", "over-2000-tokens"])
+async def test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds(long):
+    chunks = await uploaded_chunks(wrapped_table_reference_pdf(long=long))
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_caption == "Table 1: Measured accuracy."
+    if long:
+        assert not table.table_reconstructed
+        assert all(value in table.text for value in ["Base", "10.5", "20.1", "Ours", "11.7"])
+    else:
+        assert table.table_reconstructed
+        assert table.table_rows == [["Base", "10.5", "20.1"], ["Ours", "11.7", "22.3"]]
+    prose = "\n".join(c.text for c in chunks if c.kind == "text")
+    assert "The numbers below" in prose and "Table 1. Every value" in prose
+    assert "independent seeds" not in table.text
+    assert "Table 1: Measured accuracy." not in prose
+
+
+async def test_distinct_caption_typography_within_body_block_keeps_prior_prose():
+    import pymupdf
+
+    with pymupdf.open() as pdf:
+        page = pdf.new_page()
+        page.insert_text((72, 60), "1 Results", fontsize=14, fontname="tibo")
+        page.insert_text(
+            (72, 90),
+            "The following measurements compare the accuracy of both systems.",
+            fontsize=10,
+            fontname="tiro",
+        )
+        page.insert_text((72, 102), "Table 1: Measured accuracy.", fontsize=9, fontname="tiro")
+        for i, row in enumerate([["Method", "Accuracy"], ["Base", "10.5"], ["Ours", "11.7"]]):
+            for x, cell in zip([72, 220], row, strict=True):
+                page.insert_text((x, 127 + i * 12), cell, fontsize=9, fontname="tiro")
+        chunks = await uploaded_chunks(pdf.tobytes())
+    table = next(c for c in chunks if c.kind == "table")
+    assert table.table_reconstructed and table.table_caption == "Table 1: Measured accuracy."
+    assert table.table_rows == [["Base", "10.5"], ["Ours", "11.7"]]
+    assert "following measurements" not in table.text
+    assert any(c.kind == "text" and "following measurements" in c.text for c in chunks)

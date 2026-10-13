@@ -1,0 +1,9 @@
+{
+  "baseline_source": "/private/tmp/nova-r03-base/src",
+  "current_head": "f7268f9337a6287f21a2eed6e54dd9d919a15699",
+  "sections_identical": true,
+  "baseline_number_count": 421,
+  "candidate_number_count": 421,
+  "missing": {},
+  "extra": {}
+}
