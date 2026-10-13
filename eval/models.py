@@ -62,3 +62,12 @@ class EvaluationCase:
     required_citation_page: int | None = None
     required_citation_term: str | None = None
     standalone_terms: tuple[tuple[str, ...], ...] = ()
+    accepted_question_types: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        if self.expected_question_type and self.accepted_question_types:
+            raise ValueError("Use one fixed expected type or one declared accepted set, not both")
+        if len(set(self.accepted_question_types)) != len(self.accepted_question_types) or any(
+            value not in {"Global", "Lookup", "Synthesis"} for value in self.accepted_question_types
+        ):
+            raise ValueError("Accepted Question Types must be distinct valid routes")

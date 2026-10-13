@@ -308,8 +308,7 @@ def _reference_grid(rows):
         [_clean(line.text) for line in header],
         [[" ".join(cell) for cell in row] for row in cells],
         "Identifiers and model-version numbers belong to the printed label column; "
-        "only numeric columns contain measurements. Do not infer an aggregation "
-        "formula from a column named Total without its source definition.",
+        "the other columns contain the values named by their printed headers.",
     )
 
 

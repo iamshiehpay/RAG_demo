@@ -177,6 +177,9 @@ async def run_evaluation(
 
     history_supported = "history" in inspect.signature(application.ask).parameters
     for case in cases:
+        accepted_types = case.accepted_question_types or (
+            (case.expected_question_type,) if case.expected_question_type else ()
+        )
         for repetition in range(1, repeats + 1):
             if progress:
                 progress(f"{case.id} {repetition}/{repeats}")
@@ -184,7 +187,7 @@ async def run_evaluation(
                 case.id,
                 repetition,
                 case.question,
-                expected_question_type=case.expected_question_type,
+                expected_question_type=" / ".join(accepted_types) or None,
             )
             started, call_start = perf_counter(), len(gateway.calls)
             try:
@@ -235,14 +238,13 @@ async def run_evaluation(
                                 f"requires {case.minimum_citation_sections}",
                             )
                         )
-                if case.expected_question_type:
+                if accepted_types:
                     run.facts.append(
                         FactResult(
                             "question_type",
                             "events",
-                            run.plan_source == "router"
-                            and run.question_type == case.expected_question_type,
-                            f"Expected {case.expected_question_type}; actual {run.question_type}; "
+                            run.plan_source == "router" and run.question_type in accepted_types,
+                            f"Expected {' / '.join(accepted_types)}; actual {run.question_type}; "
                             f"plan_source={run.plan_source}; fallback_reason={run.fallback_reason}",
                             fallback=run.plan_source == "fallback",
                         )

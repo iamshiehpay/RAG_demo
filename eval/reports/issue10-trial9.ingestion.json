@@ -1,0 +1,1606 @@
+{
+  "revision": "1286357f2bed9d4d39d4ffda91a05b3f9bbb5c2d",
+  "dirty": "yes",
+  "pipeline_version": "ingest-v2-2de7bb9d9f24566876ee1060cc56f178164bb3f0d46454c232ef4b62664afeee",
+  "pdf_sha256": "8ab9a63ca99b0b26432e7a4d6b4c2810d00b97a2df1791973fe2d7d321ede0b9",
+  "upload_error": "",
+  "section_count": 31,
+  "chunk_count": 159,
+  "section_summary_tokens": 7120,
+  "group_levels": 1,
+  "groups_per_level": [
+    2
+  ],
+  "visible_truncated_calls": 3,
+  "sections": [
+    {
+      "title": "1 Introduction",
+      "pages": [
+        1,
+        4
+      ],
+      "tokens": 208,
+      "target": 326,
+      "source_section_ids": [
+        "section-2"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-1",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-2",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-3",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-4",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-5",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-6"
+      ]
+    },
+    {
+      "title": "2 Robotic Foundation Models",
+      "pages": [
+        4,
+        6
+      ],
+      "tokens": 370,
+      "target": 324,
+      "source_section_ids": [
+        "section-3"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-7",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-8",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-9",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-10",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-11"
+      ]
+    },
+    {
+      "title": "3 Review Methodology & Corpora Composition",
+      "pages": [
+        6,
+        7
+      ],
+      "tokens": 106,
+      "target": 80,
+      "source_section_ids": [
+        "section-4"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-12"
+      ]
+    },
+    {
+      "title": "3.1 Literature Acquisition Procedure",
+      "pages": [
+        7,
+        8
+      ],
+      "tokens": 310,
+      "target": 165,
+      "source_section_ids": [
+        "section-5"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-13",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-14",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-15"
+      ]
+    },
+    {
+      "title": "3.2 RFM-Related Corpora",
+      "pages": [
+        8,
+        10
+      ],
+      "tokens": 302,
+      "target": 218,
+      "source_section_ids": [
+        "section-6"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-16",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-17",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-18",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-19"
+      ]
+    },
+    {
+      "title": "3.3 Industrial Implication Corpus",
+      "pages": [
+        10,
+        11
+      ],
+      "tokens": 119,
+      "target": 80,
+      "source_section_ids": [
+        "section-7"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-20",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-21"
+      ]
+    },
+    {
+      "title": "3.4 Further Corpora & Manual Searches",
+      "pages": [
+        11,
+        11
+      ],
+      "tokens": 64,
+      "target": 80,
+      "source_section_ids": [
+        "section-8"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-22"
+      ]
+    },
+    {
+      "title": "4 Related Works",
+      "pages": [
+        11,
+        13
+      ],
+      "tokens": 399,
+      "target": 268,
+      "source_section_ids": [
+        "section-9"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-23",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-24",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-25",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-26",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-27",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-28"
+      ]
+    },
+    {
+      "title": "5 Rise of Cobots in Industry",
+      "pages": [
+        13,
+        13
+      ],
+      "tokens": 61,
+      "target": 80,
+      "source_section_ids": [
+        "section-10"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-29"
+      ]
+    },
+    {
+      "title": "5.1 Landscape of Industrial Robotics: Tradition & Transformation",
+      "pages": [
+        13,
+        14
+      ],
+      "tokens": 278,
+      "target": 133,
+      "source_section_ids": [
+        "section-11"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-30",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-31",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-32"
+      ]
+    },
+    {
+      "title": "5.2 Productive Cobot Applications & Domains",
+      "pages": [
+        14,
+        14
+      ],
+      "tokens": 217,
+      "target": 114,
+      "source_section_ids": [
+        "section-12"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-33",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-34"
+      ]
+    },
+    {
+      "title": "5.3 Drivers of the Industrial Shift Toward Cobots",
+      "pages": [
+        14,
+        15
+      ],
+      "tokens": 185,
+      "target": 129,
+      "source_section_ids": [
+        "section-13"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-35",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-36",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-37"
+      ]
+    },
+    {
+      "title": "5.4 Towards Intelligent & Collaborative Automation",
+      "pages": [
+        15,
+        16
+      ],
+      "tokens": 114,
+      "target": 80,
+      "source_section_ids": [
+        "section-14"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-38"
+      ]
+    },
+    {
+      "title": "6 Cobot & Compute Hardware",
+      "pages": [
+        16,
+        16
+      ],
+      "tokens": 68,
+      "target": 80,
+      "source_section_ids": [
+        "section-15"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-39"
+      ]
+    },
+    {
+      "title": "6.1 Cobot Capabilities & Power Consumption",
+      "pages": [
+        16,
+        17
+      ],
+      "tokens": 301,
+      "target": 159,
+      "source_section_ids": [
+        "section-16"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-40",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-41",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-42",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-43",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-44"
+      ]
+    },
+    {
+      "title": "6.2 Sensing & Manipulation Hardware",
+      "pages": [
+        17,
+        18
+      ],
+      "tokens": 191,
+      "target": 103,
+      "source_section_ids": [
+        "section-17"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-45",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-46"
+      ]
+    },
+    {
+      "title": "6.3 Industrial Edge PCs",
+      "pages": [
+        18,
+        20
+      ],
+      "tokens": 250,
+      "target": 344,
+      "source_section_ids": [
+        "section-18"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-47",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-48",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-49",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-50",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-51"
+      ]
+    },
+    {
+      "title": "7 General & RFM-specific Industrial Implications",
+      "pages": [
+        20,
+        20
+      ],
+      "tokens": 105,
+      "target": 80,
+      "source_section_ids": [
+        "section-19"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-52"
+      ]
+    },
+    {
+      "title": "7.1 General Industrial Implications",
+      "pages": [
+        20,
+        25
+      ],
+      "tokens": 241,
+      "target": 500,
+      "source_section_ids": [
+        "section-20"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-53",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-54",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-55",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-56",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-57",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-58",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-59",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-60",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-61",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-62",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-63"
+      ]
+    },
+    {
+      "title": "7.2 Attributes of Industry-Grade RFMs",
+      "pages": [
+        25,
+        26
+      ],
+      "tokens": 221,
+      "target": 163,
+      "source_section_ids": [
+        "section-21"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-64",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-65",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-66",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-67"
+      ]
+    },
+    {
+      "title": "7.3 Evaluating Industrial Maturity: A Criteria Catalogue",
+      "pages": [
+        26,
+        28
+      ],
+      "tokens": 219,
+      "target": 322,
+      "source_section_ids": [
+        "section-22"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-68",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-69",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-70",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-71",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-72"
+      ]
+    },
+    {
+      "title": "8 RFM Overview & Evaluation",
+      "pages": [
+        28,
+        29
+      ],
+      "tokens": 99,
+      "target": 80,
+      "source_section_ids": [
+        "section-23"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-73"
+      ]
+    },
+    {
+      "title": "8.1 Evaluation Procedure",
+      "pages": [
+        29,
+        30
+      ],
+      "tokens": 379,
+      "target": 286,
+      "source_section_ids": [
+        "section-24"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-74",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-75",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-76",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-77",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-78"
+      ]
+    },
+    {
+      "title": "8.2 Highest Rated RFMs",
+      "pages": [
+        30,
+        33
+      ],
+      "tokens": 247,
+      "target": 457,
+      "source_section_ids": [
+        "section-25"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-79",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-80",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-81",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-82",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-83",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-84",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-85",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-86",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-87"
+      ]
+    },
+    {
+      "title": "8.3 Industrial Applicability Overview",
+      "pages": [
+        33,
+        37
+      ],
+      "tokens": 268,
+      "target": 468,
+      "source_section_ids": [
+        "section-26"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-88",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-89",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-90",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-91",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-92",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-93",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-94",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-95",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-96"
+      ]
+    },
+    {
+      "title": "9 Summary & Discussion",
+      "pages": [
+        37,
+        39
+      ],
+      "tokens": 495,
+      "target": 298,
+      "source_section_ids": [
+        "section-27"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-97",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-98",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-99",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-100",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-101",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-102",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-103"
+      ]
+    },
+    {
+      "title": "Appendix A Related Works",
+      "pages": [
+        71,
+        73
+      ],
+      "tokens": 263,
+      "target": 188,
+      "source_section_ids": [
+        "section-28"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-104",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-105",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-106"
+      ]
+    },
+    {
+      "title": "Appendix B Literature Research",
+      "pages": [
+        74,
+        76
+      ],
+      "tokens": 292,
+      "target": 240,
+      "source_section_ids": [
+        "section-29"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-107",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-108",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-109",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-110",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-111"
+      ]
+    },
+    {
+      "title": "Appendix C Industrial Implications",
+      "pages": [
+        77,
+        91
+      ],
+      "tokens": 429,
+      "target": 500,
+      "source_section_ids": [
+        "section-30"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-112",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-113",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-114",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-115",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-116",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-117",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-118",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-119",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-120",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-121",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-122",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-123",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-124",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-125",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-126"
+      ]
+    },
+    {
+      "title": "Appendix D RFM-Overview",
+      "pages": [
+        92,
+        109
+      ],
+      "tokens": 319,
+      "target": 500,
+      "source_section_ids": [
+        "section-31"
+      ],
+      "source_chunk_ids": [
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-127",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-128",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-129",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-130",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-131",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-132",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-133",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-134",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-135",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-136",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-137",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-138",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-139",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-140",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-141",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-142",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-143",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-144",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-145",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-146",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-147",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-148",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-149",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-150",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-151",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-152",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-153",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-154",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-155",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-156",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-157",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-158",
+        "e200ca98dc6943abbd7a1504cd10e4ca:chunk-159"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 815,
+      "prompt_eval_count": 590,
+      "eval_count": 122,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need summary ~52 words.",
+      "latency_ms": 1425.7238330319524,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1695,
+      "prompt_eval_count": 1470,
+      "eval_count": 331,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary ~165 tokens, ~107 words.",
+      "latency_ms": 2398.7491249572486,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2798,
+      "prompt_eval_count": 2573,
+      "eval_count": 392,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~324 tokens, ~211 words.",
+      "latency_ms": 2695.2106249518692,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 688,
+      "prompt_eval_count": 463,
+      "eval_count": 94,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary of this section. 80 tokens target, about 52 words. Provide concise.",
+      "latency_ms": 894.9791251216084,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2769,
+      "prompt_eval_count": 2544,
+      "eval_count": 579,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~326 tokens, ~212 words.",
+      "latency_ms": 5550.8003749419,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1112,
+      "prompt_eval_count": 887,
+      "eval_count": 135,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need summary ~52 words.",
+      "latency_ms": 5093.984875129536,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2057,
+      "prompt_eval_count": 1832,
+      "eval_count": 325,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary ~218 tokens (~142 words). Provide concise.",
+      "latency_ms": 6200.518999947235,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 672,
+      "prompt_eval_count": 447,
+      "eval_count": 83,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~80 tokens, ~52 words.",
+      "latency_ms": 1159.3530839309096,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1207,
+      "prompt_eval_count": 982,
+      "eval_count": 233,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary \u2264123 words, \u22643 sentences. Let's craft.",
+      "latency_ms": 3189.732958097011,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2432,
+      "prompt_eval_count": 2207,
+      "eval_count": 398,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary ~268 tokens, ~174 words. Provide concise.",
+      "latency_ms": 8307.946041924879,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1502,
+      "prompt_eval_count": 1277,
+      "eval_count": 205,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need summary ~129 tokens, ~84 words.",
+      "latency_ms": 4744.976625079289,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1493,
+      "prompt_eval_count": 1268,
+      "eval_count": 271,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need summary ~133 tokens, ~86 words.",
+      "latency_ms": 5948.529415996745,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1363,
+      "prompt_eval_count": 1138,
+      "eval_count": 236,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need 114 tokens summary ~74 words.",
+      "latency_ms": 5066.927417181432,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1026,
+      "prompt_eval_count": 801,
+      "eval_count": 132,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need 80 tokens ~52 words.",
+      "latency_ms": 2308.2361668348312,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 912,
+      "prompt_eval_count": 687,
+      "eval_count": 84,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need summary ~52 words.",
+      "latency_ms": 1082.6800831127912,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1660,
+      "prompt_eval_count": 1435,
+      "eval_count": 298,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary ~159 tokens, ~103 words. Let's craft.",
+      "latency_ms": 1737.6348339021206,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1285,
+      "prompt_eval_count": 1060,
+      "eval_count": 214,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~103 tokens, ~67 words English.",
+      "latency_ms": 2008.7564170826226,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 864,
+      "prompt_eval_count": 639,
+      "eval_count": 127,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~80 tokens, ~52 words.",
+      "latency_ms": 1747.1104168798774,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1688,
+      "prompt_eval_count": 1463,
+      "eval_count": 216,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~163 tokens, ~106 words.",
+      "latency_ms": 1787.1620419900864,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 882,
+      "prompt_eval_count": 657,
+      "eval_count": 121,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to write summary ~80 tokens, ~52 words.",
+      "latency_ms": 3436.375374905765,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2889,
+      "prompt_eval_count": 2664,
+      "eval_count": 565,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary ~344 tokens, ~224 words. Let's craft.",
+      "latency_ms": 6912.557249888778,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2751,
+      "prompt_eval_count": 2526,
+      "eval_count": 546,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary ~322 tokens, ~209 words. Provide concise summary of section.",
+      "latency_ms": 6335.927124833688,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1189,
+      "prompt_eval_count": 964,
+      "eval_count": 272,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary \u2264135 words, \u22643 sentences.",
+      "latency_ms": 1873.5197081696242,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 5077,
+      "prompt_eval_count": 4852,
+      "eval_count": 838,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary of Section 7.1. 500 tokens ~ 325 words. Provide concise prose covering all 11 implications.",
+      "latency_ms": 7955.074416939169,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2548,
+      "prompt_eval_count": 2323,
+      "eval_count": 397,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~186 words.",
+      "latency_ms": 2608.746124897152,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1167,
+      "prompt_eval_count": 942,
+      "eval_count": 241,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary \u2264189 words, \u22643 sentences.",
+      "latency_ms": 1537.9954169038683,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1449,
+      "prompt_eval_count": 1224,
+      "eval_count": 274,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary \u2264190 words, \u22643 sentences. Include all points. Let's craft two sentences maybe.",
+      "latency_ms": 1791.783125139773,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2678,
+      "prompt_eval_count": 2453,
+      "eval_count": 517,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~298 tokens, ~194 words.",
+      "latency_ms": 2578.0579999554902,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 3644,
+      "prompt_eval_count": 3419,
+      "eval_count": 709,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need produce summary ~457 tokens, ~297 words.",
+      "latency_ms": 3830.360708059743,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1848,
+      "prompt_eval_count": 1623,
+      "eval_count": 309,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of Appendix A Related Works. Include that Table A1 lists 55 publications, reconstruction failed. Mention surveys focus on VLA models, foundation models, LLMs, etc., years 2023-2025. No quantitative results. Summarize scope and limitation (cannot reconstruct table).",
+      "latency_ms": 1896.577457897365,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1364,
+      "prompt_eval_count": 1139,
+      "eval_count": 247,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need concise summary \u2264135 words, \u22643 sentences. Let's craft two sentences.",
+      "latency_ms": 1902.793499873951,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 3770,
+      "prompt_eval_count": 3545,
+      "eval_count": 912,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary ~468 tokens, ~304 words. Provide concise.",
+      "latency_ms": 5259.414916159585,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2195,
+      "prompt_eval_count": 1970,
+      "eval_count": 299,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary of Appendix B Literature Research. Include both tables description and note reconstruction failure. Provide numbers of queries etc.",
+      "latency_ms": 2769.3481252063066,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1563,
+      "prompt_eval_count": 1338,
+      "eval_count": 272,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need a single compact paragraph <=108 words, max 3 sentences. Let's craft ~100 words.",
+      "latency_ms": 2281.2214579898864,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 6836,
+      "prompt_eval_count": 6611,
+      "eval_count": 656,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of this section. Summarize that Table D5 lists 324 RFMs with manipulation, shows total and per-implication applicability scores (0-0.44). Highest total 0.12 etc. Mention methodology: LLM pipeline, rounding. Note distribution: scores low, many zeros, I1 often highest. No further narrative.",
+      "latency_ms": 5489.334208890796,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 8185,
+      "prompt_eval_count": 7960,
+      "eval_count": 1131,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of Appendix C Industrial Implications criteria. No numbers. Just summarize categories and key points. 500 tokens ~ 325 words.",
+      "latency_ms": 8349.60866603069,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2083,
+      "prompt_eval_count": 1858,
+      "eval_count": 521,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary of Appendix C. Provide concise.",
+      "latency_ms": 2965.0564999319613,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 7037,
+      "prompt_eval_count": 6812,
+      "eval_count": 787,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of this section: overview table of RFMs with manipulation capabilities, their industrial applicability scores. Summarize distribution: total scores low (0.03-0.05), many share similar pattern: I1 around 0.1-0.22, I2 often 0, I3-4 zero, some I5/I6 non-zero, I9/I10/I11 contributions. Emphasize methodology: LLM pipeline, rounding, 324 models. Mention limitations: based on proportional ratings, not absolute performance.",
+      "latency_ms": 4291.484625078738,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 8568,
+      "prompt_eval_count": 8343,
+      "eval_count": 549,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of this section. Summarize that 324 RFMs identified, all have very low applicability scores, distribution etc. Mention methodology.",
+      "latency_ms": 3878.452542005107,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2242,
+      "prompt_eval_count": 2017,
+      "eval_count": 1200,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of Appendix C. 500 tokens ~ 325 words. No headings. Just prose.",
+      "latency_ms": 5888.533582910895,
+      "done_reason": "length",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2304,
+      "prompt_eval_count": 2079,
+      "eval_count": 439,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need a single compact paragraph <=225 words, max 3 sentences. Summarize all criteria. Let's craft ~200 words.",
+      "latency_ms": 3136.033082846552,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 6761,
+      "prompt_eval_count": 6536,
+      "eval_count": 1200,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary of Appendix D. Include tables overview and criterion fulfillment percentages. 500 tokens.",
+      "latency_ms": 5076.918999897316,
+      "done_reason": "length",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 6823,
+      "prompt_eval_count": 6598,
+      "eval_count": 359,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need a concise summary of Appendix D. Include tables stats. Three sentences max. Let's craft.",
+      "latency_ms": 2812.571208924055,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 2699,
+      "prompt_eval_count": 2474,
+      "eval_count": 777,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary using evidence. Combine points.",
+      "latency_ms": 3692.3859999515116,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 1433,
+      "prompt_eval_count": 1208,
+      "eval_count": 316,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need concise summary \u2264135 words, \u22643 sentences. Let's craft.",
+      "latency_ms": 6066.718999994919,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "group_summary",
+      "estimated_prompt_tokens": 6378,
+      "prompt_eval_count": 6153,
+      "eval_count": 2500,
+      "think": "low",
+      "num_predict": 2500,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~1200 tokens, ~780 words.",
+      "latency_ms": 19924.932041903958,
+      "done_reason": "length",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "group_summary",
+      "estimated_prompt_tokens": 6440,
+      "prompt_eval_count": 6215,
+      "eval_count": 379,
+      "think": "low",
+      "num_predict": 2500,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary paragraph \u2264540 words, max 3 sentences. Let's craft two sentences.",
+      "latency_ms": 2380.2151661366224,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "group_summary",
+      "estimated_prompt_tokens": 2460,
+      "prompt_eval_count": 2235,
+      "eval_count": 1301,
+      "think": "low",
+      "num_predict": 2500,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need produce group summary covering all sections. ~600 words.",
+      "latency_ms": 5802.289041923359,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "document_summary",
+      "estimated_prompt_tokens": 2577,
+      "prompt_eval_count": 2352,
+      "eval_count": 795,
+      "think": "low",
+      "num_predict": 2500,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "Need to produce summary ~500 tokens, ~325 words.",
+      "latency_ms": 3540.7774159684777,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 854,
+      "prompt_eval_count": 515,
+      "eval_count": 132,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to classify. The question asks specific numbers from a comparison: how many model papers manually annotated for expert validation, and how InfoFound affects overall accuracy and positive-class F1 relative to All, including evaluation counts. That's lookup of specific facts from a table/figure. So question_type Lookup. sub_queries [].\n\nReturn JSON.",
+      "latency_ms": 981.1163330450654,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 6093,
+      "prompt_eval_count": 5868,
+      "eval_count": 430,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to answer using only supplied excerpts. The question: \"How many model papers were manually annotated for expert validation, and in that comparison, how does InfoFound affect overall accuracy and positive-class F1 relative to All, including the evaluation counts for both settings?\"\n\nWe need to find number of model papers manually annotated for expert validation. Look at excerpts: C1 mentions \"we created three blind expert-rated catalogue evaluations: two models were annotated by an expert prior to running the automated pipeline, and one additional model was annotated after the automated run had completed\". So three model papers were manually annotated. That's the count.\n\nNow InfoFound effect: Table 9 (C6) shows All: N=447, Accuracy=0.966, F1=0.762. InfoFound: N=304, Accuracy=0.951, F1=0.762. So overall accuracy drops from 0.966 to 0.951, while positive-class F1 remains same at 0.762. Provide evaluation counts: All N=447, InfoFound N=304.\n\nWe must cite each claim. Use citations: number of papers manually annotated: from C1. Also maybe C2 mentions three papers. C1 already says three blind expert-rated catalogue evaluations. Use [C1]. For counts and metrics: use [C6].\n\nAnswer in English (question in English). Provide concise answer with citations.\n\n",
+      "latency_ms": 1970.5905409064144,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "judge",
+      "estimated_prompt_tokens": 901,
+      "prompt_eval_count": 676,
+      "eval_count": 162,
+      "think": "low",
+      "num_predict": 1000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to see if answer matches claim. The answer states exactly those numbers and context. It asserts them. So matched true, asserted true. Evidence excerpt: include the sentences.",
+      "latency_ms": 881.3416662160307,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "judge",
+      "estimated_prompt_tokens": 786,
+      "prompt_eval_count": 561,
+      "eval_count": 94,
+      "think": "low",
+      "num_predict": 1000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to see if answer asserts the claim: \"The InfoFound filter increases expert-validation overall accuracy or positive-class F1 relative to All.\" The answer says accuracy decreases (0.966 to 0.951) and F1 unchanged. So it does NOT assert increase; it states opposite. So matched false, asserted false.",
+      "latency_ms": 756.6285419743508,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 856,
+      "prompt_eval_count": 517,
+      "eval_count": 94,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to output JSON. The question is a Global? It's whole-document summary plus details, so Global. sub_queries [].\n\nReturn JSON.",
+      "latency_ms": 745.4388751648366,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 2806,
+      "prompt_eval_count": 2581,
+      "eval_count": 1914,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to answer using only supplied excerpts S1 and S2. Summarize motivation, assessment method, main findings, limitations. Explain how unreported model capabilities affect assessment and scope of expert validation. Give purpose of each appendix (A, B, C, D). Cite each factual claim with [S#]. No invented citations. Must use exact format: [S1] etc. Provide in English (question in English). Ensure each claim has citation.\n\nLet's extract needed info:\n\nMotivation: survey emerging field of RFMs, need for generalist core for cobots, gap between hardware and robust models, need for adaptable low-effort intelligence for high-mix low-volume industrial settings. Sources S1 and S2.\n\nAssessment method: build three corpora (primary RFM set 1025 works, industrial-implication set 125, auxiliary 113) using automated pipeline (ASQS, duplicate removal, LLM relevance filtering, manual enrichment). Derive 11 industrial requirements mapped to 47 attributes, 149-item criteria catalogue. Apply via GPT-5.1 pipeline to 324 manipulation-capable RFMs, yielding 48,276 binary decisions, compute scores. Scores normalized, overall score 0.12, peak I1 0.44. Also mention that scores are proportional, no empirical data, lack confidence intervals. Sources S1 and S2.\n\nMain findings: top model Gemini Robotics 1.5 only satisfies about one-tenth of criteria (overall 0.12), high breadth but shallow depth, strong on adaptability, benchmarking, data usage, low on safety, HRI, real-time latency, cost. Overall low maturity across corpus, most models near zero on many criteria, only I1 common. No model meets all criteria. Research concentrates on adaptability/flexibility, benchmarking, data usage; safety/compliance, HRI, real-time, cost underrepresented. Need for layered architectures, better benchmarks, evaluation protocols. Sources S1 and S2.\n\nLimitations: structure not reliably reconstructed, tables missing, scores are automatically generated, lack external validation, represent indirect estimates not measured capabilities. Unreported model capabilities (e.g., safety, real-time) lead to near-zero scores because not captured; assessment limited to reported attributes. Scope of expert validation is limited; authors note lack of external validation, expert review. Also extraction warning about unreliable reconstruction. Sources S1 and S2.\n\nUnreported model capabilities affect assessment: because the pipeline relies on documented attributes; missing info leads to zero/near-zero scores, skewing assessment; indicates need for expert validation to fill gaps. Scope of expert validation: limited, as authors stress that ratings are context-dependent, automatically generated, lack external validation, thus expert validation is narrow.\n\nPurpose of each appendix:\n\nAppendix A: curated bibliography of 55 recent surveys (2023-2025) covering vision-language-action models, LLMs, multimodal foundations, applications; serves as reference map, no quantitative data. [S2]\n\nAppendix B: documents systematic query strings used to assemble literature corpora; raw query strings reported; tables not reliably reconstructed; no retrieval stats. [S2]\n\nAppendix C: defines industrial-implication rubric in detail; eight primary categories expanded with benchmark themes; outlines safety, robustness, compliance, real-time, cost, explainability requirements. [S2]\n\nAppendix D: presents RFM overview; each of 324 RFMs gets proportional industrial applicability scores across eleven dimensions; scores normalized; shows low totals; confirms fragmented applicability. [S2]\n\nNow craft answer with citations after each claim. Ensure each factual claim has citation. Use [S1] or [S2] as appropriate. Might combine both for some claims. Provide concise but comprehensive summary.\n\n",
+      "latency_ms": 7729.787457967177,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "judge",
+      "estimated_prompt_tokens": 1927,
+      "prompt_eval_count": 1702,
+      "eval_count": 74,
+      "think": "low",
+      "num_predict": 1000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to check if answer covers the claim. The claim is long, describing many aspects. We must see if answer explicitly states all required parts. Likely not fully. So matched false. asserted false. evidence \"\".",
+      "latency_ms": 919.8513329029083,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    }
+  ]
+}

@@ -50,6 +50,10 @@ def summary_messages(evidence: str, target: int, *, label: str) -> list[dict[str
                 "Distinguish absence of reported evidence from demonstrated failure or "
                 "absence of capability. Do not invent methodological limitations or "
                 "aggregation formulas that the source does not define. "
+                "Summarize only this supplied material's scope. Do not infer that the "
+                "whole Document lacks methods, controls or validation merely because "
+                "they are not described in this Section or table. Negative methodological "
+                "claims require an explicit source statement, not an absence of discussion. "
                 "For a Group or Document Summary, retain a brief contribution from every "
                 "supplied Section, including supplementary material; do not drop entire "
                 "Sections because other Sections contain more detail. "
@@ -102,8 +106,8 @@ class SummaryTreeBuilder:
         if any(LIMITATION in m["content"] for m in messages if m["role"] == "user"):
             if LIMITATION not in text:
                 text = (
-                    f"Table limitation: {LIMITATION}; do not infer missing row/column "
-                    f"associations.\n{text}"
+                    f"System extraction warning (not an author claim): {LIMITATION}; "
+                    f"do not infer missing row/column associations.\n{text}"
                 )
         return text
 
@@ -126,7 +130,8 @@ class SummaryTreeBuilder:
         for _ in range(3):
             if count_tokens(text) <= limit:
                 return text
-            # Re-summarize supported generated evidence; retain original source IDs.
+            # Regenerate from the complete original evidence, not the failed
+            # draft: using a generated claim as evidence can amplify hallucination.
             # Never slice a response to fake length compliance or hide truncation.
             # Adapt generation to measured overshoot, leaving the original
             # proportional target and source IDs intact. This is no text slicing.
@@ -135,7 +140,9 @@ class SummaryTreeBuilder:
                 round(correction_target * (limit - 32) / count_tokens(text)),
             )
             revised = summary_messages(
-                text, correction_target, label=call_type.replace("_", " ").title()
+                messages[-1]["content"].removeprefix("Document evidence:\n"),
+                correction_target,
+                label=call_type.replace("_", " ").title(),
             )
             text = await self._generate_once(
                 call_type, _length_retry(revised, correction_target), calls

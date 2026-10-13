@@ -1,0 +1,32 @@
+{
+  "session_path": "/Users/shiehpay/.codex/sessions/2026/10/13/rollout-2026-10-13T09-24-45-01a132dc-ad04-7f12-aac9-248e6e3211e0.jsonl",
+  "turn_context_timestamp": "2026-10-13T06:28:52.695Z",
+  "actual_turn_context": {
+    "turn_id": "01a13376-c85b-7c33-9a26-a8ad978c46a2",
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "cwd": "/Users/shiehpay/Desktop/resume/rag/.worktrees/10-second-document",
+    "approval_policy": "on-request",
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/Users/shiehpay/.hcom"
+      ],
+      "network_access": true,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    }
+  },
+  "hcom_report": {
+    "agent_id": null,
+    "directory": "/Users/shiehpay/Desktop/resume/rag/.worktrees/10-second-document",
+    "name": "fimo",
+    "parent_name": null,
+    "session_id": "01a132dc-ad04-7f12-aac9-248e6e3211e0",
+    "status": "active",
+    "tool": "codex",
+    "transcript_path": "/Users/shiehpay/.codex/sessions/2026/10/13/rollout-2026-10-13T09-24-45-01a132dc-ad04-7f12-aac9-248e6e3211e0.jsonl"
+  },
+  "approval_reviewer_from_developer_session": "auto_review",
+  "model_not_inferred_from_requested_launch": true
+}

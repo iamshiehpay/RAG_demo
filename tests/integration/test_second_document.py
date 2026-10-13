@@ -359,3 +359,18 @@ async def test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores
             ["[11]", "Alpha 1.7", "0.25", "17"],
             ["[12]", "Beta", "0.32", "19"],
         ]
+
+
+async def test_summary_length_correction_uses_original_source_not_the_failed_draft():
+    with pymupdf.open() as pdf:
+        page = pdf.new_page()
+        page.insert_text((50, 60), "1 Measurements", fontsize=14)
+        page.insert_text(
+            (50, 100), "SOURCE_TRUTH: the measurement is supported by evidence.", fontsize=10
+        )
+        content = pdf.tobytes()
+    llm = ScriptedLLM(["UNSUPPORTED_DRAFT claim. " * 100, "Supported measurement.", "Overview."])
+    app = Application(DeterministicEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(content, "measurements.pdf")][-1].type == "ready"
+    corrective = llm.calls[1].messages[-1]["content"]
+    assert "SOURCE_TRUTH" in corrective and "UNSUPPORTED_DRAFT" not in corrective

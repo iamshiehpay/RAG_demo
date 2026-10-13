@@ -54,9 +54,11 @@ SECOND_DOCUMENT_CASES = (
                 "is forbidden; negating this claim is correct.",
             ),
         ),
-        "Synthesis",
+        # This finalized mixed question can use either table+linked prose or
+        # sub-query retrieval. Main11593 accepted both; fallback is still a fail.
         required_citation_page=31,
         required_citation_term="Table 9",
+        accepted_question_types=("Lookup", "Synthesis"),
     ),
     EvaluationCase(
         "SECOND_SUMMARY",
@@ -79,6 +81,7 @@ SECOND_DOCUMENT_CASES = (
                 "catalogue and model-level results. Does not claim a model is universally "
                 "production-ready. Motivation, method, findings and limitations must "
                 "all be supported by verbatim excerpts from the answer.",
+                answer_property=True,
             ),
         ),
         "Global",

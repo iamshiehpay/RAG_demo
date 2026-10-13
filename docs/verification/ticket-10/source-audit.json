@@ -1309,9 +1309,9 @@
           109
         ],
         "appendix": true,
-        "source_tokens": 27395,
+        "source_tokens": 26913,
         "target": 500,
-        "chunks": 35,
+        "chunks": 33,
         "tables": [
           {
             "label": "Table D5",
@@ -1547,7 +1547,7 @@
       }
     ],
     "source_bearing_sections": 30,
-    "chunk_count": 161,
+    "chunk_count": 159,
     "target_total": 6845,
     "all_chunk_pages_inside_own_section": true
   },

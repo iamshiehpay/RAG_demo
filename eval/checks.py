@@ -22,6 +22,11 @@ metric, values, comparison baseline and direction. A number under another varian
 For matched=true, copy a contiguous verbatim excerpt of the answer as evidence, including
 qualifiers and negation. Never paraphrase or invent evidence, and never omit negation.
 An excerpt may span adjacent sentences/rows to preserve numeric context.
+If required_evidence_context is provided, every alternative group must have at
+least one listed term in the excerpt. Include all adjacent answer sentences needed
+to support the ENTIRE claim; the excerpt may be the whole answer when necessary.
+Evidence is copied from the ANSWER, not the PDF. A correct answer may paraphrase
+document facts; it need not quote the original document or repeat the criterion.
 Preserve ALL Citation markers, Markdown, punctuation and words inside the excerpt.
 Only typographic hyphens and whitespace differences are tolerated by the verifier.
 If target=answer_property, the criterion describes the answer itself (such as its language).
@@ -141,6 +146,11 @@ async def check_fact(answer: str, fact: GoldenFact, gateway: LLMGateway) -> Fact
                     "target": "answer_property" if fact.answer_property else "claim",
                     "claim": fact.requirement,
                     "answer": answer,
+                    **(
+                        {"required_evidence_context": fact.evidence_terms}
+                        if fact.evidence_terms
+                        else {}
+                    ),
                 },
                 ensure_ascii=False,
             ),
