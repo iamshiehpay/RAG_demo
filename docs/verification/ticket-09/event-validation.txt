@@ -1,0 +1,1 @@
+PASS: 79 scripted events validated against backend EVENT_ADAPTER; no contract changes.

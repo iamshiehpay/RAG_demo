@@ -1,0 +1,108 @@
+Question 01
+
+Performance of ablated versions of LightRAG
+判斷問題類型
+檢索
+思考中
+回答中
+回答完成
+Baseline description
+
+Table 2 reports the results of ablation experiments that remove individual components of LightRAG and compare the resulting variants (‑High, ‑Low, ‑Origin) with the full LightRAG system and with a NaiveRAG baseline. The evaluation covers four datasets (Agriculture, CS, Legal, Mix) and four metrics (Comprehensiveness, Diversity, Empowerment, Overall) [C4][C5].
+[C4] · pp.7–8
+4.3 ABLATION STUDIES (RQ2)
+[C5] · p.8
+4.3 ABLATION STUDIES (RQ2)
+Performance of the ablated versions
+Variant	Dataset	Comprehensiveness	Diversity	Empowerment	Overall
+‑High (high‑level‑only)	Agriculture	34.8 %	27.2 %	36.0 %	35.2 %
+	CS	65.2 %	72.8 %	64.0 %	64.8 %
+	Legal	42.8 %	36.8 %	42.4 %	44.0 %
+	Mix	57.2 %	63.2 %	47.6 %	56.0 %
+‑Low (low‑level‑only)	Agriculture	36.0 %	28.0 %	34.8 %	34.8 %
+	CS	64.0 %	72.0 %	65.2 %	65.2 %
+	Legal	43.2 %	39.6 %	42.8 %	43.6 %
+	Mix	56.8 %	60.4 %	57.2 %	56.4 %
+‑Origin (original text removed)	Agriculture	24.8 %	26.4 %	32.0 %	25.6 %
+	CS	75.2 %	73.6 %	68.0 %	74.4 %
+	Legal	39.2 %	44.8 %	43.2 %	39.2 %
+	Mix	60.8 %	55.2 %	56.8 %	60.8 %
+All numbers are taken directly from Table 2 in the document [C4][C5].
+[C4] · pp.7–8
+4.3 ABLATION STUDIES (RQ2)
+[C5] · p.8
+4.3 ABLATION STUDIES (RQ2)
+Key observations
+Every ablated variant scores lower than the full LightRAG system (which achieves 67.6 %–84.8 % across metrics) on most datasets, indicating that both low‑level and high‑level retrieval components contribute to performance [C4][C5].
+[C4] · pp.7–8
+4.3 ABLATION STUDIES (RQ2)
+[C5] · p.8
+4.3 ABLATION STUDIES (RQ2)
+The ‑High variant suffers the largest drops in Diversity and Overall scores, especially on the Agriculture and Legal datasets, reflecting reduced breadth when only high‑level retrieval is used [C6].
+[C6] · p.8
+4.3 ABLATION STUDIES (RQ2)
+The ‑Low variant retains relatively higher scores on Diversity and Empowerment but still lags behind the full model, showing that focusing solely on low‑level retrieval limits comprehensiveness [C6].
+[C6] · p.8
+4.3 ABLATION STUDIES (RQ2)
+The ‑Origin variant, which eliminates original text, shows mixed results: it performs comparably to LightRAG on some metrics (e.g., CS Diversity 75.2 % vs. 73.6 %) and even exceeds it on a few (e.g., Agriculture Comprehensiveness 24.8 % vs. 34.8 % for LightRAG), suggesting that graph‑based indexing can sometimes compensate for the loss of raw text [C6].
+[C6] · p.8
+4.3 ABLATION STUDIES (RQ2)
+Trace 2 LLM calls · 6 Chunks
+Question Type
+Synthesis
+Standalone Question
+What is the performance of the ablated versions of LightRAG?
+Plan source
+router
+Sub-queries
+LightRAG ablation study results
+performance metrics of LightRAG variants
+impact of component removal on LightRAG performance
+
+Invalid Citations: 0
+
+01 / router
+think=low
+Context Budget
+1,425 / 10,000
+0
+10K
+估算 prompt 825
+輸出預留 600
+prompt_eval_count
+486
+eval_count
+139
+安全邊際 · Safety margin
+300
+延遲 · Latency
+0.87 s
+done_reason
+stop
+模型思考 · Model thinking
+02 / answer
+think=medium
+Context Budget
+5,653 / 10,000
+0
+10K
+估算 prompt 2,653
+輸出預留 3,000
+prompt_eval_count
+2428
+eval_count
+1103
+安全邊際 · Safety margin
+300
+延遲 · Latency
+4.09 s
+done_reason
+stop
+模型思考 · Model thinking
+檢索到的 Chunks · cosine similarity
+p.1 · ABSTRACT0.5598
+p.5 · 4 EVALUATION0.6468
+pp.6–7 · 4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)0.6656
+pp.7–8 · 4.3 ABLATION STUDIES (RQ2)0.6286
+p.8 · 4.3 ABLATION STUDIES (RQ2)0.5629
+p.8 · 4.3 ABLATION STUDIES (RQ2)0.5456
