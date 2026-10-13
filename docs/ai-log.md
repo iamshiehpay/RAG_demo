@@ -307,3 +307,30 @@ failure and integrated pass are recorded under ticket-03/post-issue02.
 - **Final model-output rendering needed real evidence:** The new pre-review self-check applies to the Markdown/Citation/Unicode consumer as well as the model-output producer. Independent review identified that post-annotation checks were scripted; one real gpt-oss browser smoke is required on the final renderer. Its output only proves the formats actually observed, and does not replace the final Issue11 Golden Facts gate or deterministic rare-marker regressions.
 
 - **Observed real final-renderer smoke:** On frozen `cb4f1c9a164a40243a38358e59f2ed5c126bcf7c`, actual bge-m3/OllamaLLM produced a completed Traditional Chinese three-item Markdown list with three `[S1]` Citations, U+202F/U+3000 spacing, working Section source and actual Trace. All four real gpt-oss calls ended `stop`; maximum estimated prompt plus reservation was 3,892/10,000 (actual prompt plus reservation 3,667). No Unverified or CR/CRLF was emitted, so their rare-case coverage remains deterministic. [Real smoke evidence](verification/ticket-09/real-smoke/REPORT.md). Independent real LightRAG Q3/QA09 and semantic/N=3 Issue11 gates remain open.
+# 2026-10-13 — Issue10: typography/table assumptions failed on the second Document
+
+The fixed industrial robotics Document (arXiv2603.06749v1) exposed assumptions
+that LightRAG did not: same-baseline split Appendix headings were rejected as
+shared table rows; a bold prose mention of Appendix activated appendix mode;
+indented headings split; an ordinary numeric table cell combined with the next
+row's label into a false Section. Author lines and body emphasis created false
+summary boundaries. Read-only preflight at3432aa09's integrated predecessor
+0718466 recorded64 detected Sections and no real appendices after References.
+
+Public upload regressions first failed for each behavior, then passed after
+generic relative-typography/geometry corrections. A repeated numbered hierarchy
+now distinguishes body emphasis, the title is metadata, and explicit Appendix
+openers resume after References. Wrapped titles and spatially adjacent Section
+number/title fragments are merged without fixed fonts, coordinates or paper
+names. The selected Document now has30 source-bearing Sections and four real
+appendices; target lengths remain estimates until live ingestion.
+
+Appendix captions with letter-prefixed numbers and repeated geometric table
+headers also required fixes. Continuations retain page-specific Table Chunks;
+uncertain grids keep raw rows and the reconstruction limitation. Sorting arrows
+may disappear from repeated headers; header comparison ignores the arrows while
+retaining source text. One synthetic fixture initially joined adjacent header
+cells because their text boxes overlapped; spacing was corrected before claiming
+the header-variation regression passed. RED/GREEN and retained primary PDF
+evidence: `docs/verification/ticket-10/`, `.lat/briefs/nova-i10-preflight.md`.
+

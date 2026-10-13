@@ -25,7 +25,8 @@ _CJK_TEXT = re.compile(f"[{_CJK_CHARACTERS}]")
 _CJK_LINE_WRAP = re.compile(rf"(?<=[{_CJK_CHARACTERS}\d])\n(?=[{_CJK_CHARACTERS}\d])")
 _NUMERIC_LINE = re.compile(r"[\d\s.,%+\-−]+")
 _LABELLED_NUMERIC_ROW = re.compile(r"\S.*\s[\d\s.,%+\-−]+$")
-_CAPTION = re.compile(r"(?:Table|Figure)\s+\d", re.I)
+_CAPTION = re.compile(r"(?:Table|Figure)\s+[A-Z]?\d", re.I)
+_APPENDIX = re.compile(r"^(?:appendix\b|附錄|supplementary\b|補充)", re.I)
 
 
 class DocumentError(ValueError):
@@ -105,13 +106,13 @@ def _figure_regions(page: pymupdf.Page, blocks: list[dict]) -> list[pymupdf.Rect
         line
         for b in blocks
         for line in b.get("lines", [])
-        if re.match(r"Figure\s+\d", "".join(s["text"] for s in line["spans"]), re.I)
+        if re.match(r"Figure\s+[A-Z]?\d", "".join(s["text"] for s in line["spans"]), re.I)
     ]
     table_captions = [
         pymupdf.Rect(line["bbox"])
         for b in blocks
         for line in b.get("lines", [])
-        if re.match(r"Table\s+\d", "".join(s["text"] for s in line["spans"]), re.I)
+        if re.match(r"Table\s+[A-Z]?\d", "".join(s["text"] for s in line["spans"]), re.I)
     ]
     candidates = [d["rect"] for d in page.get_drawings()] + [
         pymupdf.Rect(b["bbox"]) for b in blocks if b.get("type") == 1
@@ -318,7 +319,7 @@ def _heading(line: _Line, body_size: float, *, numbered: bool = False) -> bool:
         )
         and len(text) <= 160
         and not line.shared_row
-        and not re.match(r"(?:Table|Figure)\s+\d|[•●]|\(?[ivx]+\)", text, re.I)
+        and not re.match(r"(?:Table|Figure)\s+[A-Z]?\d|[•●]|\(?[ivx]+\)", text, re.I)
         and (
             not _SENTENCE_END.search(text)
             or (
@@ -337,13 +338,40 @@ def _section_title(lines: list[_Line], index: int, body_size: float) -> tuple[st
     line = lines[index]
     consumed = 1
     title = line.text
+    # A labelled appendix opener may be split into same-baseline text objects.
+    # Require larger heading typography and a nearby matching-style continuation;
+    # ordinary shared table rows must still fail the normal heading check.
+    if _APPENDIX.match(title) and line.size > body_size + 0.5:
+        while index + consumed < len(lines):
+            following = lines[index + consumed]
+            if not (
+                following.page == line.page
+                and abs(following.bbox[1] - line.bbox[1]) < line.size * 0.5
+                and 0 <= following.bbox[0] - line.bbox[2] <= line.size * 3
+                and abs(following.size - line.size) < 0.5
+                and following.bold == line.bold
+                and following.fonts == line.fonts
+            ):
+                break
+            title += f" {following.text}"
+            line = following
+            consumed += 1
     # Number and title can be separate PDF lines, on the same baseline or stacked.
-    if _NUMBER.fullmatch(line.text) and index + 1 < len(lines):
+    if consumed > 1:
+        pass
+    elif _NUMBER.fullmatch(line.text) and index + 1 < len(lines):
         following = lines[index + 1]
         if (
             following.page == line.page
             and _heading(following, body_size, numbered=True)
             and abs(following.bbox[1] - line.bbox[1]) <= line.size * 2
+            and (
+                (
+                    abs(following.bbox[1] - line.bbox[1]) < line.size * 0.5
+                    and 0 <= following.bbox[0] - line.bbox[2] <= line.size * 3
+                )
+                or (not line.shared_row and abs(following.bbox[0] - line.bbox[0]) <= line.size * 3)
+            )
             and re.search(r"[^\W\d_]", following.text)
         ):
             title = f"{line.text} {following.text}"
@@ -360,19 +388,60 @@ def _section_title(lines: list[_Line], index: int, body_size: float) -> tuple[st
         if not (
             following.page == line.page
             and _heading(following, body_size, numbered=True)
-            and not _NUMBERED_TITLE.match(following.text)
+            and (
+                not _NUMBERED_TITLE.match(following.text)
+                or (title.endswith(":") and following.text.startswith(("A ", "An ", "The ")))
+            )
             and not _NUMBER.fullmatch(following.text)
             and abs(following.size - line.size) < 0.5
             and following.bold == line.bold
             and following.fonts == line.fonts
             and 0 < following.bbox[1] - line.bbox[1] <= 1.5 * (line.bbox[3] - line.bbox[1])
-            and abs(following.bbox[0] - line.bbox[0]) <= line.size * 2
+            and abs(following.bbox[0] - line.bbox[0]) <= line.size * 3
         ):
             break
-        title += f" {following.text}"
+        title = (
+            title[:-1] + following.text
+            if title.endswith("-") and following.text[:1].islower()
+            else f"{title} {following.text}"
+        )
         line = following
         consumed += 1
     return title.removesuffix("."), consumed
+
+
+def _titles(lines: list[_Line], body_size: float) -> dict[int, tuple[str, int]]:
+    """Resolve a repeated numbered hierarchy before identifying table boundaries.
+
+    In a document with a demonstrated larger-type numbered hierarchy, body-size
+    emphasis is paragraph content. Preserve numbered subsections, explicit
+    References/Appendix openers, and larger headings. Without that evidence the
+    existing relative-size/bold fallback remains available to unnumbered layouts.
+    """
+    titles = {}
+    index = 0
+    while index < len(lines):
+        title, consumed = _section_title(lines, index, body_size)
+        if title:
+            titles[index] = (title, consumed)
+        index += consumed
+    main_numbers = {
+        match.group(1)
+        for i, (title, _) in titles.items()
+        if (match := re.match(r"^(\d+)(?:\.\d+)*\.?\s", title)) and lines[i].size > body_size + 0.5
+    }
+    if len(main_numbers) >= 3:
+        for i, (title, _) in list(titles.items()):
+            normalized = re.sub(r"^[\d.]+\s+", "", title).strip().casefold()
+            number = re.match(r"^(\d+)(?:\.\d+)*\.?\s", title)
+            if (
+                lines[i].size <= body_size + 0.5
+                and not (number and number.group(1) in main_numbers)
+                and not _APPENDIX.match(normalized)
+                and normalized not in {"references", "bibliography", "參考文獻"}
+            ):
+                del titles[i]
+    return titles
 
 
 def _virtual_sections(section: Section, target: int) -> list[Section]:
@@ -473,7 +542,11 @@ def _wraps_line(previous: _Line, following: _Line) -> bool:
 
 
 def _sections(
-    lines: list[_Line], body_size: float, target: int, tables: list[TableRegion]
+    lines: list[_Line],
+    body_size: float,
+    target: int,
+    tables: list[TableRegion],
+    titles: dict[int, tuple[str, int]],
 ) -> list[Section]:
     sections: list[Section] = []
     current = Section(
@@ -515,6 +588,12 @@ def _sections(
     table_anchors = {region.anchor: region.table for region in tables}
     table_lines = {i for region in tables for i in region.line_indices}
     index = 0
+    numbered = [i for i, (title, _) in titles.items() if re.match(r"^\d+(?:\.\d+)*\.?\s", title)]
+    if numbered and 0 in titles and lines[0].size > lines[numbered[0]].size + 0.5:
+        # Keep the document title as heading-only metadata, while excluding its
+        # author/affiliation preamble from the Section Summary hierarchy.
+        current.title = titles[0][0]
+        index = numbered[0]
     while index < len(lines):
         line = lines[index]
         if index in table_lines:
@@ -527,16 +606,14 @@ def _sections(
             previous = None
             index += 1
             continue
-        title, consumed = _section_title(lines, index, body_size)
+        title, consumed = titles.get(index, ("", 1))
         if title:
             normalized = re.sub(r"^[\d.]+\s+", "", title).strip().casefold()
             if normalized in {"references", "bibliography", "參考文獻"}:
                 flush_section()
                 excluded = True
-            elif (
-                "appendix" in normalized
-                or normalized.startswith(("附錄", "supplementary", "補充"))
-                or (excluded and re.match(r"^[A-Z](?:\.\d+)*\.?\s", title))
+            elif _APPENDIX.match(normalized) or (
+                excluded and re.match(r"^[A-Z](?:\.\d+)*\.?\s", title)
             ):
                 if not excluded:
                     flush_section()
@@ -544,7 +621,7 @@ def _sections(
                 appendix = detected = True
                 current = Section(
                     id=f"section-{len(sections) + 1}",
-                    title=title if "appendix" in normalized else f"Appendix — {title}",
+                    title=title if normalized.startswith("appendix") else f"Appendix — {title}",
                     page_start=line.page,
                     page_end=line.page,
                     paragraphs=[],
@@ -609,13 +686,10 @@ def parse_pdf(content: bytes, *, chunk_token_target: int = CHUNK_TOKEN_TARGET) -
             # Table detection precedes Section construction. Share the exact same
             # heading decisions, including split/wrapped titles, without importing
             # the parser from the table module or duplicating typography rules.
-            heading_lines = set()
-            index = 0
-            while index < len(lines):
-                title, consumed = _section_title(lines, index, body_size)
-                if title:
-                    heading_lines.update(range(index, index + consumed))
-                index += consumed
+            titles = _titles(lines, body_size)
+            heading_lines = {
+                i for start, (_, consumed) in titles.items() for i in range(start, start + consumed)
+            }
             return _sections(
                 lines,
                 body_size,
@@ -625,6 +699,7 @@ def parse_pdf(content: bytes, *, chunk_token_target: int = CHUNK_TOKEN_TARGET) -
                     page_widths={i: page.rect.width for i, page in enumerate(pdf, 1)},
                     heading_lines=heading_lines,
                 ),
+                titles,
             )
     except (pymupdf.FileDataError, pymupdf.EmptyFileError) as exc:
         raise DocumentError("Please upload a valid PDF Document.") from exc

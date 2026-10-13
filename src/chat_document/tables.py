@@ -9,7 +9,7 @@ from .policy import TABLE_TOKEN_LIMIT
 from .tokens import count_tokens
 
 LIMITATION = "結構未能可靠重建"
-CAPTION = re.compile(r"^((?:Table|Figure)\s+\d+)\s*[:.．]", re.I)
+CAPTION = re.compile(r"^((?:Table|Figure)\s+[A-Z]?\d+)\s*[:.．]", re.I)
 
 
 @dataclass
@@ -253,6 +253,101 @@ def _rectangular_grid(rows):
     return texts[0], texts[1:], ""
 
 
+def _continue_tables(regions, lines, heading_lines):
+    """Repeated geometric headers identify continuation pages, not prose guesses.
+
+    Keep each page's own provenance. A text-rich or damaged grid is retained as
+    raw rows with its original caption and an explicit reconstruction limitation.
+    """
+    result = []
+    occupied = {i for region in regions for i in region.line_indices}
+    for region in regions:
+        candidates = [
+            lines[i]
+            for i in sorted(region.line_indices)
+            if not CAPTION.match(lines[i].text) and lines[i].block != lines[region.anchor].block
+        ]
+        rows = _rows(candidates)
+        # The caption can precede or follow the grid; use its existing detected
+        # raw region's first multi-cell, nonnumeric header row as the signature.
+        headers = next(
+            (r for r in rows if len(r) >= 2 and not any(_numeric(line.text) for line in r)), []
+        )
+        continuations = []
+        if headers:
+            for page in range(region.table.page_end + 1, max(line.page for line in lines) + 1):
+                page_indices = [i for i, line in enumerate(lines) if line.page == page]
+                page_rows = _rows([lines[i] for i in page_indices])
+                if not page_rows:
+                    break
+                first = page_rows[0]
+                if len(first) != len(headers) or not all(
+                    re.sub(r"[↑↓\s]", "", _clean(a.text)).casefold()
+                    == re.sub(r"[↑↓\s]", "", _clean(b.text)).casefold()
+                    and abs(a.bbox[0] - b.bbox[0]) <= b.size * 1.5
+                    and abs(a.size - b.size) < 0.5
+                    for a, b in zip(first, headers, strict=True)
+                ):
+                    break
+                if any(i in occupied or i in heading_lines for i in page_indices) or any(
+                    CAPTION.match(lines[i].text) for i in page_indices
+                ):
+                    break
+                continuations.append(page_indices)
+        if continuations:
+            start_y = min(line.bbox[1] for line in headers)
+            first_indices = {
+                i
+                for i, line in enumerate(lines)
+                if line.page == region.table.page_start
+                and line.bbox[1] >= start_y
+                and i not in heading_lines
+            }
+            # Expansion is safe only for a dedicated first table page: another
+            # caption or Section after the header ends the region instead.
+            if any(CAPTION.match(lines[i].text) for i in first_indices) or any(
+                line.page == region.table.page_start
+                and line.bbox[1] >= start_y
+                and i in heading_lines
+                for i, line in enumerate(lines)
+            ):
+                continuations = []
+            else:
+                caption_indices = region.line_indices - {
+                    i for i in region.line_indices if lines[i] in candidates
+                }
+                region.line_indices = first_indices | caption_indices
+                region.table.raw_text = "\n".join(
+                    " ".join(_clean(line.text) for line in row)
+                    for row in _rows([lines[i] for i in sorted(first_indices)])
+                )
+                grid = _paired_grid(_rows([lines[i] for i in first_indices])) or _rectangular_grid(
+                    _rows([lines[i] for i in first_indices])
+                )
+                region.table.reconstructed = bool(grid)
+                region.table.headers, region.table.rows, region.table.meaning = grid or ([], [], "")
+        result.append(region)
+        for indices in continuations:
+            page_rows = _rows([lines[i] for i in indices])
+            grid = _paired_grid(page_rows) or _rectangular_grid(page_rows)
+            table = region.table.model_copy(
+                update={
+                    "page_start": lines[indices[0]].page,
+                    "page_end": lines[indices[0]].page,
+                    "raw_text": "\n".join(
+                        " ".join(_clean(line.text) for line in row) for row in page_rows
+                    ),
+                    "reconstructed": bool(grid),
+                    "headers": grid[0] if grid else [],
+                    "rows": grid[1] if grid else [],
+                    "meaning": grid[2] if grid else "",
+                }
+            )
+            result.append(TableRegion(table, set(indices), min(indices)))
+            occupied.update(indices)
+    return sorted(result, key=lambda region: region.anchor)
+
+
 def reconstruct_tables(lines, *, page_widths=None, heading_lines=frozenset()) -> list[TableRegion]:
     regions = []
     used = set()
@@ -328,7 +423,7 @@ def reconstruct_tables(lines, *, page_widths=None, heading_lines=frozenset()) ->
         indices = {*(j for j, _ in caption_lines), *(j for j, _ in chosen)}
         used.update(indices)
         regions.append(TableRegion(table, indices, min(indices)))
-    return regions
+    return _continue_tables(regions, lines, heading_lines)
 
 
 def table_text(table: Table, rows: list[list[str]] | None = None) -> str:

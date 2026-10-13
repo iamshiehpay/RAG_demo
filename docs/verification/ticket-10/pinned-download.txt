@@ -1,0 +1,3 @@
+exists: data/lightrag.pdf
+downloaded: data/industrial-robotics.pdf
+verified: data/industrial-robotics.pdf (8ab9a63ca99b0b26432e7a4d6b4c2810d00b97a2df1791973fe2d7d321ede0b9)
