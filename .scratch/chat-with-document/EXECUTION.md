@@ -9,10 +9,10 @@ Status: in-progress
 
 | 角色 | 設定 |
 |---|---|
-| Orchestrator | Claude Opus 5.5 high（HCOM 名稱 `levi`） |
+| Orchestrator | Codex `gpt-6-astra` high（HCOM `nova`）；本 session turn_context 已核對 workspace-write / on-request |
 | Implementer | Codex `gpt-6.1-sol`、`model_reasoning_effort=high`，透過 HCOM；每票新 context，依 /implement |
-| Reviewer | Claude 原生 subagent `claude-opus-5-5` high，每票新 context，依 /code-review；內部再委派同為 Opus 5.5 high |
-| QA | Claude 原生 subagent Sonnet 5.5 high；複雜情境用 Opus 5.5 high |
+| Reviewer | Claude `claude-opus-5-5` medium，獨立 context，透過 HCOM；啟動後核對 |
+| QA | Codex `gpt-6.1-sol` medium，獨立 context，workspace-write / on-request；啟動後核對 |
 
 整合分支：`main`。每票在 `.worktrees/<NN>-<slug>/`、分支 `lat/<NN>-<slug>` 開發；合併前 rebase 到最新 `main`，以 `--ff-only` 合併。
 
@@ -24,11 +24,11 @@ Status: in-progress
 | 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | merged 3a15958；QA 6/6 AC PASS，但 CJK 長段落斷句 FAIL → 修正中 |
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
-| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | dispatched 初稿（levi-t09-dune）|
+| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | D02 已核准；nova-i09-romi 接續定稿（獨立 Review／QA 待辦）|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | merged 4eee3d2（Review APPROVE），QA 中 |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | dispatched（levi-t03-mulo）|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
-| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | todo |
+| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | dispatched（levi-t05-gala）|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | todo |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | todo |
 
@@ -42,7 +42,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-- #09 初稿方向確認（issue 明定需要人參與），初稿完成後提出，紀錄於 `.lat/decisions/`。
+- D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
 ## QA 草稿缺口的歸屬（`test-list.md` 附錄）
 
@@ -90,11 +90,24 @@ Status: in-progress
 | #07 QA | 錯誤後狀態列仍是暫定的斜體；句子間沒空白時 Unverified 標籤緊貼下一句 | #09 |
 | #02 QA | Citation 原文面板標題寫「p.7」，旁註寫「p.7–8」 | #09 |
 
-## 中斷點（2026-10-13，Orchestrator 額度用盡）
+## 主控狀態快照（2026-10-13 08:55，levi 暫停排程）
 
-- main：`11968fd`（含 #01、#06、#08）。#01、#06 done；#08 QA 進行中（報告將寫到 `docs/verification/ticket-08/qa/`）。
-- #07：實作完成（`f26b09e`），獨立 Review 進行中。
-- #02：Review 修正中／已送複審（見 `.lat/briefs/pending-request.md`）。
+- main：`d56e092`（含 #01、#02、#04、#06、#07、#08 的程式碼）。
+- done：#01、#06、#07、#08。
+- #02：已合併；QA 抓到 CJK 長段落斷句 FAIL → 修正後 Review 抓到 N1（中文表格數字被黏在一起）→ vida 修正（含跨頁段落合併），複審請求 head `7d209b7`（base `d56e092`），尚未複審。
+- #04：已合併（`4eee3d2`）；QA 因 Sonnet 額度中斷，部分證據在 `docs/verification/ticket-04/qa/`（未提交），需重跑或續跑。
+- #03：第一輪 Review CHANGES_REQUESTED（Table 4 誤判已重建、caption 在下方與雙欄誤配對）→ mulo 修正並 rebase 到 `d56e092`，複審請求 head `f7268f9`，尚未複審。Q3 數值兩題 0/3 移交 #11。
+- #05：實作完成，初次 Review 請求 head `14e783d`（base `d56e092`），尚未審查。
 - #09：初稿完成，等使用者回覆 D02（`.lat/decisions/D02-tufte-draft-direction.md`）。
-- 未開始：#03、#04、#05、#10、#11。
-- 恢復：主控以 `hcom start --as levi` 重新連線，讀 `.lat/tasks/`、`.lat/decisions/`、`.lat/briefs/` 與本檔。
+- 未開始：#10、#11。
+- Codex agents vida／mulo／kano／gala／dune 於 08:54 由系統結束（process_exit），工作樹與提交都保留，可用 `hcom r <name>` 接回。
+- 簡報、審查與修正紀錄：`.lat/briefs/`；任務卡：`.lat/tasks/`；決策：`.lat/decisions/`。
+
+## 接手檢查點（2026-10-13，nova）
+
+- 直接使用者授權新 Main 接手全部既有 Issues；levi HCOM #5404 已確認停止所有排程。五位舊 workers process_exit；保留其 worktrees、commits 及未提交 QA 證據。
+- LAT recovery active：session `01a132c0-2f33-7e72-9a63-74731d18d08c`，沿用本索引與共用 decisions。Main model/effort/permissions 已從本輪 turn_context 核對。
+- 整合順序沿用依賴：先 #02 修正複審與整合，再 #03／#05 rebase 複查；#04 補完整 QA；#09 已解除 D02；#10、#11 維持既有依賴。
+- 新角色設定只套用後續工作；歷史 Review／QA 證據保留原角色與版本，不改寫成新驗證。
+
+- 接手 audit：QA nova-qa04-kilo 核對五個 worktree 皆乾淨，candidate heads 與任務卡相符；8110–8189 無 listener；無關的 8201 與既有 browser daemons 保留。#02 Reviewer nova-r02-mige（Opus5.5 medium，terminal 確認）；#04 QA nova-qa04-kilo（GPT6.1 medium，turn_context 確認）；#09 Implementer nova-i09-romi（GPT6.1 high，turn_context 確認）。Codex 均 workspace-write/on-request。
