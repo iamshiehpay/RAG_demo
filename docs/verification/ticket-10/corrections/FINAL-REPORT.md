@@ -40,7 +40,7 @@ A future bounded functional correction would need to preserve feasible80–500 d
 
 ## Validation
 
-Targeted public/eval regressions:19passed (0.65s). Ruff PASS (`ruff-d06-final.txt`); diff whitespace check PASS. **Full deterministic suite310passed,3eval deselected,6warnings in293.86s, exit0** (`d06-final-deterministic.txt`). Previous saved302PASS is historical, not substituted for the current changed source.
+Targeted public/eval regressions:19passed (0.65s). Ruff PASS (`ruff-d06-final.txt`); source/test diff whitespace check PASS. The final staged evidence check reports trailing blank whitespace in raw pytest output and empty Standalone Question fields in the generated failure reports; those original evidence strings are preserved. No source/test whitespace error was reported. **Full deterministic suite310passed,3eval deselected,6warnings in293.86s, exit0** (`d06-final-deterministic.txt`). Previous saved302PASS is historical, not substituted for the current changed source.
 
 Commands use `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. ../../.venv/bin/python -B`:
 
