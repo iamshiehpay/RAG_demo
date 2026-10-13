@@ -55,11 +55,11 @@ Section Summaries retain original source IDs. Long Documents have Group layers; 
 
 Every text-generation call crosses one budget guard: `o200k_harmony` prompt estimate plus 300-token template margin plus output reservation must stay within **10,000**. Router uses low/600, answers reserve 3,000 including thinking, Judge low/1,000. Trace and eval report both estimated and provider counts. `done_reason=length` fails that attempt; answer retries once with low, replacing provisional text. Discarded summary attempts may also retry without publishing truncated drafts. Questions over 1,000 tokens are rejected before LLM calls.
 
-The ingestion-only cache lives in `.cache/`, keyed by PDF content, source-derived pipeline version, embedding/summary models and effective Chunk target. It stores Document/Chunks/vectors/Summary Tree atomically. It stores no answers or conversation history. Source or ingestion-setting changes invalidate incompatible records. Final cache manifests and observed zero-model-call reuploads are recorded in `eval/reports/issue11/cache-manifest.json`; actual caches stay gitignored and must be retained/transferred for a demo.
+The ingestion-only cache lives in `.cache/`, keyed by PDF content, source-derived pipeline version, embedding/summary models and effective Chunk target. It stores Document/Chunks/vectors/Summary Tree atomically. It stores no answers or conversation history. Source or ingestion-setting changes invalidate incompatible records. Final cache manifests and observed zero-model-call reuploads are recorded in `eval/reports/issue11-correction/cache-manifest.json`; actual caches stay gitignored and must be retained/transferred for a demo.
 
 ## Settings and reproducible evaluation
 
-Environment controls are read by the HTTP factory and Application/eval. Explicit `RetrievalSettings` injection is also supported. Current defaults and chosen experiment results are documented in `AGENTS.md` and `eval/reports/issue11/`.
+Environment controls are read by the HTTP factory and Application/eval. Explicit `RetrievalSettings` injection is also supported. Current defaults and chosen experiment results are documented in `AGENTS.md` and the public-event experiment in `eval/reports/issue11-correction/`; earlier `issue11/` evidence remains historical.
 
 | Variable | Purpose |
 |---|---|
@@ -82,17 +82,17 @@ PYTHONPATH=src:. uv run --frozen pytest -m eval -s --eval-cases SECOND_NUMBER,SE
 
 Default tests use scripted LLMs plus actual local bge-m3; Ollama must be running. They do not call the cloud LLM. `-m eval` is opt-in. `--eval-cases` excludes unrelated live tests; the 20-case Router smoke remains separately runnable with `tests/integration/test_router_smoke_eval.py`. Reports include each fact's raw rate, evidence/reason, effective settings/pipeline, all LLM counts/reservations/latencies/done reasons, separate functional status and all length attempts. Semantic/forbidden FAIL remains a known defect under D05; it is never relabelled PASS. Functional failures remain failures.
 
-The Issue11 driver uses the same Application/Gateway, real PDF processing and models, with reusable ingestion caches:
+The Issue11 driver uses public upload/ask events and reusable ingestion caches. Native final answers remain real model calls. Controlled retrieval replays saved real Router plans and scripted non-evaluated answers/extraction only at the external LLM seam, with real Chunks/vectors/embeddings; its score-sorted returned-hit metric is distinct from original source-order events and is not full-index MRR or native answer-quality proof:
 
 ```sh
 PYTHONPATH=src:. uv run --frozen python -m scripts.tune retrieval
-PYTHONPATH=src:. uv run --frozen python -m scripts.tune retrieval-controlled
+PYTHONPATH=src:. uv run --frozen python -m scripts.tune retrieval-controlled --output eval/reports/issue11-correction
 PYTHONPATH=src:. uv run --frozen python -m scripts.tune answers
 PYTHONPATH=src:. uv run --frozen python -m scripts.measure_summary_concurrency --output eval/reports/issue11/concurrency.json
-PYTHONPATH=src:. uv run --frozen python -m scripts.tune final
+PYTHONPATH=src:. uv run --frozen python -m scripts.tune final --output eval/reports/issue11-correction
 ```
 
-Final selected settings must match production defaults/environment before `final`. Tuning and final eval were bounded to three elapsed hours by D05; the final reports preserve measured defects rather than promising 100%. Final reports completed 27 actual answers with operational PASS and raw Golden Facts FAIL; all nine absent-answer runs passed fixed-refusal checks. No formal Router/Answer call truncated. The second-document numeric source-Citation check passed 2/3: one valid reference pointed to a different table. Detailed causes and manual numeric comparisons are in `eval/reports/issue11/conclusions.md`.
+Final selected settings must match production defaults/environment before `final`. Tuning and final eval were bounded to three elapsed hours by D05; the final reports preserve measured defects rather than promising 100%. Final reports completed 27 actual answers with operational PASS and raw Golden Facts FAIL; all nine absent-answer runs passed fixed-refusal checks. No formal Router/Answer call truncated. The original second-document numeric source-Citation check passed 2/3, with one valid reference pointing to a different table. After a generic exact-table instruction, one bounded corrected N3 passed that source check 3/3 with original event capture; numeric Golden Facts remain 1/3 and summary coverage 1/3. Evaluation-unit errors, some uncited derived claims and semantic failures remain; this does not prove universal grounding. Current causes/manual comparisons are in `eval/reports/issue11-correction/conclusions.md`; original failures remain in `issue11/`.
 
 ## Known limitations
 

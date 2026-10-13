@@ -68,6 +68,7 @@ class QuestionRun:
     sub_queries: list[str] = field(default_factory=list)
     facts: list[FactResult] = field(default_factory=list)
     calls: list[LLMCallTrace] = field(default_factory=list)
+    events: list[dict] = field(default_factory=list)
     error: str = ""
     latency_ms: float = 0
     ask_latency_ms: float = 0
@@ -276,6 +277,7 @@ async def run_evaluation(
                     finally:
                         run.ask_latency_ms = (perf_counter() - ask_started) * 1000
                     for event in events:
+                        run.events.append(event.model_dump(mode="json"))
                         if isinstance(event, PlanEvent):
                             run.question_type = event.question_type
                             run.plan_source = event.plan_source

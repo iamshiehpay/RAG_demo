@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "Revision": "0c320a8c24ae4917a2fe56db55ae2651c5ad76da",
+    "Uncommitted changes": "yes",
+    "Pipeline version": "ingest-v2-58005fcc9975f854f1986b103d0f8cb3b0c2fc7e646a2fa5d168dfdb3198c81f",
+    "LLM": "gpt-oss:120b-cloud",
+    "Embedder": "bge-m3",
+    "Created": "2026-10-13T12:12:10.460784+00:00"
+  },
+  "settings": {
+    "lookup_top_k": 5,
+    "synthesis_top_k": 3,
+    "sub_query_top_k": 2,
+    "chunk_token_target": 500,
+    "answer_think": "medium",
+    "bm25_weight": 0.0,
+    "summary_concurrency": 4
+  },
+  "documents": [
+    {
+      "name": "lightrag",
+      "pdf_sha256": "bd72eebf611df1366b251c16ce4eac7aac699e519783c586feb2c5c43899347a",
+      "processing_config": {
+        "embedding_model": "bge-m3",
+        "chunk_token_target": 500,
+        "summary_model": "gpt-oss:120b-cloud"
+      },
+      "pipeline_version": "ingest-v2-58005fcc9975f854f1986b103d0f8cb3b0c2fc7e646a2fa5d168dfdb3198c81f",
+      "cache_path": ".cache/833ea057185857ffe9ebc55321a245c0c2765d32f8b43ded5b2b24e00f8c6802.json",
+      "cache_hit_model_calls": 0,
+      "cache_hit_events": [
+        "ready"
+      ],
+      "chunk_count": 42,
+      "section_summary_tokens": 4135,
+      "group_levels": 1,
+      "functional_passed": true,
+      "quality": "FAIL",
+      "audit": {
+        "calls": 170,
+        "maximum_estimated_prompt_plus_reservation": 9667,
+        "maximum_reported_prompt_plus_reservation": 9442,
+        "missing_reported_prompt_counts": 0,
+        "budget_violations": 0,
+        "length_attempts": [],
+        "router_answer_length_attempts": 0
+      }
+    },
+    {
+      "name": "second",
+      "pdf_sha256": "8ab9a63ca99b0b26432e7a4d6b4c2810d00b97a2df1791973fe2d7d321ede0b9",
+      "processing_config": {
+        "embedding_model": "bge-m3",
+        "chunk_token_target": 500,
+        "summary_model": "gpt-oss:120b-cloud"
+      },
+      "pipeline_version": "ingest-v2-58005fcc9975f854f1986b103d0f8cb3b0c2fc7e646a2fa5d168dfdb3198c81f",
+      "cache_path": ".cache/eefa4dc0c41f780b997cd7024b870ac6d669b1ae61dae3820641c21fcfeac0bc.json",
+      "cache_hit_model_calls": 0,
+      "cache_hit_events": [
+        "ready"
+      ],
+      "chunk_count": 149,
+      "section_summary_tokens": 7763,
+      "group_levels": 1,
+      "functional_passed": true,
+      "quality": "FAIL",
+      "audit": {
+        "calls": 102,
+        "maximum_estimated_prompt_plus_reservation": 9630,
+        "maximum_reported_prompt_plus_reservation": 9363,
+        "missing_reported_prompt_counts": 0,
+        "budget_violations": 0,
+        "length_attempts": [
+          {
+            "call_type": "section_summary",
+            "think": "low",
+            "num_predict": 1200
+          }
+        ],
+        "router_answer_length_attempts": 0
+      }
+    }
+  ]
+}

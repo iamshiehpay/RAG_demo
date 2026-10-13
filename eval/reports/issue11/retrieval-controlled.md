@@ -43,7 +43,7 @@ Maximize actual Router evidence coverage, then MRR; ties prefer dense and docume
 
 Selected effective settings: `{"lookup_top_k": 5, "synthesis_top_k": 3, "sub_query_top_k": 2, "chunk_token_target": 500, "answer_think": "medium", "bm25_weight": 0.0, "summary_concurrency": 4}`
 
-These are retrieval measurements, not Golden Facts answer acceptance. Raw plans/settings/provenance are in retrieval.json.
+These are retrieval measurements, not Golden Facts answer acceptance. Raw controlled plans/settings/provenance are in retrieval-controlled.json. This historical matrix used internal ranking seams; the corrected public-event experiment is recorded separately.
 
 Fixed actual Router plan pair across all configurations; reuse measured original Chunks/vectors because parser/chunker/embedder and explicit Chunk targets are unchanged. Old Summary Trees are not final-cache evidence.
 Ingestion version: ingest-v2-d6cc86232977edb2c4cd1a1e6fd3deb5755d2b0e85e3a858d999fd23b1e62058

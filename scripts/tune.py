@@ -16,8 +16,8 @@ from time import perf_counter
 from chat_document.application import Application
 from chat_document.cache import PIPELINE_VERSION, ProcessingCache
 from chat_document.embedder import OllamaEmbedder
-from chat_document.events import ErrorEvent, PlanEvent, ReadyEvent
-from chat_document.llm_adapter import OllamaLLM
+from chat_document.events import ErrorEvent, PlanEvent, ReadyEvent, RetrievalEvent
+from chat_document.llm_adapter import OllamaLLM, ScriptedLLM
 from chat_document.settings import RetrievalSettings
 from chat_document.tokens import count_tokens
 from eval.golden_facts import LIGHTRAG_CASES
@@ -26,7 +26,8 @@ from eval.report import write_report
 from eval.runner import RecordingGateway, run_evaluation
 from eval.second_document import DOCUMENT, SECOND_DOCUMENT_CASES
 
-OUT = Path("eval/reports/issue11")
+ORIGINAL_OUT = Path("eval/reports/issue11")
+OUT = ORIGINAL_OUT
 EXPERIMENT_CACHE = Path(".cache/issue11-experiments")
 LIGHTRAG = Path("data/lightrag.pdf")
 BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
@@ -51,8 +52,8 @@ def provenance():
     }
 
 
-def application(settings, cache=EXPERIMENT_CACHE, *, ingestion_version=None):
-    gateway = RecordingGateway(OllamaLLM(BASE_URL))
+def application(settings, cache=EXPERIMENT_CACHE, *, ingestion_version=None, adapter=None):
+    gateway = RecordingGateway(adapter or OllamaLLM(BASE_URL))
     return Application(
         OllamaEmbedder(BASE_URL),
         gateway,
@@ -72,9 +73,58 @@ def target(chunk, kind):
     return "incremental" in text and ("update" in text or "new" in text)
 
 
+class RetrievalReplayAdapter:
+    """External LLM seam only; summaries must come from a real measured cache.
+
+    Router output replays saved native plans. Answer/extraction output is scripted,
+    never assessed as a real answer or used to claim native model accounting.
+    The model field describes the reused native Summary cache, not scripted calls.
+    """
+
+    model = "gpt-oss:120b-cloud"
+
+    def __init__(self, plans):
+        self.plans = plans
+        self.scripted_calls = []
+
+    async def stream(self, request):
+        if request.call_type.endswith("summary"):
+            raise RuntimeError("Retrieval-only replay requires a valid measured Summary cache")
+        self.scripted_calls.append(request.call_type)
+        if request.call_type == "router":
+            question = (
+                request.messages[-1]["content"]
+                .removeprefix("Current question: ")
+                .split("\n\n", 1)[0]
+            )
+            plan = self.plans.get(question) or PlanEvent(
+                question_type="Lookup", standalone_question=question, sub_queries=[]
+            )
+            text = json.dumps(
+                {
+                    key: getattr(plan, key)
+                    for key in ("question_type", "standalone_question", "sub_queries")
+                }
+            )
+        elif request.call_type == "fact_extraction":
+            text = "Retrieval-only scripted placeholder. [C1]"
+        else:
+            text = "Not mentioned in the document."
+        async for frame in ScriptedLLM([text]).stream(request):
+            yield frame
+
+
+async def public_retrieval(app, question):
+    events = [e async for e in app.ask(question, history=[])]
+    retrieval = next((e for e in events if isinstance(e, RetrievalEvent)), None)
+    if retrieval is None or any(isinstance(e, ErrorEvent) for e in events):
+        raise RuntimeError("Public retrieval probe failed")
+    return retrieval, next(e for e in events if isinstance(e, PlanEvent))
+
+
 async def retrieval_matrix(*, controlled=False):
     results = {"provenance": provenance(), "uploads": [], "rows": []}
-    previous = json.loads((OUT / "retrieval.json").read_text()) if controlled else None
+    previous = json.loads((ORIGINAL_OUT / "retrieval.json").read_text()) if controlled else None
     fixed_plans = (
         tuple(
             PlanEvent.model_validate(previous["uploads"][0][key]) for key in ("q2_plan", "q3_plan")
@@ -85,158 +135,166 @@ async def retrieval_matrix(*, controlled=False):
     ingestion_version = previous["provenance"]["Pipeline version"] if previous else None
     output_name = "retrieval-controlled" if controlled else "retrieval"
     results["experimental_design"] = (
-        "Fixed actual Router plan pair across all configurations; reuse measured original "
-        "Chunks/vectors because parser/chunker/embedder and explicit Chunk targets are unchanged. "
+        "Public upload/ask PlanEvent and RetrievalEvent. Controlled replay uses saved native "
+        "Router plans and scripted non-evaluated answers/extraction at the external adapter. "
+        "Real cached PDF Chunks/vectors and local embeddings; zero native replay calls. "
+        "Original source-order hits are separate from score-sorted returned-hit diagnostics; "
+        "returned-hit RR is NOT full-index MRR or end-to-end answer quality. "
         "Old Summary Trees are not final-cache evidence."
-        if controlled
-        else "Per-size actual Router plans confound across-size context comparisons."
     )
     results["ingestion_version"] = ingestion_version or PIPELINE_VERSION
-    try:
-        for size in (256, 500, 800):
-            baseline, gateway = application(
-                RetrievalSettings(chunk_token_target=size), ingestion_version=ingestion_version
-            )
-            started = perf_counter()
-            uploaded = [
-                e async for e in baseline.upload_document(LIGHTRAG.read_bytes(), LIGHTRAG.name)
-            ]
-            errors = [e.message for e in uploaded if isinstance(e, ErrorEvent)]
-            results["uploads"].append(
-                {
-                    "chunk_target": size,
-                    "latency_ms": (perf_counter() - started) * 1000,
-                    "errors": errors,
-                    "calls": gateway.calls.copy(),
-                }
-            )
-            if not any(isinstance(e, ReadyEvent) for e in uploaded):
-                await baseline.close()
-                continue
-            # Actual production Router produces the plans used by every comparison.
-            calls = []
-            if fixed_plans:
-                q2, q3 = fixed_plans
-            else:
-                q2 = await baseline.router.plan("Compare LightRAG with GraphRAG.", [], calls)
-                q3 = await baseline.router.plan(
-                    "Performance of ablated versions of LightRAG.", [], calls
+    q2_question = "Compare LightRAG with GraphRAG."
+    q3_question = "Performance of ablated versions of LightRAG."
+    cost_question = "How much does retrieval cost for GraphRAG compared with LightRAG?"
+    update_question = "How are incremental updates handled when new data arrives?"
+    for size in (256, 500, 800):
+        if fixed_plans:
+            q2, q3 = fixed_plans
+        else:
+            baseline, native_gateway = application(RetrievalSettings(chunk_token_target=size))
+            try:
+                uploaded = [
+                    e async for e in baseline.upload_document(LIGHTRAG.read_bytes(), LIGHTRAG.name)
+                ]
+                if not any(isinstance(e, ReadyEvent) for e in uploaded):
+                    raise RuntimeError("Native public plan upload failed")
+                _, q2 = await public_retrieval(baseline, q2_question)
+                _, q3 = await public_retrieval(baseline, q3_question)
+                results["uploads"].append(
+                    {
+                        "chunk_target": size,
+                        "native_calls": [c.model_dump() for c in native_gateway.calls],
+                    }
                 )
-            results["uploads"][-1].update(
-                {
-                    "chunk_count": len(baseline.document.chunks),
-                    "q2_plan": q2.model_dump(),
-                    "q3_plan": q3.model_dump(),
-                    "router_calls": calls,
-                }
-            )
-            for weight in (0, 0.1, 0.25, 0.5):
-                for top in (3, 5, 7):
-                    settings = RetrievalSettings(
-                        chunk_token_target=size,
-                        lookup_top_k=top,
-                        synthesis_top_k=3 if top <= 5 else 5,
-                        sub_query_top_k=2 if top <= 5 else 3,
-                        bm25_weight=weight,
-                    )
-                    app, _ = application(settings, ingestion_version=ingestion_version)
-                    replay = [
+            finally:
+                await baseline.close()
+        plans = {q2_question: q2, q3_question: q3}
+        for weight in (0, 0.1, 0.25, 0.5):
+            for top in (3, 5, 7):
+                settings = RetrievalSettings(
+                    chunk_token_target=size,
+                    lookup_top_k=top,
+                    synthesis_top_k=3 if top <= 5 else 5,
+                    sub_query_top_k=2 if top <= 5 else 3,
+                    bm25_weight=weight,
+                )
+                adapter = RetrievalReplayAdapter(plans)
+                app, gateway = application(
+                    settings, ingestion_version=ingestion_version, adapter=adapter
+                )
+                try:
+                    start = perf_counter()
+                    uploaded = [
                         e async for e in app.upload_document(LIGHTRAG.read_bytes(), LIGHTRAG.name)
                     ]
-                    if replay[-1].type != "ready":
-                        raise RuntimeError("Experiment cache replay failed")
-                    start = perf_counter()
-                    lookup = await app.context_packer.retrieve(
-                        app.index, q3, current_question=q3.standalone_question
-                    )
-                    synthesis = await app.context_packer.retrieve(
-                        app.index, q2, current_question=q2.standalone_question
-                    )
-                    ranks = {}
-                    for name, question in (
-                        ("table2", q3.standalone_question),
-                        (
-                            "cost",
-                            "How much does retrieval cost for GraphRAG compared with LightRAG?",
-                        ),
-                        ("update", "How are incremental updates handled when new data arrives?"),
+                    ready = next((e for e in uploaded if isinstance(e, ReadyEvent)), None)
+                    if ready is None:
+                        raise RuntimeError("Measured experiment cache replay failed")
+                    probes = {}
+                    observed_plans = {}
+                    for label, question in (
+                        ("lookup", q3_question),
+                        ("synthesis", q2_question),
+                        ("cost", cost_question),
+                        ("update", update_question),
                     ):
-                        ranked = await app.index.retrieve(question, len(app.index.chunks))
+                        probes[label], observed_plans[label] = await public_retrieval(app, question)
+                    ranks = {}
+                    score_orders = {}
+                    for name, probe in (
+                        ("table2", probes["lookup"]),
+                        ("cost", probes["cost"]),
+                        ("update", probes["update"]),
+                    ):
+                        ranked = sorted(
+                            probe.chunks,
+                            key=lambda item: (
+                                -(
+                                    item.ranking_score
+                                    if item.ranking_score is not None
+                                    else item.score
+                                )
+                            ),
+                        )
                         ranks[name] = next(
                             (i for i, item in enumerate(ranked, 1) if target(item.chunk, name)),
                             None,
                         )
+                        score_orders[name] = [item.chunk.id for item in ranked]
                     coverage = {
-                        "table2": any(target(i.chunk, "table2") for i in lookup.chunks),
-                        "cost": any(target(i.chunk, "cost") for i in synthesis.chunks),
-                        "update": any(target(i.chunk, "update") for i in synthesis.chunks),
+                        "table2": any(target(i.chunk, "table2") for i in probes["lookup"].chunks),
+                        "cost": any(target(i.chunk, "cost") for i in probes["synthesis"].chunks),
+                        "update": any(
+                            target(i.chunk, "update") for i in probes["synthesis"].chunks
+                        ),
                     }
                     results["rows"].append(
                         {
                             "settings": settings.model_dump(),
-                            "first_relevant_rank": ranks,
+                            "first_relevant_returned_hit_rank": ranks,
+                            "returned_hit_rr_mean": sum(1 / r if r else 0 for r in ranks.values())
+                            / 3,
                             "context_coverage": coverage,
-                            "mrr": sum(1 / r if r else 0 for r in ranks.values()) / 3,
-                            "retrieved_sections": {
-                                "lookup": [i.chunk.section for i in lookup.chunks],
-                                "synthesis": [i.chunk.section for i in synthesis.chunks],
+                            "plans": {k: v.model_dump() for k, v in observed_plans.items()},
+                            "public_retrieval_events": {
+                                k: v.model_dump() for k, v in probes.items()
                             },
-                            "context_tokens": sum(
-                                count_tokens(i.chunk.context) for i in synthesis.chunks
-                            ),
+                            "score_sorted_returned_hit_ids": score_orders,
+                            "upload_ready": ready.model_dump(),
+                            "scripted_call_types": adapter.scripted_calls,
+                            "native_replay_calls": 0,
                             "latency_ms": (perf_counter() - start) * 1000,
                         }
                     )
+                finally:
                     await app.close()
-            await baseline.close()
-            json_write(OUT / (output_name + ".json"), results)
-        if not results["rows"]:
-            raise RuntimeError("No Chunk configuration uploaded successfully")
+        json_write(OUT / (output_name + ".json"), results)
 
-        def preference(row):
-            s = row["settings"]
-            # Coverage first; ties preserve the documented dense/500/5 defaults.
-            distance = abs(s["chunk_token_target"] - 500) / 500 + abs(s["lookup_top_k"] - 5)
-            return (sum(row["context_coverage"].values()), row["mrr"], -s["bm25_weight"], -distance)
-
-        chosen = max(results["rows"], key=preference)
-        results["selection"] = chosen["settings"]
-        results["selection_reason"] = (
-            "Maximize actual Router evidence coverage, then MRR; "
-            "ties prefer dense and documented defaults."
+    def preference(row):
+        values = row["settings"]
+        distance = abs(values["chunk_token_target"] - 500) / 500 + abs(values["lookup_top_k"] - 5)
+        return (
+            sum(row["context_coverage"].values()),
+            row["returned_hit_rr_mean"],
+            -values["bm25_weight"],
+            -distance,
         )
-        json_write(OUT / (output_name + ".json"), results)
-        rows = [
-            "# Issue11 retrieval experiment",
+
+    chosen = max(results["rows"], key=preference)
+    results["selection"] = chosen["settings"]
+    results["selection_reason"] = (
+        "Public context coverage, then returned-hit RR; ties retain defaults"
+    )
+    json_write(OUT / (output_name + ".json"), results)
+    lines = [
+        "# Public-event retrieval experiment",
+        "",
+        results["experimental_design"],
+        "",
+        "| Chunk | Lookup/Synthesis/Sub k | BM25 | Returned-hit RR mean | Coverage |",
+        "|---|---|---|---|---|",
+    ]
+    for row in results["rows"]:
+        values = row["settings"]
+        lines.append(
+            f"| {values['chunk_token_target']} | {values['lookup_top_k']}/"
+            f"{values['synthesis_top_k']}/{values['sub_query_top_k']} | "
+            f"{values['bm25_weight']} | {row['returned_hit_rr_mean']:.3f} | "
+            f"{row['context_coverage']} |"
+        )
+    lines.extend(
+        [
             "",
-            results["selection_reason"],
+            "Selected settings: `" + json.dumps(results["selection"]) + "`",
             "",
-            "| Chunk | Lookup/Synthesis/Sub-query k | BM25 | MRR | Context coverage |",
-            "|---|---|---|---|---|",
+            f"Raw public events/ordering/plans/provenance: `{output_name}.json`.",
+            "",
+            "This scripted retrieval-only replay does not establish native answer quality, "
+            "global full-index MRR, final cache identity or universal grounding.",
         ]
-        for r in results["rows"]:
-            s = r["settings"]
-            rows.append(
-                f"| {s['chunk_token_target']} | "
-                f"{s['lookup_top_k']}/{s['synthesis_top_k']}/{s['sub_query_top_k']} | "
-                f"{s['bm25_weight']} | {r['mrr']:.3f} | {r['context_coverage']} |"
-            )
-        rows += [
-            "",
-            "Selected effective settings: `" + json.dumps(results["selection"]) + "`",
-            "",
-            "These are retrieval measurements, not Golden Facts answer acceptance. "
-            "Raw plans/settings/provenance are in retrieval.json.",
-        ]
-        rows += [
-            "",
-            results["experimental_design"],
-            "Ingestion version: " + results["ingestion_version"],
-        ]
-        (OUT / (output_name + ".md")).write_text("\n".join(rows) + "\n")
-        print("Selected:", results["selection"], flush=True)
-    finally:
-        json_write(OUT / (output_name + ".json"), results)
+    )
+    (OUT / (output_name + ".md")).write_text("\n".join(lines) + "\n")
+    print("selected", results["selection"], flush=True)
 
 
 def selected_settings():
@@ -400,7 +458,10 @@ async def final_run():
 async def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("phase", choices=("retrieval", "retrieval-controlled", "answers", "final"))
+    parser.add_argument("--output", type=Path, default=ORIGINAL_OUT)
     args = parser.parse_args()
+    global OUT
+    OUT = args.output
     OUT.mkdir(parents=True, exist_ok=True)
     if args.phase == "retrieval-controlled":
         await retrieval_matrix(controlled=True)

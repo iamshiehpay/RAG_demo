@@ -1,0 +1,464 @@
+{
+  "label": "unrelated numeric adjacent-table native smoke N1; not universal grounding proof",
+  "question": "What are the shoreline campaign's sample count and mean residual?",
+  "effective_settings": {
+    "lookup_top_k": 5,
+    "synthesis_top_k": 3,
+    "sub_query_top_k": 2,
+    "chunk_token_target": 500,
+    "answer_think": "medium",
+    "bm25_weight": 0.0,
+    "summary_concurrency": 4
+  },
+  "events": [
+    {
+      "type": "plan",
+      "question_type": "Lookup",
+      "standalone_question": "What are the shoreline campaign's sample count and mean residual?",
+      "sub_queries": [],
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "type": "retrieval",
+      "chunks": [
+        {
+          "chunk": {
+            "id": "a71e552defed4187b115ead748da6fa4:chunk-1",
+            "section_id": "section-1",
+            "section": "1 Inspection campaign measurements",
+            "page_start": 1,
+            "page_end": 1,
+            "text": "Table 7: Shoreline campaign measurements.\nCampaign | Samples | Mean residual (mm)\nshoreline | 37 | 0.42",
+            "order": 0,
+            "kind": "table",
+            "table_label": "Table 7",
+            "table_caption": "Table 7: Shoreline campaign measurements.",
+            "table_meaning": "",
+            "table_headers": [
+              "Campaign",
+              "Samples",
+              "Mean residual (mm)"
+            ],
+            "table_rows": [
+              [
+                "shoreline",
+                "37",
+                "0.42"
+              ]
+            ],
+            "table_reconstructed": true,
+            "linked_chunk_ids": []
+          },
+          "score": 0.6910930871963501,
+          "ranking_score": null
+        },
+        {
+          "chunk": {
+            "id": "a71e552defed4187b115ead748da6fa4:chunk-2",
+            "section_id": "section-1",
+            "section": "1 Inspection campaign measurements",
+            "page_start": 1,
+            "page_end": 1,
+            "text": "Table 8: Inland campaign measurements.\nCampaign | Samples | Mean residual (mm)\ninland | 59 | 0.73",
+            "order": 1,
+            "kind": "table",
+            "table_label": "Table 8",
+            "table_caption": "Table 8: Inland campaign measurements.",
+            "table_meaning": "",
+            "table_headers": [
+              "Campaign",
+              "Samples",
+              "Mean residual (mm)"
+            ],
+            "table_rows": [
+              [
+                "inland",
+                "59",
+                "0.73"
+              ]
+            ],
+            "table_reconstructed": true,
+            "linked_chunk_ids": []
+          },
+          "score": 0.5473511219024658,
+          "ranking_score": null
+        },
+        {
+          "chunk": {
+            "id": "a71e552defed4187b115ead748da6fa4:chunk-3",
+            "section_id": "section-1",
+            "section": "1 Inspection campaign measurements",
+            "page_start": 1,
+            "page_end": 1,
+            "text": "The inspection report describes two separate field campaigns. Each table identifies its\npopulation, sample count and the mean residual measured in millimetres. The shoreline and\ninland campaigns use the same reporting method but represent different observations, so\ntheir values must not be exchanged. Operators record the observations before calculating\nthe residual. A supervisor checks the logs and keeps the individual measurements available\nfor later verification. The report presents local measurements rather than a universal\nassessment of every inspection site. An omitted manufacturing detail is outside the scope of\nthis report. The table captions distinguish the two observation populations and the column\nheadings identify the units. These measurements are illustrative field observations and do\nnot determine future campaign results.",
+            "order": 2,
+            "kind": "text",
+            "table_label": null,
+            "table_caption": null,
+            "table_meaning": "",
+            "table_headers": [],
+            "table_rows": [],
+            "table_reconstructed": false,
+            "linked_chunk_ids": []
+          },
+          "score": 0.5790588855743408,
+          "ranking_score": null
+        }
+      ],
+      "dropped_chunk_count": 0
+    },
+    {
+      "type": "citation_map",
+      "citations": [
+        {
+          "id": "C1",
+          "source_id": "a71e552defed4187b115ead748da6fa4:chunk-1",
+          "section": "1 Inspection campaign measurements",
+          "page_start": 1,
+          "page_end": 1
+        },
+        {
+          "id": "C2",
+          "source_id": "a71e552defed4187b115ead748da6fa4:chunk-2",
+          "section": "1 Inspection campaign measurements",
+          "page_start": 1,
+          "page_end": 1
+        },
+        {
+          "id": "C3",
+          "source_id": "a71e552defed4187b115ead748da6fa4:chunk-3",
+          "section": "1 Inspection campaign measurements",
+          "page_start": 1,
+          "page_end": 1
+        }
+      ]
+    },
+    {
+      "type": "thinking",
+      "text": "We need to answer"
+    },
+    {
+      "type": "thinking",
+      "text": " using only supplied"
+    },
+    {
+      "type": "thinking",
+      "text": " excerpts. The"
+    },
+    {
+      "type": "thinking",
+      "text": " question: \"What are the"
+    },
+    {
+      "type": "thinking",
+      "text": " shoreline campaign's sample count and"
+    },
+    {
+      "type": "thinking",
+      "text": " mean residual?\" From C"
+    },
+    {
+      "type": "thinking",
+      "text": "1: Table"
+    },
+    {
+      "type": "thinking",
+      "text": " 7"
+    },
+    {
+      "type": "thinking",
+      "text": ": Shoreline campaign measurements."
+    },
+    {
+      "type": "thinking",
+      "text": " Campaign | Samples | Mean"
+    },
+    {
+      "type": "thinking",
+      "text": " residual (mm"
+    },
+    {
+      "type": "thinking",
+      "text": ") shoreline"
+    },
+    {
+      "type": "thinking",
+      "text": " | 37 | 0"
+    },
+    {
+      "type": "thinking",
+      "text": ".42. So answer:"
+    },
+    {
+      "type": "thinking",
+      "text": " sample"
+    },
+    {
+      "type": "thinking",
+      "text": " count 37, mean residual"
+    },
+    {
+      "type": "thinking",
+      "text": " 0.42 mm"
+    },
+    {
+      "type": "thinking",
+      "text": ". Cite"
+    },
+    {
+      "type": "thinking",
+      "text": " C"
+    },
+    {
+      "type": "thinking",
+      "text": "1."
+    },
+    {
+      "type": "delta",
+      "text": "The shoreline campaign had"
+    },
+    {
+      "type": "delta",
+      "text": " **"
+    },
+    {
+      "type": "delta",
+      "text": "37 samples** and a"
+    },
+    {
+      "type": "delta",
+      "text": " **mean residual of "
+    },
+    {
+      "type": "delta",
+      "text": "0.42 mm**"
+    },
+    {
+      "type": "delta",
+      "text": "[C1]"
+    },
+    {
+      "type": "final",
+      "answer": "The shoreline campaign had **37 samples** and a **mean residual of 0.42 mm**[C1]",
+      "citations": [
+        {
+          "id": "C1",
+          "source_id": "a71e552defed4187b115ead748da6fa4:chunk-1",
+          "section": "1 Inspection campaign measurements",
+          "page_start": 1,
+          "page_end": 1
+        }
+      ],
+      "unverified": []
+    },
+    {
+      "type": "trace",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 827,
+          "prompt_eval_count": 488,
+          "eval_count": 95,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. The question asks about shoreline campaign's sample count and mean residual. That's likely a lookup from a table. So question_type Lookup. sub_queries [].\n\nStandalone_question: \"What are the shoreline campaign's sample count and mean residual?\" Already complete.\n\nReturn JSON.",
+          "latency_ms": 748.0576660018414,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "answer",
+          "estimated_prompt_tokens": 914,
+          "prompt_eval_count": 689,
+          "eval_count": 112,
+          "think": "medium",
+          "num_predict": 3000,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to answer using only supplied excerpts. The question: \"What are the shoreline campaign's sample count and mean residual?\" From C1: Table 7: Shoreline campaign measurements. Campaign | Samples | Mean residual (mm) shoreline | 37 | 0.42. So answer: sample count 37, mean residual 0.42 mm. Cite C1.",
+          "latency_ms": 978.1315829604864,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ],
+      "invalid_citation_count": 0,
+      "dropped_chunk_count": 0,
+      "summary_level": null
+    }
+  ],
+  "upload_events": [
+    {
+      "type": "stage",
+      "stage": "parsing",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "type": "stage",
+      "stage": "chunking",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "type": "stage",
+      "stage": "embedding",
+      "completed": 0,
+      "total": 3
+    },
+    {
+      "type": "stage",
+      "stage": "embedding",
+      "completed": 3,
+      "total": 3
+    },
+    {
+      "type": "stage",
+      "stage": "summary",
+      "completed": 0,
+      "total": 2
+    },
+    {
+      "type": "stage",
+      "stage": "summary",
+      "completed": 1,
+      "total": 2
+    },
+    {
+      "type": "stage",
+      "stage": "summary",
+      "completed": 2,
+      "total": 2
+    },
+    {
+      "type": "stage",
+      "stage": "complete",
+      "completed": 1,
+      "total": 1
+    },
+    {
+      "type": "ready",
+      "document_id": "a71e552defed4187b115ead748da6fa4",
+      "name": "Campaign-measurements.pdf",
+      "chunk_count": 3,
+      "document_summary": "The report presents two field inspection campaigns that measured residuals in millimetres. In the shoreline campaign, 37 samples were collected; the mean residual was 0.42 mm. In the inland campaign, 59 samples were collected; the mean residual was 0.73 mm. Both campaigns used the same reporting method but constitute distinct observation populations. Operators recorded raw observations before residual calculation, and a supervisor verified the logs and retained the individual measurements for later verification. The data are presented as local illustrative measurements and are not intended as a universal assessment of all inspection sites nor as a prediction of future campaign results. An omitted manufacturing detail is noted as outside the report’s scope."
+    }
+  ],
+  "answer": "The shoreline campaign had **37 samples** and a **mean residual of 0.42 mm**[C1]",
+  "used_original_sources": [
+    {
+      "id": "a71e552defed4187b115ead748da6fa4:chunk-1",
+      "section_id": "section-1",
+      "section": "1 Inspection campaign measurements",
+      "page_start": 1,
+      "page_end": 1,
+      "text": "Table 7: Shoreline campaign measurements.\nCampaign | Samples | Mean residual (mm)\nshoreline | 37 | 0.42",
+      "order": 0,
+      "kind": "table",
+      "table_label": "Table 7",
+      "table_caption": "Table 7: Shoreline campaign measurements.",
+      "table_meaning": "",
+      "table_headers": [
+        "Campaign",
+        "Samples",
+        "Mean residual (mm)"
+      ],
+      "table_rows": [
+        [
+          "shoreline",
+          "37",
+          "0.42"
+        ]
+      ],
+      "table_reconstructed": true,
+      "linked_chunk_ids": []
+    }
+  ],
+  "source_table_check": true,
+  "calls": [
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 836,
+      "prompt_eval_count": 611,
+      "eval_count": 216,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need summary 80 tokens. Summarize motivation, methods, settings, findings, conclusions, limitations. From evidence: two field campaigns, tables give samples and mean residual. Operators record observations before residual calculation. Supervisor checks logs, keeps measurements for verification. Report presents local measurements, not universal. Omitted manufacturing detail out of scope. Measurements illustrative, not predictive. Provide summary.",
+      "latency_ms": 1139.590541832149,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "document_summary",
+      "estimated_prompt_tokens": 773,
+      "prompt_eval_count": 548,
+      "eval_count": 229,
+      "think": "low",
+      "num_predict": 2500,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary of this document. Include motivation, methods, settings, findings, conclusions, limitations. From evidence: two inspection campaigns measuring residuals in mm. Provide means, sample sizes. Note they are distinct populations, local illustrative, not universal, no future prediction. Omitted manufacturing detail outside scope. Also operators recorded raw observations, supervisor verified logs and retained measurements for verification. Provide that.",
+      "latency_ms": 1157.9752089455724,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 827,
+      "prompt_eval_count": 488,
+      "eval_count": 95,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to output JSON. The question asks about shoreline campaign's sample count and mean residual. That's likely a lookup from a table. So question_type Lookup. sub_queries [].\n\nStandalone_question: \"What are the shoreline campaign's sample count and mean residual?\" Already complete.\n\nReturn JSON.",
+      "latency_ms": 748.0576660018414,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 914,
+      "prompt_eval_count": 689,
+      "eval_count": 112,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to answer using only supplied excerpts. The question: \"What are the shoreline campaign's sample count and mean residual?\" From C1: Table 7: Shoreline campaign measurements. Campaign | Samples | Mean residual (mm) shoreline | 37 | 0.42. So answer: sample count 37, mean residual 0.42 mm. Cite C1.",
+      "latency_ms": 978.1315829604864,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    }
+  ]
+}

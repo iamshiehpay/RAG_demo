@@ -162,3 +162,60 @@ async def test_weighted_bm25_public_evidence_keeps_cosine_scores():
         assert any(e.type == "final" for e in events)
     finally:
         await app.close()
+
+
+async def test_eval_retains_original_public_citation_map_and_final_events(tmp_path):
+    """Original mappings must be inspectable without reconstructing a later search."""
+    path = tmp_path / "Independent-measurement.pdf"
+    path.write_bytes(text_pdf("Independent measurement is recorded as 37 units."))
+    llm = SummaryScriptedLLM(["not JSON", "The measurement is 37 units. [C1]"])
+    gateway = RecordingGateway(llm)
+    app = Application(OllamaEmbedder(), gateway)
+    try:
+        report = await run_evaluation(
+            app, gateway, path, (EvaluationCase("measurement", "What is the measurement?"),)
+        )
+        captured = report.runs[0].events
+        mapping = next(e for e in captured if e["type"] == "citation_map")
+        final = next(e for e in captured if e["type"] == "final")
+        retrieved = next(e for e in captured if e["type"] == "retrieval")
+        assert final["answer"] == report.runs[0].answer
+        citation = final["citations"][0]
+        assert citation in mapping["citations"]
+        source = next(
+            c["chunk"] for c in retrieved["chunks"] if c["chunk"]["id"] == citation["source_id"]
+        )
+        assert "37 units" in source["text"]
+    finally:
+        await app.close()
+
+
+async def test_controlled_retrieval_replay_uses_public_events_and_no_summary_calls(tmp_path):
+    from chat_document.cache import ProcessingCache
+    from chat_document.events import PlanEvent
+    from scripts.tune import RetrievalReplayAdapter, public_retrieval
+
+    content = text_pdf("The inspection campaign records 37 validated samples.")
+    cache = ProcessingCache(tmp_path / "cache")
+    prepared = Application(OllamaEmbedder(), LLMGateway(SummaryScriptedLLM([])), cache=cache)
+    try:
+        assert [e async for e in prepared.upload_document(content, "Inspection.pdf")][
+            -1
+        ].type == "ready"
+    finally:
+        await prepared.close()
+    question = "How many validated samples were recorded?"
+    plan = PlanEvent(question_type="Lookup", standalone_question=question, sub_queries=[])
+    adapter = RetrievalReplayAdapter({question: plan})
+    # This regression's cached summaries are scripted, not native-quality evidence.
+    adapter.model = "scripted"
+    app = Application(OllamaEmbedder(), RecordingGateway(adapter), cache=cache)
+    try:
+        ready = [e async for e in app.upload_document(content, "Inspection.pdf")]
+        assert [e.type for e in ready] == ["ready"]
+        retrieval, observed = await public_retrieval(app, question)
+        assert observed == plan and observed.plan_source == "router"
+        assert any("37 validated samples" in item.chunk.text for item in retrieval.chunks)
+        assert adapter.scripted_calls == ["router", "answer"]
+    finally:
+        await app.close()

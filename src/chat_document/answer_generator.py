@@ -20,6 +20,9 @@ Use exactly ASCII square brackets: [{prefix}1]. Do not use alternate brackets su
 The CURRENT USER QUESTION controls the answer language, even when the rewritten Question
 or Document excerpts use another language. Preserve all source numbers exactly.
 When citing tables, first explain the comparison baseline before giving conclusions.
+For a numeric table claim, cite the supplied Table Chunk whose caption, header and row
+contain those figures. A nearby table or prose source with a different metric or population
+is not support. Keep each numeric claim attached to its exact supporting Citation.
 For paired win rates, use the named baseline / variant order.
 When comparing table rows, identify the supplied reference/full-system row and include it
 in the comparison. Compare values only on the SAME metric and dataset/column, and explicitly
