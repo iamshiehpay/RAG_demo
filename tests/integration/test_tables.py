@@ -6,8 +6,9 @@ import pytest
 
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
+
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 
 # Transcribed from the fixed LightRAG Table 2, in printed row/column order.
 TABLE2_VALUES = [

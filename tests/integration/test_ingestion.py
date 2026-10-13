@@ -7,6 +7,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
+from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .fixtures import (
     cjk_layout_pdf,
     heading_free_pdf,
@@ -16,7 +17,6 @@ from .fixtures import (
     structured_pdf,
     text_pdf,
 )
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
 from .test_router_synthesis import router_script
 
 

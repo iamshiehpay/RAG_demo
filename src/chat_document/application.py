@@ -24,6 +24,7 @@ from .events import (
     FinalEvent,
     ReadyEvent,
     RejectedEvent,
+    RetrievalEvent,
     RetryEvent,
     StageEvent,
     ThinkingEvent,
@@ -303,7 +304,9 @@ class Application:
                 )
                 dropped_chunk_count = retrieved.dropped_chunk_count
                 yield retrieved
-                chunks = sorted((item.chunk for item in retrieved.chunks), key=lambda chunk: chunk.order)
+                chunks = sorted(
+                    (item.chunk for item in retrieved.chunks), key=lambda chunk: chunk.order
+                )
                 citations = citation_map(chunks)
                 yield CitationMapEvent(citations=citations)
                 stage = "answer"

@@ -1,7 +1,8 @@
 """Application regressions with real parser and shared guard.
 
-Success paths use real local bge-m3 and a scripted LLM. Large recursive and
-cancellation/failure probes use fake embeddings to isolate edge behavior.
+Success paths use real local bge-m3 and a scripted LLM. The exceptionally large
+recursive and pathological-provider probes use fake embeddings; the sibling
+failure/cancellation probe uses real bge-m3.
 These prove orchestration and request contracts, not cloud answer quality (#11).
 """
 
