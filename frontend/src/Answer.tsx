@@ -33,12 +33,13 @@ function sourceValueOffsets(source: string, value: string): number[] | undefined
   while (raw < source.length) {
     const reference = /^(?:\\[!-/:-@[-`{-~]|&(?:#(?:\d{1,7}|[xX][\da-fA-F]{1,6})|[\da-zA-Z]{1,31});)/.exec(source.slice(raw));
     const token = reference?.[0] ?? (source.startsWith('\r\n', raw) ? '\r\n' : source[raw]);
-    const decoded = reference ? decodeString(token) : token === '\r\n' || token === '\r' ? '\n' : token;
+    // mdast keeps CR/CRLF verbatim, so preserve their widths when mapping positions.
+    const decoded = reference ? decodeString(token) : token;
     if (value.startsWith(decoded, rendered)) {
       for (let i = 1; i <= token.length; i++) offsets[raw + i] = rendered + decoded.length;
       raw += token.length;
       rendered += decoded.length;
-      if (decoded === '\n') linePrefix = true;
+      if (decoded === '\n' || decoded === '\r' || decoded === '\r\n') linePrefix = true;
       else if (!/^[ \t]*$/.test(decoded)) linePrefix = false;
     } else if (linePrefix && /[ \t>]/.test(source[raw])) {
       // List indentation and blockquote prefixes are absent from mdast text values.
