@@ -1,7 +1,7 @@
 /* Review-only network fixture: inject with agent-browser eval --stdin.
    Not imported by production. Every answer/summary here is scripted evidence.
    Set window.__t09.scenario before pressing 送出. Scenarios:
-   q3 (default) | compare | global | fallback | provisional | retry | error | unverified | markdown | budget | missing-source */
+   q3 (default) | compare | widetable | global | fallback | provisional | retry | error | unverified | markdown | budget | missing-source */
 (() => {
   const nativeFetch = window.fetch.bind(window);
   const chunk = { id: 'review-table2', section_id: 'review-4.3', section: '4.3 Ablation Study',
@@ -12,6 +12,11 @@
     table_label: 'Table 1', table_caption: 'Table 1. Win rates of GraphRAG against LightRAG.', table_reconstructed: true,
     table_meaning: '每格是 GraphRAG 勝率 / LightRAG 勝率（%）。', table_headers: ['Dataset', 'GraphRAG', 'LightRAG'],
     table_rows: [['Agriculture', '45.2', '54.8'], ['CS', '48.0', '52.0'], ['Legal', '47.2', '52.8'], ['Mix (Overall)', '50.4', '49.6']] };
+  const wideCols = ['Dataset', 'Comprehensiveness', 'Diversity', 'Empowerment', 'Overall', 'Win rate 11.1', 'Win rate 22.2', 'Win rate 33.3', 'Delta -0.4', 'Cost 610.5'];
+  const wideChunk = { ...tableChunk, id: 'review-wide', section: '4.4 Wide table', page_start: 9, page_end: 9, table_label: 'Table 9',
+    table_caption: 'Table 9. A ten-column table used to check horizontal scrolling and number wrapping.',
+    table_meaning: '每格是各資料集在該指標下的勝率（%）；此表為設計審閱用腳本。', table_headers: wideCols,
+    table_rows: ['Agriculture', 'Legal', 'Mix'].map((name, r) => [name, ...wideCols.slice(1).map((_, i) => (11.1 + r * 9.7 + i * 1.7).toFixed(1))]) };
   const summary = { id: 'review-summary', kind: 'section', section: '3 The LightRAG Architecture', page_start: 3, page_end: 6,
     section_titles: ['3 The LightRAG Architecture', '3.1 Graph-based indexing'],
     text: 'Review fixture summary: 說明 LightRAG 的圖索引與雙層檢索流程。此文字為設計審閱用腳本。' };
@@ -48,13 +53,13 @@
     if (String(url).startsWith('/api/sources/')) {
       if (window.__t09.scenario === 'missing-source') return new Response('{}', { status: 404 });
       const id = decodeURIComponent(String(url).slice('/api/sources/'.length));
-      return Response.json(id === summary.id ? summary : id === tableChunk.id ? tableChunk : chunk);
+      return Response.json(id === summary.id ? summary : id === tableChunk.id ? tableChunk : id === wideChunk.id ? wideChunk : chunk);
     }
     if (url === '/api/ask') return response(async emit => {
       const scenario = window.__t09.scenario;
       const compare = scenario === 'compare';
       const globalQ = scenario === 'global';
-      const mapped = globalQ ? [{ id: 'S1', source_id: summary.id, section: summary.section, page_start: 3, page_end: 6 }]
+      const mapped = scenario === 'widetable' ? [{ id: 'C1', source_id: wideChunk.id, section: wideChunk.section, page_start: 9, page_end: 9 }] : globalQ ? [{ id: 'S1', source_id: summary.id, section: summary.section, page_start: 3, page_end: 6 }]
         : compare ? [...citations, { id: 'C2', source_id: tableChunk.id, section: tableChunk.section, page_start: 7, page_end: 7 }] : citations;
       emit(plan(globalQ ? { question_type: 'Global', standalone_question: '請摘要這份文件' }
         : compare ? { question_type: 'Synthesis', standalone_question: 'LightRAG 和 GraphRAG 的差異是什麼？',
@@ -86,6 +91,11 @@
         unverified = [{ start, end: start + Array.from(claim).length }];
       }
       if (scenario === 'compare') result = '兩者都用知識圖譜，但檢索成本不同。[C1][C2]\n\n| 面向 | GraphRAG | LightRAG |\n| --- | --- | --- |\n| 檢索方式 | 遍歷 community 報告後再合併回答 | 雙層關鍵字對應實體與關係 |\n| 檢索成本 | 約 610 × 1,000 tokens，多次呼叫 | 少於 100 tokens，1 次呼叫 |\n| 增量更新 | 需重建 community，成本高 | 新節點直接合併進圖 |\n\n勝率並非全面領先：Mix 資料集的 Overall，GraphRAG 為 50.4%，LightRAG 為 49.6%。[C2]';
+      if (scenario === 'widetable') {
+        const cols = ['Dataset', 'Comprehensiveness', 'Diversity', 'Empowerment', 'Overall', 'Win rate 11.1', 'Win rate 22.2', 'Win rate 33.3', 'Delta -0.4', 'Cost 610.5'];
+        const row = (name, base) => `| ${name} | ${cols.slice(1).map((_, i) => (base + i * 1.7).toFixed(1)).join(' | ')} |`;
+        result = `下表有 10 欄小數，窄螢幕應該左右捲動而不是把數字拆開。[C1]\n\n| ${cols.join(' | ')} |\n| ${cols.map(() => '---').join(' | ')} |\n${row('Agriculture', 11.1)}\n${row('Legal', 20.5)}\n${row('Mix', 49.6)}\n\n以上為設計審閱用腳本資料。[C1]`;
+      }
       if (scenario === 'markdown') result = '**Safe bold** and *safe emphasis*. [C1]\n\n<script>window.__unsafe = true</script>\n\n[unsafe](javascript:alert(1))\n\n| Dataset | Overall |\n| --- | --- |\n| Mix | 64.8% |';
       emit({ type: 'final', answer: result, citations: mapped, unverified });
       emit({ type: 'trace', invalid_citation_count: scenario === 'unverified' ? 1 : 0, dropped_chunk_count: compare ? 1 : 0,
@@ -93,7 +103,7 @@
         calls: scenario === 'budget' ? [
           { ...routerCall, estimated_prompt_tokens: 1200 },
           { ...call, estimated_prompt_tokens: 6990, prompt_eval_count: 6765 },
-        ] : [routerCall, ...(compare ? [{ ...call, call_type: 'fact_extraction', think: 'low', estimated_prompt_tokens: 7600, num_predict: 1000, latency_ms: 2100, discarded_fact_lines: 1 }] : []), { ...call, estimated_prompt_tokens: compare ? 5940 : 2100 }] });
+        ] : [routerCall, ...(compare ? [1, 2].map(n => ({ ...call, call_type: 'fact_extraction', think: 'low', estimated_prompt_tokens: 7000 + n * 300, num_predict: 1000, latency_ms: 1900 + n * 200, discarded_fact_lines: n - 1 })) : []), { ...call, estimated_prompt_tokens: compare ? 5940 : 2100 }] });
     });
     return nativeFetch(url, options);
   };
