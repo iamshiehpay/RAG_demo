@@ -252,3 +252,17 @@ heading boundaries: if aligned numeric rows resume, the divider stays inside the
 region and the whole table retains raw uncertain evidence. The list/equation
 boundary and caption/Section fixes stay covered. This corrects an AI-written rule
 that was too broad; re-review is still separate and required.
+
+### 2026-10-13 — #03 rebase preserves #02 measured flow alongside tables
+
+Main confirmed integrated #02 e59e096 and authorized the #03 rebase. The parser
+conflict combined #02's body-continuation/wrapping helpers and typed `_Line`
+paragraph handling with #03's table-aware `_sections` signature/anchors; all
+existing #02 measured-width, caption, numeric-row and CJK chunk rules remained.
+Both logs were preserved. Application/cache/events/frontend are byte-identical
+to pre-rebase #03 1d21023; no shared lifecycle/UI behavior was replaced.
+All 78 existing ingestion/table uploads passed after rebase. A new combined PDF
+checks a CJK number continuing across pages before a Table Chunk, followed by a
+close same-size heading: exact number 14 and p.1–2 prose provenance, p.2 table
+cells, and the following Section are retained together. Its pre-rebase source
+failure and integrated pass are recorded under ticket-03/post-issue02.

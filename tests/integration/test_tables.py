@@ -686,3 +686,38 @@ async def test_group_divider_inside_table_keeps_all_later_numeric_cells_as_uncer
     prose = "\n".join(c.text for c in app.document.chunks if c.kind == "text")
     assert "body discussion" in prose and "Proprietary models" not in prose
     assert "Gamma" not in prose and "Delta" not in prose
+
+
+async def test_cjk_page_continuation_and_close_table_heading_preserve_numbers_and_provenance():
+    import pymupdf
+
+    from .fixtures import page_continuation_pdf
+
+    first = "觀察記錄" * 9 + "月球區域1"
+    second = "4的觀察延續到第二頁才結束。本段落的內容保留原始數值與跨頁來源。"
+    with pymupdf.open(stream=page_continuation_pdf(first, second, cjk=True), filetype="pdf") as pdf:
+        page = pdf[1]
+        page.insert_text((150, 120), "Table 7: Measured accuracy.", fontsize=9)
+        for i, row in enumerate([["Method", "Accuracy"], ["Base", "10.5"], ["Ours", "11.7"]]):
+            for x, cell in zip([72, 220], row, strict=True):
+                page.insert_text((x, 140 + i * 12), cell, fontsize=9)
+        page.insert_text((72, 188), "2 METHOD DETAILS", fontsize=10, fontname="hebo")
+        page.insert_text((72, 210), "後續方法說明保留自己的章節。", fontsize=10, fontname="china-t")
+        data = pdf.tobytes()
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    try:
+        assert [e async for e in app.upload_document(data, "combined.pdf")][-1].type == "ready"
+        section = next(s for s in app.document.sections if s.title == "1 Results")
+        assert section.paragraphs == [first + second]
+        assert section.paragraph_pages == [(1, 2)]
+        prose = next(c for c in app.document.chunks if c.kind == "text" and "月球區域14" in c.text)
+        assert (prose.page_start, prose.page_end) == (1, 2)
+        table = next(c for c in app.document.chunks if c.kind == "table")
+        assert table.table_reconstructed and table.section == "1 Results"
+        assert (table.page_start, table.page_end) == (2, 2)
+        assert table.table_rows == [["Base", "10.5"], ["Ours", "11.7"]]
+        discussion = next(c for c in app.document.chunks if "後續方法說明" in c.text)
+        assert discussion.kind == "text" and discussion.section == "2 METHOD DETAILS"
+        assert (discussion.page_start, discussion.page_end) == (2, 2)
+    finally:
+        await app.close()
