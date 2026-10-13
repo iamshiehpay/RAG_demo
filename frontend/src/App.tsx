@@ -7,12 +7,14 @@ import { consumeEvents } from './sse';
 import { ErrorState, StageIndicator, UploadProgress } from './Shared';
 import type { AskStage } from './Shared';
 import { SourceDialog } from './SourceDialog';
+import type { SummarySource } from './SourceDialog';
 
 interface Turn {
   id: number; question: string; answer: string; citations: Citation[];
   chunks: RetrievedChunk[]; calls: LLMCallTrace[]; stage: AskStage; final: boolean; error: string;
   plan: PlanEvent | null; rejected: boolean;
   thinking: string; unverified: UnverifiedSpan[]; invalidCitationCount: number; retrying: boolean;
+  droppedChunkCount: number; summaryLevel: string | null;
 }
 const message = (error: unknown) => error instanceof Error ? error.message : 'Request failed. Please retry.';
 async function responseMessage(response: Response, fallback: string) {
@@ -29,7 +31,7 @@ export function App() {
   const [uploadStage, setUploadStage] = useState<StageEvent | null>(null);
   const [uploadEventsUrl, setUploadEventsUrl] = useState('');
   const [error, setError] = useState('');
-  const [source, setSource] = useState<Chunk | null>(null);
+  const [source, setSource] = useState<Chunk | SummarySource | null>(null);
   const [sourceOpen, setSourceOpen] = useState(false);
   const [sourceLoading, setSourceLoading] = useState(false);
   const [sourceError, setSourceError] = useState('');
@@ -96,6 +98,7 @@ export function App() {
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
       thinking: '', unverified: [], invalidCitationCount: 0, retrying: false,
+      droppedChunkCount: 0, summaryLevel: null,
       stage: 'planning', final: false, error: '' };
     setTurns(previous => retryId === undefined ? [...previous, freshTurn] :
       previous.map(turn => turn.id === retryId ? freshTurn : turn));
@@ -107,7 +110,8 @@ export function App() {
         updateTurn(id, turn => {
           switch (event.type) {
             case 'plan': return { ...turn, plan: event, stage: 'retrieval' };
-            case 'retrieval': return { ...turn, chunks: event.chunks, stage: 'thinking' };
+            case 'retrieval': return { ...turn, chunks: event.chunks,
+              droppedChunkCount: event.dropped_chunk_count ?? 0, stage: 'thinking' };
             case 'citation_map': return { ...turn, citations: event.citations };
             case 'thinking': return { ...turn, thinking: turn.thinking + event.text };
             case 'delta': return { ...turn, answer: turn.answer + event.text,
@@ -117,7 +121,8 @@ export function App() {
             case 'final': return { ...turn, answer: event.answer, citations: event.citations,
               unverified: event.unverified, retrying: false, final: true, stage: 'complete' };
             case 'trace': return { ...turn, calls: event.calls,
-              invalidCitationCount: event.invalid_citation_count };
+              invalidCitationCount: event.invalid_citation_count,
+              droppedChunkCount: event.dropped_chunk_count ?? 0, summaryLevel: event.summary_level ?? null };
             case 'rejected': return { ...turn, answer: '', error: event.message,
               rejected: true, stage: 'rejected', final: false };
             case 'error': return { ...turn, answer: '', error: event.message, stage: 'error', final: false };
@@ -137,7 +142,7 @@ export function App() {
     try {
       const response = await fetch(`/api/sources/${encodeURIComponent(citation.source_id)}`);
       if (!response.ok) throw new Error(response.status === 404 ? 'Source not found.' : 'Could not load source.');
-      const content = await response.json() as Chunk;
+      const content = await response.json() as Chunk | SummarySource;
       if (request === sourceRequest.current) setSource(content);
     } catch (error) {
       if (request === sourceRequest.current) setSourceError(message(error));
@@ -167,7 +172,7 @@ export function App() {
           {uploading && !busy && uploadEventsUrl && <button className="secondary-button" onClick={() => void reconnectUpload()}>Reconnect upload progress</button>}
           {error && <ErrorState message={error} />}
         </section>
-        <section className="document-overview" aria-label="Document Summary">
+        <section className="document-overview" aria-label="Document Summary" tabIndex={0}>
           <p className="eyebrow">Document Summary</p><h2>文件概覽</h2>
           {document?.document_summary ? <Answer text={document.document_summary} citations={[]} onSource={() => {}} /> :
             <p className="muted">{document ? '此版本尚未提供文件概覽。' : '處理完成後，文件概覽會顯示在這裡。'}</p>}
@@ -186,7 +191,8 @@ export function App() {
             {turn.error && <ErrorState message={turn.error} disabled={busy || uploading}
               onRetry={!turn.rejected && turn.id === turns.at(-1)?.id ? () => void ask(turn.question, turn.id) : undefined} />}
             {(turn.plan || turn.chunks.length > 0 || turn.calls.length > 0 || turn.thinking) && <Trace chunks={turn.chunks}
-              calls={turn.calls} plan={turn.plan} thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount} />}
+              calls={turn.calls} plan={turn.plan} thinking={turn.thinking} invalidCitationCount={turn.invalidCitationCount}
+              droppedChunkCount={turn.droppedChunkCount} summaryLevel={turn.summaryLevel} />}
           </article>)}
         </section>
         <form className="composer" onSubmit={submit}>

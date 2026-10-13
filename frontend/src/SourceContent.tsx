@@ -2,10 +2,10 @@ import type { Chunk } from './events';
 
 /** Typed source fields come from the parser; model output never supplies table cells. */
 export function SourceContent({ source }: { source: Chunk }) {
-  if (source.kind !== 'table') return <pre>{source.text}</pre>;
+  if (source.kind !== 'table') return <pre className="source-text">{source.text}</pre>;
   if (!source.table_reconstructed) return <>
     <p className="table-limitation" role="note">結構未能可靠重建 · Table structure could not be reliably reconstructed.</p>
-    <pre>{source.text}</pre>
+    <pre className="source-text">{source.text}</pre>
   </>;
   return <>
     {source.table_meaning && <p>{source.table_meaning}</p>}

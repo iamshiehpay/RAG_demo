@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
 import type { Chunk } from './events';
 import { ErrorState, pageRange } from './Shared';
+import { SourceContent } from './SourceContent';
 
-export type SourceContent = Pick<Chunk, 'section' | 'page_start' | 'page_end' | 'text'>;
-export type SourceTable = { headers: string[]; rows: string[][]; caption?: string };
+export interface SummarySource {
+  id: string; kind: 'section' | 'group' | 'document'; section: string;
+  page_start: number; page_end: number; text: string; section_titles: string[];
+}
 
-/** #03/#05 can supply structured tables/Section Summary without changing the dialog. */
-export function SourceDialog({ source, kind = 'Chunk', table, loading = false, error = '', onClose }: {
-  source: SourceContent | null; kind?: 'Chunk' | 'Table Chunk' | 'Section Summary';
-  table?: SourceTable; loading?: boolean; error?: string; onClose: () => void;
+/** Both typed Chunk and Summary sources retain their backend provenance. */
+export function SourceDialog({ source, kind = 'Chunk', loading = false, error = '', onClose }: {
+  source: Chunk | SummarySource | null; kind?: 'Chunk' | 'Section Summary';
+  loading?: boolean; error?: string; onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const returnFocus = useRef(document.activeElement);
@@ -21,17 +24,17 @@ export function SourceDialog({ source, kind = 'Chunk', table, loading = false, e
       if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
     };
   }, []);
+  const summary = source && 'section_titles' in source ? source : null;
+  const label = summary ? summary.kind === 'group' ? 'Group Summary' : summary.kind === 'document' ? 'Document Summary' : 'Section Summary'
+    : source?.kind === 'table' ? 'Table Chunk' : kind;
   return <dialog ref={dialog} className="source-dialog" onCancel={onClose} aria-labelledby="source-title">
-    <header className="source-heading"><div><p className="eyebrow">Citation / {kind}</p>
+    <header className="source-heading"><div><p className="eyebrow">Citation / {label}</p>
       <h2 id="source-title">{source ? `${pageRange(source)} · ${source.section}` : 'Citation source'}</h2></div>
       <button className="secondary-button" onClick={onClose} autoFocus>關閉 · Close source</button>
     </header>
     {loading && <p role="status">正在讀取原文…</p>}
     {error && <ErrorState message={error} />}
-    {source && (table ? <div className="source-table-scroll"><table>
-      {table.caption && <caption>{table.caption}</caption>}
-      <thead><tr>{table.headers.map((header, i) => <th key={i} scope="col">{header}</th>)}</tr></thead>
-      <tbody>{table.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>)}</tbody>
-    </table></div> : <pre className="source-text">{source.text}</pre>)}
+    {summary && <ul aria-label="Covered Sections">{summary.section_titles.map((title, i) => <li key={i}>{title}</li>)}</ul>}
+    {source && ('section_titles' in source ? <pre className="source-text">{source.text}</pre> : <SourceContent source={source} />)}
   </dialog>;
 }

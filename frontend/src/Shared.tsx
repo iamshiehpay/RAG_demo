@@ -35,7 +35,7 @@ export function StageIndicator({ stage }: { stage: AskStage }) {
   </div>;
 }
 
-const uploadLabels: Record<StageEvent['stage'], string> = { parsing: '解析', chunking: '切塊', embedding: 'Embedding', complete: '完成' };
+const uploadLabels: Record<StageEvent['stage'], string> = { parsing: '解析', chunking: '切塊', embedding: 'Embedding', summary: '摘要', complete: '完成' };
 export function UploadProgress({ stage, busy, ready, name }: {
   stage: StageEvent | null; busy: boolean; ready: boolean; name?: string;
 }) {

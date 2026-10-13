@@ -1,9 +1,9 @@
 import type { LLMCallTrace, PlanEvent, RetrievedChunk } from './events';
 import { pageRange, ThinkingContent, TokenBar } from './Shared';
 
-export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount = 0 }: {
+export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount = 0, droppedChunkCount = 0, summaryLevel = null }: {
   calls: LLMCallTrace[]; chunks: RetrievedChunk[]; plan?: PlanEvent | null;
-  thinking?: string; invalidCitationCount?: number;
+  thinking?: string; invalidCitationCount?: number; droppedChunkCount?: number; summaryLevel?: string | null;
 }) {
   return <details className="trace"><summary>Trace <span className="trace-count">{calls.length} LLM call{calls.length === 1 ? '' : 's'} · {chunks.length} Chunks</span></summary>
     <div className="trace-content">
@@ -19,6 +19,8 @@ export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount
         {plan.sub_queries.length > 0 && <div><dt>Sub-queries</dt><dd><ol>{plan.sub_queries.map((query, i) => <li key={i}>{query}</li>)}</ol></dd></div>}
       </dl>}
       <p className={invalidCitationCount ? 'error' : 'muted'}>Invalid Citations: {invalidCitationCount}</p>
+      <p className="muted">Chunks dropped because of Context Budget: {droppedChunkCount}</p>
+      {summaryLevel && <p className="muted">Summary Tree level: {summaryLevel}</p>}
       {calls.map((call, i) => <section className="trace-call" key={i} aria-label={`LLM call ${i + 1}`}>
         <h4><span>{String(i + 1).padStart(2, '0')} / {call.call_type}</span><span className="call-think">think={call.think}</span></h4>
         <TokenBar call={call} />
