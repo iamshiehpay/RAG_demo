@@ -114,9 +114,13 @@ uses a git archive of exact e59e096. Full suite excludes the two cloud eval test
 
 ## Remaining scope and cleanup
 
-Independent post-rebase approval is pending from nova-r03-hazu. Pre-rebase
-Round 3 independently approved N1/R1/R2, but that does not substitute for final
-integration approval. The grouped-table fallback can retain a close short list
+Independent reviewer nova-r03-hazu **APPROVED dcbc937** (source/tests=d7d77e8),
+full range e59e096..dcbc937, in HCOM #7489 and main
+`.lat/briefs/nova-r03-review.md`, Round 4. The reviewer independently verified
+the docs-only delta, rebase conflict resolution, #02/#03 rule preservation, all
+421 numbers/Sections, N1/R1/R2 probes, and a full **238 passed, 2 deselected** run.
+This final report-status commit changes documentation only; reviewed source and
+tests remain unchanged. The grouped-table fallback can retain a close short list
 inside already uncertain raw source (text preserved); independent reviewer
 classified it as non-blocking. Q3 live answer quality remains owned by #11;
 existing failed numeric/forbidden evaluations are preserved, not represented as
@@ -124,6 +128,7 @@ passed by deterministic upload/renderer tests. Current frontend source/display
 behavior is unchanged from the prior independently reviewed #03 candidate.
 
 No servers, browser tabs, ports, shared service changes, main/other-worktree edits,
-merge, push, or delegated agents were created by this implementer. All temporary
-archives/build/cache belong to `/private/tmp/nova-i03-*` and are removed once
-final evidence is saved; reviewer-owned `/private/tmp/nova-r03-*` remain untouched.
+merge, push, or delegated agents were created by this implementer. Authored temporary archives, baseline archive and production build under
+`/private/tmp/nova-i03-*` have been removed. Temporary uv/CLI cache and tool
+roots are removed after the final HCOM handoff; reviewer-owned
+`/private/tmp/nova-r03-*` remain untouched.
