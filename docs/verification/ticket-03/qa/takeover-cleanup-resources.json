@@ -1,0 +1,17 @@
+{
+  "remaining_owned_temp_paths": [],
+  "listening_ports": {
+    "8260": false,
+    "8261": false,
+    "8262": false,
+    "8263": false,
+    "8264": false,
+    "8265": false,
+    "8266": false,
+    "8267": false,
+    "8268": false,
+    "8269": false
+  },
+  "browser": "nova-qa03 closed before cleanup",
+  "server": "owned uvicorn session81989 exited0 after SIGINT"
+}

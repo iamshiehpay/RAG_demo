@@ -1,0 +1,19 @@
+INFO:     Started server process [44813]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8260 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58614 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49663 - "GET /assets/index-CwqF2Lty.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58614 - "GET /assets/index-C29a4zR-.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52721 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52721 - "GET /api/documents/67af159c49d3431fb8262d23c5476607/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60466 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54712 - "GET /api/sources/0150e0133a4f444486b15d1e1fa71d76%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52117 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52117 - "GET /api/documents/30254510e5db40d2be6cb16f13baa1af/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62784 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63354 - "GET /api/sources/ec5de9a31a9b45b09a915f7812ec10ae%3Achunk-1 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [44813]

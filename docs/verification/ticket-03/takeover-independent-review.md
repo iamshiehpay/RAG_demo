@@ -169,3 +169,152 @@ Residual (non-blocking, carried forward):
 - Q3 numeric quality is deferred to #11.
 
 Approval extension: **5d6204c** (on dcbc937). The only change is to docs/verification/ticket-03/post-issue02/README.md (+11/−6, recording this approval and cleanup). src/tests/frontend/scripts/eval/pyproject/uv.lock are identical to dcbc937 (= d7d77e8). Final approved head: **5d6204c**.
+
+---
+
+# Appendix: reproduction probes (copied from /private/tmp/nova-r03-probe)
+
+Usage: export a commit with `git archive <sha> | tar -x -C /private/tmp/nova-r03-<V>`, then run `GAP=14 V=<V> <worktree>/.venv/bin/python -I adversarial.py <case...>`. Cases: heading_after_table, prose_line_starts_with_table, list_after_table, group_rows, mid_group, mid_group_list, trailing_note. numbers.py takes `<V> <pdf>` and writes nums-<V>.json for the numeric-multiset comparison.
+
+## adversarial.py
+```python
+import sys, pymupdf
+import os; GAP=float(os.environ.get("GAP","10")); sys.path.insert(0, "/private/tmp/nova-r03-%s/src" % os.environ["V"])
+from chat_document.pdf_parser import parse_pdf
+
+BODY = ("Retrieval systems are evaluated on several datasets in this work and we report the results in detail here. " * 1)
+def para(page, y, lines, size=10):
+    for t in lines:
+        page.insert_text((72, y), t, fontsize=size, fontname="tiro"); y += size*1.25
+    return y
+def grid(page, y, rows, xs=(72, 220, 320, 420)):
+    for r in rows:
+        for x, cell in zip(xs, r):
+            page.insert_text((x, y), cell, fontsize=9, fontname="tiro")
+        y += 12
+    return y
+filler = ["Retrieval augmented generation combines a retriever with a generator to answer questions well.",
+          "We describe the experimental setup, the datasets, and the metrics that are used in this study.",
+          "Each method is run three times and the mean score is reported for every dataset and metric.",
+          "The following paragraphs discuss the main findings and their implications for practitioners."]
+rows = [["Method","Alpha","Beta","Gamma"],["Base","10.5","20.1","30.2"],["Ours","11.7","22.3","33.9"],["Large","12.4","23.8","35.0"]]
+
+def build(kind):
+    doc = pymupdf.open(); page = doc.new_page()
+    page.insert_text((72, 60), "1 Introduction", fontsize=14, fontname="tibo")
+    y = para(page, 90, filler*3)
+    if kind == "heading_after_table":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, rows)
+        page.insert_text((72, y+GAP), "2 METHOD DETAILS", fontsize=10, fontname="tibo")
+        y = para(page, y+30, filler*2)
+    if kind == "heading_after_table_bigger":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, rows)
+        page.insert_text((72, y+12), "2 Method Details", fontsize=14, fontname="tibo")
+        y = para(page, y+34, filler*2)
+    if kind == "prose_line_starts_with_table":
+        y = para(page, y, ["The numbers below are drawn from the evaluation that we summarise in",
+                            "Table 1. Every value is averaged over three independent seeds of runs."])
+        y = grid(page, y+8, rows)
+        page.insert_text((150, y+6), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = para(page, y+30, filler*2)
+    if kind == "list_after_table":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, rows)
+        y = para(page, y+8, ["(a) Alpha subset", "(b) Beta subset", "(c) Gamma subset"])
+        y = para(page, y+8, filler*2)
+    if kind == "group_rows":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, [rows[0]])
+        page.insert_text((72, y), "Open-source models", fontsize=9, fontname="tiro"); y += 12
+        y = grid(page, y, rows[1:3])
+        page.insert_text((72, y), "Proprietary models", fontsize=9, fontname="tiro"); y += 12
+        y = grid(page, y, [["GPT","13.1","24.2","36.3"],["Claude","14.5","25.6","37.7"]])
+        y = para(page, y+20, filler*2)
+    if kind == "mid_group":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, rows)
+        page.insert_text((72, y), "Proprietary models", fontsize=9, fontname="tiro"); y += 12
+        y = grid(page, y, [["GPT","13.1","24.2","36.3"],["Claude","14.5","25.6","37.7"]])
+        y = para(page, y+20, filler*2)
+    if kind == "mid_group_list":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, rows)
+        page.insert_text((72, y), "Proprietary models", fontsize=9, fontname="tiro"); y += 12
+        y = grid(page, y, [["GPT","13.1","24.2","36.3"],["Claude","14.5","25.6","37.7"]])
+        y = para(page, y+8, ["(a) Alpha subset", "(b) Beta subset"])
+        y = para(page, y+20, filler*2)
+    if kind == "trailing_note":
+        page.insert_text((150, y+8), "Table 1: Accuracy of the compared methods.", fontsize=9, fontname="tiro")
+        y = grid(page, y+22, rows)
+        page.insert_text((72, y), "Higher is better", fontsize=9, fontname="tiro"); y += 12
+        y = para(page, y+20, filler*2)
+    return doc.tobytes()
+
+for kind in sys.argv[1:]:
+    print("=====", kind)
+    for s in parse_pdf(build(kind)):
+        print(f"  [{s.title}] paras={len(s.paragraphs)}", [p[:70] for p in s.paragraphs][-3:])
+        for t in getattr(s, "tables", []):
+            print("   TABLE", t.label, "recon", t.reconstructed, "| caption:", t.caption[:160], "| rows:", t.rows, "| raw:", t.raw_text[:300].replace("\n"," / "))
+```
+
+## numbers.py
+```python
+import sys, re, collections
+v = sys.argv[1]
+sys.path.insert(0, f'/private/tmp/nova-r03-{v}/src')
+from chat_document.pdf_parser import parse_pdf
+from chat_document.chunker import chunk_sections
+secs = parse_pdf(open(sys.argv[2],'rb').read())
+chunks = chunk_sections(secs, "d")
+c = collections.Counter()
+for ch in chunks:
+    t = ch.text
+    if getattr(ch,'kind','text')=='table':
+        # strip caption line(s) duplicated? count as is
+        pass
+    c.update(re.findall(r"\d+(?:[.,]\d+)*", t.replace('_','')))
+import json; json.dump(c, open(f'/private/tmp/nova-r03-probe/nums-{v}.json','w'))
+print(v, len(chunks), sum(c.values()), "table chunks:", [(ch.table_label, ch.page_start, len(ch.linked_chunk_ids)) for ch in chunks if getattr(ch,'kind','text')=='table'])
+```
+
+## sections.py
+```python
+import sys, json
+from chat_document.pdf_parser import parse_pdf
+secs = parse_pdf(open(sys.argv[1],'rb').read())
+for s in secs:
+    tabs = getattr(s, 'tables', [])
+    print(f"{s.id}|{s.title}|p{s.page_start}-{s.page_end}|paras={len(s.paragraphs)}|toks={sum(len(p) for p in s.paragraphs)}|tables={[ (t.label, t.reconstructed, len(t.rows)) for t in tabs]}")
+```
+
+## Final probe results at d7d77e8 (= 5d6204c source)
+```
+### rb heading_after_table
+  [1 Introduction] paras=1 ['Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon True | caption: Table 1: Accuracy of the compared methods. | rows: [['Base', '10.5', '20.1', '30.2'], ['Ours', '11.7', '22.3', '33.9'], ['Large', '12.4', '23.8', '35.0']] | raw: Method Alpha Beta Gamma / Base 10.5 20.1 30.2 / Ours 11.7 2
+  [2 METHOD DETAILS] paras=1 ['Retrieval augmented generation combines a retriever with a generator t']
+### rb prose_line_starts_with_table
+  [1 Introduction] paras=2 ['Retrieval augmented generation combines a retriever with a generator t', 'Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon True | caption: Table 1: Accuracy of the compared methods. | rows: [['Base', '10.5', '20.1', '30.2'], ['Ours', '11.7', '22.3', '33.9'], ['Large', '12.4', '23.8', '35.0']] | raw: Method Alpha Beta Gamma / Base 10.5 20.1 30.2 / Ours 11.7 2
+### rb list_after_table
+  [1 Introduction] paras=3 ['Retrieval augmented generation combines a retriever with a generator t', '(a) Alpha subset\n(b) Beta subset\n(c) Gamma subset', 'Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon True | caption: Table 1: Accuracy of the compared methods. | rows: [['Base', '10.5', '20.1', '30.2'], ['Ours', '11.7', '22.3', '33.9'], ['Large', '12.4', '23.8', '35.0']] | raw: Method Alpha Beta Gamma / Base 10.5 20.1 30.2 / Ours 11.7 2
+### rb group_rows
+  [1 Introduction] paras=2 ['Retrieval augmented generation combines a retriever with a generator t', 'Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon False | caption: Table 1: Accuracy of the compared methods. | rows: [] | raw: Method Alpha Beta Gamma / Open-source models / Base 10.5 20.1 30.2 / Ours 11.7 22.3 33.9 / Proprietary models / GPT 13.1 24.2 36.3 / Claude 14.5 25.6 37.7
+### rb mid_group
+  [1 Introduction] paras=2 ['Retrieval augmented generation combines a retriever with a generator t', 'Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon False | caption: Table 1: Accuracy of the compared methods. | rows: [] | raw: Method Alpha Beta Gamma / Base 10.5 20.1 30.2 / Ours 11.7 22.3 33.9 / Large 12.4 23.8 35.0 / Proprietary models / GPT 13.1 24.2 36.3 / Claude 14.5 25.6 37.7
+### rb mid_group_list
+  [1 Introduction] paras=2 ['Retrieval augmented generation combines a retriever with a generator t', 'Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon False | caption: Table 1: Accuracy of the compared methods. | rows: [] | raw: Method Alpha Beta Gamma / Base 10.5 20.1 30.2 / Ours 11.7 22.3 33.9 / Large 12.4 23.8 35.0 / Proprietary models / GPT 13.1 24.2 36.3 / Claude 14.5 25.6 37.7 /
+### rb trailing_note
+  [1 Introduction] paras=3 ['Retrieval augmented generation combines a retriever with a generator t', 'Higher is better', 'Retrieval augmented generation combines a retriever with a generator t']
+   TABLE Table 1 recon True | caption: Table 1: Accuracy of the compared methods. | rows: [['Base', '10.5', '20.1', '30.2'], ['Ours', '11.7', '22.3', '33.9'], ['Large', '12.4', '23.8', '35.0']] | raw: Method Alpha Beta Gamma / Base 10.5 20.1 30.2 / Ours 11.7 2
+```
+
+
+Main runtime audit: reviewer child Standards a064ff7b4b8e789ee and Spec a9bfd152f7a46f30c transcripts each contain13 assistant messages with actual model claude-opus-5-5 and effort/perTurnEffort medium. No substitution.

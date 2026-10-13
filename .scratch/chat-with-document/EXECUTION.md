@@ -26,11 +26,11 @@ Status: in-progress
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
 | 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | D02 已核准；e8b266c（含 CRLF 修正）複審 APPROVE；整合 rebase 仍等 #03/#05|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | done（4eee3d2；Review APPROVE；獨立 QA 5/5 AC PASS，192 tests PASS） |
-| 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | 5d6204c 已整合；獨立 Review APPROVE、238 tests PASS；nova-qa03-tiki 獨立整合 QA 中|
+| 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | done（5d6204c；Review APPROVE；QA structural/UI PASS、238 tests；Q3 品質仍 #11 FAIL）|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | 8433e9f 複審 APPROVE；sari/guru 正接上 main5d6204c，整合再審與 live Q1 報告|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 僅選文 preflight（nova-i10-fimo）；實作/eval 仍等 #03/#05 |
-| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | todo |
+| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | 僅唯讀 evidence preflight（nova-i11-meme）；正式實作仍等全部依賴 |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -141,3 +141,9 @@ Status: in-progress
 - #03 5d6204c ff-only 整合，source/tests/assets 與已審 d7d77e8 位元組一致；獨立 QA nova-qa03-tiki（session01a132f2-a494-73d1-b0cb-04a7899bcd93，GPT6.1 medium/workspace-write/on-request，terminal+turn_context 核對）凍結 main source 進行驗收。#05 只在自己的 worktree 接續 rebase。
 
 - #02 Main 已核對完整 `docs/verification/ticket-02/qa/takeover-report.md`、環境與跨頁 screenshot，六項 AC 全通過，issue 標 done。原160-fact/CJK、24 independent scenarios +2 typography、cache0/0 與 source404 均有獨立證據；角色偏差與自主複核已明記。收尾自己的 implementer/reviewer/QA，不觸碰既有 port8201。
+
+- #11 唯讀盤點已派 nova-i11-meme（GPT6.1 high/workspace-write/on-request，terminal+turn_context 核對，session01a132fb-ce96-78d2-8c04-4cd08fb37bd2），獨立 worktree ca8a02c；只沿用既有實驗與 deferred findings，不改規格/清單、不跑模型或改程式。正式實作仍等全部依賴。
+
+- #03 獨立 QA source-freeze released（HCOM8043）：256 labelled PDF numerical cells、421 tokens、10 independent layouts、CJK/page provenance、browser Table2/uncertain-source PASS，238 tests PASS。fresh real Q3 N=3 仍 FAIL：兩項 numeric exceptions0/3、forbidden pass2/3、baseline1/3、ablation meaning0/3，部分 judge evidence 非逐字遭拒。報告 `docs/verification/ticket-03/qa/takeover-q3-live-n3.md`；AC6 如實報告與最終品質通過分開，#11 不豁免。正式 QA 報告核對後才標 #03 done。
+
+- #03 Main 已核對完整獨立 QA 報告與 uncertain-source screenshot；AC1–5 PASS、AC6 如實報告 PASS，正式標 done。Reviewer 兩個 child transcripts 各13次 assistant actualmodel Opus5.5 / effort+perTurnEffort medium 已核對。收尾自己的三個角色及 merged worktree，最終 Q3 品質不豁免。

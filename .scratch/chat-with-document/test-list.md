@@ -42,10 +42,10 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
-| TB-01 | 切塊規則 4；Story 11、12；Golden Facts Q3 | LightRAG 已 `ready` | 取出 Table 1、Table 2 的 Table Chunk | 每一格數字與論文一致（含 Table 2 中 Mix 的 `-Low` Overall 64.8、完整版 60.0；Agriculture `-Origin` 74.4、完整版 67.6；Table 1 Mix Overall 50.4 / 49.6）；內容含 caption，且多層欄標題寫明「資料集 × NaiveRAG／變體」「每格是 NaiveRAG 勝率／變體勝率」；p9 成本表沒有數學斜體殘留的 `_` | DET | #03 | NOT_EXECUTED（實作前草稿） |
-| TB-02 | 切塊規則 4、7；Story 11；AGENTS「Q3 的前 5 名一定有 Table 2」 | 假 LLM 記錄 prompt；真 bge-m3 | 問 Q3 | 檢索前 5 名含 Table 2 的 Table Chunk；回答 prompt 同時含 Table 2 與 §4.3 討論它的段落（以 Table 2 與「Table 2」提及處互相連結帶出）；Chunk 依原文順序、各標 `[C#]` 與頁碼、Section；Table Chunk 與 Table 內文鄰居未使額度超過 | DET | #03（連結）、#01（Lookup 前 5） | NOT_EXECUTED（實作前草稿） |
-| TB-03 | 切塊規則 4（失敗保留）；Story 29 | 程式產生結構不規則、無法可靠重建的表格 PDF；假 LLM 腳本讓回答引用該 Table Chunk | 上傳 → 提問該表格 | Table Chunk 保留原始文字並帶「結構未能可靠重建」標記；回答（prompt 規則）說明此限制；UI 點開引用時顯示限制提示；不發生 LLM 重排表格的呼叫 | DET + UI | #03 | NOT_EXECUTED（實作前草稿） |
-| TB-04 | 切塊規則 4（>2,000 tokens）；「放不下時怎麼辦」 | 程式產生超過 2,000 tokens 的表格 PDF | 上傳 | 依列分段，每段都重複表頭與 caption，每段 ≤ 2,000 tokens，各段都可被檢索與引用 | DET | #03 | NOT_EXECUTED（實作前草稿） |
+| TB-01 | 切塊規則 4；Story 11、12；Golden Facts Q3 | LightRAG 已 `ready` | 取出 Table 1、Table 2 的 Table Chunk | 每一格數字與論文一致（含 Table 2 中 Mix 的 `-Low` Overall 64.8、完整版 60.0；Agriculture `-Origin` 74.4、完整版 67.6；Table 1 Mix Overall 50.4 / 49.6）；內容含 caption，且多層欄標題寫明「資料集 × NaiveRAG／變體」「每格是 NaiveRAG 勝率／變體勝率」；p9 成本表沒有數學斜體殘留的 `_` | DET | #03 | PASS（#03 QA5d6204c：128 labelled paired cells/256 values、cost noise、421 tokens preserved；ticket-03/qa/takeover-report.md） |
+| TB-02 | 切塊規則 4、7；Story 11；AGENTS「Q3 的前 5 名一定有 Table 2」 | 假 LLM 記錄 prompt；真 bge-m3 | 問 Q3 | 檢索前 5 名含 Table 2 的 Table Chunk；回答 prompt 同時含 Table 2 與 §4.3 討論它的段落（以 Table 2 與「Table 2」提及處互相連結帶出）；Chunk 依原文順序、各標 `[C#]` 與頁碼、Section；Table Chunk 與 Table 內文鄰居未使額度超過 | DET | #03（連結）、#01（Lookup 前 5） | PASS（#03 QA：真 bge + recording LLM 的 Q3 prompt 含 Table2/§4.3；link/order/budget/drop tests PASS；同報告） |
+| TB-03 | 切塊規則 4（失敗保留）；Story 29 | 程式產生結構不規則、無法可靠重建的表格 PDF；假 LLM 腳本讓回答引用該 Table Chunk | 上傳 → 提問該表格 | Table Chunk 保留原始文字並帶「結構未能可靠重建」標記；回答（prompt 規則）說明此限制；UI 點開引用時顯示限制提示；不發生 LLM 重排表格的呼叫 | DET + UI | #03 | PASS（#03 QA：independent missing-cell/divider raw preservation + actual browser limitation；同報告） |
+| TB-04 | 切塊規則 4（>2,000 tokens）；「放不下時怎麼辦」 | 程式產生超過 2,000 tokens 的表格 PDF | 上傳 | 依列分段，每段都重複表頭與 caption，每段 ≤ 2,000 tokens，各段都可被檢索與引用 | DET | #03 | PASS（#03 QA：310-row table 全部保留、row split/repeated headers、each≤2000；同報告） |
 
 ## E. Summary Tree
 
@@ -95,7 +95,7 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
-| CT-01 | Story 14、15、16；AGENTS「用短編號引用」 | Q3 回答完成 | 看頁邊；點 `[C#]`；用 PyMuPDF 在原 PDF 該頁搜尋彈窗文字；另對不存在編號呼叫來源查詢端點 | 每個引用在頁邊旁註顯示「p.N §Section」；點擊彈出該 Chunk 原文（Table Chunk 以表格形式顯示）；彈窗文字確實出現在其標示的頁碼；模型只寫編號，位置字串由後端對照表產生（假 LLM 寫出錯誤的「p.9」字樣也不影響對照結果）；未知編號回 404 而非崩潰 | UI + HTTP + DET | #01（彈窗）、#02（旁註含頁碼與 Section）、#03（表格形式）、#09；404：GAP | PASS（#02 範圍：旁註頁碼/Section、原文/provenance/source404；ticket-02/qa/takeover-report.md）；表格格式仍待 #03 QA、彈窗完整頁碼標題待 #09 |
+| CT-01 | Story 14、15、16；AGENTS「用短編號引用」 | Q3 回答完成 | 看頁邊；點 `[C#]`；用 PyMuPDF 在原 PDF 該頁搜尋彈窗文字；另對不存在編號呼叫來源查詢端點 | 每個引用在頁邊旁註顯示「p.N §Section」；點擊彈出該 Chunk 原文（Table Chunk 以表格形式顯示）；彈窗文字確實出現在其標示的頁碼；模型只寫編號，位置字串由後端對照表產生（假 LLM 寫出錯誤的「p.9」字樣也不影響對照結果）；未知編號回 404 而非崩潰 | UI + HTTP + DET | #01（彈窗）、#02（旁註含頁碼與 Section）、#03（表格形式）、#09；404：GAP | PASS（#02/#03 範圍：旁註/原文/provenance/source404 + actual Table2 16rows/6columns）；ticket-02/qa/takeover-report.md、ticket-03/qa/takeover-report.md；彈窗完整頁碼標題仍待 #09 |
 | CT-02 | Story 17；AGENTS「`[S#]` 點下去顯示該 Section 的頁碼範圍和摘要」 | Q1 回答完成 | 點 `[S#]` | 顯示該 Section 的頁碼範圍與其 Section Summary；Group 層則顯示涵蓋的 Section 清單；不做逐句追溯 | UI | #05 | NOT_EXECUTED（實作前草稿） |
 | CT-03 | Story 22；AGENTS「開始產生回答前先傳對照表」 | 串流進行中 | 在第一個 `delta` 剛出現、尚未 `final` 時點 `[C3]` | `[C3]` 已是可點的引用並能開啟正確來源，不必等 `final` | UI | #01 | NOT_EXECUTED（實作前草稿） |
 

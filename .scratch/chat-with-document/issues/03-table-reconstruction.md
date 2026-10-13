@@ -1,6 +1,6 @@
 # #03 表格重建與 Lookup 品質（Q3）
 
-Status: ready-for-agent
+Status: done
 
 ## Parent
 
@@ -22,13 +22,19 @@ Status: ready-for-agent
 
 ## Acceptance criteria
 
-- [ ] 確定性測試：Table 1 和 Table 2 重建後，每一格的數字都和論文一致。
-- [ ] 確定性測試：p9 的成本表裡沒有 `_` 雜訊。
-- [ ] 確定性測試：問 Q3 時，假 LLM 記錄到的回答 prompt 裡，同時有 Table 2，以及 §4.3 中討論它的段落。
-- [ ] 確定性測試：重建失敗的表格會保留原始文字並帶有標記；介面引用它時會顯示限制的提示。
-- [ ] 確定性測試：在測試中產生一張超過 2,000 tokens 的表格，它會被依列分段，而且每段都有表頭。
-- [ ] 如果 #08 已經合併：Q3 的 Golden Facts（包括 forbidden claim）寫進 eval 報告。
+- [x] 確定性測試：Table 1 和 Table 2 重建後，每一格的數字都和論文一致。
+- [x] 確定性測試：p9 的成本表裡沒有 `_` 雜訊。
+- [x] 確定性測試：問 Q3 時，假 LLM 記錄到的回答 prompt 裡，同時有 Table 2，以及 §4.3 中討論它的段落。
+- [x] 確定性測試：重建失敗的表格會保留原始文字並帶有標記；介面引用它時會顯示限制的提示。
+- [x] 確定性測試：在測試中產生一張超過 2,000 tokens 的表格，它會被依列分段，而且每段都有表頭。
+- [x] 如果 #08 已經合併：Q3 的 Golden Facts（包括 forbidden claim）寫進 eval 報告。
 
 ## Blocked by
 
 - #02（`02-structure-aware-chunking.md`）
+
+## Verification
+
+- Final5d6204c integrated; independent Opus5.5 medium Review APPROVE including #02 rebase conflicts, numeric/Section preservation and adversarial layouts. Evidence `docs/verification/ticket-03/takeover-independent-review.md`.
+- Independent GPT6.1 medium integrated QA: AC1–5 PASS, AC6 honest reporting PASS;238 deterministic tests,256 labelled PDF numeric values,421 numeric-token preservation,10 independent layouts and actual table/uncertain-source browser PASS. Report `docs/verification/ticket-03/qa/takeover-report.md`.
+- Fresh real Q3 N=3 remains FAIL (both numerical exceptions0/3; forbidden pass2/3), recorded at `docs/verification/ticket-03/qa/takeover-q3-live-n3.md`. This ticket requires reporting; #11 still requires Golden Facts to pass and is not waived.
