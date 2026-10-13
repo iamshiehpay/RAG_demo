@@ -52,6 +52,21 @@ def page_continuation_pdf(first, second, *, cjk=False):
         return document.tobytes()
 
 
+def page_top_interruption_pdf(top, *, cjk=False):
+    """A caption/header and body continuation share typography and the left margin."""
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.insert_text((72, 40), "1 Results", fontsize=14)
+        font = "china-t" if cjk else "helv"
+        first = "觀察記錄" * 11 if cjk else "The body describes an unfinished comparison"
+        page.insert_text((72, 60), first, fontname=font, fontsize=10)
+        page = document.new_page()
+        page.insert_text((72, 60), top, fontname=font, fontsize=10)
+        second = "繼續的內容。" if cjk else "and continues with the actual body text."
+        page.insert_text((72, 74), second, fontname=font, fontsize=10)
+        return document.tobytes(), first, second
+
+
 def structured_pdf(body_size=10):
     """Separate/stacked Section numbers, relative-size and same-size bold headings."""
     with pymupdf.open() as document:

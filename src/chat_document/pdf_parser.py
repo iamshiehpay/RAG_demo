@@ -23,6 +23,8 @@ _CJK_CHARACTERS = r"\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af\U000200
 _CJK_TEXT = re.compile(f"[{_CJK_CHARACTERS}]")
 _CJK_LINE_WRAP = re.compile(rf"(?<=[{_CJK_CHARACTERS}\d])\n(?=[{_CJK_CHARACTERS}\d])")
 _NUMERIC_LINE = re.compile(r"[\d\s.,%+\-−]+")
+_LABELLED_NUMERIC_ROW = re.compile(r"\S.*\s[\d\s.,%+\-−]+$")
+_CAPTION = re.compile(r"(?:Table|Figure)\s+\d", re.I)
 
 
 class DocumentError(ValueError):
@@ -39,6 +41,9 @@ class _Line:
     size: float
     bold: bool
     fonts: tuple[str, ...]
+    flow_width: float
+    page_first: bool = False
+    ragged_block: bool = False
     small_caps: bool = False
     font_change: bool = False
     shared_row: bool = False
@@ -169,6 +174,10 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                         size=max_size,
                         bold=all(s["flags"] & 16 for s in spans),
                         fonts=tuple(sorted({s["font"] for s in spans})),
+                        # A page/column reference is independent of a short row block.
+                        flow_width=(page.rect.width / (2 if two_columns else 1))
+                        - (1 if two_columns else 2)
+                        * (bbox[0] % (page.rect.width / 2) if two_columns else bbox[0]),
                         small_caps=text.isupper()
                         and any(
                             s["size"] < max_size * 0.9 and any(char.isalpha() for char in s["text"])
@@ -188,6 +197,19 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                 and not _NUMBER.fullmatch(other.text)
                 for other in page_lines
             )
+        if page_lines:
+            page_lines[0].page_first = True
+        for block_number in {line.block for line in page_lines}:
+            block_lines = [line for line in page_lines if line.block == block_number]
+            width = max(line.bbox[2] - line.bbox[0] for line in block_lines)
+            last = block_lines[-1]
+            # Equal-width rows supply no evidence of wrapping; a ragged last line
+            # establishes that this block contains text flowing against its right edge.
+            ragged = len(block_lines) > 1 and (
+                last.bbox[2] - last.bbox[0] < width * _LINE_WRAP_WIDTH_RATIO
+            )
+            for line in block_lines:
+                line.ragged_block = ragged
         lines.extend(page_lines)
     body_size = sizes.most_common(1)[0][0] if sizes else 0
     body_fonts = Counter(
@@ -333,12 +355,30 @@ def _virtual_sections(section: Section, target: int) -> list[Section]:
     ]
 
 
+def _body_continuation_target(line: _Line) -> bool:
+    # A matching font alone cannot establish prose: captions and short top-of-page
+    # labels can use body typography too. Require sentence or text-flow evidence.
+    return (
+        not _CAPTION.match(line.text)
+        and not line.shared_row
+        and not _NUMERIC_LINE.fullmatch(line.text)
+        and (
+            bool(_SENTENCE_END.search(line.text))
+            or (line.text[0].isascii() and line.text[0].islower())
+            or line.bbox[2] - line.bbox[0] >= line.flow_width * _LINE_WRAP_WIDTH_RATIO
+        )
+    )
+
+
 def _continues_on_next_page(previous: _Line, following: _Line) -> bool:
     # Called for adjacent source lines; a new Section heading already flushed the paragraph.
     return (
         following.page == previous.page + 1
         and not _SENTENCE_END.search(previous.text)
         and not _NUMERIC_LINE.fullmatch(previous.text)
+        and not previous.text.endswith((":", "："))
+        and not _CAPTION.match(previous.text)
+        and _body_continuation_target(following)
         and abs(following.size - previous.size) < 0.5
         and following.fonts == previous.fonts
         and following.bold == previous.bold
@@ -358,9 +398,18 @@ def _wraps_line(previous: _Line, following: _Line) -> bool:
             )
             or _continues_on_next_page(previous, following)
         )
+        and (previous.ragged_block or previous.page != following.page)
         and previous.bbox[2] - previous.bbox[0] >= block_width * _LINE_WRAP_WIDTH_RATIO
         and not _NUMERIC_LINE.fullmatch(previous.text)
         and not _NUMERIC_LINE.fullmatch(following.text)
+        # Repeated label/value rows can have a shorter final row too. Their
+        # whitespace-delimited numeric cells are evidence against flowing prose.
+        and not (
+            _CJK_TEXT.search(previous.text)
+            and _CJK_TEXT.search(following.text)
+            and _LABELLED_NUMERIC_ROW.fullmatch(previous.text)
+            and _LABELLED_NUMERIC_ROW.fullmatch(following.text)
+        )
     )
 
 
@@ -448,6 +497,7 @@ def _sections(lines: list[_Line], body_size: float, target: int) -> list[Section
             if previous and (
                 (line.page != previous.page and not _continues_on_next_page(previous, line))
                 or (line.page == previous.page and line.block != previous.block)
+                or (previous.page_first and not _body_continuation_target(previous))
             ):
                 flush_paragraph()
             if not pending:

@@ -8,7 +8,14 @@ from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
-from .fixtures import heading_free_pdf, paragraph_pdf, scanned_pdf, structured_pdf, text_pdf
+from .fixtures import (
+    heading_free_pdf,
+    page_top_interruption_pdf,
+    paragraph_pdf,
+    scanned_pdf,
+    structured_pdf,
+    text_pdf,
+)
 from .test_router_synthesis import router_script
 
 
@@ -537,3 +544,76 @@ async def test_short_cjk_sentence_overlap_starts_with_a_complete_sentence():
             left.text.endswith(sentence) and right.text.startswith(sentence)
             for sentence in sentences
         )
+
+
+@pytest.mark.parametrize(
+    ("top", "cjk"),
+    [
+        ("Figure 3: An overview of the pipeline", False),
+        ("Table 1: Comparison of the methods", False),
+        ("期刊名稱 第十卷", True),
+    ],
+)
+async def test_page_top_caption_or_header_does_not_extend_body_provenance(top, cjk):
+    content, first, second = page_top_interruption_pdf(top, cjk=cjk)
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=40)
+    try:
+        events = [e async for e in app.upload_document(content, "interruption.pdf")]
+        assert events[-1].type == "ready"
+        section = app.document.sections[0]
+        paragraph = next(p for p in section.paragraphs if first in p)
+        assert paragraph == first
+        assert section.paragraph_pages[section.paragraphs.index(paragraph)] == (1, 1)
+        assert any(second in p and top not in p for p in section.paragraphs)
+        assert any(top in p for p in section.paragraphs)  # Preserve source text.
+        assert all(
+            first + "\n\n" + top in c.text
+            for c in app.document.chunks
+            if first in c.text and top in c.text
+        )  # Small independent paragraphs may share a Chunk, with their separator intact.
+    finally:
+        await app.close()
+
+
+async def test_lightrag_page_top_tables_do_not_enter_previous_page_body():
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    try:
+        events = [
+            e
+            async for e in app.upload_document(Path("data/lightrag.pdf").read_bytes(), "paper.pdf")
+        ]
+        assert events[-1].type == "ready"
+        for title, phrase, pages, caption in [
+            ("4.2 ", "we draw the following conclusions:", (6, 6), "Table 1:"),
+            ("4.4 ", "which combines in-depth", (8, 8), "Table 3:"),
+        ]:
+            section = next(s for s in app.document.sections if s.title.startswith(title))
+            paragraph = next(p for p in section.paragraphs if phrase in p)
+            assert caption not in paragraph
+            assert section.paragraph_pages[section.paragraphs.index(paragraph)] == pages
+        # The existing genuine continuations must survive the caption correction.
+        for title, pages in [("4.5 ", (9, 10)), ("Appendix — 7.2 ", (13, 14))]:
+            section = next(s for s in app.document.sections if s.title.startswith(title))
+            assert pages in section.paragraph_pages
+    finally:
+        await app.close()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "區域甲 1.2\n區域乙 3.4\n區域丙 5.6",
+        "區域甲 123.45\n區域乙 678.90\n區域丙 5.6",
+        "觀察記錄" * 11 + "1\n" + "觀察記錄" * 11 + "2",
+    ],
+    ids=["labelled-measurements", "short-final-row", "equal-width-list-items"],
+)
+async def test_labelled_cjk_numeric_rows_keep_source_and_chunk_separators(text):
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    try:
+        events = [e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "rows.pdf")]
+        assert events[-1].type == "ready"
+        assert app.document.sections[0].paragraphs == [text]
+        assert app.document.chunks[0].text == text
+    finally:
+        await app.close()
