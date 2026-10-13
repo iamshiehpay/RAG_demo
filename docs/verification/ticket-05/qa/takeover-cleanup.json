@@ -1,0 +1,16 @@
+{
+  "sha": "0718466a1dae475417f61f622f796ddf77429d27",
+  "source_files_rechecked": 75,
+  "source_unchanged": true,
+  "browser": "nova-qa05 closed",
+  "server_pid": 49775,
+  "temporary_directories_removed": [
+    "/private/tmp/nova-qa05-public-cache-8edi1xnm",
+    "/private/tmp/nova-qa05-batch",
+    "/private/tmp/nova-qa05-cancel-k_28ubux",
+    "/private/tmp/nova-qa05-failure-z38o6xoq",
+    "/private/tmp/nova-qa05-failure-1eautfok",
+    "/private/tmp/nova-qa05-identity-5x6zvzex",
+    "/private/tmp/nova-qa05-failure-2_xx2gxo"
+  ]
+}

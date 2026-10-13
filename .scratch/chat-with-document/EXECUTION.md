@@ -24,11 +24,11 @@ Status: in-progress
 | 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | done（e59e096；Review APPROVE；獨立 QA 6/6 AC、213 tests、browser PASS） |
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
-| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | D02 已核准；e8b266c（含 CRLF 修正）複審 APPROVE；整合 rebase 仍等 #03/#05|
+| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | d48fbf6 已整合；full＋fresh correction Review APPROVE；345產品檔整合位元組一致；獨立 QA09 與 QA05 概覽複驗待執行|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | done（4eee3d2；Review APPROVE；獨立 QA 5/5 AC PASS，192 tests PASS） |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | done（5d6204c；Review APPROVE；QA structural/UI PASS、238 tests；Q3 品質仍 #11 FAIL）|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
-| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | ca66429 已整合；fresh Review APPROVE、265 tests PASS；獨立 QA 執行中（尚未 done）|
+| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | ca66429 已整合；Review APPROVE；QA265 PASS，但 UP-03 概覽隨對話捲走 FAIL，由 #09 frontend owner 修正後複驗|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 僅選文 preflight（nova-i10-fimo）；實作/eval 仍等 #05（#03 已完成） |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | 僅唯讀 evidence preflight（nova-i11-meme）；正式實作仍等全部依賴 |
 
@@ -160,3 +160,17 @@ Status: in-progress
 - 流程更新：已完整重讀現行 LAT/hcom-spawn 與 Main AGENTS 自查要求；複審改派 fresh context、以上次 reviewed head 為 base，QA 先備情境批次、最多3個同時實作、文件隨下次合併提交。#05 修正 ca66429 自0663db0起由 nova-r05fix-nano 獨立複審（session01a13317-a4ed-7a20-8d96-93b4dcc78014；actual GPT6-sol/high/workspace-write/on-request 已核對）。#09 nova-r09sol-duma 同設定已核對，僅待整合版本；原 Review 證據保留。接續資訊 `/private/tmp/rag-lat-main-handoff.md`；既有清單與授權不變。
 
 - #05 ca66429 ff-only 整合：Main 已核對完整 full Review＋fresh correction Review（Standards0／Spec0 findings）；兩個 Review child actualmodel/effort/permissions 均符合。15個受保護來源檔與原 main d371b79 位元組相同；整合後全部 source/tests/frontend/scripts/eval-config 檔與 candidate 相同，證據 `docs/verification/ticket-05/integration-source-identity.json`。QA05 已先備20項情境，整合後依固定 SHA 執行；#09 僅在自身 worktree rebase，#10 仍等 QA05。
+
+- #05 QA on0718466：265 deterministic PASS；public10TableChunks/820rows/2batches、48Sections10→2Group、fail/cancel/cache identity PASS。fresh real Q1=5/8、中文=6/10 FAIL（保留原文，#11）。Browser啟動的 auto-review 授權前提拒絕經 Main 核對實際SHA/情境/本機服務後，以同一指令獲核准，非繞過。實際 UI 發現 UP-03 概覽只留在 DOM，會被對話捲出視窗（HCOM9591）；共享 frontend 指派 romi/#09 修正，#05 不標 done，等整合後獨立 QA 複驗，#10 仍等候。
+
+- QA05 最終 batch（HCOM9778）已完成並解除 Main source freeze：0718466／75檔未變，AC2–5 PASS，AC6 如實報告 PASS／品質 FAIL，AC1 UP-03 viewport FAIL。完整報告 `docs/verification/ticket-05/qa/takeover-report.md`；QA own browser/server/temp 已清理，保留 context 待 #09 reviewed integration 後複驗。#05 保持未完成；#09 修正由單一 owner 繼續。
+
+- #10 bounded read-only refresh on0718466（HCOM9911）：固定PDFhash未變；最新版解析仍未保留真正附錄，保留26個 genuine body intervals，15個 TableChunks/123總Chunks，Table9數值正確但 Section 歸屬落在假 Appendix 標題。genuine retained-body target5399；原全文PDF6844/HTML6582只是估計，尚無生成>6K證據。已更新原 preflight，不改程式或重新選文；正式 #10 仍等 #05 UI 複驗。
+
+- #09 frozen cb4f1c9/sourceee383e5（base0718466）：實作者265backend、29real-endpoint、6viewport、148adjacent、10source/restart、6CRLF PASS；107dist重建一致。Main 自行比對89個 backend/test/eval/script/config、129 draft/font 與原已審 Answer.tsx 位元組未變；duma 已開始完整獨立 Review。QA05 AC1與QA09仍待整合後驗證，未提前關票。
+
+- #09 full Review（HCOM10213）：未發現產品程式缺陷；Spec APPROVE，Standards 要求最終 Markdown/Citation renderer 真實 gpt-oss smoke 及 docs/ai-log correction 紀錄。Main 放行 romi 獨占小型 generic PDF 真實模型測試，產品 source 固定不改，Main 提供 ai-log 文字供 branch 追加；完成 evidence/docs delta 後派 fresh GPT6-sol high Reviewer 以cb4f1c9為base複查。
+
+- #09 correction d48fbf6：真實 gpt-oss／bge 的4次呼叫全stop，最高預估3892/10K；最終browser renderer條列／S1／Unicode空白／Source／Trace證據已核對，未觀察的rareformats明列限制。Main逐一比對345產品檔與cb4f1c9相同，29docs/evidence差異；nova-r09fix-gigi fresh correction Review進行中。#10獨立QA nova-qa10-pita（session01a1335c-6805-7941-af57-973873f1caa6，actualGPT6.1medium/workspace-write/on-request核對）僅先備既有需求情境；不提前執行或解除#05依賴。
+
+- #09 d48fbf6 ff-only 整合：Main 核對 full＋fresh correction 兩軸 APPROVE 與 child runtime，345檔實際工作區hash與candidate一致；89backend/config、129draft/font與原已審Answer保留證據合併於 docs/verification/ticket-09/integration-source-identity.json。完整Review、原QA05 FAIL/live品質報告及QA09預備22情境隨本次合併checkpoint；QA05/QA09依最終MainSHA獨立批次驗收，未標done。

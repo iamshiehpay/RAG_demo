@@ -1,0 +1,410 @@
+{
+  "ordinary_full_source_and_target": {
+    "chunk_count": 2,
+    "section_count": 2,
+    "group_levels": []
+  },
+  "cache_replay_and_fresh_answers": {
+    "llm_replay_calls": 0,
+    "embedding_replay_calls": 0,
+    "cache_hashes": {
+      "7101822a89637a9e0c002b686c0130bb861dc92369777fa2021c3fba6dafbc36.json": "bcacca240f11119daea3fbd8c1186a40375d0e200aa4b97deb41a9a5d6d9e0b1"
+    }
+  },
+  "long_table_whole_chunk_preservation": {
+    "chunk_count": 10,
+    "section_count": 1,
+    "group_levels": [],
+    "raw_batches": 2,
+    "tables": [
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-1",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 41: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-2",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 42: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-3",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 43: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-4",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 44: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-5",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 45: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-6",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 46: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-7",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 47: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-8",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 48: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-9",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 49: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      },
+      {
+        "id": "4d5a343d9f5e4572ac5d1c97b1a850aa:chunk-10",
+        "tokens": 1245,
+        "rows": 82,
+        "caption": "Table 50: Independent seasonal comparison.",
+        "columns": [
+          "Trial",
+          "Baseline",
+          "Variant"
+        ]
+      }
+    ]
+  },
+  "deepest_fitting_short_exact1000": {
+    "chunk_count": 72,
+    "section_count": 18,
+    "group_levels": [
+      1
+    ],
+    "choices": [
+      "section",
+      "group:1"
+    ],
+    "long_question_tokens": 1000
+  },
+  "supplemental_recursive_layers": {
+    "chunk_count": 48,
+    "section_count": 48,
+    "group_levels": [
+      10,
+      2
+    ],
+    "progress": [
+      [
+        0,
+        49
+      ],
+      [
+        1,
+        49
+      ],
+      [
+        2,
+        49
+      ],
+      [
+        3,
+        49
+      ],
+      [
+        4,
+        49
+      ],
+      [
+        5,
+        49
+      ],
+      [
+        6,
+        49
+      ],
+      [
+        7,
+        49
+      ],
+      [
+        8,
+        49
+      ],
+      [
+        9,
+        49
+      ],
+      [
+        10,
+        49
+      ],
+      [
+        11,
+        49
+      ],
+      [
+        12,
+        49
+      ],
+      [
+        13,
+        49
+      ],
+      [
+        14,
+        49
+      ],
+      [
+        15,
+        49
+      ],
+      [
+        16,
+        49
+      ],
+      [
+        17,
+        49
+      ],
+      [
+        18,
+        49
+      ],
+      [
+        19,
+        49
+      ],
+      [
+        20,
+        49
+      ],
+      [
+        21,
+        49
+      ],
+      [
+        22,
+        49
+      ],
+      [
+        23,
+        49
+      ],
+      [
+        24,
+        49
+      ],
+      [
+        25,
+        49
+      ],
+      [
+        26,
+        49
+      ],
+      [
+        27,
+        49
+      ],
+      [
+        28,
+        49
+      ],
+      [
+        29,
+        49
+      ],
+      [
+        30,
+        49
+      ],
+      [
+        31,
+        49
+      ],
+      [
+        32,
+        49
+      ],
+      [
+        33,
+        49
+      ],
+      [
+        34,
+        49
+      ],
+      [
+        35,
+        49
+      ],
+      [
+        36,
+        49
+      ],
+      [
+        37,
+        49
+      ],
+      [
+        38,
+        49
+      ],
+      [
+        39,
+        49
+      ],
+      [
+        40,
+        49
+      ],
+      [
+        41,
+        49
+      ],
+      [
+        42,
+        49
+      ],
+      [
+        43,
+        49
+      ],
+      [
+        44,
+        49
+      ],
+      [
+        45,
+        49
+      ],
+      [
+        46,
+        49
+      ],
+      [
+        47,
+        49
+      ],
+      [
+        48,
+        49
+      ],
+      [
+        48,
+        59
+      ],
+      [
+        49,
+        59
+      ],
+      [
+        50,
+        59
+      ],
+      [
+        51,
+        59
+      ],
+      [
+        52,
+        59
+      ],
+      [
+        53,
+        59
+      ],
+      [
+        54,
+        59
+      ],
+      [
+        55,
+        59
+      ],
+      [
+        56,
+        59
+      ],
+      [
+        57,
+        59
+      ],
+      [
+        58,
+        59
+      ],
+      [
+        58,
+        61
+      ],
+      [
+        59,
+        61
+      ],
+      [
+        60,
+        61
+      ],
+      [
+        61,
+        61
+      ]
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - heading "Chat with Document" [level=1, ref=e4]
+      - paragraph
+        - StaticText "Ask a question. Follow the evidence back to your Document."
+    - region "Upload Document" [ref=e2]
+      - LabelText
+        - StaticText "PDF Document"
+      - button "PDF Document" [disabled, ref=e5]: No file chosen
+      - status
+        - paragraph
+          - StaticText "摘要 · 0/3"
+        - progressbar "摘要": 0
+    - region "Conversation" [ref=e3]
+      - paragraph
+        - StaticText "Questions will be available when your Document is ready."
+    - form
+      - LabelText
+        - StaticText "Question"
+      - textbox "Question" [disabled, ref=e6]
+      - status
+        - StaticText "文件處理中，完成後才能提問。"
+      - button "Ask" [disabled, ref=e7]

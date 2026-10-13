@@ -34,3 +34,21 @@ Execution conditions: record exact SHA and environment, fixture hashes, configur
 AC coverage: AC1→01/15; AC2→02/08/09; AC3→03; AC4→05–08/14; AC5→11/12; AC6→16. Additional regression/contract requirements→04/10/13/17–20. The final evidence reconciliation must map every relevant Reviewer/Implementer path to these rows or document a justified exclusion; no requirement is waived because a Reviewer rated a risk nonblocking.
 
 Execution order after release: (1) pin SHA/environment and reconcile paths, (2) deterministic/static/event/type batch and public application probes, (3) browser upload/overview/Global/Section-and-Group citation/cache/failure batch, (4) current-source live quality evidence, (5) per-AC verdict and cleanup. Record PASS only with evidence, FAIL for contrary results, UNPROVEN for insufficient evidence, NOT_EXECUTED with reason. Any production defect returns to Main and sari; correction Review uses Main's fresh assigned Reviewer. Stop source-sensitive execution before subsequent integrations and report completion with the exact source SHA. Clean only QA-owned processes, ports, browser and temporary data; preserve evidence and historical work.
+
+## Release and path reconciliation (HCOM9155)
+
+Pinned integrated SHA: 0718466a1dae475417f61f622f796ddf77429d27. Main reports source-equivalent approved ca66429; Git HEAD independently matches. Initial full Review CHANGES_REQUESTED and fresh correction APPROVE both read in full before execution.
+
+| Reviewer execution path | Scenario rows | Planned integrated coverage |
+|---|---|---|
+| HTTP→Application.start_upload→background processing; cache replay/load validation | 01/11–15/19 | Full suite plus independent public probes and browser upload/replay |
+| Parse→Chunk→batch8 embeddings→SummaryTree→atomic publication | 01/04–07/14/17–19 | Real bge-m3 uploads plus all-call and provenance ledger |
+| Section filtering/target/semaphore; whole-Chunk batches; heading context; split merge and nonreducing failure | 03–06/14/20 | New table regression and independent long-table upload; existing split/recursive/failure regressions |
+| Adjacent progressive Group layers→Document; dynamic completed n/N; warning carry | 07/09/14 | Multi-layer supplemental fixture and table-only public/browser fixture |
+| Global bypass embedding/retrieval; deepest-fitting full-prompt selection | 02/08/09 | Boundary upload/short vs exact1000 asks; browser S citation |
+| Lookup/Synthesis retain Chunk source mode, links/neighbors/order/drop counts and literal S text | 10/18/20 | Full suite plus unseen-document public probe |
+| Medium answer→low retry→citation validation→final/trace/source404 | 02/09/20 | Existing event/failure tests, independent public source lookup and browser |
+| Overview, summary source content, progress, Trace, generated event types and committed dist | 01/02/15/20 | Actual bundled frontend browser batch, type/event/source-display checks |
+| README/AI-log and committed RED/GREEN evidence | 06/16 | Historical evidence read; no current pass inferred; fresh AC6 run |
+
+No relevant path excluded. Full integrated deterministic suite and fresh real gpt-oss Q1/Chinese report started; static/event/type/source-display checks returned exit0. Production build will reuse byte-identical approved dist/build evidence to preserve the no-frontend-edits boundary.

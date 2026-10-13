@@ -1,0 +1,40 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - heading "Chat with Document" [level=1, ref=e5]
+      - paragraph
+        - StaticText "Ask a question. Follow the evidence back to your Document."
+    - region "Upload Document" [ref=e2]
+      - LabelText
+        - StaticText "PDF Document"
+      - button "PDF Document" [disabled, ref=e6]: No file chosen
+      - status
+        - paragraph
+          - StaticText "解析 · 0/1"
+        - progressbar "解析": 0
+    - region "文件概覽" [ref=e3]
+      - heading "文件概覽" [level=2, ref=e7]
+      - StaticText "Table limitation: 結構未能可靠重建; do not infer missing row/column associations.\nDocument Overview: calibrated instruments measure seasonal conditions across the supplied Sections."
+    - region "Conversation" [ref=e4]
+      - article
+        - heading "Summary this document." [level=2, ref=e10]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 2, 2 Calibration 0" [ref=e11]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.2 2 Calibration 0" [ref=e12]
+            - StaticText "[S1] · p.2"
+            - StaticText "2 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+    - form
+      - LabelText
+        - StaticText "Question"
+      - textbox "Question" [disabled, ref=e8]
+      - status
+        - StaticText "文件處理中，完成後才能提問。"
+      - button "Ask" [disabled, ref=e9]

@@ -1,0 +1,307 @@
+{
+  "sha": "0718466a1dae475417f61f622f796ddf77429d27",
+  "checked_files": 75,
+  "all_match": true,
+  "files": [
+    {
+      "path": "eval/golden_facts.py",
+      "matches": true
+    },
+    {
+      "path": "frontend/dist/assets/index-BkGIwQZL.js",
+      "matches": true
+    },
+    {
+      "path": "frontend/dist/assets/index-CwqF2Lty.css",
+      "matches": true
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "matches": true
+    },
+    {
+      "path": "frontend/index.html",
+      "matches": true
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "matches": true
+    },
+    {
+      "path": "frontend/package.json",
+      "matches": true
+    },
+    {
+      "path": "frontend/scripts/test_source_content.mjs",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/Answer.tsx",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/Shared.tsx",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/SourceContent.tsx",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/Trace.tsx",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/events.ts",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/sse.ts",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "matches": true
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "matches": true
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "matches": true
+    },
+    {
+      "path": "pyproject.toml",
+      "matches": true
+    },
+    {
+      "path": "scripts/fetch_data.sh",
+      "matches": true
+    },
+    {
+      "path": "scripts/generate_event_types.py",
+      "matches": true
+    },
+    {
+      "path": "scripts/measure_summary_concurrency.py",
+      "matches": true
+    },
+    {
+      "path": "scripts/measure_table_reading.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/__init__.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/answer_generator.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/api.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/application.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/cache.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/chunker.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/citation.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/context_packer.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/embedder.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/events.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/index.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/ingestion.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/llm_adapter.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/llm_gateway.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/models.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/pdf_parser.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/policy.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/router.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/router_regression.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/settings.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/summary_context.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/summary_tree.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/tables.py",
+      "matches": true
+    },
+    {
+      "path": "src/chat_document/tokens.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/__init__.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/data/router_qa_raw.json",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/fixtures.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_eval_runner.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_event_types.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_failure_handling.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_http.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_ingestion.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_ingestion_jobs.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_operations.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_question_language.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_review_regressions.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_router_live_qa.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_router_review.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_router_smoke_checks.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_router_smoke_eval.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_router_synthesis.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_summary_corrections.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_summary_table_integration.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_summary_tree.py",
+      "matches": true
+    },
+    {
+      "path": "tests/integration/test_tables.py",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/test_eval_checks.py",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/test_eval_citation.py",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/test_eval_plan.py",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/test_eval_provenance.py",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/test_eval_report.py",
+      "matches": true
+    },
+    {
+      "path": "uv.lock",
+      "matches": true
+    }
+  ]
+}
