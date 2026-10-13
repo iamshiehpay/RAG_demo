@@ -1,0 +1,30 @@
+{
+  "answer_html": "<ul>\n<li><div class=\"answer-row\"><div class=\"answer-paragraph\">實驗 0：準確率 0.25 %，成本 0.75　<button class=\"inline-citation\" aria-label=\"View S1, p.1, 1 Results\">[S1]</button></div><aside class=\"margin-citations\" aria-label=\"Citation margin notes\"><button class=\"margin-citation\" aria-label=\"View S1, p.1, 1 Results\"><span class=\"citation-location\">[S1] · p.1</span><span class=\"citation-section\">1 Results</span></button></aside></div></li>\n<li><div class=\"answer-row\"><div class=\"answer-paragraph\">實驗 1：準確率 1.25 %，成本 1.75　<button class=\"inline-citation\" aria-label=\"View S1, p.1, 1 Results\">[S1]</button></div><aside class=\"margin-citations\" aria-label=\"Citation margin notes\"><button class=\"margin-citation\" aria-label=\"View S1, p.1, 1 Results\"><span class=\"citation-location\">[S1] · p.1</span><span class=\"citation-section\">1 Results</span></button></aside></div></li>\n<li><div class=\"answer-row\"><div class=\"answer-paragraph\">實驗 2：準確率 2.25 %，成本 2.75　<button class=\"inline-citation\" aria-label=\"View S1, p.1, 1 Results\">[S1]</button></div><aside class=\"margin-citations\" aria-label=\"Citation margin notes\"><button class=\"margin-citation\" aria-label=\"View S1, p.1, 1 Results\"><span class=\"citation-location\">[S1] · p.1</span><span class=\"citation-section\">1 Results</span></button></aside></div></li>\n</ul>",
+  "answer_text": "\n實驗 0：準確率 0.25 %，成本 0.75　[S1][S1] · p.11 Results\n實驗 1：準確率 1.25 %，成本 1.75　[S1][S1] · p.11 Results\n實驗 2：準確率 2.25 %，成本 2.75　[S1][S1] · p.11 Results\n",
+  "body_font": "\"Noto Serif TC\", Georgia, serif",
+  "body_size": "16px",
+  "complete": true,
+  "error": null,
+  "heading_count": 0,
+  "inline_citations": [
+    "[S1]",
+    "[S1]",
+    "[S1]"
+  ],
+  "list_count": 1,
+  "margin_citations": [
+    "[S1] · p.11 Results",
+    "[S1] · p.11 Results",
+    "[S1] · p.11 Results"
+  ],
+  "overflow": false,
+  "question": "請用繁體中文簡述這份文件的實驗測量結果，以條列列出實驗、準確率與成本，並附引用。",
+  "table_count": 0,
+  "thinking_collapsed": true,
+  "trace_collapsed": true,
+  "unverified_marks": 0,
+  "viewport": [
+    1280,
+    720
+  ]
+}

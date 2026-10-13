@@ -1,5 +1,7 @@
 # Issue09 integrated candidate for fresh review
 
+**Subsequent Standards correction:** duma approved Spec but required a real final-renderer format smoke and an Issue09 ai-log entry. The earlier self-check1 N/A interpretation below is superseded by [actual gpt-oss smoke and documentation correction](../real-smoke/REPORT.md), run on identical frozen `cb4f1c9` product bytes. Fresh correction Reviewer is `nova-r09fix-gigi`; all prior scripted results remain historical evidence, not real-model claims.
+
 Frontend source checkpoint: `ee383e5dacab62897bb4e4ec24963e8fdff3f7c6`, branch `lat/09-tufte-design`. Base: Main `0718466a1dae475417f61f622f796ddf77429d27`. The frozen evidence head will be supplied through HCOM; review the **full `0718466...frozen-head` diff**, not only the latest source checkpoint. Fresh Main-assigned Reviewer: `nova-r09sol-duma`. This is implementer evidence; independent review and integrated QA remain required.
 
 Main released integration at HCOM9157, and the existing UP-03/Issue05 AC1 correction at HCOM9639/9664. QA05's final report and freeze release arrived at HCOM9802. No Main source, shared decisions, EXECUTION, ai-log, backend, merge, push or extra agent was changed/started by romi.

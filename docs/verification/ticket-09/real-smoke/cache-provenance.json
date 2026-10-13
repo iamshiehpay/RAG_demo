@@ -1,0 +1,11 @@
+[
+  {
+    "content_hash": "3ac69fdcb17aedf15e9fb1d6698becb729ee8f3c0471ff313a1b2e794a153225",
+    "pipeline_version": "ingest-v2-eb73f15011496d55c65df48d8faaf2aaa442ac95ae131d1da4885b1462726ff6",
+    "processing_config": {
+      "embedding_model": "bge-m3",
+      "chunk_token_target": 500,
+      "summary_model": "gpt-oss:120b-cloud"
+    }
+  }
+]
