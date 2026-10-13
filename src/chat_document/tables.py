@@ -141,6 +141,30 @@ def _prose(line, width):
     )
 
 
+def _grid_follows(rows, formed, width, *, above, heading_lines, indices):
+    """Keep an internal divider when nearby rows resume the same numeric grid."""
+    size = max(line.size for row in formed for line in row)
+    for prior, row in zip(rows, rows[1:], strict=False):
+        gap = (
+            min(line.bbox[1] for line in prior) - max(line.bbox[3] for line in row)
+            if above
+            else min(line.bbox[1] for line in row) - max(line.bbox[3] for line in prior)
+        )
+        height = median(line.bbox[3] - line.bbox[1] for line in prior)
+        if (
+            gap > 2.2 * height
+            or any(indices[id(line)] in heading_lines for line in row)
+            or any(CAPTION.match(line.text) for line in row)
+            or any(abs(line.size - size) >= 0.5 for line in row)
+            or (len(row) == 1 and _prose(row[0], width))
+        ):
+            return False
+        extended = _rows([*(line for group in formed for line in group), *row])
+        if _paired_grid(extended) or _rectangular_grid(extended):
+            return True
+    return False
+
+
 def _collect(candidates, caption_edge, width, *, above=False, heading_lines=frozenset()):
     rows = _rows([line for _, line in candidates])
     if above:
@@ -151,7 +175,7 @@ def _collect(candidates, caption_edge, width, *, above=False, heading_lines=froz
     first_size = None
     height = None
     text_cell_x = None
-    for row in rows:
+    for position, row in enumerate(rows):
         if any(indices[id(line)] in heading_lines for line in row):
             break
         top, bottom = min(line.bbox[1] for line in row), max(line.bbox[3] for line in row)
@@ -172,7 +196,15 @@ def _collect(candidates, caption_edge, width, *, above=False, heading_lines=froz
             if (_paired_grid(formed) or _rectangular_grid(formed)) and not (
                 _paired_grid(extended) or _rectangular_grid(extended)
             ):
-                break
+                if not _grid_follows(
+                    rows[position:],
+                    formed,
+                    width,
+                    above=above,
+                    heading_lines=heading_lines,
+                    indices=indices,
+                ):
+                    break
         prose = [line for line in row if _prose(line, width)]
         if prose:
             # A labelled prose cell is source table content, but plain paragraph

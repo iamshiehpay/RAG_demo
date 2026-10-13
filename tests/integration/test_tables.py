@@ -625,3 +625,64 @@ async def test_distinct_caption_typography_within_body_block_keeps_prior_prose()
     assert table.table_rows == [["Base", "10.5"], ["Ours", "11.7"]]
     assert "following measurements" not in table.text
     assert any(c.kind == "text" and "following measurements" in c.text for c in chunks)
+
+
+@pytest.mark.parametrize("caption_below", [False, True], ids=["caption-above", "caption-below"])
+async def test_group_divider_inside_table_keeps_all_later_numeric_cells_as_uncertain_source(
+    caption_below,
+):
+    import pymupdf
+
+    with pymupdf.open() as pdf:
+        page = pdf.new_page()
+        page.insert_text((72, 60), "1 Results", fontsize=14)
+        for i in range(4):
+            page.insert_text(
+                (72, 90 + i * 12),
+                "The experiments measure accuracy on several datasets and report their results.",
+                fontsize=10,
+            )
+        page.insert_text(
+            (150, 256 if caption_below else 160), "Table 1: Measured accuracy.", fontsize=9
+        )
+        rows = [
+            ["Method", "Alpha", "Beta"],
+            ["Base", "10.5", "20.1"],
+            ["Ours", "11.7", "22.3"],
+            ["Proprietary models"],
+            ["Gamma", "13.1", "24.2"],
+            ["Delta", "14.5", "25.6"],
+        ]
+        for i, row in enumerate(rows):
+            for x, cell in zip([72, 220, 320][: len(row)], row, strict=True):
+                page.insert_text((x, 180 + i * 12), cell, fontsize=9)
+        page.insert_text(
+            (72, 275), "The body discussion remains after the entire table.", fontsize=10
+        )
+        data = pdf.tobytes()
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    events = [e async for e in app.upload_document(data, "group-divider.pdf")]
+    assert events[-1].type == "ready"
+    table = next(c for c in app.document.chunks if c.kind == "table")
+    assert not table.table_reconstructed
+    assert all(
+        value in table.text
+        for value in [
+            "Base",
+            "10.5",
+            "20.1",
+            "Ours",
+            "11.7",
+            "22.3",
+            "Proprietary models",
+            "Gamma",
+            "13.1",
+            "24.2",
+            "Delta",
+            "14.5",
+            "25.6",
+        ]
+    )
+    prose = "\n".join(c.text for c in app.document.chunks if c.kind == "text")
+    assert "body discussion" in prose and "Proprietary models" not in prose
+    assert "Gamma" not in prose and "Delta" not in prose

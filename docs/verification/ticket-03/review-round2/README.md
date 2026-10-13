@@ -48,8 +48,51 @@ working source, 421 numerical tokens on both sides, no missing/extra, identical
 Section titles/page ranges (`numeric-preservation.json`). Existing labelled Table
 1/2 every-cell assertions and Table 4/statistics remain passing in table-suite.txt.
 
+## Additional checkpoint verification
+
+All six new regressions were rerun unchanged against an isolated `git archive
+f7268f9` source/test snapshot: **6 failed, 17 deselected**, 7.55s. Failures are
+the actual target behaviors, including Error rather than Ready for the large
+stolen paragraph (`exact-f7268f9-red.txt`), not environment/import failures.
+TypeScript check and source static rendering: PASS. Vite production build to
+`/private/tmp/nova-i03-dist`: PASS; all rebuilt file SHA-256 hashes equal committed
+`frontend/dist` (`dist-parity.json`). No frontend files needed changes.
+
 ## Remaining validation
 
 Full suite, frontend typecheck/build/parity/source display and post-#02 rebase
 interaction validation are pending at this checkpoint. Main owns integration;
 no merge/push, self-review, subagent spawning, cloud eval or Q3 prompt tuning.
+
+## Independent round-2 result and N1 correction
+
+Independent reviewer nova-r03-hazu reported CHANGES_REQUESTED at e9deece.
+R1 heading/list/equation and R2 wrapped-caption/large upload findings were fixed;
+N1 found an internal nonnumeric group label after data rows prematurely ended the
+grid, leaving later numeric cells in prose and reporting reconstructed=True.
+Main full report: `.lat/briefs/nova-r03-review.md`, Round 2 section.
+
+Authored caption-above AND caption-below public uploads reproduce N1 on an
+isolated exact e9deece git archive: **2 failed, 23 deselected**, 2.30s
+(`group-divider-red.txt`). Failures assert the wrongly reconstructed truncated
+table, not setup/import failures. `_grid_follows` now checks contiguous future
+rows against the already formed numeric grid, preserving gap/heading/caption/
+font/body-prose boundaries. A resumed grid retains the divider and every later
+numeric cell as uncertain raw Table evidence, with no numeric rows leaking to
+prose. It handles upward caption-below collection in the same way. No table
+numbers or model/system identities are hard-coded in production rules.
+
+Own full suite on e9deece: **214 passed, 2 deselected**, 345.26s
+(`full-suite-before-rebase.txt`). Independent reviewer separately ran 214 passed,
+2 deselected, 359.26s; that does not approve N1. This source checkpoint adds the
+N1 fix and two regressions; updated targeted/table-suite evidence follows.
+Final integration still waits for Main's #02 signal and subsequent full-scope
+independent rebase review. No merge/push or cloud prompt changes.
+
+N1 corrected targeted command (`-k 'group_divider or heading_immediately or
+short_list_or_equation or wrapped_table_reference or distinct_caption or
+uncertain_table or equal_cell_counts'`): **10 passed, 15 deselected**, 11.42s
+(`group-divider-green.txt`). Full updated table file: **25 passed**, 51.51s
+(`table-suite-group-fix.txt`). Ruff check/format: PASS. Updated baseline numerical/
+Section comparison: 421/421, no missing/extra, same Sections
+(`numeric-preservation-group-fix.json`, corrected working source before checkpoint).

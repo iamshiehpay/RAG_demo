@@ -240,3 +240,15 @@ or distinct typography and consume only lines from the actual caption onward.
 New RED→GREEN logs and the 421-token LightRAG preservation comparison are in
 `docs/verification/ticket-03/review-round2/`. Independent re-review and #02
 integration verification remain required; no cloud quality/prompt tuning ran.
+
+### 2026-10-13 — #03 grid-stop correction retains internal group dividers
+
+Independent round-2 review of e9deece found that the new grid-stop rule treated an
+internal nonnumeric group divider as the table's end, leaving later numeric rows
+in prose while claiming reconstruction succeeded. Authored caption-above and
+caption-below public-upload tests both failed on an isolated exact e9deece source
+snapshot. Coordinate collection now looks ahead within the same font, gap and
+heading boundaries: if aligned numeric rows resume, the divider stays inside the
+region and the whole table retains raw uncertain evidence. The list/equation
+boundary and caption/Section fixes stay covered. This corrects an AI-written rule
+that was too broad; re-review is still separate and required.
