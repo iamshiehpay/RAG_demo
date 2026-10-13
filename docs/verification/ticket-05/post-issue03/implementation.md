@@ -4,7 +4,7 @@
 
 Main assigned integration at HCOM #7699, initial source base `5d6204cf78e3fe166abfc7bf719c1d0cf8118189`. Main docs-only checkpoints `ca8a02c` and `d371b79e000a63cec14ac26b4aecc63ea25af8dc` preserve source/test/frontend/scripts/eval/lock bytes. Final ancestry base is `d371b79`; Main owns its issue Comments. No merge, push, issue-comment edits, new agents, or self-review was performed.
 
-Independent reviewer: `nova-r05-guru`. This report records implementation tests; it does not replace independent review or integrated QA.
+Initial independent reviewer: `nova-r05-guru`. D04/HCOM #8242 changes final review to an independent Codex gpt-6-sol/high peer; Main will assign its name. No new review task was sent to the old reviewer after that steering. This report records implementation tests; it does not replace independent review or integrated QA.
 
 The conservative upload capacity is authorized in the actual main Issue05 Comments and HCOM #6150/#7699. At the integrated prompt it computes to **4,242 tokens**, from the existing 6,700 answer-prompt cap, both 1,000-token question reservations, summary/language/table prompt overhead, join allowance and 6,000 evidence ceiling. Original Section Summaries remain selectable for short questions. No tree construction or truncation is introduced during ask.
 
