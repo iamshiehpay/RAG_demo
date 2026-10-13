@@ -41,7 +41,8 @@ class _Line:
     size: float
     bold: bool
     fonts: tuple[str, ...]
-    flow_width: float
+    flow_width: float = 0
+    continuation_width: float = 0
     page_first: bool = False
     flowing_block: bool = False
     small_caps: bool = False
@@ -174,10 +175,6 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                         size=max_size,
                         bold=all(s["flags"] & 16 for s in spans),
                         fonts=tuple(sorted({s["font"] for s in spans})),
-                        # A page/column reference is independent of a short row block.
-                        flow_width=(page.rect.width / (2 if two_columns else 1))
-                        - (1 if two_columns else 2)
-                        * (bbox[0] % (page.rect.width / 2) if two_columns else bbox[0]),
                         small_caps=text.isupper()
                         and any(
                             s["size"] < max_size * 0.9 and any(char.isalpha() for char in s["text"])
@@ -199,6 +196,9 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
             )
         if page_lines:
             page_lines[0].page_first = True
+        for line in page_lines:
+            line.flow_width = _measured_flow_width(line, page_lines)
+            line.continuation_width = line.flow_width
         for block_number in {line.block for line in page_lines}:
             block_lines = [line for line in page_lines if line.block == block_number]
             width = max(line.bbox[2] - line.bbox[0] for line in block_lines)
@@ -227,9 +227,40 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
         regions_by_page[page_number] = [
             region for region in regions if not _contains_prose(region, page_lines, body_size)
         ]
-    return [
-        line for line in lines if not _is_figure_label(line, regions_by_page[line.page])
-    ], body_size
+    retained = [line for line in lines if not _is_figure_label(line, regions_by_page[line.page])]
+    for index, line in enumerate(retained):
+        previous = retained[index - 1] if index else None
+        line.page_first = previous is None or line.page != previous.page
+        if previous and line.page_first and _aligned_style(previous, line):
+            # A short header cannot establish body width by referring to itself.
+            # Carry the measured preceding body flow only into page-target checks.
+            line.continuation_width = max(line.flow_width, previous.flow_width)
+    return retained, body_size
+
+
+def _aligned_style(left: _Line, right: _Line) -> bool:
+    return (
+        abs(left.size - right.size) < 0.5
+        and left.fonts == right.fonts
+        and left.bold == right.bold
+        and abs(left.bbox[0] - right.bbox[0]) <= left.size * 2
+    )
+
+
+def _measured_flow_width(line: _Line, page_lines: list[_Line]) -> float:
+    """Use actual aligned text, so column widths do not imply symmetric margins."""
+    return max(
+        (
+            other.bbox[2] - other.bbox[0]
+            for other in page_lines
+            if _aligned_style(line, other)
+            and other.bbox[2] <= line.block_bbox[2] + line.size * 2
+            and not other.shared_row
+            and not _CAPTION.match(other.text)
+            and not _NUMERIC_LINE.fullmatch(other.text)
+        ),
+        default=line.block_bbox[2] - line.block_bbox[0],
+    )
 
 
 def _is_figure_label(line: _Line, regions: list[pymupdf.Rect]) -> bool:
@@ -369,7 +400,7 @@ def _body_continuation_target(line: _Line) -> bool:
         and (
             bool(_SENTENCE_END.search(line.text))
             or (line.text[0].isascii() and line.text[0].islower())
-            or line.bbox[2] - line.bbox[0] >= line.flow_width * _LINE_WRAP_WIDTH_RATIO
+            or line.bbox[2] - line.bbox[0] >= line.continuation_width * _LINE_WRAP_WIDTH_RATIO
         )
     )
 
@@ -383,10 +414,7 @@ def _continues_on_next_page(previous: _Line, following: _Line) -> bool:
         and not previous.text.endswith((":", "："))
         and not _CAPTION.match(previous.text)
         and _body_continuation_target(following)
-        and abs(following.size - previous.size) < 0.5
-        and following.fonts == previous.fonts
-        and following.bold == previous.bold
-        and abs(following.bbox[0] - previous.bbox[0]) <= previous.size * 2
+        and _aligned_style(previous, following)
     )
 
 

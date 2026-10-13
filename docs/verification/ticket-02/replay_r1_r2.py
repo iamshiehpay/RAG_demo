@@ -70,9 +70,12 @@ async def main():
                 "short_concluding_paragraph_retained": True,
                 "llm_calls": len(llm.calls),
             }
-            Path("docs/verification/ticket-02/qa-r1-r2-cache-replay.json").write_text(
-                json.dumps(record, indent=2) + "\n"
+            output = (
+                Path(sys.argv[2])
+                if len(sys.argv) > 2
+                else Path("docs/verification/ticket-02/qa-r1-r2-cache-replay.json")
             )
+            output.write_text(json.dumps(record, indent=2) + "\n")
             print(json.dumps(record, indent=2))
         finally:
             await first.close()

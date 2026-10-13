@@ -9,6 +9,7 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
 from .fixtures import (
+    cjk_layout_pdf,
     heading_free_pdf,
     page_top_interruption_pdf,
     paragraph_pdf,
@@ -630,5 +631,24 @@ async def test_genuine_cjk_wrap_with_a_full_final_line_keeps_source_text_intact(
         assert events[-1].type == "ready"
         assert app.document.sections[0].paragraphs == [text]
         assert app.document.chunks[0].text == text
+    finally:
+        await app.close()
+
+
+@pytest.mark.parametrize(
+    ("two_columns", "full_lines"),
+    [(False, 4), (True, 4), (True, 5)],
+    ids=["asymmetric-margins", "two-columns-96-characters", "two-columns-120-characters"],
+)
+async def test_cjk_full_final_lines_use_the_actual_column_or_text_width(two_columns, full_lines):
+    content, texts = cjk_layout_pdf(two_columns=two_columns, full_lines=full_lines)
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    try:
+        events = [e async for e in app.upload_document(content, "layout.pdf")]
+        assert events[-1].type == "ready"
+        section = app.document.sections[0]
+        assert section.paragraphs == texts
+        assert section.paragraph_pages == [(1, 1)] * len(texts)
+        assert app.document.chunks[0].text == "\n\n".join(texts)
     finally:
         await app.close()

@@ -67,6 +67,25 @@ def page_top_interruption_pdf(top, *, cjk=False):
         return document.tobytes(), first, second
 
 
+def cjk_layout_pdf(*, two_columns, full_lines=4):
+    """Completed prose whose final PDF line fills the measured text area."""
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.insert_text((50, 40), "1 Results", fontsize=14)
+        if two_columns:
+            texts = [
+                (label * 20)[: 24 * full_lines - 1] + "。"
+                for label in ["左欄觀察記錄", "右欄觀察記錄"]
+            ]
+            boxes = [pymupdf.Rect(50, 70, 296, 500), pymupdf.Rect(316, 70, 562, 500)]
+        else:
+            texts = ["觀察記錄" * 42 + "數據好。"]
+            boxes = [pymupdf.Rect(50, 70, 480, 500)]
+        for text, box in zip(texts, boxes, strict=True):
+            assert page.insert_textbox(box, text, fontsize=10, fontname="china-t") >= 0
+        return document.tobytes(), texts
+
+
 def structured_pdf(body_size=10):
     """Separate/stacked Section numbers, relative-size and same-size bold headings."""
     with pymupdf.open() as document:
