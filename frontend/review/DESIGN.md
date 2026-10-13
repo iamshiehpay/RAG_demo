@@ -1,3 +1,16 @@
+# Ticket #12 layout update (supersedes the margin-note, Trace and dialog decisions below)
+
+Approved in `.lat/decisions/D11` and `D12`. The interface is now a three-column, collapsible chat view with a Traditional Chinese UI.
+
+- Left column: Document (upload or replace, processing progress, Chunk count, Document Summary). Middle: conversation with the input pinned at the bottom. Right: source text for the clicked Citation (replaces the modal dialog and the margin notes). Side columns collapse to 56px strips; at 900px and below they become overlays opened from the header.
+- Questions are right-aligned bubbles; Citations are small buttons inside the sentence (`C#` and `S#`). Markdown tables sit in an `overflow-x: auto` box.
+- 回答過程 replaces Trace: one summary line, then three sections (how the question was understood, which model each step used with a 10,000-full token bar, the retrieved passages), then 技術細節（開發用）, closed by default, which holds the raw counters and the model's thinking text.
+- Model names are constants in `src/models.ts` (the event contract has no model field); keep them in sync with the backend.
+- Enter sends, Shift+Enter inserts a newline, Enter during IME composition never sends.
+- Palette, Noto Serif TC at 16px and the no-animation rule are unchanged. `review/checks.js` and `review/scripted-events.js` were rewritten for this structure; `docs/verification/ticket-12/` holds the evidence.
+
+---
+
 # Ticket #09 — first design draft
 
 Status: awaiting user direction approval. This is the Phase 1 checkpoint, not final acceptance.
