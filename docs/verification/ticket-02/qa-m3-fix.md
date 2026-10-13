@@ -53,5 +53,40 @@ or shared-service changes. No cloud LLM or independent QA is claimed.
 The pre-existing long-sentence overlap and cross-column page-continuation
 limitations remain as independently recorded; they are not expanded here.
 
-Final immutable checkpoint, complete tests/static/parity results and independent
-re-review handoff are appended after verification.
+## Stable checkpoint
+
+Source and regression checkpoint:
+`2ee613b2a537d55d9ae3bda7edf414787c33779c`, on
+`lat/02-structure-aware-chunking`. It follows the previously reviewed
+`582d07e7f50e993cac8131e8b21946068b541d06`; base remains `03e6f361` as
+Main confirmed. The M3 delta is limited to the measured parser flow reference,
+public-upload regressions and owned evidence. No rebase is needed.
+
+Ruff check/format: PASS (**65 files**, including replay runner); backend/frontend
+event parity and `git diff --check`: PASS. The documented replay command with
+the optional M3 output path was also rerun and passed on this checkpoint.
+Source/tests are unchanged during the complete final suite run; its result and
+independent re-review handoff are appended after it finishes.
+
+## Final verification and re-review handoff
+
+- `UV_CACHE_DIR=/private/tmp/nova-i02-uv-cache uv run --no-sync pytest -q`:
+  **213 passed, 2 deselected**, 258.96 s, six existing dependency warnings.
+  This includes all **53 ingestion tests**; source and tests stayed at
+  `2ee613b2a537d55d9ae3bda7edf414787c33779c` throughout the run.
+- Ruff check/format, backend/frontend event parity and `git diff --check` all
+  passed on this source checkpoint. Production-path comparison against the
+  previous `582d07e` confirms M3 changes only `pdf_parser.py`.
+- Independent reviewer `nova-r02-mige` (same Opus 5.5 medium session, no child
+  contexts this round) confirmed M3 fixed with no new findings in HCOM #6931
+  and Re-review 3 of Main's `.lat/briefs/nova-r02-review.md`. Its archived-source
+  probes cover right-column lengths 95/96/97/119/120 and asymmetric margins;
+  labelled rows retain separators. LightRAG parse is byte-identical to
+  `582d07e`, retaining R1 closure and genuine §4.5/§7.2 joins. Its ingestion
+  suite passed **53 tests** (39.34 s); static checks also passed.
+- Final reviewer approval is pending inspection of this committed evidence
+  and the final documentation head supplied by HCOM; it is not claimed yet.
+  Main owns integrated independent QA and merge. No self-review, merge or push.
+- Applications/processing caches were closed and removed. The task-local uv
+  cache is removed before handoff. No servers, browsers, ports, containers or
+  shared-service changes were introduced.
