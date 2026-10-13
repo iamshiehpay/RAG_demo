@@ -25,7 +25,7 @@ Status: in-progress
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
 | 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | D02 已核准；nova-i09-romi 接續定稿（獨立 Review／QA 待辦）|
-| 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | merged 4eee3d2（Review APPROVE），QA 中 |
+| 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | done（4eee3d2；Review APPROVE；獨立 QA 5/5 AC PASS，192 tests PASS） |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | dispatched（levi-t03-mulo）|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | dispatched（levi-t05-gala）|
@@ -111,3 +111,8 @@ Status: in-progress
 - 新角色設定只套用後續工作；歷史 Review／QA 證據保留原角色與版本，不改寫成新驗證。
 
 - 接手 audit：QA nova-qa04-kilo 核對五個 worktree 皆乾淨，candidate heads 與任務卡相符；8110–8189 無 listener；無關的 8201 與既有 browser daemons 保留。#02 Reviewer nova-r02-mige（Opus5.5 medium，terminal 確認）；#04 QA nova-qa04-kilo（GPT6.1 medium，turn_context 確認）；#09 Implementer nova-i09-romi（GPT6.1 high，turn_context 確認）。Codex 均 workspace-write/on-request。
+
+- #02 nova-r02-mige 複審 CHANGES_REQUESTED（2026-10-13）：R1 跨頁接續混入 Table/Figure caption／running header；R2 中文標籤+數值列仍會黏合。F1 原 CJK 分句形狀已通過；42 ingestion tests 通過仍不足以排除這兩項。證據 `.lat/briefs/nova-r02-review.md`；指派新 Implementer 修正後交回同一獨立 Reviewer。
+- git-track sync：本機 checkpoint `cd3e303`；`git push` 回報 No configured push destination。無 remote，不自行指定遠端；不阻擋本機實作與驗收。
+
+- #04 完成：獨立 QA `docs/verification/ticket-04/qa/takeover-report.md`（5/5 AC PASS）；Main 核对原 Review、commit ancestry、source unchanged 與 screenshot。#05 合併後摘要快取／概覽，#09 合併後上傳 UI 回歸仍按原依賴驗證。#03 Reviewer nova-r03-hazu、#05 Reviewer nova-r05-guru 均 Opus5.5 medium（terminal 已核對），正在既有 candidate 上獨立審查。

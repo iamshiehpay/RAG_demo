@@ -1,0 +1,1 @@
+"{\"text\":\"Chat with Document\\n\\nAsk a question. Follow the evidence back to your Document.\\n\\nPDF Document\\n\\nnova-qa04-replacement.pdf · Ready\\n\\nYour Document is ready. What would you like to know?\\n\\nQuestion\\nAsk\",\"disabled\":false,\"reason\":false,\"articles\":0,\"sources\":0,\"question\":\"\"}"

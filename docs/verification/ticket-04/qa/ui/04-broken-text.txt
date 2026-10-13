@@ -1,0 +1,14 @@
+Chat with Document
+
+Ask a question. Follow the evidence back to your Document.
+
+PDF Document
+
+lightrag-renamed.pdf · Ready
+
+Please upload a valid PDF Document.
+
+Your Document is ready. What would you like to know?
+
+Question
+Ask

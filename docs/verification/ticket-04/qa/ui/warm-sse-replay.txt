@@ -1,0 +1,3 @@
+event: ready
+data: {"type":"ready","document_id":"1ad3ce9dc2194891bf03a4d7735777b6","name":"lightrag-renamed.pdf","chunk_count":41,"document_summary":null}
+

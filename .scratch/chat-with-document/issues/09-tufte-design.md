@@ -1,6 +1,6 @@
 # #09 Tufte 視覺設計與共用元件（需要人參與）
 
-Status: ready-for-human
+Status: ready-for-agent
 
 ## Parent
 
@@ -32,7 +32,7 @@ Status: ready-for-human
 
 ## Acceptance criteria
 
-- [ ] 初稿經過使用者確認，方向也已同意。
+- [x] 初稿經過使用者確認，方向也已同意。
 - [ ] 共用元件都已完成，目前的介面也已改用這些元件。
 - [ ] 瀏覽器驗收：上傳 → 問 Q3 → 能看到頁邊旁註和 Trace 的 token 長條；離線時字型也能正常顯示。
 - [ ] 重新 build 前端，並 commit。
@@ -40,3 +40,7 @@ Status: ready-for-human
 ## Blocked by
 
 - #01（`01-walking-skeleton.md`）
+
+## Comments
+
+- 2026-10-13 nova：使用者於 Main session `01a132c0-2f33-7e72-9a63-74731d18d08c` 對 D02 v1 直接回覆「同意，照此方向定稿」。初稿基準 `f15f792`；定稿、重新 build、獨立 Review、整合驗證與獨立 QA 仍待完成。
