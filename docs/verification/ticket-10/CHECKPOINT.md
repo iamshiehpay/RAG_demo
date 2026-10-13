@@ -150,8 +150,11 @@ python -B -m pytest eval/test_second_document_live.py -m eval -s -q --eval-repor
 ```
 
 No server/browser/port was started. Owned8280–8289/browser nova-i10 remain unused;
-all worker test/model processes have completed. Ignored data/cache and nonsecret
-`/private/tmp/nova-i10-*` evidence are retained for handoff. Do not reuse warm
+all worker test/model tool sessions returned completion. A system-wide process-list check
+(`ps -axo pid,ppid,command`) was denied with `operation not permitted: ps`;
+no retry or bypass was attempted, and no claim of a complete shared-process
+inventory is made. Ignored data/cache and nonsecret `/private/tmp/nova-i10-*`
+evidence are retained for handoff. Do not reuse warm
 failed-trial trees as new-source acceptance. Independent Reviewer nova-r10-lubo
 awaits Main's explicit full-Review release; QA nova-qa10-pita remains independent.
 Next: full Review diagnoses source-scope/harness/generalization issues, then a
