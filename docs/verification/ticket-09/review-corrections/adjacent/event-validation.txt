@@ -1,0 +1,1 @@
+PASS: all 79 captured events match backend EVENT_ADAPTER; scripted frontend evidence only.

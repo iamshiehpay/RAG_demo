@@ -1,5 +1,7 @@
 # Issue 09 candidate handoff
 
+Current correction candidate: `f27904854500570a3c4d6117a2eaf1ef4b336394`. See [review corrections](review-corrections/REPORT.md) for M1/m1/m2 fixes and fresh browser evidence. The remainder of this report records the first candidate and its checks. Historical `frontend/review/DESIGN.md` pending-approval wording is preserved as draft evidence; D02 v1 is the current approved direction.
+
 This is implementation evidence for Main nova to assign independent review and QA. It is not an Issue done claim, independent review, independent QA, or integration approval.
 
 Source checkpoint: `7e71bd22e06a6e5f82af5742e39a12fc387f6a18`, branch `lat/09-tufte-design`, worktree `/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design`. Rebase baseline: `d56e092138f6d5c87c75e042caf4f79e0db6989c`. The rebased design checkpoint is `c4728a1`; original draft `f15f792` remains available in Git, and its `frontend/review/` evidence and font sources remain byte-for-byte unchanged.

@@ -1,0 +1,914 @@
+[
+  {
+    "args": [
+      "open",
+      "http://127.0.0.1:8190"
+    ],
+    "stdout": "✓ Chat with Document\n  http://127.0.0.1:8190/\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1440",
+      "900"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "reload"
+    ],
+    "stdout": "http://127.0.0.1:8190/\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Review fixture installed; use normal upload and ask controls.\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 17,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Scripted regression escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === \"Scripted regression escape\" && !!document.querySelector('article:last-child .stage-complete')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Unverified boundary: escape: {\"before\":\".\"}\n    at <anonymous>:13:15\n    at <anonymous>:16:7\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-escape.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-escape.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 18,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Scripted regression entity"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === \"Scripted regression entity\" && !!document.querySelector('article:last-child .stage-complete')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Unverified boundary: entity: {\"before\":\".\"}\n    at <anonymous>:13:15\n    at <anonymous>:16:7\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-entity.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-entity.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 21,\n    \"start\": 2\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Scripted regression list"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === \"Scripted regression list\" && !!document.querySelector('article:last-child .stage-complete')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Unverified boundary: list: {\"before\":\".\"}\n    at <anonymous>:13:15\n    at <anonymous>:16:7\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-list.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-list.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 20,\n    \"start\": 2\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Scripted regression quote"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === \"Scripted regression quote\" && !!document.querySelector('article:last-child .stage-complete')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Unverified boundary: quote: {\"before\":\".\"}\n    at <anonymous>:13:15\n    at <anonymous>:16:7\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-quote.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-quote.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 20,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Scripted regression numeric-emoji"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === \"Scripted regression numeric-emoji\" && !!document.querySelector('article:last-child .stage-complete')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Unverified boundary: numeric-emoji: {\"before\":\".\"}\n    at <anonymous>:13:15\n    at <anonymous>:16:7\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-numeric-emoji.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-numeric-emoji.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Scripted source fetch race"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === \"Scripted source fetch race\" && !!document.querySelector('article:last-child .stage-complete')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation[aria-label^=\"View C1,\"]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__t09.c1Requested"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "dialog .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation[aria-label^=\"View C2,\"]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__t09.c2Requested"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__t09.c1Returned"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Old C1 altered pending C2 source/loading\n    at <anonymous>:1:168\n    at <anonymous>:1:290\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Current C2 source text"
+    ],
+    "stdout": "Current C2 source text\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: only current C2 source/title displayed, stale success/error ignored\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-source-race-False.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-source-race-False.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "dialog .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation[aria-label^=\"View C1,\"]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__t09.c1Requested"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "dialog .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation[aria-label^=\"View C2,\"]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__t09.c2Requested"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Current C2 source text"
+    ],
+    "stdout": "Current C2 source text\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "13106.6\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Stale C1 corrupted C2 dialog\n    at <anonymous>:1:256\n    at <anonymous>:1:385\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-source-race-True.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-source-race-True.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "dialog .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Reconnect upload progress"
+    ],
+    "stdout": "Reconnect upload progress\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"restart\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      ".upload .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Choose the PDF again."
+    ],
+    "stdout": "Choose the PDF again.\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "",
+    "stderr": "✗ Evaluation error: Error: Restart left stale Document askable\n    at <anonymous>:1:291\n    at <anonymous>:1:441\n",
+    "exit_code": 1
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-restart.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/review-corrections/evidence/before-restart.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: reupload after restart restores ready gating\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "console"
+    ],
+    "stdout": "",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "errors"
+    ],
+    "stdout": "",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "close"
+    ],
+    "stdout": "✓ Browser closed\n",
+    "stderr": "",
+    "exit_code": 0
+  }
+]

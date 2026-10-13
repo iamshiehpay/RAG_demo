@@ -2,10 +2,13 @@
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-OUT = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parent
+OUT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else BASE
+(OUT / "evidence").mkdir(parents=True, exist_ok=True)
 LOG = []
 
 
@@ -62,7 +65,7 @@ def ask(scenario):
             )
             run("click", "article:last-child .trace > summary")
         run("wait", "--fn", "document.querySelector('article:last-child .trace').open")
-    return evaluate((OUT / "checks.js").read_text())
+    return evaluate((BASE / "checks.js").read_text())
 
 
 run("open", "http://127.0.0.1:8190")
@@ -71,7 +74,7 @@ run("network", "route", "https://**", "--abort")
 run("reload")
 run("wait", "--load", "networkidle")
 screenshot("01-empty")
-evaluate((OUT / "scripted-events.js").read_text())
+evaluate((BASE / "scripted-events.js").read_text())
 evaluate("window.__t09.uploadHold = true")
 run("upload", "#document", str(ROOT / "data/lightrag.pdf"))
 run("wait", "--text", "18 / 52")
@@ -95,7 +98,7 @@ evaluate(
 )
 for w, h in [(1280, 720), (390, 844)]:
     run("set", "viewport", str(w), str(h))
-    evaluate((OUT / "checks.js").read_text())
+    evaluate((BASE / "checks.js").read_text())
     screenshot(f"05-q3-{w}")
 run("set", "viewport", "1440", "900")
 for scenario in [
@@ -181,4 +184,5 @@ screenshot("09-restart-recovery")
 (OUT / "fixture-events.json").write_text(evaluate("window.__t09.events"))
 run("console")
 run("errors")
+run("close")
 print("Browser implementation checks passed; evidence saved to", OUT)
