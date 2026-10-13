@@ -187,11 +187,64 @@ def _table_boxes(page: pymupdf.Page) -> list[tuple[float, float, float, float]]:
     return list(dict.fromkeys(rectangles))
 
 
+def _page_folios(pdf: pymupdf.Document) -> set[tuple[int, tuple[float, ...]]]:
+    """Recognize isolated, sequential folios at recurring margin positions.
+
+    A low integer alone is insufficient: body/table/heading numbers remain
+    evidence. Logical page numbers may start at an offset, and alternate left
+    and right margins; each recurring position must have corroborating pages.
+    """
+    candidates = []
+    for page_number, page in enumerate(pdf, 1):
+        blocks = [b for b in page.get_text("dict")["blocks"] if "lines" in b]
+        text_lines = [
+            ("".join(s["text"] for s in line["spans"]).strip(), line)
+            for block in blocks
+            for line in block["lines"]
+        ]
+        for block in blocks:
+            if len(block["lines"]) != 1:
+                continue
+            line = block["lines"][0]
+            text = "".join(s["text"] for s in line["spans"]).strip()
+            if not text.isascii() or not text.isdigit():
+                continue
+            bbox = tuple(line["bbox"])
+            x = (bbox[0] + bbox[2]) / (2 * page.rect.width)
+            y = (bbox[1] + bbox[3]) / (2 * page.rect.height)
+            if 0.25 <= y <= 0.75:
+                continue
+            size = max(s["size"] for s in line["spans"])
+            # Nearby title/body labels or aligned table cells disqualify a
+            # number. Ignore other isolated digits; they cannot authenticate it.
+            if any(
+                other_text
+                and not other_text.isdigit()
+                and max(other["bbox"][1] - bbox[3], bbox[1] - other["bbox"][3], 0) < size * 1.5
+                for other_text, other in text_lines
+                if other is not line
+            ):
+                continue
+            candidates.append((page_number, int(text) - page_number, x, y, bbox))
+    return {
+        (page, bbox)
+        for page, offset, x, y, bbox in candidates
+        if any(
+            other_page != page
+            and other_offset == offset
+            and abs(other_x - x) < 0.025
+            and abs(other_y - y) < 0.01
+            for other_page, other_offset, other_x, other_y, _ in candidates
+        )
+    }
+
+
 def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
     lines = []
     sizes: Counter[int] = Counter()
     font_sizes: Counter[tuple[int, str]] = Counter()
     regions_by_page = {}
+    folios = _page_folios(pdf)
     for page_number, page in enumerate(pdf, 1):
         page_lines = []
         blocks, two_columns = _ordered_blocks(page)
@@ -210,7 +263,7 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
                 bbox = tuple(line["bbox"])
                 if all(char.isspace() or ord(char) < 32 for char in text):
                     continue  # Font-mapped control glyphs; retain mathematical/table symbols.
-                if text.isdigit() and bbox[1] > page.rect.height * 0.9:
+                if (page_number, bbox) in folios:
                     continue  # Page numbers are not paragraphs or Section numbers.
                 for span in spans:
                     sizes[round(span["size"])] += len(span["text"].strip())

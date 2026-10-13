@@ -136,7 +136,7 @@ async def test_second_document_real_ingestion_and_golden_facts(pytestconfig):
         if not pytestconfig.getoption("--eval-record-only"):
             # D05: report semantic/forbidden pass rates honestly; they do not
             # replace or disable functional ingestion/provenance/budget guards.
-            assert report.upload_error is None, f"Document processing failed; see {path}"
+            assert not report.upload_error, f"Document processing failed; see {path}"
             assert statistics["section_summary_tokens"] > 6000, f"No >6K actual summaries: {path}"
             assert statistics["group_levels"] >= 1, f"No Group layer: {path}"
             assert all(80 <= s["tokens"] <= 500 for s in statistics["sections"]), (

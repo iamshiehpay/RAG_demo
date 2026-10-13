@@ -84,3 +84,39 @@ async def test_reviewer_reported_reversed_settings_are_generic(reversed_values):
     )
     judge = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
     assert (await check_fact(answer, fact, LLMGateway(judge))).passed == (not reversed_values)
+
+
+@pytest.mark.parametrize("reversed_values", [False, True])
+async def test_table_comparison_column_cannot_reassign_primary_row_owner(reversed_values):
+    control, filtered = ("0.745", "0.812") if reversed_values else ("0.812", "0.745")
+    answer = (
+        "Validation:\n| Setting | Compared with | Accuracy |\n|---|---|---|\n"
+        f"| Control | Filtered | {control} |\n| Filtered | Control | {filtered} |"
+    )
+    fact = GoldenFact(
+        "row_ownership",
+        "judge",
+        "Correct primary setting accuracy.",
+        value_bindings=FACT.value_bindings[:2],
+    )
+    judge = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+    assert (await check_fact(answer, fact, LLMGateway(judge))).passed == (not reversed_values)
+
+
+@pytest.mark.parametrize("reversed_values", [False, True])
+async def test_postpositive_labels_and_explicit_shared_metric_preserve_associations(
+    reversed_values,
+):
+    first, second = ("0.745", "0.812") if reversed_values else ("0.812", "0.745")
+    answer = (
+        "Validation: With Filtered, accuracy drops from "
+        f"{first} (Control) to {second} (Filtered), while F1 remains unchanged at 0.683."
+    )
+    fact = GoldenFact(
+        "comparison",
+        "judge",
+        "Validation accuracy drops; F1 is unchanged in both settings.",
+        value_bindings=FACT.value_bindings[:4],
+    )
+    judge = ScriptedLLM([json.dumps({"matched": True, "asserted": True, "evidence": answer})])
+    assert (await check_fact(answer, fact, LLMGateway(judge))).passed == (not reversed_values)

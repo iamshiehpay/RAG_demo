@@ -89,3 +89,69 @@ async def test_short_section_summary_regenerates_from_original_source_or_fails(s
         assert events[-1].type == "error" and app.document is None
         assert "length" in events[-1].message.lower()
     assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+
+
+@pytest.mark.parametrize("footer_side", ["bottom", "top"])
+@pytest.mark.parametrize("first_folio", [7, 28])
+async def test_upload_and_global_answer_exclude_sequential_margin_folios(footer_side, first_folio):
+    """A folio above the old 90% cutoff must not become a validation count."""
+    with pymupdf.open() as pdf:
+        for index in range(2):
+            page = pdf.new_page(width=600, height=800)
+            # Logical folios need not equal the physical PDF page number.
+            page.insert_text(
+                (295, 680 if footer_side == "bottom" else 32), str(index + first_folio), fontsize=10
+            )
+            if index == 0:
+                page.insert_text((50, 80), "1 Evaluation", fontsize=14)
+                page.insert_text((50, 540), "BODY_COUNT records", fontsize=10)
+                page.insert_text((50, 557), "99", fontsize=10)
+                page.insert_text((50, 630), "The pipeline was checked against", fontsize=10)
+            else:
+                page.insert_text(
+                    (50, 80), "expert judgements on three independent reports.", fontsize=10
+                )
+                page.insert_text((50, 160), "2 Measurements", fontsize=14)
+                page.insert_text((50, 200), "Table 1: Recorded counts", fontsize=10)
+                page.insert_text((50, 220), "Setting", fontsize=10)
+                page.insert_text((230, 220), "Count", fontsize=10)
+                page.insert_text((50, 240), "Control", fontsize=10)
+                page.insert_text((230, 240), "23", fontsize=10)
+                # A legitimate isolated integer near the lower margin is not a
+                # sequential recurring folio and must remain original evidence.
+                page.insert_text((50, 640), "LEGITIMATE_COUNT", fontsize=10)
+                page.insert_text((50, 658), "41", fontsize=10)
+        content = pdf.tobytes()
+    llm = SummaryScriptedLLM(
+        [
+            '{"question_type":"Global","standalone_question":"Summarize evaluation.",'
+            '"sub_queries":[]}',
+            "The pipeline was checked against expert judgements on three independent reports [S1].",
+        ]
+    )
+    app = Application(DeterministicEmbedder(), LLMGateway(llm))
+    try:
+        assert [e async for e in app.upload_document(content, "margin-folios.pdf")][
+            -1
+        ].type == "ready"
+        source = "\n".join(c.text for c in app.document.chunks)
+        folios = {str(first_folio), str(first_folio + 1)}
+        assert not any(line.strip() in folios for line in source.splitlines())
+        assert all(value in source for value in ("BODY_COUNT", "99", "23", "41"))
+        assert any(s.title.startswith("2 Measurements") for s in app.document.sections)
+        assert "against" in source and "expert judgements" in source
+        summary_requests = [c for c in llm.calls if c.call_type == "section_summary"]
+        assert summary_requests and all(
+            not any(line.strip() in folios for line in c.messages[-1]["content"].splitlines())
+            for c in summary_requests
+        )
+        events = [e async for e in app.ask("Summarize evaluation.")]
+        final = next(e for e in events if e.type == "final")
+        assert "three independent reports" in final.answer and final.citations
+        assert "28 expert judgments" not in final.answer
+        for citation in final.citations:
+            summary = app.source(citation.source_id)
+            assert summary.chunk_ids
+            assert all(app.source(chunk_id).id == chunk_id for chunk_id in summary.chunk_ids)
+    finally:
+        await app.close()

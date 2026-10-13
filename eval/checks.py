@@ -118,14 +118,39 @@ def binding_matches(
         names = list(re.finditer(entity_pattern, text))
         for value in re.finditer(term_pattern(binding.value), text):
             before = [m for m in names if m.end() <= value.start()]
-            owner = (
-                before[-1] if before else next((m for m in names if m.start() >= value.end()), None)
-            )
-            if owner is None or not any(has_term(owner.group(), term) for term in binding.variants):
-                continue
             metric = dimension(text, value.start(), binding.metrics, metrics)
             context = dimension(text, value.start(), binding.contexts, contexts)
             if metric is False or context is False:
+                continue
+            # Explicit postpositive labels bind their immediately preceding
+            # value: "from 0.812 (Control) to 0.745 (Filtered)". They outrank a
+            # different setting earlier in the comparison's introduction.
+            labeled = re.match(r"\s*\(\s*(" + entity_pattern + r")\s*\)", text[value.end() :])
+            owner = (
+                next((m for m in names if m.start() == value.end() + labeled.start(1)), None)
+                if labeled
+                else before[-1]
+                if before
+                else next((m for m in names if m.start() >= value.end()), None)
+            )
+            # A shared number must be explicitly unchanged/same for the named
+            # comparison settings on this metric; mere nearby names do not
+            # transfer ownership between claims or sentence/row boundaries.
+            if metric is not None and re.search(
+                r"\b(?:unchanged|same|identical)\b|相同|不變|不变",
+                text[metric.end() : value.start()],
+            ):
+                compared = [m for m in names if m.end() <= value.start()]
+                if len({m.group() for m in compared}) >= 2:
+                    owner = next(
+                        (
+                            m
+                            for m in compared
+                            if any(has_term(m.group(), term) for term in binding.variants)
+                        ),
+                        owner,
+                    )
+            if owner is None or not any(has_term(owner.group(), term) for term in binding.variants):
                 continue
             if owner.start() > value.start():
                 between = text[value.end() : owner.start()]
@@ -160,8 +185,18 @@ def binding_matches(
         for index, cell in enumerate(cells):
             if not has_term(cell, binding.value):
                 continue
-            column_entity = any(has_term(headers[index], term) for term in binding.variants)
-            row_entity = any(any(has_term(c, term) for term in binding.variants) for c in cells)
+            # Ownership is the primary row label or this numeric column's
+            # header, never a baseline named in a later "Compared with" cell.
+            column_names = list(re.finditer(entity_pattern, headers[index]))
+            row_names = list(re.finditer(entity_pattern, cells[0]))
+            column_entity = len(column_names) == 1 and any(
+                has_term(column_names[0].group(), term) for term in binding.variants
+            )
+            row_entity = (
+                not column_names
+                and len(row_names) == 1
+                and any(has_term(row_names[0].group(), term) for term in binding.variants)
+            )
             if not column_entity and not row_entity:
                 continue
             metric_text = " ".join(cells[:index]) if column_entity else headers[index]
