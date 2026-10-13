@@ -1,5 +1,7 @@
 # Bounded correction after independent Review0c320a8
 
+> 最終狀態更新：已審 source `f089cae` 與文件尾提交 `50eab20` 已整合至 Main `db64d84`。D10 A 已由真人核准保留明列的逐項 Citation 缺陷；下方是原始實作／審查時點紀錄，不覆寫原 FAIL。最新整合證據見 [integration.md](integration.md)，最終網站 QA 依 D09 待使用者執行 [人工清單](../final-acceptance/manual-qa-checklist.md)。
+
 Authorization: Main14912/14950 within originalIssue11, same13:33:01UTC deadline. Full first Review with exactparent/axisruntimes retained in review-0c320a8.md. Candidate was frozen until concrete correction scope/freshness sent to Main. No semantic-validator feature, document-specific prompt, fact/budget/model change or Citation waiver.
 
 - Production change: source_system_prompt now tells the answer model to cite the supplied Table Chunk with the actual caption/header/row for each numeric claim, not a nearby table/prose source for another metric/population. Existing guards/validators and source mappings unchanged. An instruction reduces risk but cannot enforce universal semantic grounding.

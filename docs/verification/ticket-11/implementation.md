@@ -1,5 +1,7 @@
 # Issue11 implementation and evidence
 
+> 最終狀態更新：已審 source `f089cae` 與文件尾提交 `50eab20` 已整合至 Main `db64d84`。D10 A 已由真人核准保留明列的逐項 Citation 缺陷；下方是原始實作／審查時點紀錄，不覆寫原 FAIL。最新整合證據見 [integration.md](integration.md)，最終網站 QA 依 D09 待使用者執行 [人工清單](../final-acceptance/manual-qa-checklist.md)。
+
 Base: `7cf91851f9f86527d69c95910f9eadd58cf7b357`; branch `lat/11-tuning-and-acceptance`.
 Formal D05 window: 2026-10-13 18:33:01–21:33:01 Taipei. Main release HCOM14083 superseded the original read-only hold. Runtime native session `01a132fb-ce96-78d2-8c04-4cd08fb37bd2`, turn `01a134d2-a177-74d3-a226-49a9db4dfbe5`: gpt-6.1-sol/high/workspace-write/on-request. No substitution.
 

@@ -35,7 +35,7 @@ Status: in-progress
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | done（ca66429＋#09整合3432aa09；Review APPROVE；QA265tests／R01–R06複驗PASS；品質仍#11）|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | done（3bb0c64／Main7cf9185；限定Review兩軸PASS／整合316PASS／獨立QA功能PASS；N3品質FAIL與已知限制按D05/D06保留） |
-| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | in progress（meme；18:33:01正式開始；D05調參＋finaleval至21:33:01） |
+| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09人工QA待回） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -47,7 +47,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷作為已知限制整合；D09 最終人工 QA 結果待回。
+D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷作為已知限制整合；D09 最終人工 QA 結果待回。D11 已收到排版方向紀錄，實作時間／負責人仍待真人決定，不在本次收尾中排程。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -281,3 +281,7 @@ D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷�
 - #11 fresh scopedReview15271完成：Standards0，Spec保留逐項grounding硬finding（評估數量稱papers、時間細節引用相鄰Chunk、結論缺引用）；特定Table9錯表關聯本輪3/3已無再現。Global表格提示對[S#]路徑有未觀察風險。Main已完成最小修正／全327tests／27freshN3後，先記D10v1 pending並向真人提問：接受明列限制的本版驗收例外，或再一輪bounded修正。未答不合併／不新增模型調整，證據交接仍繼續；D09人工QA等待最終版本。
 
 - D10 A 已直接核對 Claude proposal f6033630／human1fc94f9d（12:55:59Z），停止品質修正，明列限制不改判PASS。50eab20（reviewed source f089cae＋docs tail）已 ff-only 整合，保留Main ai-log追加、簡報素材、QA10/QA11與原清單。接續固定Main checkpoint後一套完整測試及兩份快取實際命中；人工QA尚未執行。
+
+- #11 Main db64d84 整合驗證：327 passed／3 eval deselected／zero skipped／263.68s；Main Python與imports、500/dense/5-3-2/medium/4及58005fcc pipeline已核對。兩份named current cache已移交Main `.cache/`，公開上傳均Ready、0 LLM/embedding/guarded calls。已核對完整log及環境／cache證據；不重跑N3、不把D10缺陷改判PASS。D09人工網站QA尚未執行，接續HTTP readiness與已合併資源收尾。
+
+- #11 資源收尾完成：meme/Bela recorded tags 已停止，已合併50eab20 worktree及分支安全移除；8份歷史cache與9份工作context保留在ignored archive，開發暫存已移至Trash。Main兩份current cache、使用者8101服務、Ollama及無關8201保留。首頁／JS／CSS／字型HTTP200僅證明可載入，最終人工QA仍待D09回覆，#11維持ready-for-human；D11未派工。

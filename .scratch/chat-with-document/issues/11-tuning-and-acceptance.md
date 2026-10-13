@@ -42,4 +42,5 @@ Status: ready-for-human
 - 實驗／最終結果：`eval/reports/issue11-correction/`；27實際回答，raw品質FAIL保留，272呼叫均≤10K，正式Router/Answer無截斷。
 - 完整初審及限定複審：`docs/verification/ticket-11/review-0c320a8.md`、`review-f089cae.md`。
 - 修正後327確定性測試PASS；乾淨Python clone、前端build與兩份current pipeline快取證據已核對。
-- 主工作區整合後完整測試／快取確認：待執行。最終人工QA：待使用者，尚未done。
+- 主工作區 `db64d84` 整合驗證：327 passed、3 eval deselected、zero skipped，263.68s；兩份current pipeline快取公開上傳皆Ready，0 LLM／0 embedding calls。詳見 [integration.md](../../../docs/verification/ticket-11/integration.md)。
+- 最終人工QA：待使用者，尚未done；依D09保留結果空欄，不以HTTP或確定性測試代替。

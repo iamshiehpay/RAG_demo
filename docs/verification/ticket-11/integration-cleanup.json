@@ -1,0 +1,99 @@
+{
+  "owner": "meme",
+  "authorization": "Main15438/15459",
+  "reversible_trash_moves": [
+    {
+      "source": "/private/tmp/nova-i11-clean-clone",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-clean-clone"
+    },
+    {
+      "source": "/private/tmp/nova-i11-browser-server.py",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-browser-server.py"
+    },
+    {
+      "source": "/private/tmp/nova-i11-numeric-cache",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-numeric-cache"
+    },
+    {
+      "source": "/private/tmp/nova-i11-heldout.py",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-heldout.py"
+    },
+    {
+      "source": "/private/tmp/nova-i11-browser-cache",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-browser-cache"
+    },
+    {
+      "source": "/private/tmp/nova-i11-heldout-cache",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-heldout-cache"
+    },
+    {
+      "source": "/private/tmp/nova-i11-browser-document.pdf",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-browser-document.pdf"
+    },
+    {
+      "source": "/private/tmp/nova-i11-browser-skill.md",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-browser-skill.md"
+    },
+    {
+      "source": "/private/tmp/nova-i11-rewrite-driver.py",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-rewrite-driver.py"
+    },
+    {
+      "source": "/private/tmp/nova-i11-clean-server.txt",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-clean-server.txt"
+    },
+    {
+      "source": "/private/tmp/nova-i11-numeric-heldout.py",
+      "trash": "/Users/shiehpay/.Trash/nova-i11-meme-20261013/nova-i11-numeric-heldout.py"
+    }
+  ],
+  "historical_archive_manifest": "/Users/shiehpay/Desktop/resume/rag/.lat/retained/issue11/meme/manifest.json",
+  "remaining_private_paths": [
+    "/private/tmp/nova-i11-corrected-freeze.md",
+    "/private/tmp/nova-i11-correction-scope.md",
+    "/private/tmp/nova-i11-final-finding.md",
+    "/private/tmp/nova-i11-frozen-release.md",
+    "/private/tmp/nova-i11-main-ai-log-append.md",
+    "/private/tmp/nova-i11-main-ai-log-before-merge.md",
+    "/private/tmp/nova-i11-preflight.md",
+    "/private/tmp/nova-i11-recheck-assignment.md",
+    "/private/tmp/nova-i11-red-settings.txt",
+    "/private/tmp/nova-i11-review-assignment.md",
+    "/private/tmp/nova-i11-review-disposition.md"
+  ],
+  "preserved_other_owner_paths": [
+    "/private/tmp/nova-i11-main-ai-log-append.md",
+    "/private/tmp/nova-i11-main-ai-log-before-merge.md"
+  ],
+  "preserved_evidence": [
+    "/private/tmp/meme-review-riko-issue11.md",
+    "/private/tmp/meme-recheck-bela-issue11.md",
+    "worker tracked reports/source/history",
+    "worker .venv/data/.cache originals",
+    "Main current .cache payloads"
+  ],
+  "worktree_and_branch": "retained for Main removal after no-active handoff",
+  "worker_active_workloads": [],
+  "worker_owned_live_servers_or_browsers": [],
+  "external_resources_preserved": [
+    "existing user-managed 8101 PID61511",
+    "unrelated 8201 PID86391",
+    "shared Ollama"
+  ],
+  "no_8102_started": true,
+  "Main_commit": "none by worker",
+  "Main_final_cleanup": {
+    "agents_closed": [
+      "nova-i11-meme",
+      "meme-recheck-bela"
+    ],
+    "merged_worktree_removed": true,
+    "branch_safely_deleted": "lat/11-tuning-and-acceptance",
+    "generated_worker_files_trashed": true,
+    "archived_context_originals_trashed": true,
+    "current_main_caches_retained": true,
+    "historical_cache_payloads_retained": 8,
+    "existing_8101_server_preserved": true,
+    "remaining_acceptance": "D09 user manual QA; D11 implementation timing/owner undecided"
+  }
+}
