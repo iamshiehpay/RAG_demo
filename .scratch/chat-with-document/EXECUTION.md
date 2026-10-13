@@ -21,15 +21,15 @@ Status: in-progress
 | # | 票 | 依賴 | 波次 | 預計修改範圍（衝突協調） | 狀態 |
 |---|---|---|---|---|---|
 | 01 | Walking skeleton | — | W1 | 建立整個骨架（後端、前端、測試、README） | done（9ba4327；Review APPROVE；QA 7/7 PASS）|
-| 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | merged 3a15958；QA 6/6 AC PASS，但 CJK 長段落斷句 FAIL → 修正中 |
+| 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | done（e59e096；Review APPROVE；獨立 QA 6/6 AC、213 tests、browser PASS） |
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
-| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | D02 已核准；nova-i09-romi 接續定稿（獨立 Review／QA 待辦）|
+| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | D02 已核准；e8b266c（含 CRLF 修正）複審 APPROVE；整合 rebase 仍等 #03/#05|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | done（4eee3d2；Review APPROVE；獨立 QA 5/5 AC PASS，192 tests PASS） |
-| 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | dispatched（levi-t03-mulo）|
+| 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | 5d6204c 已整合；獨立 Review APPROVE、238 tests PASS；nova-qa03-tiki 獨立整合 QA 中|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
-| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | dispatched（levi-t05-gala）|
-| 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | todo |
+| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | 8433e9f 複審 APPROVE；sari/guru 正接上 main5d6204c，整合再審與 live Q1 報告|
+| 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 僅選文 preflight（nova-i10-fimo）；實作/eval 仍等 #03/#05 |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | todo |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
@@ -116,3 +116,28 @@ Status: in-progress
 - git-track sync：本機 checkpoint `cd3e303`；`git push` 回報 No configured push destination。無 remote，不自行指定遠端；不阻擋本機實作與驗收。
 
 - #04 完成：獨立 QA `docs/verification/ticket-04/qa/takeover-report.md`（5/5 AC PASS）；Main 核对原 Review、commit ancestry、source unchanged 與 screenshot。#05 合併後摘要快取／概覽，#09 合併後上傳 UI 回歸仍按原依賴驗證。#03 Reviewer nova-r03-hazu、#05 Reviewer nova-r05-guru 均 Opus5.5 medium（terminal 已核對），正在既有 candidate 上獨立審查。
+
+- #05 nova-r05-guru 初審 CHANGES_REQUESTED：H1 Global prompt 偏向 LightRAG/Q1、M1 以來源文字內 [S#] 猜 source mode、M2 upload/cache 測試過濾 summary calls 而削弱斷言；另有 Group/Document 進度、遞迴/取消測試、標題與 cache identity 缺口。完整 `.lat/briefs/nova-r05-review.md`；交給獨立 Implementer 修正，Q1 真實品質仍於 #11 驗收。
+
+- #03 nova-r03-hazu 複審：既有七項 findings 已修正，208 tests PASS；新增 CHANGES_REQUESTED：表格後的 heading/list 被吞入 table region（Section 消失）、段落中 Table/Figure 開頭行誤認 caption。完整 `.lat/briefs/nova-r03-review.md`；新 Implementer 修正後，待 #02 整合再 rebase 複審。
+
+- #02 複審 2：R1 caption/header 與 R2 labelled rows 已修正；full210 PASS 但獨立右欄/非對稱 margin probe 發現新 M3（flow width 假設對稱），仍不得整合。
+- #09 獨立 Review CHANGES_REQUESTED：M1 Markdown source/value offset 導致 Unverified 標錯句；另修復 backend restart404 的舊 Document 狀態及 source fetch race。依 PRD 使用 browser harness 回歸、不新增前端 unit-test 要求；原設計證據保留，D02 核准在新報告說明。Reviewer與兩個 child contexts 實際 Opus5.5 medium 已核對。
+- #03 新修正 e9deece 的 formed-grid stop 又暴露 internal group-divider 後數值列可能截掉，已由 Reviewer/Implementer 直接協作補回歸；原始數字完整性不放寬。
+
+- #10 獨立選文 preflight：nova-i10-fimo（GPT6.1 high / workspace-write/on-request 已核對），只讀 primary sources、下載 ignored candidate PDF、記錄 fixed version/頁數/雙欄與摘要長度估計。不得改 tracked script/GoldenFacts/source，正式實作與 eval 仍按 #03/#05 依賴放行。
+
+- #02 e59e096 已 ff-only 整合；Main 比對 #04 application/cache/events/frontend 未改，source2ee613b 與 final evidence head 相同。獨立 QA nova-qa02-zeme（GPT6.1 medium，terminal+turn_context 核對）接續六項 AC、原 PA-02 與 Review adversarial cases，main 保持 source 穩定至 QA 放行。
+- #05 修正複審 APPROVE（8433e9f）：H1/M1/M2/L1–L6 關閉，Reviewer targeted148 PASS。非阻擋觀察：長問題 Group 過度合併與 prompt cache identity，交 #10/#11 檢查；正式整合與 QA 仍未完成。
+- #10 preflight 選定 arXiv2603.06749v1（2026-03-06，109頁雙欄非RAG）；真實 Section 目標長度估計6844/6582 tokens，尚非實際生成證據；正式處理須證明 >6K 與 Group layer。模型原始發行早於論文，opaque cloud exact weights 的限制保留於 provenance。
+
+- #09 修正複審 APPROVE（71925e2）：M1/m1/m2 關閉；獨立18/19 adversarial rendering probes、build/dist parity 通過。殘留 CRLF 邊界 fallback 指派 romi 在其獨占 frontend 分支先補 browser RED/GREEN 後由 kobe 複審，rebase 仍等 #03/#05；現階段不標 done。
+
+- QA02 設定 audit：zeme 曾依一般 AGENTS 路徑探索規則誤派 repo-scout（role metadata GPT6-luna low），不符本輪 exact-model 要求。已停用其結論、禁止再委派，由已核對 GPT6.1 medium 的 zeme 自行重新讀取流程並核對 fixture hash；實際驗收只採其獨立執行證據，QA 報告須明記修正。
+
+- #09 CRLF 修正 e8b266c / source3292629 獨立複審 APPROVE：Reviewer27/27 adversarial probes、typecheck/dist parity PASS；browser RED6→GREEN6，原148 assertions 回歸通過。保留原始 draft/字型，無 backend 變更；尚待整合再審與獨立 QA。
+
+- #02 QA source-freeze released（HCOM7664）：六項 AC PASS、213 tests PASS、24 個獨立 PDF scenarios 與真實 browser/error/cache/citation PASS，無新增 production bug。完整報告整理中，Main 尚未提前勾 done。
+- #03 5d6204c ff-only 整合，source/tests/assets 與已審 d7d77e8 位元組一致；獨立 QA nova-qa03-tiki（session01a132f2-a494-73d1-b0cb-04a7899bcd93，GPT6.1 medium/workspace-write/on-request，terminal+turn_context 核對）凍結 main source 進行驗收。#05 只在自己的 worktree 接續 rebase。
+
+- #02 Main 已核對完整 `docs/verification/ticket-02/qa/takeover-report.md`、環境與跨頁 screenshot，六項 AC 全通過，issue 標 done。原160-fact/CJK、24 independent scenarios +2 typography、cache0/0 與 source404 均有獨立證據；角色偏差與自主複核已明記。收尾自己的 implementer/reviewer/QA，不觸碰既有 port8201。

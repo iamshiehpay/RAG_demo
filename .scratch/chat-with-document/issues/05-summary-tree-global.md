@@ -34,3 +34,8 @@ Status: ready-for-agent
 - #02（`02-structure-aware-chunking.md`）
 - #04（`04-ingest-progress-and-cache.md`）
 - #06（`06-router-synthesis.md`）
+
+## Comments
+
+- 2026-10-13 nova / independent initial Review：Global prompt 必須與文件主題無關；source kind 由 Global 路徑明確傳入，不掃描原文的 [S#] 判斷；upload/cache/no-call 斷言包含全部 LLM 呼叫。由 nova-i05-sari 修正，nova-r05-guru 獨立複查。
+- L2 budget arrangement（既有規格內裁決）：上傳時依支援的最長 current/standalone question 與回答 prompt overhead 保守建立所需 Group 層，保留原始 Section 層。短問題仍選 Section，長問題可選 Group，避免只能退到 Document Summary。不得截斷來源、不在回答期間臨時建樹；納入 answer prompt 的 cache identity。代價是接近額度上限的文件可能多做上傳摘要；需以邊界測試驗證兩種問題的完整 provenance 與 budget。

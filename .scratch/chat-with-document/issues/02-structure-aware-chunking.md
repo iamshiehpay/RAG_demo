@@ -1,6 +1,6 @@
 # #02 依結構解析與切塊：Section、References、附錄、掃描檔
 
-Status: ready-for-agent
+Status: done
 
 ## Parent
 
@@ -24,13 +24,19 @@ Status: ready-for-agent
 
 ## Acceptance criteria
 
-- [ ] 處理 LightRAG 論文時，偵測得到全部主章節（Introduction 到 Conclusion，以及 Appendix）。
-- [ ] 任何 Chunk 都不含 References 的內容；附錄的 Chunk 都標示為 Appendix。
-- [ ] 確定性測試：沒有 Chunk 跨越 Section；除了單一長段落之外，每個 Chunk 都不超過設定的大小。
-- [ ] 確定性測試：在測試中產生一份只有圖片、沒有文字層的 PDF，上傳時會收到錯誤事件。
-- [ ] 確定性測試：在測試中產生一份完全沒有標題的 PDF，系統用虛擬 Section 照常處理，並且可以提問。
-- [ ] Citation 的旁註顯示頁碼和 Section 標題。
+- [x] 處理 LightRAG 論文時，偵測得到全部主章節（Introduction 到 Conclusion，以及 Appendix）。
+- [x] 任何 Chunk 都不含 References 的內容；附錄的 Chunk 都標示為 Appendix。
+- [x] 確定性測試：沒有 Chunk 跨越 Section；除了單一長段落之外，每個 Chunk 都不超過設定的大小。
+- [x] 確定性測試：在測試中產生一份只有圖片、沒有文字層的 PDF，上傳時會收到錯誤事件。
+- [x] 確定性測試：在測試中產生一份完全沒有標題的 PDF，系統用虛擬 Section 照常處理，並且可以提問。
+- [x] Citation 的旁註顯示頁碼和 Section 標題。
 
 ## Blocked by
 
 - #01（`01-walking-skeleton.md`）
+
+## Verification
+
+- Final source e59e096 integrated after independent Opus5.5 medium APPROVE; report `docs/verification/ticket-02/takeover-independent-review.md`.
+- Independent GPT6.1 medium QA on integrated e59e096: all six AC PASS, 213 tests PASS, 24 independent PDF scenarios plus two typography/packing probes, actual browser/error/citation/cache checks PASS. Evidence: `docs/verification/ticket-02/qa/takeover-report.md`. Main inspected report, environment, source ancestry and cross-page screenshot.
+- Source panel heading page-range display remains assigned to #09; full source metadata/text and Citation side-note ranges passed.

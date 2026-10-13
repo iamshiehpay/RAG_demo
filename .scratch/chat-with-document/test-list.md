@@ -1,8 +1,8 @@
 # Chat with Document：需求導向測試清單（實作前草稿）
 
-Status: draft
+Status: in-progress (existing requirement checklist; evidence updated incrementally)
 
-> 產生方式：先只依 `PRD.md`（50 條 user story、事件契約、測試決策）、`AGENTS.md`（硬數字、失敗處理、Golden Facts、交付）、`CONTEXT.md`（術語）與題目原文獨立列出情境，之後才對照 `issues/01..11` 填「對應票」欄。尚未實作任何東西。
+> 產生方式：先只依 `PRD.md`（50 條 user story、事件契約、測試決策）、`AGENTS.md`（硬數字、失敗處理、Golden Facts、交付）、`CONTEXT.md`（術語）與題目原文獨立列出情境，之後才對照 `issues/01..11` 填「對應票」欄。原始需求草稿保留；已實作範圍與目前驗證見 EXECUTION.md 及各列證據。
 >
 > 驗證方式縮寫：**DET** = deterministic pytest（假 LLM + 真 bge-m3，不呼叫雲端 LLM）；**EVAL** = `pytest -m eval`（真 gpt-oss，語意判定，不降低 AGENTS.md 已確認的驗收條件）；**UI** = 真實瀏覽器（web-design-engineer 驗收）；**HTTP** = HTTP / SSE 契約測試。
 >
@@ -20,22 +20,22 @@ Status: draft
 
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
-| UP-01 | Story 1、2；PRD 事件契約「上傳」；AGENTS「上傳處理與快取」 | 服務已啟動，LightRAG 未被快取 | POST 上傳 PDF 並訂閱進度 SSE | 上傳請求立刻回應（不等處理完，數秒內）；`stage` 事件依序為 解析 → 切塊 → embedding → 摘要 n/N（n 單調遞增到 N）→ 完成；串流一定以 `ready`（附文件概覽）或 `error` 結束，且之後不再有事件 | HTTP + DET | #04、#05 | NOT_EXECUTED（實作前草稿） |
-| UP-02 | Story 2、4；AGENTS「上傳處理」 | 瀏覽器開啟首頁 | 選擇 LightRAG PDF 上傳，處理中觀察畫面 | 即時看到目前階段與 n/N 進度；提問框為停用狀態且旁邊有文字說明原因（例如「文件處理中」）；`ready` 之後提問框才啟用、原因文字消失 | UI | #04、#09 | NOT_EXECUTED（實作前草稿） |
+| UP-01 | Story 1、2；PRD 事件契約「上傳」；AGENTS「上傳處理與快取」 | 服務已啟動，LightRAG 未被快取 | POST 上傳 PDF 並訂閱進度 SSE | 上傳請求立刻回應（不等處理完，數秒內）；`stage` 事件依序為 解析 → 切塊 → embedding → 摘要 n/N（n 單調遞增到 N）→ 完成；串流一定以 `ready`（附文件概覽）或 `error` 結束，且之後不再有事件 | HTTP + DET | #04、#05 | #04 PASS；#05 摘要/概覽 NOT_EXECUTED。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
+| UP-02 | Story 2、4；AGENTS「上傳處理」 | 瀏覽器開啟首頁 | 選擇 LightRAG PDF 上傳，處理中觀察畫面 | 即時看到目前階段與 n/N 進度；提問框為停用狀態且旁邊有文字說明原因（例如「文件處理中」）；`ready` 之後提問框才啟用、原因文字消失 | UI | #04、#09 | PASS：真實 UI 0/41→8/41→ready，提問停用與原因。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
 | UP-03 | Story 3、30 | UP-02 完成 | 看畫面，並連續提問數輪、捲動對話 | 完成時立即顯示「文件概覽」（Document Summary，內容非空且為全文層級）；整個對話期間仍看得到，不被對話擠掉 | UI | #05 | NOT_EXECUTED（實作前草稿） |
-| UP-04 | Story 5；AGENTS「支援範圍」；PRD Parser | 測試中以程式產生「只有圖片、無文字層」的 PDF；另備一個損毀／非 PDF 檔 | 上傳該檔 | 上傳階段（非等到提問）就收到 `error` 事件，訊息說明「掃描檔／無文字層，不支援」；UI 顯示該原因、不卡在進度條；提問框仍停用；之後可立即重新上傳正常 PDF 成功。損毀檔同樣得到明確錯誤而非 500 空白頁 | DET + UI | #02（掃描檔）；損毀／非 PDF：GAP | NOT_EXECUTED（實作前草稿） |
-| UP-05 | AGENTS「失敗處理」；PRD `error` 事件 | 以假 LLM／假 Embedder 注入：第 k 個 Section Summary 呼叫失敗、或 Embedder 連線失敗 | 上傳 PDF | 以 `error` 結束，不發 `ready`；UI 顯示錯誤並可重新上傳；不留下半成品快取（再次上傳會完整重跑） | DET + UI | #04（只有文字描述，無驗收項）；快取不留半成品：GAP | NOT_EXECUTED（實作前草稿） |
-| UP-06 | Story 6、46；AGENTS「處理結果依雜湊值存到 .cache/」；PRD Ingestion Jobs | 假 LLM／假 Embedder 會計數；LightRAG 已處理過一次 | (a) 同一檔案再上傳；(b) 改一個位元組再上傳；(c) 把「處理流程版本」常數改掉再上傳同一檔 | (a) Embedder 與 LLM 呼叫次數皆為 0，直接進 `ready`，概覽與首次相同，UI 幾乎立刻完成；(b)(c) 重新處理；`.cache/` 內含 Chunk、embedding、Summary Tree，鍵含內容雜湊與流程版本 | DET + UI | #04、#05 | NOT_EXECUTED（實作前草稿） |
-| UP-07 | AGENTS「只快取上傳時的處理結果，不快取回答」；Story 25 的前提 | 文件已 `ready`（含快取） | 對同一份文件連續問同一題兩次 | 兩次都真的呼叫 LLM（假 LLM 紀錄兩組呼叫）、兩次 Trace 各自獨立；`.cache/` 內沒有任何回答內容 | DET | GAP（無票涵蓋） | NOT_EXECUTED（實作前草稿） |
-| UP-08 | PRD 流程步驟 1「完成後開放提問」；CONTEXT「一次只針對一份 Document」 | (a) 文件處理中；(b) 已有文件 A 的對話 | (a) 繞過 UI 直接 POST 提問；(b) 上傳文件 B | (a) 伺服器端拒絕（4xx／`error`），不進入檢索也不呼叫 LLM；(b) 對話區、概覽、Trace、引用彈窗全部切到文件 B，不殘留 A 的引用或歷史 | HTTP + UI | GAP（#04 只管 UI 停用） | NOT_EXECUTED（實作前草稿） |
+| UP-04 | Story 5；AGENTS「支援範圍」；PRD Parser | 測試中以程式產生「只有圖片、無文字層」的 PDF；另備一個損毀／非 PDF 檔 | 上傳該檔 | 上傳階段（非等到提問）就收到 `error` 事件，訊息說明「掃描檔／無文字層，不支援」；UI 顯示該原因、不卡在進度條；提問框仍停用；之後可立即重新上傳正常 PDF 成功。損毀檔同樣得到明確錯誤而非 500 空白頁 | DET + UI | #02（掃描檔）；損毀／非 PDF：GAP | PASS（#02 QA e59e096：scan/non-PDF/corrupt distinct errors + browser recovery；ticket-02/qa/takeover-report.md） |
+| UP-05 | AGENTS「失敗處理」；PRD `error` 事件 | 以假 LLM／假 Embedder 注入：第 k 個 Section Summary 呼叫失敗、或 Embedder 連線失敗 | 上傳 PDF | 以 `error` 結束，不發 `ready`；UI 顯示錯誤並可重新上傳；不留下半成品快取（再次上傳會完整重跑） | DET + UI | #04（只有文字描述，無驗收項）；快取不留半成品：GAP | #04 embedding失敗/無半成品快取/重試 PASS；#05 summary失敗 NOT_EXECUTED。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
+| UP-06 | Story 6、46；AGENTS「處理結果依雜湊值存到 .cache/」；PRD Ingestion Jobs | 假 LLM／假 Embedder 會計數；LightRAG 已處理過一次 | (a) 同一檔案再上傳；(b) 改一個位元組再上傳；(c) 把「處理流程版本」常數改掉再上傳同一檔 | (a) Embedder 與 LLM 呼叫次數皆為 0，直接進 `ready`，概覽與首次相同，UI 幾乎立刻完成；(b)(c) 重新處理；`.cache/` 內含 Chunk、embedding、Summary Tree，鍵含內容雜湊與流程版本 | DET + UI | #04、#05 | #04 cache/hash/version/config PASS；#05 Summary Tree NOT_EXECUTED。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
+| UP-07 | AGENTS「只快取上傳時的處理結果，不快取回答」；Story 25 的前提 | 文件已 `ready`（含快取） | 對同一份文件連續問同一題兩次 | 兩次都真的呼叫 LLM（假 LLM 紀錄兩組呼叫）、兩次 Trace 各自獨立；`.cache/` 內沒有任何回答內容 | DET | GAP（無票涵蓋） | PASS：重問兩次真的呼叫 LLM，快取 bytes 不變。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
+| UP-08 | PRD 流程步驟 1「完成後開放提問」；CONTEXT「一次只針對一份 Document」 | (a) 文件處理中；(b) 已有文件 A 的對話 | (a) 繞過 UI 直接 POST 提問；(b) 上傳文件 B | (a) 伺服器端拒絕（4xx／`error`），不進入檢索也不呼叫 LLM；(b) 對話區、概覽、Trace、引用彈窗全部切到文件 B，不殘留 A 的引用或歷史 | HTTP + UI | GAP（#04 只管 UI 停用） | #04 readiness/backend拒絕/切換重置 PASS；#05概覽 NOT_EXECUTED。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
 
 ## C. 解析與切塊
 
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
-| PA-01 | AGENTS「已驗證事實：章節標題」；「切塊規則」1、5、6 | LightRAG 已 `ready` | 檢視 Document 的 Section 清單與全部 Chunk | 偵測到 Introduction 到 Conclusion 的全部主章節（編號與標題分兩行也合併，如 `3` / `THE LIGHTRAG ARCHITECTURE`）與 Appendix；每個 Chunk 屬於且不跨越單一 Section，文字開頭帶 Section 標題，帶頁碼；沒有任何 Chunk 含 References 書目內容；附錄 Chunk 皆標 Appendix | DET | #02 | NOT_EXECUTED（實作前草稿） |
-| PA-02 | 切塊規則 2、3；Story 38；AGENTS「程式不能寫死字體大小」 | 測試中程式產生：(a) 不同字體大小／粗體標題的 PDF；(b) 含超過 500 tokens 單一長段落的 PDF；(c) 中英混合標點長段落；(d) 設定改為其他 Chunk 大小 | 上傳並檢視 Chunk | (a) 依「最常見字級為內文、較大或粗體為標題」偵測，不依賴 12pt 或 NimbusRomNo9L；(b) 只有該長段落在句子邊界切開，相鄰片段重疊約 10%，其餘 Chunk 以整段段落裝到約設定大小、段落間不重疊、且不超過設定大小；(c) 在 。！？ 與英文標點邊界切；(d) 設定值改變會改變切塊結果（可配置） | DET | #02、#10、#11（設定值）；可配置性：#02 一句話帶過 | NOT_EXECUTED（實作前草稿） |
-| PA-03 | 範圍「完全偵測不到標題」；CONTEXT「Section」 | 程式產生完全沒有標題的 PDF | 上傳後提問 | 以固定長度切出虛擬 Section，處理成功、可提問、有回答與引用（頁碼仍正確） | DET | #02 | NOT_EXECUTED（實作前草稿） |
+| PA-01 | AGENTS「已驗證事實：章節標題」；「切塊規則」1、5、6 | LightRAG 已 `ready` | 檢視 Document 的 Section 清單與全部 Chunk | 偵測到 Introduction 到 Conclusion 的全部主章節（編號與標題分兩行也合併，如 `3` / `THE LIGHTRAG ARCHITECTURE`）與 Appendix；每個 Chunk 屬於且不跨越單一 Section，文字開頭帶 Section 標題，帶頁碼；沒有任何 Chunk 含 References 書目內容；附錄 Chunk 皆標 Appendix | DET | #02 | PASS（#02 QA e59e096：28 Sections/41 Chunks、References/Appendix/provenance；ticket-02/qa/takeover-report.md） |
+| PA-02 | 切塊規則 2、3；Story 38；AGENTS「程式不能寫死字體大小」 | 測試中程式產生：(a) 不同字體大小／粗體標題的 PDF；(b) 含超過 500 tokens 單一長段落的 PDF；(c) 中英混合標點長段落；(d) 設定改為其他 Chunk 大小 | 上傳並檢視 Chunk | (a) 依「最常見字級為內文、較大或粗體為標題」偵測，不依賴 12pt 或 NimbusRomNo9L；(b) 只有該長段落在句子邊界切開，相鄰片段重疊約 10%，其餘 Chunk 以整段段落裝到約設定大小、段落間不重疊、且不超過設定大小；(c) 在 。！？ 與英文標點邊界切；(d) 設定值改變會改變切塊結果（可配置） | DET | #02、#10、#11（設定值）；可配置性：#02 一句話帶過 | PASS（#02 QA：160/160 facts、11 Chunks max498、256/500/800、相對字級與整段裝填；同報告） |
+| PA-03 | 範圍「完全偵測不到標題」；CONTEXT「Section」 | 程式產生完全沒有標題的 PDF | 上傳後提問 | 以固定長度切出虛擬 Section，處理成功、可提問、有回答與引用（頁碼仍正確） | DET | #02 | PASS（#02 QA：6 virtual Sections、App + browser ask/source；同報告） |
 | PA-04 | AGENTS「Section 超過 8,500 tokens 先切開，各自摘要，再合併」 | 程式產生單一 Section 超過 8,500 tokens 的 PDF | 上傳 | 該 Section 的摘要呼叫被拆成多次，每次 prompt ≤ 8,500、合計後再合併成一個 Section Summary；沒有 guard raise | DET | GAP（#05 未寫） | NOT_EXECUTED（實作前草稿） |
 
 ## D. 表格
@@ -87,7 +87,7 @@ Status: draft
 | FL-02 | Story 26 | 假 LLM：兩次皆 `done_reason=length`（其中一次有內容） | 提問 | 最後事件為 `error`，沒有 `final`；UI 顯示錯誤訊息，畫面上不殘留任何半截答案或暫定文字 | DET + UI | #07 | NOT_EXECUTED（實作前草稿） |
 | FL-03 | Story 24；AGENTS「串流文字先標示為暫定」 | 真 LLM 或慢速假 LLM | 提問並於串流中途截圖，再等到完成 | 串流中文字有明顯「暫定」樣式；收到 `final` 後樣式變為定稿，文字與 `final` 內容一致；中途不得有定稿樣式 | UI | #07、#09 | NOT_EXECUTED（實作前草稿） |
 | FL-04 | Story 18；AGENTS「引用 prompt 裡沒有的編號」 | 假 LLM 回答含 `[C99]`（以及同時含有效 `[C1]` 的另一句） | 提問 | `final` 中含 `[C99]` 的句子被標 Unverified、該編號被移除、有效引用保留且對應正確頁碼；UI 在該句顯示 Unverified 標記；Trace 的無效引用數 = 1；沒有靜默刪句 | DET + UI | #07 | NOT_EXECUTED（實作前草稿） |
-| FL-05 | CONTEXT「Citation：找不到有效來源的句子標記為 Unverified」；Story 14 | 假 LLM 回答含一句完全沒有 `[C#]`／`[S#]` 的事實句，以及固定的「文件中未提及」句 | 提問 | 待確認規則：事實句若無任何有效編號，依 CONTEXT 定義應標 Unverified；固定的「文件中未提及」句不應被標 Unverified。測試依產品決定的規則斷言，並在 Trace 計數 | DET + UI | GAP（#07 只覆蓋「不存在的編號」） | NOT_EXECUTED（實作前草稿） |
+| FL-05 | CONTEXT「Citation：找不到有效來源的句子標記為 Unverified」；Story 14 | 假 LLM 回答含一句完全沒有 `[C#]`／`[S#]` 的事實句，以及固定的「文件中未提及」句 | 提問 | D01 已核准：只有引用不存在編號的句子標 Unverified；完全未附編號與固定拒答不標，prompt 要求論點附引用 | DET + UI | GAP（#07 只覆蓋「不存在的編號」） | NOT_EXECUTED（實作前草稿） |
 | FL-06 | Story 27；AGENTS「Router 失敗：連線失敗或逾時不繼續檢索」 | 分別讓 Router、Embedder（查詢時）、回答 LLM（串流中途）連線失敗或逾時 | 提問；之後恢復服務並按重試鈕 | 三種都發出 `error`：Router／Embedder 失敗時不進入檢索或回答，沒有 `final`；UI 顯示錯誤訊息與重試按鈕；按鈕重新送出同一題並成功完成，畫面不殘留舊的錯誤與暫定文字；JSON 壞掉不屬此類（見 RT-03） | DET + UI | #07 | NOT_EXECUTED（實作前草稿） |
 | FL-07 | PRD 事件契約；Story 22、23、35 | 真 LLM 與假 LLM 各跑一次 | 對提問 SSE 做契約檢查；比對前端 TypeScript 型別與後端事件模型 | 事件順序為 `plan` → `retrieval` → `citation_map` → [`thinking`] → `delta`… → [`retry`…] → `final` → `trace`，任一步可改發 `error` 並終止；`thinking` 沒有時前端不出錯；`citation_map` 在第一個 `delta` 之前；前端 TS 型別與後端模型一致（由後端模型產生或 CI 型別檢查）；`retry` 後的 `delta` 重新開始 | HTTP + DET | #01（順序、型別）、#07（retry）；`thinking` 事件：GAP | NOT_EXECUTED（實作前草稿） |
 
@@ -95,7 +95,7 @@ Status: draft
 
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
-| CT-01 | Story 14、15、16；AGENTS「用短編號引用」 | Q3 回答完成 | 看頁邊；點 `[C#]`；用 PyMuPDF 在原 PDF 該頁搜尋彈窗文字；另對不存在編號呼叫來源查詢端點 | 每個引用在頁邊旁註顯示「p.N §Section」；點擊彈出該 Chunk 原文（Table Chunk 以表格形式顯示）；彈窗文字確實出現在其標示的頁碼；模型只寫編號，位置字串由後端對照表產生（假 LLM 寫出錯誤的「p.9」字樣也不影響對照結果）；未知編號回 404 而非崩潰 | UI + HTTP + DET | #01（彈窗）、#02（旁註含頁碼與 Section）、#03（表格形式）、#09；404：GAP | NOT_EXECUTED（實作前草稿） |
+| CT-01 | Story 14、15、16；AGENTS「用短編號引用」 | Q3 回答完成 | 看頁邊；點 `[C#]`；用 PyMuPDF 在原 PDF 該頁搜尋彈窗文字；另對不存在編號呼叫來源查詢端點 | 每個引用在頁邊旁註顯示「p.N §Section」；點擊彈出該 Chunk 原文（Table Chunk 以表格形式顯示）；彈窗文字確實出現在其標示的頁碼；模型只寫編號，位置字串由後端對照表產生（假 LLM 寫出錯誤的「p.9」字樣也不影響對照結果）；未知編號回 404 而非崩潰 | UI + HTTP + DET | #01（彈窗）、#02（旁註含頁碼與 Section）、#03（表格形式）、#09；404：GAP | PASS（#02 範圍：旁註頁碼/Section、原文/provenance/source404；ticket-02/qa/takeover-report.md）；表格格式仍待 #03 QA、彈窗完整頁碼標題待 #09 |
 | CT-02 | Story 17；AGENTS「`[S#]` 點下去顯示該 Section 的頁碼範圍和摘要」 | Q1 回答完成 | 點 `[S#]` | 顯示該 Section 的頁碼範圍與其 Section Summary；Group 層則顯示涵蓋的 Section 清單；不做逐句追溯 | UI | #05 | NOT_EXECUTED（實作前草稿） |
 | CT-03 | Story 22；AGENTS「開始產生回答前先傳對照表」 | 串流進行中 | 在第一個 `delta` 剛出現、尚未 `final` 時點 `[C3]` | `[C3]` 已是可點的引用並能開啟正確來源，不必等 `final` | UI | #01 | NOT_EXECUTED（實作前草稿） |
 
@@ -123,7 +123,7 @@ Status: draft
 | TR-04 | AGENTS「Trace 同時記錄無效引用數與最高相似度」 | FL-04 與 QA-05 的情境 | 看 Trace | 無效引用數、最高相似度分數都可見 | UI + DET | #07（引用數）；最高相似度：#01 的 retrieval 分數間接涵蓋 | NOT_EXECUTED（實作前草稿） |
 | UX-01 | Story 22、23；AGENTS「串流」 | 慢速回答 | 提問後逐秒觀察 | 階段依序顯示 判斷問題類型 → 檢索 → 思考中 → 回答逐字出現；階段指示在 1 秒內出現；`delta` 為增量而非一次吐出全文 | UI | #06（階段）、#01（逐字） | NOT_EXECUTED（實作前草稿） |
 | UX-02 | AGENTS「因為要分享螢幕 demo」；「視覺設計」決策 | 1440×900 與 1280×720 視窗；Q2 長回答與多旁註 | 檢視版面 | 頁邊旁註不與內文重疊、無橫向捲軸、Trace 不遮住對話；樣式為 Tufte 風格（非深色聊天介面）；長回答時引用旁註與所屬句子對齊 | UI | #09 | NOT_EXECUTED（實作前草稿） |
-| UX-03 | #09 的人工流程；AGENTS「設計前先載入 web-design-engineer」 | 設計初稿 | 給使用者檢視 | 使用者確認方向後才定稿；共用元件（旁註、彈窗、10K 長條、階段、暫定、重試／錯誤、Unverified、收合思考、上傳進度）全數存在且被實際使用 | 人工 + UI | #09 | NOT_EXECUTED（實作前草稿） |
+| UX-03 | #09 的人工流程；AGENTS「設計前先載入 web-design-engineer」 | 設計初稿 | 給使用者檢視 | 使用者確認方向後才定稿；共用元件（旁註、彈窗、10K 長條、階段、暫定、重試／錯誤、Unverified、收合思考、上傳進度）全數存在且被實際使用 | 人工 + UI | #09 | 人工方向確認 PASS（D02 v1，使用者「同意，照此方向定稿」）；定稿共用元件/UI 待 #09。 |
 
 ## L. Eval harness 本身
 
