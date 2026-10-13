@@ -159,11 +159,12 @@ async def test_real_10k_prompt_cap_failure_is_an_application_error_without_final
         # Control only upstream prompt text; keep the real Gateway budget policy and guard.
         async def generate(self, call_type, messages, **kwargs):
             if call_type.endswith("summary"):
-                async for event in super().generate(call_type, messages, **kwargs):
-                    yield event
-                return
-            prompt = "x " * BUDGET_TABLE[call_type].prompt_limit
-            async for event in super().generate(call_type, [{"role": "user", "content": prompt}]):
+                guarded_messages = messages
+            else:
+                guarded_messages = [
+                    {"role": "user", "content": "x " * BUDGET_TABLE[call_type].prompt_limit}
+                ]
+            async for event in super().generate(call_type, guarded_messages, **kwargs):
                 yield event
 
     llm = ScriptedLLM(["Must not run"])
@@ -191,7 +192,7 @@ async def test_unexpected_upload_exception_emits_generic_error():
     assert result[-1].type == "error" and result[-1].code == "ingestion_failed"
     assert "Internal details" not in result[-1].message
     assert not any(e.type == "ready" for e in result)
-    assert llm.ask_calls == []
+    assert llm.calls == []
 
 
 async def test_unexpected_llm_exception_emits_generic_error_and_trace():

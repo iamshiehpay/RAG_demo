@@ -38,7 +38,16 @@ def test_upload_http_emits_ready_or_error_and_serves_committed_frontend():
         create_app(Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([]))))
     ) as client:
         result = upload(client)
-        assert [event["type"] for event in result] == ["stage"] * 7 + ["ready"]
+        assert result[-1]["type"] == "ready"
+        assert list(dict.fromkeys(e["stage"] for e in result if e["type"] == "stage")) == [
+            "parsing",
+            "chunking",
+            "embedding",
+            "summary",
+            "complete",
+        ]
+        summary_progress = [e for e in result if e["type"] == "stage" and e["stage"] == "summary"]
+        assert [(e["completed"], e["total"]) for e in summary_progress] == [(0, 2), (1, 2), (2, 2)]
         assert result[-1]["chunk_count"] == 1
         failed = upload(client, text_pdf(""))
         assert [event["type"] for event in failed] == ["stage", "error"]
@@ -154,7 +163,8 @@ async def test_upload_http_returns_202_while_embedding_is_pending_and_blocks_ask
             "/api/documents", files={"document": ("other.pdf", text_pdf())}
         )
         assert conflict.status_code == 409
+        assert llm.calls == []
         embedder.release.set()
         result = events(await client.get(accepted.json()["events_url"]))
         assert result[-1]["type"] == "ready"
-        assert llm.ask_calls == []
+        assert [c.call_type for c in llm.calls] == ["section_summary", "document_summary"]

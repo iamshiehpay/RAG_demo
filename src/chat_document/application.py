@@ -317,6 +317,7 @@ class Application:
                 citations,
                 context=context,
                 current_question=question,
+                sources="summary" if plan.question_type == "Global" else "chunk",
             ):
                 if isinstance(event, DeltaEvent):
                     answer += event.text

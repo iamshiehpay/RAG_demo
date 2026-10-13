@@ -215,11 +215,7 @@ async def test_synthesis_extraction_range_uses_each_batch_citation_map():
             super().__init__([])
             self.extracted_ids = []
 
-        async def stream(self, request):
-            if request.call_type.endswith("summary"):
-                async for frame in super().stream(request):
-                    yield frame
-                return
+        async def ask_stream(self, request):
             if request.format is not None:
                 script = json.dumps(
                     dict(
@@ -236,7 +232,7 @@ async def test_synthesis_extraction_range_uses_each_batch_citation_map():
             else:
                 script = "Final [C1]."
             self.scripts.append(script)
-            async for frame in super().stream(request):
+            async for frame in super().ask_stream(request):
                 yield frame
 
     llm = RangeExtractionLLM()

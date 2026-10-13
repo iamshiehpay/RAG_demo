@@ -9,13 +9,18 @@ from .llm_gateway import BUDGET_TABLE, LLMFailure, LLMGateway
 from .models import Document, LLMCallTrace, Summary, SummaryTree
 from .policy import (
     CONTEXT_EVIDENCE_TOKEN_LIMIT,
+    DOCUMENT_SUMMARY_TARGET_TOKENS,
+    GROUP_SUMMARY_MAX_TOKENS,
+    GROUP_SUMMARY_MIN_TOKENS,
+    GROUP_SUMMARY_RATIO,
     PACKING_JOIN_TOKEN_ALLOWANCE,
+    SECTION_MERGE_TARGET_TOKENS,
     SECTION_SUMMARY_MAX_TOKENS,
     SECTION_SUMMARY_MIN_TOKENS,
     SECTION_SUMMARY_RATIO,
     SUMMARY_CONCURRENCY,
 )
-from .summary_context import summary_context
+from .summary_context import summary_context, upload_summary_capacity
 from .tokens import count_tokens
 
 
@@ -69,19 +74,26 @@ class SummaryTreeBuilder:
         )
         return BUDGET_TABLE[call_type].prompt_limit - overhead - PACKING_JOIN_TOKEN_ALLOWANCE
 
-    async def _section_text(self, evidence: str, target: int, calls) -> str:
-        capacity = self._capacity("section_summary", target, "Section Summary")
+    async def _section_text(self, evidence: str, target: int, calls, *, title: str) -> str:
+        heading = f"Section: {title}\n"
+        capacity = (
+            self._capacity("section_summary", target, "Section Summary")
+            - count_tokens(heading)
+            - PACKING_JOIN_TOKEN_ALLOWANCE
+        )
         units = split_text(evidence, capacity)
         if len(units) == 1:
             return await self._generate(
                 "section_summary",
-                summary_messages(evidence, target, label="Section Summary"),
+                summary_messages(heading + evidence, target, label="Section Summary"),
                 calls,
             )
         partials = [
             await self._generate(
                 "section_summary",
-                summary_messages(unit, summary_target(count_tokens(unit)), label="Section Summary"),
+                summary_messages(
+                    heading + unit, summary_target(count_tokens(unit)), label="Section Summary"
+                ),
                 calls,
             )
             for unit in units
@@ -91,23 +103,31 @@ class SummaryTreeBuilder:
             previous = count_tokens("\n\n".join(partials))
             partials = [
                 await self._generate(
-                    "group_summary", summary_messages(batch, 500, label="Group Summary"), calls
+                    "group_summary",
+                    summary_messages(
+                        heading + batch, SECTION_MERGE_TARGET_TOKENS, label="Group Summary"
+                    ),
+                    calls,
                 )
                 for batch in batches(
-                    partials, self._capacity("group_summary", 500, "Group Summary")
+                    partials,
+                    self._capacity("group_summary", SECTION_MERGE_TARGET_TOKENS, "Group Summary")
+                    - count_tokens(heading)
+                    - PACKING_JOIN_TOKEN_ALLOWANCE,
                 )
             ]
             if count_tokens("\n\n".join(partials)) >= previous:
                 raise LLMFailure("Section Summary merge did not reduce evidence.")
         return await self._generate(
             "section_summary",
-            summary_messages("\n\n".join(partials), target, label="Section Summary"),
+            summary_messages(heading + "\n\n".join(partials), target, label="Section Summary"),
             calls,
         )
 
-    async def _groups(self, document: Document, summaries, depth: int, calls) -> list[Summary]:
+    def _group_inputs(self, summaries) -> list[list[Summary]]:
         capacity = min(
-            CONTEXT_EVIDENCE_TOKEN_LIMIT, self._capacity("group_summary", 1200, "Group Summary")
+            CONTEXT_EVIDENCE_TOKEN_LIMIT,
+            self._capacity("group_summary", GROUP_SUMMARY_MAX_TOKENS, "Group Summary"),
         )
         grouped: list[list[Summary]] = []
         current: list[Summary] = []
@@ -118,28 +138,30 @@ class SummaryTreeBuilder:
             current.append(summary)
         if current:
             grouped.append(current)
-        result = []
+        return grouped
+
+    async def _groups(self, document: Document, grouped, depth: int, calls):
         for index, children in enumerate(grouped, 1):
             evidence = summary_context(children)
-            target = max(80, min(1200, round(count_tokens(evidence) * 0.5)))
+            target = max(
+                GROUP_SUMMARY_MIN_TOKENS,
+                min(GROUP_SUMMARY_MAX_TOKENS, round(count_tokens(evidence) * GROUP_SUMMARY_RATIO)),
+            )
             text = await self._generate(
                 "group_summary", summary_messages(evidence, target, label="Group Summary"), calls
             )
-            result.append(
-                Summary(
-                    id=f"{document.id}-summary-group-{depth}-{index}",
-                    kind="group",
-                    section=f"Group Summary {depth}.{index}",
-                    page_start=min(s.page_start for s in children),
-                    page_end=max(s.page_end for s in children),
-                    text=text,
-                    section_ids=[id for s in children for id in s.section_ids],
-                    section_titles=[title for s in children for title in s.section_titles],
-                    chunk_ids=[id for s in children for id in s.chunk_ids],
-                    target_tokens=target,
-                )
+            yield Summary(
+                id=f"{document.id}-summary-group-{depth}-{index}",
+                kind="group",
+                section=f"Group Summary {depth}.{index}",
+                page_start=min(s.page_start for s in children),
+                page_end=max(s.page_end for s in children),
+                text=text,
+                section_ids=[id for s in children for id in s.section_ids],
+                section_titles=[title for s in children for title in s.section_titles],
+                chunk_ids=[id for s in children for id in s.chunk_ids],
+                target_tokens=target,
             )
-        return result
 
     async def build(self, document: Document) -> AsyncIterator[StageEvent | SummaryTree]:
         sections = [
@@ -161,7 +183,7 @@ class SummaryTreeBuilder:
                     + [c.text for c in chunks if getattr(c, "kind", None) == "table"]
                 )
                 target = summary_target(count_tokens(original or evidence))
-                text = await self._section_text(f"{section.title}\n{evidence}", target, calls)
+                text = await self._section_text(evidence, target, calls, title=section.title)
                 return index, Summary(
                     id=f"{document.id}-summary-section-{index + 1}",
                     kind="section",
@@ -175,7 +197,9 @@ class SummaryTreeBuilder:
                     target_tokens=target,
                 )
 
-        yield StageEvent(stage="summary", completed=0, total=len(sections))
+        completed = 0
+        total = len(sections) + 1  # Reserve Document Summary; discover Group work per level.
+        yield StageEvent(stage="summary", completed=completed, total=total)
         # Cancel and await siblings if any call fails or upload is cancelled.
         tasks = [
             asyncio.create_task(summarize(index, section, chunks))
@@ -186,7 +210,7 @@ class SummaryTreeBuilder:
             for completed, future in enumerate(asyncio.as_completed(tasks), 1):
                 index, summary = await future
                 summaries[index] = summary
-                yield StageEvent(stage="summary", completed=completed, total=len(sections))
+                yield StageEvent(stage="summary", completed=completed, total=total)
         finally:
             for task in tasks:
                 if not task.done():
@@ -195,8 +219,15 @@ class SummaryTreeBuilder:
         ordered = [summaries[i] for i in range(len(sections))]
         levels = []
         current = ordered
-        while count_tokens(summary_context(current)) > CONTEXT_EVIDENCE_TOKEN_LIMIT:
-            reduced = await self._groups(document, current, len(levels) + 1, calls)
+        while count_tokens(summary_context(current)) > upload_summary_capacity():
+            grouped = self._group_inputs(current)
+            total += len(grouped)
+            yield StageEvent(stage="summary", completed=completed, total=total)
+            reduced = []
+            async for summary in self._groups(document, grouped, len(levels) + 1, calls):
+                reduced.append(summary)
+                completed += 1
+                yield StageEvent(stage="summary", completed=completed, total=total)
             if count_tokens(summary_context(reduced)) >= count_tokens(summary_context(current)):
                 raise LLMFailure("Group Summary did not reduce evidence to fit Context Budget.")
             levels.append(reduced)
@@ -204,7 +235,7 @@ class SummaryTreeBuilder:
         evidence = summary_context(current)
         text = await self._generate(
             "document_summary",
-            summary_messages(evidence, 500, label="Document Summary"),
+            summary_messages(evidence, DOCUMENT_SUMMARY_TARGET_TOKENS, label="Document Summary"),
             calls,
         )
         overview = Summary(
@@ -217,8 +248,11 @@ class SummaryTreeBuilder:
             section_ids=[id for s in ordered for id in s.section_ids],
             section_titles=[title for s in ordered for title in s.section_titles],
             chunk_ids=[id for s in ordered for id in s.chunk_ids],
-            target_tokens=500,
+            target_tokens=DOCUMENT_SUMMARY_TARGET_TOKENS,
         )
         yield SummaryTree(
             section_summaries=ordered, group_levels=levels, document_summary=overview, calls=calls
         )
+        # The consumer receives and assigns the complete tree before visible summary completion.
+        completed += 1
+        yield StageEvent(stage="summary", completed=completed, total=total)

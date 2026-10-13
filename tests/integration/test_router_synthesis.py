@@ -193,11 +193,7 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
             self.fact_ids = []
             self.facts = []
 
-        async def stream(self, request):
-            if request.call_type.endswith("summary"):
-                async for frame in super().stream(request):
-                    yield frame
-                return
+        async def ask_stream(self, request):
             if request.format is not None:
                 script = router_script(
                     "Synthesis",
@@ -213,7 +209,7 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
             else:
                 script = "Combined answer " + "".join(f"[{i}]" for i in self.fact_ids) + "."
             self.scripts.append(script)
-            async for frame in super().stream(request):
+            async for frame in super().ask_stream(request):
                 yield frame
 
     llm = ExtractionScript()
@@ -262,11 +258,7 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
             super().__init__([])
             self.first_pass_facts = []
 
-        async def stream(self, request):
-            if request.call_type.endswith("summary"):
-                async for frame in super().stream(request):
-                    yield frame
-                return
+        async def ask_stream(self, request):
             if request.format is not None:
                 script = router_script("Synthesis", "Compare costs and incremental updates.", [])
             elif request.call_type == "fact_extraction":
@@ -281,7 +273,7 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
                 script = "Combined answer [C1]."
             assert count_tokens(script) <= request.num_predict
             self.scripts.append(script)
-            async for frame in super().stream(request):
+            async for frame in super().ask_stream(request):
                 yield frame
 
     # Enough raw evidence for >6 first-pass batches. Each result stays below 1,000 tokens,
@@ -417,17 +409,13 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
     from chat_document.settings import RetrievalSettings
 
     class UncitedExtractionScript(ScriptedLLM):
-        async def stream(self, request):
-            if request.call_type.endswith("summary"):
-                async for frame in super().stream(request):
-                    yield frame
-                return
+        async def ask_stream(self, request):
             self.scripts.append(
                 router_script("Synthesis", "Compare costs.", ["cost", "update"])
                 if request.format is not None
                 else "An uncited extracted fact."
             )
-            async for frame in super().stream(request):
+            async for frame in super().ask_stream(request):
                 yield frame
 
     llm = UncitedExtractionScript([])

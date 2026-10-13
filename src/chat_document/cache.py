@@ -25,6 +25,8 @@ PIPELINE_SOURCES = (
     "summary_context.py",
     "context_packer.py",
     "llm_gateway.py",
+    "llm_adapter.py",
+    "answer_generator.py",
 )
 
 

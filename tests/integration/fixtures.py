@@ -21,6 +21,11 @@ class SummaryScriptedLLM(ScriptedLLM):
             async for frame in scripted.stream(request):
                 yield frame
             return
+        async for frame in self.ask_stream(request):
+            yield frame
+
+    async def ask_stream(self, request):
+        """Override ask behavior without repeating upload-summary passthrough."""
         async for frame in super().stream(request):
             yield frame
 

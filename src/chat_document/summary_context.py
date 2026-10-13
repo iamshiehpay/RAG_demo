@@ -3,7 +3,11 @@
 from .answer_generator import answer_messages
 from .llm_gateway import BUDGET_TABLE, LLMFailure
 from .models import Citation, Summary, SummaryTree
-from .policy import CONTEXT_EVIDENCE_TOKEN_LIMIT
+from .policy import (
+    CONTEXT_EVIDENCE_TOKEN_LIMIT,
+    PACKING_JOIN_TOKEN_ALLOWANCE,
+    QUESTION_TOKEN_LIMIT,
+)
 from .tokens import count_tokens
 
 
@@ -11,6 +15,26 @@ def summary_context(summaries: list[Summary]) -> str:
     return "\n\n".join(
         f"[S{i}] {s.section} (p.{s.page_start}–{s.page_end})\n{s.text}"
         for i, s in enumerate(summaries, 1)
+    )
+
+
+def upload_summary_capacity() -> int:
+    """Reserve both question fields and the longer language rule at upload time.
+
+    Short questions can still select the unchanged Section level. This lower bound
+    supplies an intermediate complete level for supported long questions; selection
+    always checks the actual prompt and the shared guard remains authoritative.
+    """
+    overhead = sum(
+        count_tokens(m["content"])
+        for m in answer_messages("", "", current_question="中", sources="summary")
+    )
+    return min(
+        CONTEXT_EVIDENCE_TOKEN_LIMIT,
+        BUDGET_TABLE["answer"].prompt_limit
+        - overhead
+        - 2 * QUESTION_TOKEN_LIMIT
+        - PACKING_JOIN_TOKEN_ALLOWANCE,
     )
 
 
@@ -24,7 +48,9 @@ def select_summary_context(
         context = summary_context(summaries)
         prompt_tokens = sum(
             count_tokens(m["content"])
-            for m in answer_messages(question, context, current_question=current_question)
+            for m in answer_messages(
+                question, context, current_question=current_question, sources="summary"
+            )
         )
         if (
             count_tokens(context) <= CONTEXT_EVIDENCE_TOKEN_LIMIT

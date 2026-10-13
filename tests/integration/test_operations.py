@@ -88,7 +88,7 @@ async def test_scanned_document_is_rejected_before_embedding_or_llm():
     assert result[-1].code == "invalid_document"
     assert "text layer" in result[-1].message
     assert app.document is None
-    assert llm.ask_calls == []
+    assert llm.calls == []
 
 
 async def test_questions_over_1000_tokens_never_call_llm():

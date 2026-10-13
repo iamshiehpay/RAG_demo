@@ -44,8 +44,8 @@ async def test_upload_builds_proportional_section_summaries_and_overview():
         assert request.call_type == "section_summary"
         assert request.think == "low" and request.num_predict == 1200
     progress = [e for e in events if e.type == "stage" and e.stage == "summary"]
-    assert [e.completed for e in progress] == [0, 1, 2, 3]
-    assert all(e.total == 3 for e in progress)
+    assert [e.completed for e in progress] == [0, 1, 2, 3, 4]
+    assert all(e.total == 4 for e in progress)
 
 
 async def test_global_uses_summary_sources_without_query_embedding_and_cache_reuses_tree(tmp_path):
@@ -175,6 +175,7 @@ async def test_heading_only_sections_are_skipped():
     }
     assert empty
     tree = app.document.summary_tree
+    assert not tree.group_levels
     assert not empty.intersection(id for s in tree.section_summaries for id in s.section_ids)
     assert len([c for c in llm.calls if c.call_type == "section_summary"]) == len(
         app.document.sections

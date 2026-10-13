@@ -43,11 +43,7 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
     class NormalizationScript(ScriptedLLM):
         batches = 0
 
-        async def stream(self, request):
-            if request.call_type.endswith("summary"):
-                async for frame in super().stream(request):
-                    yield frame
-                return
+        async def ask_stream(self, request):
             if request.format is not None:
                 script = router_script("Synthesis", "Compare costs.", ["cost", "update"])
             elif request.call_type == "fact_extraction":
@@ -61,7 +57,7 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
             else:
                 script = "Combined [C1][C3]."
             self.scripts.append(script)
-            async for frame in super().stream(request):
+            async for frame in super().ask_stream(request):
                 yield frame
 
     llm = NormalizationScript([])

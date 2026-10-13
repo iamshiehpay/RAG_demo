@@ -39,7 +39,7 @@ async def test_upload_returns_job_before_embedding_and_progress_replays_to_ready
     assert app.document is None
     rejected = [event async for event in app.ask("What does the Document say?")]
     assert [event.code for event in rejected] == ["document_not_ready"]
-    assert llm.ask_calls == []
+    assert llm.calls == []
     embedder.release.set()
     result = [event async for event in app.upload_events(job_id)]
     assert list(dict.fromkeys(event.stage for event in result if event.type == "stage")) == [
@@ -63,6 +63,8 @@ async def test_same_document_uses_persisted_cache_without_embedding_or_llm(tmp_p
     app = Application(embedder, LLMGateway(llm), cache=cache)
     first = [event async for event in app.upload_document(content, "sample.pdf")]
     assert first[-1].type == "ready"
+    first_call_count = len(llm.calls)
+    assert first_call_count == 2
     chunks = app.document.chunks
     assert len(embedder.calls) == 1
     # A fresh Application demonstrates a disk hit rather than an in-memory shortcut.
@@ -72,7 +74,8 @@ async def test_same_document_uses_persisted_cache_without_embedding_or_llm(tmp_p
     assert [event.type for event in result] == ["ready"]
     assert second.document.chunks == chunks
     assert second.document.name == "renamed.pdf"
-    assert second_embedder.calls == llm.ask_calls == []
+    assert second_embedder.calls == []
+    assert len(llm.calls) == first_call_count
     assert second.index.vectors.tolist() == app.index.vectors.tolist()
 
 
@@ -94,7 +97,8 @@ async def test_pipeline_version_and_content_changes_reprocess_the_document(tmp_p
             "complete",
         ]
     assert len(embedder.calls) == 3
-    assert llm.ask_calls == []
+    assert len(llm.calls) == 6
+    assert [c.call_type for c in llm.calls] == ["section_summary", "document_summary"] * 3
 
 
 async def test_effective_chunk_target_invalidates_cache_and_preserves_section_metadata(tmp_path):
@@ -197,10 +201,12 @@ async def test_embedding_failure_is_stage_specific_and_leaves_no_cache_then_reco
     assert "local Ollama daemon" in result[-1].message
     assert "ready" not in [event.type for event in result]
     assert list(tmp_path.iterdir()) == []
+    assert llm.calls == []
     app.embedder = RecordingEmbedder()
     recovered = [event async for event in app.upload_document(content, "sample.pdf")]
     assert recovered[-1].type == "ready"
-    assert len(app.embedder.calls) == 1 and llm.ask_calls == []
+    assert len(app.embedder.calls) == 1
+    assert [c.call_type for c in llm.calls] == ["section_summary", "document_summary"]
 
 
 async def test_disconnected_progress_subscriber_does_not_cancel_background_ingestion():
