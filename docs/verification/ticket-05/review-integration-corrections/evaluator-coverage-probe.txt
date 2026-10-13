@@ -1,0 +1,6 @@
+Q1 ['Full LightRAG is best on every dataset and every metric (not merely balanced or often better).']
+Traceback (most recent call last):
+  File "/private/tmp/nova-i05-forbidden-coverage-probe.py", line 8, in <module>
+    assert forbidden in case.facts, f"{id} lacks the GraphRAG all-datasets forbidden claim"
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Q1 lacks the GraphRAG all-datasets forbidden claim

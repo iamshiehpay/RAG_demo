@@ -11,6 +11,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tables import LIMITATION
+from chat_document.tokens import count_tokens
 
 
 def table_only_pdf(section_count):
@@ -110,3 +111,46 @@ async def test_table_only_sections_keep_all_sources_caveat_and_global_cache(
     assert all(
         c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls + replay_llm.calls
     )
+
+
+async def test_section_summary_partitions_preserve_complete_table_chunks():
+    with pymupdf.open() as pdf:
+        for index in range(12):
+            page = pdf.new_page(width=600, height=1600)
+            if index == 0:
+                page.insert_text((50, 40), "1 Measurements", fontsize=14)
+            page.insert_text((50, 80), f"Table {index + 1}: Measurement comparison.", fontsize=10)
+            for row in range(71):
+                cells = (
+                    ["Trial", "Baseline", "Variant"]
+                    if row == 0
+                    else [f"trial_{index}_{row}", f"{row}.2%", f"{row}.8%"]
+                )
+                for x, text in zip([50, 240, 420], cells, strict=True):
+                    page.insert_text((x, 110 + row * 16), text, fontsize=10)
+        content = pdf.tobytes()
+
+    class SummariesLLM(ScriptedLLM):
+        async def stream(self, request):
+            self.scripts.append("Measured finding.")
+            async for frame in super().stream(request):
+                yield frame
+
+    llm = SummariesLLM([])
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    events = [e async for e in app.upload_document(content, "table-heavy.pdf")]
+    assert events[-1].type == "ready", events[-1]
+    assert len(app.document.sections) == 1
+    chunks = app.document.chunks
+    assert chunks and all(c.kind == "table" and count_tokens(c.text) <= 2000 for c in chunks)
+    requests = [
+        c
+        for c in llm.calls
+        if c.call_type == "section_summary" and "Table " in c.messages[-1]["content"]
+    ]
+    assert len(requests) > 1
+    assert app.document.summary_tree.section_summaries[0].chunk_ids == [c.id for c in chunks]
+    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+    for chunk in chunks:
+        complete_parts = [r for r in requests if chunk.text in r.messages[-1]["content"]]
+        assert len(complete_parts) == 1, f"{chunk.id} was split inside a Table Chunk"

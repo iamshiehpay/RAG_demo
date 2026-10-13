@@ -3,7 +3,7 @@
 import asyncio
 from collections.abc import AsyncIterator
 
-from .context_packer import batches, split_text
+from .context_packer import batches
 from .events import DeltaEvent, StageEvent, TraceEvent
 from .llm_gateway import BUDGET_TABLE, LLMFailure, LLMGateway
 from .models import Document, LLMCallTrace, Summary, SummaryTree
@@ -86,18 +86,20 @@ class SummaryTreeBuilder:
         )
         return BUDGET_TABLE[call_type].prompt_limit - overhead - PACKING_JOIN_TOKEN_ALLOWANCE
 
-    async def _section_text(self, evidence: str, target: int, calls, *, title: str) -> str:
+    async def _section_text(self, evidence: list[str], target: int, calls, *, title: str) -> str:
         heading = f"Section: {title}\n"
         capacity = (
             self._capacity("section_summary", target, "Section Summary")
             - count_tokens(heading)
             - PACKING_JOIN_TOKEN_ALLOWANCE
         )
-        units = split_text(evidence, capacity)
+        # Chunks already respect paragraph and Table boundaries. Pack complete
+        # units so every Table part retains its repeated caption/header and rows.
+        units = batches(evidence, capacity)
         if len(units) == 1:
             return await self._generate(
                 "section_summary",
-                summary_messages(heading + evidence, target, label="Section Summary"),
+                summary_messages(heading + units[0], target, label="Section Summary"),
                 calls,
             )
         partials = [
@@ -188,13 +190,13 @@ class SummaryTreeBuilder:
 
         async def summarize(index, section, chunks):
             async with semaphore:
-                evidence = "\n\n".join(c.text for c in chunks)
+                evidence = [c.text for c in chunks]
                 # Chunk overlap must not inflate the original Section's length target.
                 original = "\n\n".join(
                     section.paragraphs
                     + [c.text for c in chunks if getattr(c, "kind", None) == "table"]
                 )
-                target = summary_target(count_tokens(original or evidence))
+                target = summary_target(count_tokens(original or "\n\n".join(evidence)))
                 text = await self._section_text(evidence, target, calls, title=section.title)
                 return index, Summary(
                     id=f"{document.id}-summary-section-{index + 1}",
