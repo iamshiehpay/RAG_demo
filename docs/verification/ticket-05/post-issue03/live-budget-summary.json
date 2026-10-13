@@ -1,0 +1,16 @@
+{
+  "calls": 49,
+  "types": {
+    "section_summary": 25,
+    "group_summary": 1,
+    "document_summary": 1,
+    "router": 2,
+    "answer": 2,
+    "judge": 18
+  },
+  "max_estimate_plus_reserved": 8394,
+  "max_actual_plus_reserved": 8169,
+  "done": {
+    "stop": 49
+  }
+}
