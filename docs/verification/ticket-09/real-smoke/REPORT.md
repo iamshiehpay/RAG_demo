@@ -16,6 +16,8 @@ The browser loaded committed `frontend/dist`, uploaded the PDF, filled the quest
 
 Raw API records: [upload SSE](upload.sse), [ask SSE](ask.sse), [observed HTTP responses](responses.json), [raw model answer/final event](answer.json). The raw answer is exactly equal to the backend final answer; no invalid IDs or Unverified spans occurred. Router selected **Global**, with `summary_level=section`, real `[S1]` metadata and no Chunk retrieval. That route is observed, not forced by the harness.
 
+Raw `.sse` files preserve the native final blank event terminator. `git diff --check` reports their new blank line at EOF; this is intentional protocol evidence and was not trimmed. The earlier typecheck-log blank was ordinary console whitespace and was removed separately.
+
 ## All-call budgets and termination
 
 Every real call used the production guard and native Ollama counters. Output reservation includes reasoning. [Complete proof/call ledger](proof.json).
