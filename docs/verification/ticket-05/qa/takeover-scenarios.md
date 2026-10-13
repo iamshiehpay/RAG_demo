@@ -52,3 +52,18 @@ Pinned integrated SHA: 0718466a1dae475417f61f622f796ddf77429d27. Main reports so
 | README/AI-log and committed RED/GREEN evidence | 06/16 | Historical evidence read; no current pass inferred; fresh AC6 run |
 
 No relevant path excluded. Full integrated deterministic suite and fresh real gpt-oss Q1/Chinese report started; static/event/type/source-display checks returned exit0. Production build will reuse byte-identical approved dist/build evidence to preserve the no-frontend-edits boundary.
+
+## Affected revalidation batch after Issue09 integration
+
+Release HCOM10547, exact3432aa09ee7d9fcbdc9199ff9f0ee685961102e3. Full Issue09 initial Review and fresh correction APPROVE read in full.345product-path proof independently checked; backend/eval/script/config bytes match original0718466, preserving265tests and real Q1 English5/8/Chinese6/10 failure evidence. Current runtime remains gpt-6.1-sol medium/workspace-write/on-request. No cloud work: QA09 owns that window. Historical rows/results remain unchanged.
+
+| Row / affected path | Prepared operation | Expected result | Verification | Initial verdict |
+|---|---|---|---|---|
+| R01 / App Document Summary; styles sticky bounded sidebar; AC1/UP-03 | Upload generic18Section fixture; six original ordinary short Global questions;1280x720 scroll latest chat/composer | Overview genuinely intersects viewport; correct current Document text; composer visible; no overflow | Screenshot and measured rect, scrollY, section text | NOT_EXECUTED |
+| R02 / overflow-y:auto; tabindex0 | Long Document Overview; focus panel using browser controls; End/Home/PageDown | Internal panel scrolls by keyboard and final marker reachable; retained viewport bounds and current text | before/after scrollTop/clientHeight/scrollHeight and screenshots | NOT_EXECUTED |
+| R03 / SourceDialog modal/focus return; Trace details | Open latest Section source, Escape close; open/close Trace | Page range/summary/coveredSection metadata correct; focus returns; overview layout unchanged after close; modal occlusion alone is permitted | Browser controls plus geometry/focus/screenshot | NOT_EXECUTED |
+| R04 / SourceDialog typed Section/Group/Document branches | ShortGlobal Section, exact1000currentGlobal Group, supplemental source Document-only fallback | Correct type/page range/coveredSections/summary, original Chunk/Section provenance; route-specific source maps unchanged | Real application operations, scripted external outputs labelled, browser dialogs and diagnostic ledger | NOT_EXECUTED |
+| R05 / Shared UploadProgress and App ready/replacement | Cold upload observes summary0/N→completion inclGroup; switch Document | Monotonic progress/finalN/N with correct readyOverview; no old Document content | Browser capture/SSE observation and application state | NOT_EXECUTED |
+| R06 / responsive≤600/≤900 rules | Phone390x844 overview→conversation→composer→source dialog→close | Usable normal page flow, reachable controls/source and no horizontal overflow; phone persistence reported separately from desktop sticky contract | Actual browser actions/screenshots/DOM bounds | NOT_EXECUTED |
+
+Path reconciliation: full09 upload/ask transition inventory is delegated to independent QA09; QA05 tests affected overview/source/Trace/progress/responsive paths above. Answer renderer transport/metadata is exercised incidentally by these same-source summary outputs; rare Markdown/CRLF/Unverified and liveQ3 acceptance stayQA09. Correction delta is29docs/evidence paths only; no extra backend/model rerun justified. Product build bytes verified345path proof; no source changes permitted.

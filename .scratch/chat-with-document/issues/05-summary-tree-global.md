@@ -1,6 +1,6 @@
 # #05 Summary Tree 與 Global 回答（Q1）
 
-Status: ready-for-agent
+Status: done
 
 ## Parent
 
@@ -22,12 +22,12 @@ Status: ready-for-agent
 
 ## Acceptance criteria
 
-- [ ] 處理完成時顯示文件概覽，對話期間也一直看得到。
-- [ ] 問 Q1 時走 Global 路徑；回答用 `[S#]` 引用，點開後能看到 Section 的頁碼範圍和摘要。
-- [ ] 確定性測試：Section Summary 的輸出長度設定符合「約 15%、最短 80、最長 500」的規則。
-- [ ] 確定性測試：在測試中產生一份有很多 Section、Section Summary 加起來超過額度的文件。系統會建立 Group Summary 這一層，Global 回答使用放得下的那一層；假 LLM 記錄的每一次呼叫都 ≤ 10,000。
-- [ ] 確定性測試：同一份檔案第二次上傳時，不會再呼叫摘要的 LLM。
-- [ ] 如果 #08 已經合併：Q1 的 Golden Facts，以及「用三句話、中文總結」的格式要求，寫進 eval 報告。
+- [x] 處理完成時顯示文件概覽，對話期間也一直看得到。
+- [x] 問 Q1 時走 Global 路徑；回答用 `[S#]` 引用，點開後能看到 Section 的頁碼範圍和摘要。
+- [x] 確定性測試：Section Summary 的輸出長度設定符合「約 15%、最短 80、最長 500」的規則。
+- [x] 確定性測試：在測試中產生一份有很多 Section、Section Summary 加起來超過額度的文件。系統會建立 Group Summary 這一層，Global 回答使用放得下的那一層；假 LLM 記錄的每一次呼叫都 ≤ 10,000。
+- [x] 確定性測試：同一份檔案第二次上傳時，不會再呼叫摘要的 LLM。
+- [x] 如果 #08 已經合併：Q1 的 Golden Facts，以及「用三句話、中文總結」的格式要求，寫進 eval 報告。
 
 ## Blocked by
 
@@ -41,3 +41,5 @@ Status: ready-for-agent
 - L2 budget arrangement（既有規格內裁決）：上傳時依支援的最長 current/standalone question 與回答 prompt overhead 保守建立所需 Group 層，保留原始 Section 層。短問題仍選 Section，長問題可選 Group，避免只能退到 Document Summary。不得截斷來源、不在回答期間臨時建樹；納入 answer prompt 的 cache identity。代價是接近額度上限的文件可能多做上傳摘要；需以邊界測試驗證兩種問題的完整 provenance 與 budget。
 
 - 2026-10-13 nova：ca66429 已整合；D04 GPT6-sol high full Review 找到長 Section 切斷 Table Chunk，修正經 fresh GPT6-sol high Review APPROVE；265 tests PASS。來源與整合檔案 byte identity 證據在 docs/verification/ticket-05/，獨立 QA 尚未結束，不提前標 done。AC6 既有實際品質失敗及繁簡／forbidden coverage 缺口保留於 #11。
+
+- 2026-10-13 nova：獨立QA05於Main3432aa09完成R01–R06複驗，六輪對話概覽viewport、鍵盤長概覽、Section/Group來源、進度、換檔與手機操作PASS；345檔未變、66backend/eval/script/config字節比對支援沿用265tests及原AC2–6證據。Main已讀完整報告並核對桌面/手機截圖，正式完成。AC6是如實報告；Q1 English5/8、中文6/10品質FAIL仍由#11最終N3解決。

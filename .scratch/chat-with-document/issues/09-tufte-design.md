@@ -1,6 +1,6 @@
 # #09 Tufte 視覺設計與共用元件（需要人參與）
 
-Status: ready-for-agent
+Status: done
 
 ## Parent
 
@@ -33,9 +33,9 @@ Status: ready-for-agent
 ## Acceptance criteria
 
 - [x] 初稿經過使用者確認，方向也已同意。
-- [ ] 共用元件都已完成，目前的介面也已改用這些元件。
-- [ ] 瀏覽器驗收：上傳 → 問 Q3 → 能看到頁邊旁註和 Trace 的 token 長條；離線時字型也能正常顯示。
-- [ ] 重新 build 前端，並 commit。
+- [x] 共用元件都已完成，目前的介面也已改用這些元件。
+- [x] 瀏覽器驗收：上傳 → 問 Q3 → 能看到頁邊旁註和 Trace 的 token 長條；離線時字型也能正常顯示。
+- [x] 重新 build 前端，並 commit。
 
 ## Blocked by
 
@@ -46,3 +46,5 @@ Status: ready-for-agent
 - 2026-10-13 nova：使用者於 Main session `01a132c0-2f33-7e72-9a63-74731d18d08c` 對 D02 v1 直接回覆「同意，照此方向定稿」。初稿基準 `f15f792`；定稿、重新 build、獨立 Review、整合驗證與獨立 QA 仍待完成。
 
 - 2026-10-13 nova：d48fbf6 已 ff-only 整合，完整與 fresh correction Review 兩軸通過。產品345檔 byte identity、實作者265tests／browser回歸／dist107parity及真實4call渲染證據已保存；仍待最終Main獨立QA與#05概覽複驗，不提前標done。
+
+- 2026-10-13 nova：Main3432aa09獨立QA四項AC通過；21情境PASS，107檔build parity、345產品檔hash、真實上傳/Q3/Citation/Table2/Trace/離線字型已核對。Main讀完整報告、查看Source與fresh-font畫面，標done。T09-08「處理中整頁reload後自動續接job」仍UNPROVEN：現行Issue09四項AC及PRD沒有承諾跨頁面重载保存job身份，故不新增endpoint或視為本票必要驗收；如實保留限制，#11 README說明，不聲稱支援resume。真實Q3漏掉完整版比較仍#11 FAIL。

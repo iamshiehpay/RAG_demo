@@ -1,0 +1,2523 @@
+[
+  {
+    "args": [
+      "reload"
+    ],
+    "stdout": "http://127.0.0.1:8290/\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1280",
+      "720"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Review fixture installed; use normal upload and ask controls.\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "18 / 52"
+    ],
+    "stdout": "18 / 52\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"processing disables composer with visible progress\",\n  \"pass\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-progress.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-progress.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Summarize ordinary measurements round 1"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"Summarize ordinary measurements round 1\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Summarize ordinary measurements round 2"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"Summarize ordinary measurements round 2\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Summarize ordinary measurements round 3"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"Summarize ordinary measurements round 3\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Summarize ordinary measurements round 4"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"Summarize ordinary measurements round 4\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Summarize ordinary measurements round 5"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"Summarize ordinary measurements round 5\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Summarize ordinary measurements round 6"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"Summarize ordinary measurements round 6\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"bottom\": 648.15625,\n  \"count\": 6,\n  \"readable\": true,\n  \"scrollY\": 3479,\n  \"top\": 380.109375,\n  \"viewport\": [\n    1280,\n    720\n  ]\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"six ordinary turns overview visible\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-six-turn-overview.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-six-turn-overview.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"thinking collapsed by default\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .thinking-content > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"thinking expands\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-thinking.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-thinking.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"budget\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"fixed10K meter and proportional near-budget bar\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-meters.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-meters.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"provisional\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!!document.querySelector('article:last-child .stage-answering')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"provisional Citation clickable before final\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog .source-text"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"source full page range\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Tab"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"modal focus contained\",\n  \"pass\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Escape returns focus\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-provisional.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-provisional.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"final removes provisional style\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"retry\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!!document.querySelector('article:last-child .stage-retry')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"retry clears tentative first answer\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-retry.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-retry.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"retry final replaces initial text\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"error\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"double length failure clears answer\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-error.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-error.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .error-state button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"visible retry recovers\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"rejected\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Edit this overlong question"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"\\u554f\\u984c\\u904e\\u9577\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"rejected input retained\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"markdown\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Markdown safe without executable script/unsafe scheme\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-safe-markdown.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-safe-markdown.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"no-thinking\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"absent thinking no empty panel\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 18,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence LF\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-LF.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-LF.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 18,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence CRLF\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-CRLF.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-CRLF.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 18,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence CR\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-CR.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-CR.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 43,\n    \"start\": 25\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence mixed\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-mixed.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-mixed.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 20,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence emoji\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-emoji.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-emoji.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 20,\n    \"start\": 2\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence quote\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-quote.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-quote.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 17,\n    \"start\": 0\n  }\n]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"Unverified correct sentence escape\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-escape.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-marker-escape.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"D01 uncited/refusal sentences unmarked\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"id\": \"qa-summary\",\n  \"kind\": \"section\",\n  \"page_end\": 12,\n  \"page_start\": 2,\n  \"section\": \"QA section\",\n  \"section_titles\": [\n    \"Section Alpha\",\n    \"Section Omega\"\n  ],\n  \"text\": \"Independent UI summary provenance fixture\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog .source-text"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"section source range and coverage\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-source-section.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-source-section.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"id\": \"qa-summary\",\n  \"kind\": \"group\",\n  \"page_end\": 12,\n  \"page_start\": 2,\n  \"section\": \"QA group\",\n  \"section_titles\": [\n    \"Section Alpha\",\n    \"Section Omega\"\n  ],\n  \"text\": \"Independent UI summary provenance fixture\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog .source-text"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"group source range and coverage\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-source-group.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-source-group.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"id\": \"qa-summary\",\n  \"kind\": \"document\",\n  \"page_end\": 12,\n  \"page_start\": 2,\n  \"section\": \"QA document\",\n  \"section_titles\": [\n    \"Section Alpha\",\n    \"Section Omega\"\n  ],\n  \"text\": \"Independent UI summary provenance fixture\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog .source-text"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"document source range and coverage\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-source-document.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-source-document.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"id\": \"qa-table\",\n  \"kind\": \"table\",\n  \"order\": 0,\n  \"page_end\": 4,\n  \"page_start\": 3,\n  \"section\": \"QA Uncertain\",\n  \"section_id\": \"q\",\n  \"table_reconstructed\": false,\n  \"text\": \"Raw ambiguous table 64.8 60.0\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog .source-text"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"uncertain table warns and preserves raw source\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-uncertain.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-uncertain.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1440",
+      "900"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"readable no overflow 1440\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-responsive-1440.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-responsive-1440.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1280",
+      "720"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"readable no overflow 1280\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-responsive-1280.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-responsive-1280.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "390",
+      "844"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"readable no overflow 390\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-responsive-390.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-responsive-390.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1280",
+      "720"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "dialog .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('dialog')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"late source cannot reopen closed dialog\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Reconnect upload progress"
+    ],
+    "stdout": "Reconnect upload progress\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"restart\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      ".upload .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Choose the PDF again."
+    ],
+    "stdout": "Choose the PDF again.\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"restart404 clears stale states\",\n  \"pass\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "/Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-restart404.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/docs/verification/ticket-09/qa/takeover-scripted-restart404.png\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"restart reupload recovers\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "console"
+    ],
+    "stdout": "",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "errors"
+    ],
+    "stdout": "",
+    "stderr": "",
+    "exit": 0
+  }
+]

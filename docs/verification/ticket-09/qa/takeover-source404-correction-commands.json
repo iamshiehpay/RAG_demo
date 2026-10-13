@@ -1,0 +1,57 @@
+[
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!!document.querySelector('dialog .error-state')"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"source404 clear accessible error and no stale content\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"source404 close restores Citation focus\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  }
+]

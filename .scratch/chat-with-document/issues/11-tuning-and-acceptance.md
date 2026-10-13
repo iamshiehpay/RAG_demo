@@ -27,7 +27,7 @@ Status: ready-for-agent
 ## Acceptance criteria
 
 - [ ] 實驗結果表寫進 eval 報告，選定的設定也更新到 AGENTS.md。
-- [ ] Q1～Q3 的 Golden Facts 通過（含 forbidden claim），報告列出 N=3 的通過率。
+- [ ] Q1～Q3 的 Golden Facts 每題跑 N=3，報告每條 fact（含 forbidden claim）的通過率與失敗原因；調參與最終 eval 從開工起最多 3 小時（使用者決策，2026-10-13：由「必須通過」改為「量測並報告」）。
 - [ ] 從乾淨的 clone 開始，照 README 只裝 Python，加上開著的 Ollama，就能跑起來。
 - [ ] 兩份文件的快取已經建好。
 

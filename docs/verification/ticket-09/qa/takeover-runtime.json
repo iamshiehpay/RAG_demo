@@ -1,0 +1,16 @@
+{
+  "session": "01a13326-0261-7142-b38a-bd663e5dc854",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "approval_policy": "on-request",
+  "sandbox_policy": {
+    "type": "workspace-write",
+    "writable_roots": [
+      "/Users/shiehpay/.hcom"
+    ],
+    "network_access": true,
+    "exclude_tmpdir_env_var": false,
+    "exclude_slash_tmp": false
+  },
+  "cwd": "/Users/shiehpay/Desktop/resume/rag"
+}

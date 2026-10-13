@@ -5,6 +5,11 @@ Status: in-progress
 依據：`PRD.md`（ready-for-agent）、`issues/01`～`11`、`AGENTS.md`（數值的唯一來源）、`CONTEXT.md`（術語）。
 需求與 Spec 已由使用者確認，本輪略過討論與重寫 Spec，只依既有 issues 推進。
 
+**現行驗收／流程：D05（2026-10-13 15:43 真人核准，Main直接核對原對話）。** #10品質調整到17:45；#11正式開工後調參＋最終eval最多3小時（尚未開工）。Q1–Q3與第二份文件每題N=3、報告每fact通過率與失敗原因，含forbidden的品質缺陷不阻擋交付。10K、Citation、固定拒答、確定性測試、獨立Review維持。剩餘QA只在#10合併後及交付前；改查commit與測試，不逐檔byte/hash比對；新證據保留結論與最終run，既有歷史保留。下方歷史嚴格品質gate／每trial保存／byte比對要求均以D05覆蓋。
+
+
+**D06 收斂（16:46 真人核准，Main直接核對原對話）：** #10本輪必要修正限generic頁碼污染、upload_error成功判斷、ai-log與freshN3；numeric檢查器不擋合併，附原始率／原因／來源與答案人工核對及已知誤判。下一輪只審這些修正與回歸；新發現僅10K／有根據Citation／固定拒答／確定性測試失敗擋合併，其他列已知缺陷。D05時間與QA點不變。
+
 ## 分工
 
 | 角色 | 設定 |
@@ -24,12 +29,12 @@ Status: in-progress
 | 02 | 依結構解析與切塊 | 01 | W2 | Parser、Chunker、ingest 測試；前端只動 Citation 旁註文字 | done（e59e096；Review APPROVE；獨立 QA 6/6 AC、213 tests、browser PASS） |
 | 06 | Router 與 Synthesis | 01 | W2 | Router、Context Packer、提問流程；前端 Trace 的 plan 與階段指示 | done（5799106；Review APPROVE；QA PASS，AC7 報告隨 #08）|
 | 08 | Eval harness | 01 | W2 | `eval/`、pytest marker 設定 | done（11968fd；Review APPROVE；QA 0 FAIL）|
-| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | d48fbf6 已整合；full＋fresh correction Review APPROVE；345產品檔整合位元組一致；獨立 QA09 與 QA05 概覽複驗待執行|
+| 09 | Tufte 設計（需人確認初稿） | 01 | W2 初稿 → 使用者確認 → 定稿 | `frontend/`（樣式與共用元件） | done（d48fbf6／Main3432aa09；Review APPROVE；独立QA四項AC通過、21情境PASS；reload-resume限制明列）|
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | done（4eee3d2；Review APPROVE；獨立 QA 5/5 AC PASS，192 tests PASS） |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | done（5d6204c；Review APPROVE；QA structural/UI PASS、238 tests；Q3 品質仍 #11 FAIL）|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
-| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | ca66429 已整合；Review APPROVE；QA265 PASS，但 UP-03 概覽隨對話捲走 FAIL，由 #09 frontend owner 修正後複驗|
-| 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 僅選文 preflight（nova-i10-fimo）；實作/eval 仍等 #05（#03 已完成） |
+| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | done（ca66429＋#09整合3432aa09；Review APPROVE；QA265tests／R01–R06複驗PASS；品質仍#11）|
+| 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 3bb0c64已ff整合；D06+D08兩軸限定Review PASS；316 tests／fresh六答案N3完成，待Main整合fullsuite＋獨立QA |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | 僅唯讀 evidence preflight（nova-i11-meme）；正式實作仍等全部依賴 |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
@@ -174,3 +179,73 @@ Status: in-progress
 - #09 correction d48fbf6：真實 gpt-oss／bge 的4次呼叫全stop，最高預估3892/10K；最終browser renderer條列／S1／Unicode空白／Source／Trace證據已核對，未觀察的rareformats明列限制。Main逐一比對345產品檔與cb4f1c9相同，29docs/evidence差異；nova-r09fix-gigi fresh correction Review進行中。#10獨立QA nova-qa10-pita（session01a1335c-6805-7941-af57-973873f1caa6，actualGPT6.1medium/workspace-write/on-request核對）僅先備既有需求情境；不提前執行或解除#05依賴。
 
 - #09 d48fbf6 ff-only 整合：Main 核對 full＋fresh correction 兩軸 APPROVE 與 child runtime，345檔實際工作區hash與candidate一致；89backend/config、129draft/font與原已審Answer保留證據合併於 docs/verification/ticket-09/integration-source-identity.json。完整Review、原QA05 FAIL/live品質報告及QA09預備22情境隨本次合併checkpoint；QA05/QA09依最終MainSHA獨立批次驗收，未標done。
+
+- QA05/QA09 released onMain3432aa09（HCOM10547），獨立context與port8270/8290；Main source frozen。QA05重現browser approval前提拒絕（10598）後，Main直接核对SHA／完整Review／345hashes／R01–R06／本機PID49927，以相同command核准exit0解除，僅開browser、不代做驗收。QA10 requirements-only19情境已備妥，仍全NOT_EXECUTED；其正式執行維持依賴。
+
+- #05正式done：Main已核對完整獨立QA原報告＋3432aa09 R01–R06 PASS、桌面六輪geometry/截圖及手機换檔source。原品質FAIL保留#11，非豁免。QA05/QA09 UI均完成後，Main依序以各自session close兩個browser，均exit0；未知tab reset不推論產品bug，受影響cases已獨占重驗。#10正式實作依賴解除，Main仍凍結3432aa09供QA09最後hash/report；#10僅在獨立worktree修改。
+
+- #09正式done：Main完整核對QA09報告、runtime、source345hash/build107parity、真實Citation/Table2/Trace/localfont畫面；四項AC全通過。T09-08處理中整頁reload自動續接job是額外恢復探查，既有PRD/Issue09未要求持久化job身份，仍標UNPROVEN並交#11 README如實說明，不新增需求/endpoint、不宣称resume成功。真實Q3模型比較遺漏仍#11 FAIL。QA09全部source-sensitive工作與cloudwindow已release，測試資源清理完成。Main source freeze解除，#10沿3432aa09獨立實作；#11依賴#10。
+
+- 收尾：#05/#09的本輪實作者與QA已關閉，worktree與merged分支安全移除；D02原核准draftf15f792保留tag lat-approved-tufte-draft。QA11 nova-qa11-zoru（actualGPT6.1medium/workspace-write/on-request，session01a13377-7204-77e2-aba2-34ffbf1a7651）完成18個requirements-only情境，全NOT_EXECUTED，待#11實作/審查/整合。#10 fresh Reviewer nova-r10-lubo（session01a1337c-ba34-7263-ad04-0a473242f2b1，actualGPT6-solhigh/permissions已核對）只讀需求待固定candidate；正式sourceReview未開始。
+
+- #10 實作中：六個 generic parser/table public-upload RED→GREEN 已保存；checkpoint448b719尚非送審版本。首次真實長文件試驗 issue10-trial1 在 Section Summary 1200輸出上限遇到 done_reason=length，Gateway正確拒絕發布Document，尚未執行問答；22calls最高預估6107。保留原始失敗證據，Implementer接續摘要長度控制／回歸，不調高額度、不降低實際>6K與Golden Facts門檻。Reviewer與QA維持待固定版本放行。
+
+- #10 trial4中間實測（未送審448b719＋dirty）：真實public upload完成，31Sections/154Chunks，實際Section Summary7390tokens、1層Group；此為初步證據，仍須固定候選與Review核對合理Section／完整性。SECOND_NUMBER與SECOND_SUMMARY judge皆FAIL；原始數字回答已呈現447/304、0.966→0.951與F1不變，但完整fact/Judge證據仍待診斷，不自行改判。2次length後重試stop完整保留，最終#11全call無截斷門檻不豁免。
+
+- #10 trial5：數字contextual judge與forbidden PASS；全文summary judge仍FAIL。擴充後數字題同時要求expert子集辨識與比較，實際Synthesis與既有保守分流規則相容；Main要求依完整題意／來源跨度核對測試預期，不調production Router硬逼Lookup，保留歷史FAIL與期望修正理由交獨立Review。仍未送審／完成。
+
+- #10 checkpoint11450：277 deterministic PASS／259.94s正常結束，非stalled。trial7真實Section tokens7641／1Group，數字與分流PASS，summary judge仍FAIL。新public-upload RED顯示Ref/Model表內換行模型版本號可能誤判成scores；fimo接續generic geometric reference-row reconstruction與missing-cells raw fallback，候選尚未凍結，需修正後重跑完整測試／真實facts。
+
+- #10 trial8固定source後仍FAIL：numeric judge摘錄缺少完整expert-subset脈絡，summary覆蓋仍不足。Main依既有Issue10裁定新數字題可由Lookup（表格＋連結段落）或Synthesis（子集說明＋表格）完成；驗收未指定唯一route，故使用明記理由的允許集合，但仍必須真實Router／無fallback、來源與完整facts通過，不逐輪切換單一期望值。原12題Router回歸不變，歷史FAIL保留供Review。
+
+- #10新source checkpoint1286357仍非final：source audit報告AppendixD324rows／3888數值保留與LightRAGTable2相同，待Review核對關聯。trial9實際7120Section tokens／1Group但FAIL，3次length重試可見；Main讀到「沒有外部專家驗證」與三篇論文驗證資料矛盾，要求追溯Section/Group來源。fimo已補generic局部未提及不等於全文件缺失、system warning非作者主張、eval允許route集合仍拒fallback的修正／回歸。獨立Review/QA尚未放行，#11仍hold。
+
+- #10 Main11718改進下一步：trial10仍有summary實質FAIL與numeric分號句關聯檢查FAIL，先完成bounded診斷／現有測試，整理乾淨固定checkpoint、完整suite與path inventory，停止新prompt迭代；交尚未開始的freshReviewer lubo作完整獨立Review協助定位，再由fimo修正、另派fresh correction Review。這是既有Review→修正循環，未降低驗收、不合併／不標done；Main仍待exact head才正式放行。
+
+- #10 frozen597db375（Main查證clean、base3432ancestor、16tested-source hashes與252frontend保留PASS）已正式放行lubo完整獨立Review；fimo source hold、cloud已釋出。287tests PASS不覆蓋實際summary矛盾／numeric分號binder／3個Section不足80tokens。Review需補實際入口分支與失敗恢復路徑，原path-inventory只是檔名；修正後另派freshReviewer，QA10與#11仍依賴未放行。
+
+- #10 Review runtime audit：lubo本輪01a133fc-19cf-7d43-bba3-99d529bb223b與獨立children01a133fc-a562-7f23-9735-8c239736006f／01a133fc-cf52-7483-9942-679809294fa1，Main逐一讀取actualturn_context均gpt-6-sol/high/workspace-write/on-request；無模型替換。
+
+- #10 fullReview12023兩軸CHANGES_REQUESTED：獨立probe確認Abstract被前言略過、3個Summary不足80、AppendixD缺乏驗證主張傳至Global、numeric分號false-negative與互換All/InfoFound值false-positive。Main完整讀報告及pathcoverage後放行fimo獨占修正／cloud；保留所有FAIL，不合併。以597db375為下一輪freshReviewer基準；lubo不複審自己提出的修正。
+
+- #10 correction中：Abstract／80tokens四項RED→GREEN，numeric adversarial與既有checks28PASS（尚非finalsuite）。兩次bounded真實probe保留FAIL：局部未見驗證仍可能上推、partial表格範圍泛化、Total誤稱summed、無關材料部分factual bullets缺Citation；Main已讀原輸出並交回fimo，原文Total為fulfilled criteria比例。QA10原19情境補齊這些路徑，仍全NOT_EXECUTED。
+
+- #10 fresh correction Reviewer nova-r10fix-halo已備妥（session01a13416-3f3e-7ac0-bc93-38bcd3831f85／turn01a13417-36bb-7420-bcfc-0abdaf704f03，Main actualaudit gpt-6-sol/high/workspace-write/on-request），base597db375；僅requirements/priorReview prep，sourceReview待固定head。
+
+- #10 Main裁決12244：三次prompt-only bounded試驗仍產生來源未明言的absence評論，改採generic表格主導Section/partial的source-anchored extractive selection；既有low1200 guard／SummaryNode／80-500／>6K／Group／原文provenance與真實Global要求不變，不增加獨立auditor階段。不另問使用者，屬既有grounded摘要的內部實作；先用原FAIL與無關table/prose實測，保留真正作者限制與完整數字關聯，再全流程驗證／fresh複審。
+
+- #10 source-selection適用邊界裁決12280：以table-dominant且足夠distinct原文atomic units可保留caption/header/rows並達80-500為条件；極短／非表格Section仍可走忠實敘述摘要，同限額同長度，不因選文失敗而偷偷fallback逃過驗證。真實來源若無法忠實滿足契約須具體回報，不padding／重複／放寬。
+
+- #10 Main12308依D01裁決：真實Global無關材料S1/S2主體主張有引用，短開場「文件報告兩項研究」作為立即接續來源段落的導讀，不新增無引用句validator／重試／Unverified政策；先前四個未引用methodological bullets仍屬實質FAIL。保留原probe觀察與JSON誤覆寫後從完整raw log還原的紀錄，優先完成source-selection及完整fresh驗證，不為導讀句擴充scope。
+
+- D05已直接核對Claude原始proposal UUID86f304f7-2b2b-4c37-8a9e-ef51d3b17048與真人UUID7cff15e1-c83f-4c2f-91a7-0a2a8d8bbd20（07:43:33Z）；完整定位寫回decision。Main07:46:35Z廣播fimo/halo/pita/meme/zoru，立即停逐檔比對與每次trial歸檔，按17:45／#11三小時與N3報告門檻推進。levi修改AGENTS／10／11未提交隨下次merge保存；nova仍唯一調度者。LangChain追問不代表核准重寫，原硬限制不變。
+
+- #10 correction fullsuite298PASS／4FAIL（249.68s）；已定位source-selection單一sourceunit超過guarded capacity使ingest失敗，需修正功能回歸。fimo指定gpt-6.1-sol/high當前出現Selected model is at capacity，Main已通知同session同設定重試一次，禁止換模型；若重現保存交接並回報外部阻塞。D05品質timebox不免除功能測試。
+
+- #10 modelcapacity已以原session一次續作恢復，Main新turn_context核對仍gpt-6.1-sol/high/workspace-write/on-request；無替換。4FAIL分為2個舊測試adapter與2個selector容量問題，fimo接續修正後finalN3。
+
+- #10 correction確定性重跑302PASS／3eval deselected／243.12s，ruffPASS。真實finalN3已完成六次問答：sourcecitation／route／numeric forbidden3/3，expert_agreement與whole_document_coverage0/3；最後test把upload_error空字串誤當None才exit1，非上傳失敗。Main要求修正sentinel並驗證現有report，不為純harnessassert修正重跑未變production的昂貴模型。依D05報告品質缺陷；尚待fimo固定提交／halo複審／整合QA。
+
+- #10 指定GPT6.1 high再次capacity停工，Main保存302PASS與finalN3原始結果，凍結現有worker成果供fresh halo複審。已知upload_error空字串assert與最終失敗原因報告尚未修正；非完成／不合併、不換模型。獨立Review繼續，QA10與#11仍hold。
+
+- #10容量冷卻後以原session恢復report-only；Main核對新turn01a13463-a32a-7bb1-b80b-d83a0fa4bd73仍指定GPT6.1 high/permissions，source維持588638d供halo審查。Main已讀完整finalN3：numeric失敗可能包含檢查器關聯誤判；Global三次均寫28expertjudgments，原因待查，不改判。levi另交既有使用者簡報素材.md，保留並隨下次merge納入。
+
+- #10 freshReview12806／12850初步發現：p28footer進入Chunk74並被Section→Group→Global當28expertjudgments；numeric比較欄互換false-positive及後置標籤／共用F1false-negative；成功upload_error空字串assert。Main已讀fimo完整report-only draft，兩個length草稿均丟棄、重試完整且所有110calls守10K。原0/3與exit1不改判，等待完整Review後由fimo集中修正。
+
+- #10 588638d freshReview12894完整CHANGES_REQUESTED已讀；兩軸actualGPT6-solhigh皆Main核對。fimo放行generic頁碼／numeric關聯／success-sentinel修正、ai-log與最後一次freshN3；PRD補充eval工具公開check_fact可獨立測試，應用upload/ask主seam不變。先前Section重試call誤記31已由Reviewer核對修正34，原結論不變。下一輪另派fresh Reviewer，QA10／#11仍hold。
+
+- Main重讀#11原文：無截斷實驗明指正式Router600／Answer3000；一般摘要length可依既有規格丟棄並重試，不另創所有summary嘗試必須stop門檻。每次call仍守10K、記錄length與禁止發布截斷稿。meme／zoru已收到澄清；#11正式三小時計時尚未開始。
+
+- D06套用後#10目前genericfolio回歸2PASS、numeric新增關聯11PASS，成果未提交；fimo再次Selected model is at capacity（第三次），未替換模型。完整suite／freshN3／sentinel與ai-log尚待續作。Main保留source與資源，待同設定恢復；數字檢查器已完成部分保留，不再擴大調整。
+
+- D07真人核准已從freshClaude transcript直接核對：#10合併＋整合QA後，#11正式開工前，以handoff換新Main session，沿用nova唯一調度身份，精確GPTastra high／permissions，啟用新session recovery；移交D01–D07／原清單／已知缺陷。舊Main先停止調度；#11三小時計時於新Main正式放行才開始。
+
+- D06修正fullsuite310PASS／3eval deselected／293.86s、ruffPASS；freshN3先因額外note格式失敗，Main允許同source一次恢復後又因selection pool僅74tokens失敗。兩次均無Ready/cache/答案，不能宣稱N3完成。D08已先記pending並向使用者詢問最小selector修正或明確接受N3未完成限制；fimo停模型／新增source修改，整理固定checkpoint供sumi對既有三項限定複審，其他依賴不提前放行。
+
+- D08使用者直接回覆「允許最小修正並重驗（建議）」已記answered（Main原session／call_ca06b004f6bc4fe4b110f885ae7db1c9）。sumi scoped Review暫停以供fimo獨占兩項selector修正；其public-upload探查發現top-margin章節編號1/2被folio規則誤刪，屬D06明定整數保留的必要回歸，同批修正。待固定head／完整測試／freshN3再限定複審，QA與#11依賴維持。
+
+- D08三項限定回歸已RED→GREEN（commentary丟棄／strictIDs、74-token收斂失敗、D06分離章節整數）；freshN3已實際完成6答案、指令PASS133.72s。Main讀報告初核：數字主fact1/3、summary0/3，Citation／route／forbidden3/3；32Sections／149Chunks、SectionSummary7777tokens／1Group，107calls最高估算9729/10K、2個summary length待finalreport對照丟棄重試。完整suite仍進行，尚未固定head／複審／QA，不提前關票。
+
+- Main已核對3bb0c64ae464ccbe411bbec28bf4490a8fd87354 tracked clean、588638d祖先、完整FINAL-REPORT／316PASS348.69s／29targeted／ruff，以及完成freshN3。sumi原79d0報告僅provisional、未finalize；放行同一待完成限定複審到3bb0c64（D06＋D08），不重做完整Review。兩個summary length為29→33／39→44成功重試，沒有answer/judge length；raw數字1/3與summary0/3照實報告，不繼續品質調整。
+
+- #10 Main已完整核對final scoped Review（13679，兩軸PASS）與actual子context設定；mixed-font標題配對於588638d/3bb0c64完全相同，保留既有provenance限制，第三次數字回答缺逐項Citation亦明列knownFAIL。3bb0c64已公告後ff-only整合，無衝突；Main原tracker／05、09QA證據／使用者AGENTS與簡報素材隨本次checkpoint保存。接續由fimo在Main跑一次整合fullsuite，再放行pita原19情境QA；#10未提前done，#11時計未開始。

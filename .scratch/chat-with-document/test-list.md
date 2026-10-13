@@ -22,12 +22,12 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 |---|---|---|---|---|---|---|---|
 | UP-01 | Story 1、2；PRD 事件契約「上傳」；AGENTS「上傳處理與快取」 | 服務已啟動，LightRAG 未被快取 | POST 上傳 PDF 並訂閱進度 SSE | 上傳請求立刻回應（不等處理完，數秒內）；`stage` 事件依序為 解析 → 切塊 → embedding → 摘要 n/N（n 單調遞增到 N）→ 完成；串流一定以 `ready`（附文件概覽）或 `error` 結束，且之後不再有事件 | HTTP + DET | #04、#05 | #04 PASS；#05 summary n/N／ready PASS on0718466。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | UP-02 | Story 2、4；AGENTS「上傳處理」 | 瀏覽器開啟首頁 | 選擇 LightRAG PDF 上傳，處理中觀察畫面 | 即時看到目前階段與 n/N 進度；提問框為停用狀態且旁邊有文字說明原因（例如「文件處理中」）；`ready` 之後提問框才啟用、原因文字消失 | UI | #04、#09 | PASS：真實 UI 0/41→8/41→ready，提問停用與原因。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
-| UP-03 | Story 3、30 | UP-02 完成 | 看畫面，並連續提問數輪、捲動對話 | 完成時立即顯示「文件概覽」（Document Summary，內容非空且為全文層級）；整個對話期間仍看得到，不被對話擠掉 | UI | #05 | FAIL on0718466：概覽留在 DOM，但長對話捲動後離開 viewport；#09 owner 修正中，待獨立複驗（QA HCOM9591） |
+| UP-03 | Story 3、30 | UP-02 完成 | 看畫面，並連續提問數輪、捲動對話 | 完成時立即顯示「文件概覽」（Document Summary，內容非空且為全文層級）；整個對話期間仍看得到，不被對話擠掉 | UI | #05 | PASS on3432aa09：原六輪情境概覽352.453–647.5/720與composer可見，長概覽鍵盤可捲；手機正常page-flow分列。原0718466 FAIL保留於 [QA05 report](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | UP-04 | Story 5；AGENTS「支援範圍」；PRD Parser | 測試中以程式產生「只有圖片、無文字層」的 PDF；另備一個損毀／非 PDF 檔 | 上傳該檔 | 上傳階段（非等到提問）就收到 `error` 事件，訊息說明「掃描檔／無文字層，不支援」；UI 顯示該原因、不卡在進度條；提問框仍停用；之後可立即重新上傳正常 PDF 成功。損毀檔同樣得到明確錯誤而非 500 空白頁 | DET + UI | #02（掃描檔）；損毀／非 PDF：GAP | PASS（#02 QA e59e096：scan/non-PDF/corrupt distinct errors + browser recovery；ticket-02/qa/takeover-report.md） |
 | UP-05 | AGENTS「失敗處理」；PRD `error` 事件 | 以假 LLM／假 Embedder 注入：第 k 個 Section Summary 呼叫失敗、或 Embedder 連線失敗 | 上傳 PDF | 以 `error` 結束，不發 `ready`；UI 顯示錯誤並可重新上傳；不留下半成品快取（再次上傳會完整重跑） | DET + UI | #04（只有文字描述，無驗收項）；快取不留半成品：GAP | #04 PASS；#05 Section/Group/Document failure＋recovery/no partial cache PASS（application）；injected model-failure UI NOT_EXECUTED。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | UP-06 | Story 6、46；AGENTS「處理結果依雜湊值存到 .cache/」；PRD Ingestion Jobs | 假 LLM／假 Embedder 會計數；LightRAG 已處理過一次 | (a) 同一檔案再上傳；(b) 改一個位元組再上傳；(c) 把「處理流程版本」常數改掉再上傳同一檔 | (a) Embedder 與 LLM 呼叫次數皆為 0，直接進 `ready`，概覽與首次相同，UI 幾乎立刻完成；(b)(c) 重新處理；`.cache/` 內含 Chunk、embedding、Summary Tree，鍵含內容雜湊與流程版本 | DET + UI | #04、#05 | #04/#05 cache/hash/config PASS on0718466；獨立 fresh-server browser replay 0 embedding / 0 LLM，tree/overview 一致。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | UP-07 | AGENTS「只快取上傳時的處理結果，不快取回答」；Story 25 的前提 | 文件已 `ready`（含快取） | 對同一份文件連續問同一題兩次 | 兩次都真的呼叫 LLM（假 LLM 紀錄兩組呼叫）、兩次 Trace 各自獨立；`.cache/` 內沒有任何回答內容 | DET | GAP（無票涵蓋） | PASS：重問兩次真的呼叫 LLM，快取 bytes 不變。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
-| UP-08 | PRD 流程步驟 1「完成後開放提問」；CONTEXT「一次只針對一份 Document」 | (a) 文件處理中；(b) 已有文件 A 的對話 | (a) 繞過 UI 直接 POST 提問；(b) 上傳文件 B | (a) 伺服器端拒絕（4xx／`error`），不進入檢索也不呼叫 LLM；(b) 對話區、概覽、Trace、引用彈窗全部切到文件 B，不殘留 A 的引用或歷史 | HTTP + UI | GAP（#04 只管 UI 停用） | #04 readiness/backend拒絕/切換重置 PASS；#05概覽 NOT_EXECUTED。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
+| UP-08 | PRD 流程步驟 1「完成後開放提問」；CONTEXT「一次只針對一份 Document」 | (a) 文件處理中；(b) 已有文件 A 的對話 | (a) 繞過 UI 直接 POST 提問；(b) 上傳文件 B | (a) 伺服器端拒絕（4xx／`error`），不進入檢索也不呼叫 LLM；(b) 對話區、概覽、Trace、引用彈窗全部切到文件 B，不殘留 A 的引用或歷史 | HTTP + UI | GAP（#04 只管 UI 停用） | #04 readiness/backend拒絕/切換重置 PASS；#05概覽／換檔清除舊對話與source PASS on3432aa09（QA05 R05/R06）。 [QA #04](../../../docs/verification/ticket-04/qa/takeover-report.md)（d56e092 source / cd3e303；2026-10-13） |
 
 ## C. 解析與切塊
 
@@ -96,7 +96,7 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 | ID | 來源 | 前置條件 | 操作／觸發 | 預期可見結果 | 驗證方式 | 對應票 | 證據與判定 |
 |---|---|---|---|---|---|---|---|
 | CT-01 | Story 14、15、16；AGENTS「用短編號引用」 | Q3 回答完成 | 看頁邊；點 `[C#]`；用 PyMuPDF 在原 PDF 該頁搜尋彈窗文字；另對不存在編號呼叫來源查詢端點 | 每個引用在頁邊旁註顯示「p.N §Section」；點擊彈出該 Chunk 原文（Table Chunk 以表格形式顯示）；彈窗文字確實出現在其標示的頁碼；模型只寫編號，位置字串由後端對照表產生（假 LLM 寫出錯誤的「p.9」字樣也不影響對照結果）；未知編號回 404 而非崩潰 | UI + HTTP + DET | #01（彈窗）、#02（旁註含頁碼與 Section）、#03（表格形式）、#09；404：GAP | PASS（#02/#03 範圍：旁註/原文/provenance/source404 + actual Table2 16rows/6columns）；ticket-02/qa/takeover-report.md、ticket-03/qa/takeover-report.md；彈窗完整頁碼標題仍待 #09 |
-| CT-02 | Story 17；AGENTS「`[S#]` 點下去顯示該 Section 的頁碼範圍和摘要」 | Q1 回答完成 | 點 `[S#]` | 顯示該 Section 的頁碼範圍與其 Section Summary；Group 層則顯示涵蓋的 Section 清單；不做逐句追溯 | UI | #05 | PASS on0718466：實際 browser Section p.2／Group p.1–18 與18 coveredSections。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
+| CT-02 | Story 17；AGENTS「`[S#]` 點下去顯示該 Section 的頁碼範圍和摘要」 | Q1 回答完成 | 點 `[S#]` | 顯示該 Section 的頁碼範圍與其 Section Summary；Group 層則顯示涵蓋的 Section 清單；不做逐句追溯 | UI | #05 | PASS on0718466＋3432aa09複驗：實際 browser Section／Group p.1–18 與18 coveredSections，supplemental Document renderer另列限制。 [QA05 evidence](../../../docs/verification/ticket-05/qa/takeover-report.md) |
 | CT-03 | Story 22；AGENTS「開始產生回答前先傳對照表」 | 串流進行中 | 在第一個 `delta` 剛出現、尚未 `final` 時點 `[C3]` | `[C3]` 已是可點的引用並能開啟正確來源，不必等 `final` | UI | #01 | NOT_EXECUTED（實作前草稿） |
 
 ## J. 端到端問答（含 Golden Facts）
@@ -175,3 +175,9 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 - #09「初稿須經使用者確認」的人工關卡與 ai-log 紀錄要求（已併 UX-03、D2-02、EV-06）。
 - #02「Citation 旁註顯示頁碼與 Section」（CT-01 已涵蓋）；#02 對無標題 PDF「並且可以提問」（PA-03 已涵蓋）。
 - #05 Group Summary 情境下「假 LLM 每次呼叫 ≤ 10,000」與 #06 合併前 Global 暫走 Synthesis 的過渡行為（RV-02 備註）：票之間的暫時行為，整合後須再跑一次 QA-01。
+
+## #09 最終整合 QA 對照（3432aa09）
+
+既有需求與實際路徑對照已由獨立QA先備批次再執行；完整逐項結果與限制：[22情境](../../../docs/verification/ticket-09/qa/takeover-scenarios.md)、[最終報告](../../../docs/verification/ticket-09/qa/takeover-report.md)。四項Issue09 AC通過；上傳/來源/Trace/串流失敗/安全Markdown/Unverified/鍵盤/手機為21項PASS，真實Q3內容品質仍FAIL並保留QA-04/#11。UI判定與unchanged backend evidence分列，不覆蓋其他未執行的端到端語意項目。
+
+T09-08處理中整頁reload的job自動續接UNPROVEN。Main核對PRD及Issue09，未有跨reload持久化job身份的既有驗收要求；保留為已知限制供README說明，不將其聲稱為PASS，也不新增endpoint範圍。

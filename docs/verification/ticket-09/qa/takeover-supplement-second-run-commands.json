@@ -1,0 +1,475 @@
+[
+  {
+    "args": [
+      "reload"
+    ],
+    "stdout": "http://127.0.0.1:8290/\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1280",
+      "720"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Review fixture installed; use normal upload and ask controls.\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "18 / 52"
+    ],
+    "stdout": "18 / 52\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"processing reason accessible (corrected language assumption)\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "dialog .source-text"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"class\": \"secondary-button\",\n  \"inDialog\": true,\n  \"tag\": \"BUTTON\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Tab"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"class\": \"\",\n  \"inDialog\": false,\n  \"tag\": \"BODY\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Tab"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"class\": \"secondary-button\",\n  \"inDialog\": true,\n  \"tag\": \"BUTTON\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Tab"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"class\": \"\",\n  \"inDialog\": false,\n  \"tag\": \"BODY\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Tab"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"class\": \"secondary-button\",\n  \"inDialog\": true,\n  \"tag\": \"BUTTON\"\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Tab"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"modal cannot Tab to background page control\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"name\": \"focus returns after modal tab cycle\",\n  \"pass\": true\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[]\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"custom\"\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "QA09 independent UI state probe"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent===\"QA09 independent UI state probe\""
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation[aria-label^=\"View C1,\"]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__qaPending==='c1'"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "dialog .secondary-button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .inline-citation[aria-label^=\"View C2,\"]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "window.__qaPending==='c2'"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit": 0
+  }
+]

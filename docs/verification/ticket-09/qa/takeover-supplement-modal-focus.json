@@ -1,0 +1,27 @@
+[
+  {
+    "class": "secondary-button",
+    "inDialog": true,
+    "tag": "BUTTON"
+  },
+  {
+    "class": "",
+    "inDialog": false,
+    "tag": "BODY"
+  },
+  {
+    "class": "secondary-button",
+    "inDialog": true,
+    "tag": "BUTTON"
+  },
+  {
+    "class": "",
+    "inDialog": false,
+    "tag": "BODY"
+  },
+  {
+    "class": "secondary-button",
+    "inDialog": true,
+    "tag": "BUTTON"
+  }
+]

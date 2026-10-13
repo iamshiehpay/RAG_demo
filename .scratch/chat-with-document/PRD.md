@@ -187,6 +187,8 @@ Status: ready-for-agent
 
 ## Testing Decisions
 
+- **Eval harness 的測試邊界（Main 2026-10-13 澄清）：** Golden Facts 評分器本身是獨立的驗收工具，可以透過其 `check_fact` 公開入口寫確定性測試，驗證逐字證據、數值關聯及 forbidden 規則。這不取代應用層的 upload／ask 驗證，也不擴大 Parser／Chunker／Index 內部單元測試範圍。
+
 - **好的測試只檢查外部行為。** 測試透過兩個操作進行：「上傳 Document」和「提問」。斷言的對象是它們發出的事件和產生的 Document，也就是使用者在介面上會看到的東西。Parser、Chunker、Index 這些內部模組不另外寫單元測試，所以內部重構不會讓測試壞掉。
 - **唯一的主要 seam 是應用層的這兩個操作。** LLM 和 Embedder 是可以替換的外部依賴：
   - **確定性測試**（一般的 pytest）：使用「照劇本回應、並記錄每次呼叫的假 LLM」，搭配真的本地 bge-m3（結果是固定的，但需要 Ollama 開著）。要驗證：

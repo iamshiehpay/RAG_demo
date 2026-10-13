@@ -1,0 +1,5 @@
+Observed on Main3432aa09ee7d9fcbdc9199ff9f0ee685961102e3 during independent QA:
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python scripts/generate_event_types.py --check
+Exit code: 0
+Stdout: Backend and frontend event types match.
+Source identity checked before and after (345 paths, zero mismatches).

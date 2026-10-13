@@ -1,0 +1,45 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - paragraph
+        - StaticText "Chat with Document"
+      - heading "與文件對話" [level=1, ref=e3]
+      - paragraph
+        - StaticText "讓每個回答，"
+        - LineBreak "\n"
+        - StaticText "都有出處可循。"
+    - complementary
+      - region "Upload Document" [ref=e4]
+        - paragraph
+          - StaticText "01 / Document"
+        - heading "閱讀的起點" [level=2, ref=e9]
+        - paragraph
+          - StaticText "上傳一份 PDF，從文件內容開始提問。"
+        - LabelText
+          - StaticText "選擇 PDF Document"
+        - button "選擇 PDF Document" [disabled, ref=e10]: No file chosen
+        - paragraph
+          - StaticText "支援有文字層的 PDF"
+        - status
+          - StaticText "Embedding · 0 / 18"
+          - progressbar "Embedding進度": 0
+      - region "Document Summary" [ref=e5] focusable [tabindex]
+        - paragraph
+          - StaticText "Document Summary"
+        - heading "文件概覽" [level=2, ref=e11]
+        - paragraph
+          - StaticText "處理完成後，文件概覽會顯示在這裡。"
+    - region "Conversation" [ref=e2]
+      - paragraph
+        - StaticText "02 / Conversation"
+      - StaticText "Citation / 來源旁註"
+      - heading "先讀文件，再循證據。" [level=2, ref=e6]
+      - paragraph
+        - StaticText "完成上傳後即可提問。回答的 Citation 會放在頁邊，方便一邊閱讀、一邊查證。"
+    - form
+      - LabelText
+        - StaticText "你的問題 Question"
+      - textbox "你的問題 Question" [disabled, ref=e7]
+      - paragraph
+        - StaticText "文件處理中，完成後即可提問。"
+      - button "提問 · Ask" [disabled, ref=e8]

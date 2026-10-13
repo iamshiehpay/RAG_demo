@@ -1,0 +1,82 @@
+INFO:     Started server process [49927]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8270 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52544 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52544 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58962 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58962 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49862 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52544 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62090 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59861 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60227 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60227 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58962 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56228 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:56228 - "GET /api/documents/0ad7dbb5d3a24364a343801f4e5b7cb5/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50157 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53776 - "GET /qa05-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54243 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58270 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53879 - "GET /qa05-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49636 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63552 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65361 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65361 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65361 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54169 - "GET /qa05-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54171 - "GET /api/sources/e5e0a5b4b241438195e8ec1dfa923a0a-summary-document HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51125 - "GET /api/sources/e5e0a5b4b241438195e8ec1dfa923a0a-summary-section-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64127 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62755 - "GET /api/sources/e5e0a5b4b241438195e8ec1dfa923a0a-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [49927]
+INFO:     Started server process [87230]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8270 (Press CTRL+C to quit)
+INFO:     127.0.0.1:61174 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61174 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61009 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61174 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61009 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61367 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61030 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54896 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49680 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61009 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61174 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52470 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52470 - "GET /api/documents/3db1999c0679430087a680ac3f3aa657/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53368 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56687 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59821 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63179 - "GET /api/sources/24b9e3d9bc214247909e5c0bbad23f00-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64599 - "GET /api/sources/24b9e3d9bc214247909e5c0bbad23f00-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64790 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54479 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64790 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64790 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54479 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49662 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56311 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61653 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63322 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54479 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64790 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57426 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:57426 - "GET /api/documents/35052553f5594535aaccec62b363dee7/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52065 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53090 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53090 - "GET /api/documents/3e5d2aa586c941b889513b9a149b1700/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50778 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63680 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55192 - "GET /api/sources/8943a933524c409bb3c607ceb34438b9-summary-section-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55085 - "GET /qa05-state HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87230]
