@@ -4,7 +4,7 @@ import Markdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { visit } from 'unist-util-visit';
-import type { Root, PhrasingContent } from 'mdast';
+import type { Root, RootContent as MarkdownContent, PhrasingContent, Parents } from 'mdast';
 import type { Element, RootContent } from 'hast';
 import type { Citation, UnverifiedSpan } from './events';
 import { pageRange, UnverifiedMark } from './Shared';
@@ -27,15 +27,57 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
   text: string; citations: Citation[]; onSource: (citation: Citation) => void;
   provisional?: boolean; unverified?: UnverifiedSpan[];
 }) {
-  // Backend spans use Python Unicode code-point offsets, including Markdown.
-  // Insert marks at those exact offsets before safe Markdown rendering; never match
-  // sentence text, since an identical sentence may be verified elsewhere.
+  // Python offsets count Unicode code points; Markdown positions use UTF-16.
   const characters = Array.from(text);
-  const markedText = [...unverified].sort((a, b) => b.end - a.end).reduce((answer, span) => {
-    if (span.start < 0 || span.end > characters.length || span.start >= span.end) return answer;
-    const offset = characters.slice(0, span.end).join('').length;
-    return answer.slice(0, offset) + ' [未驗證 · Unverified](#unverified)' + answer.slice(offset);
-  }, text);
+  function unverifiedSpans() {
+    return (tree: Root) => {
+      const targets = new Map<MarkdownContent, { parent: Parents; marks: number[] }>();
+      for (const span of unverified) {
+        const start = characters.slice(0, span.start).join('').length;
+        const end = characters.slice(0, span.end).join('').length;
+        let target: { node: MarkdownContent; parent: Parents; score: number } | undefined;
+        visit(tree, (node, _index, parent) => {
+          if (!parent || !['text', 'inlineCode', 'code', 'html', 'link', 'image'].includes(node.type)) return;
+          if (parent.type === 'link' || parent.type === 'linkReference') return;
+          const from = node.position?.start.offset;
+          const to = node.position?.end.offset;
+          if (from === undefined || to === undefined || from >= end || to <= start) return;
+          const score = Math.min(to, end);
+          if (!target || score >= target.score) target = { node: node as MarkdownContent, parent, score };
+        });
+        if (target) {
+          const existing = targets.get(target.node) ?? { parent: target.parent, marks: [] };
+          existing.marks.push(end);
+          targets.set(target.node, existing);
+        }
+      }
+      for (const [node, { parent, marks }] of targets) {
+        const marker = (): PhrasingContent => ({ type: 'link', url: '#unverified',
+          data: { hProperties: { 'data-unverified': true } },
+          children: [{ type: 'text', value: '未驗證 · Unverified' }] });
+        const replacements: MarkdownContent[] = [];
+        const from = node.position?.start.offset ?? 0;
+        const to = node.position?.end.offset ?? from;
+        if (node.type === 'text' && text.slice(from, to) === node.value) {
+          let offset = 0;
+          for (const end of marks.sort((a, b) => a - b)) {
+            const next = Math.min(node.value.length, end - from);
+            replacements.push({ type: 'text', value: node.value.slice(offset, next) }, marker());
+            offset = next;
+          }
+          replacements.push({ type: 'text', value: node.value.slice(offset) });
+        } else {
+          // Code/HTML/escaped text remains intact. Put the label beside its node,
+          // rather than injecting Markdown into a code span, link, or table syntax.
+          replacements.push(node);
+          for (const _end of marks) replacements.push(parent.type === 'root'
+            ? { type: 'paragraph', children: [marker()] } : marker());
+        }
+        const children = parent.children as MarkdownContent[];
+        children.splice(children.indexOf(node), 1, ...replacements);
+      }
+    };
+  }
   const byId = new Map(citations.map(citation => [citation.id, citation]));
   // Convert only recognized Citation text tokens into safe, internal Markdown links.
   // HTML and code nodes are never interpreted as Citation text.
@@ -75,8 +117,8 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
       li: ({ children, node }) => <li>{node?.children.some(child => child.type === 'element' && child.tagName === 'p')
         ? children : row(children, node)}</li>,
       table: ({ children, node }) => row(<div className="source-table-scroll"><table>{children}</table></div>, node),
-      a: ({ children, href }) => {
-        if (href === '#unverified') return <UnverifiedMark />;
+      a: ({ children, href, node }) => {
+        if (node?.properties['data-unverified']) return <UnverifiedMark />;
         const citation = href?.startsWith('#citation-') ? byId.get(href.slice(10)) : undefined;
         return citation ? <button className="inline-citation" onClick={event => { event.currentTarget.focus(); onSource(citation); }}
           aria-label={`View ${citation.id}, ${pageRange(citation)}, ${citation.section}`}>{children}</button> :
@@ -85,6 +127,6 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
     }), [citations, onSource, unverified]);
 
   return <div className={`answer-text${provisional ? ' provisional-text' : ''}`} data-unverified-count={unverified.length}>
-    <Markdown skipHtml remarkPlugins={[remarkGfm, citationTokens]} components={components}>{markedText}</Markdown>
+    <Markdown skipHtml remarkPlugins={[remarkGfm, unverifiedSpans, citationTokens]} components={components}>{text}</Markdown>
   </div>;
 }
