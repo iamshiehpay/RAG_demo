@@ -36,7 +36,7 @@ Status: in-progress (existing requirement checklist; evidence updated incrementa
 | PA-01 | AGENTS「已驗證事實：章節標題」；「切塊規則」1、5、6 | LightRAG 已 `ready` | 檢視 Document 的 Section 清單與全部 Chunk | 偵測到 Introduction 到 Conclusion 的全部主章節（編號與標題分兩行也合併，如 `3` / `THE LIGHTRAG ARCHITECTURE`）與 Appendix；每個 Chunk 屬於且不跨越單一 Section，文字開頭帶 Section 標題，帶頁碼；沒有任何 Chunk 含 References 書目內容；附錄 Chunk 皆標 Appendix | DET | #02 | PASS（#02 QA e59e096：28 Sections/41 Chunks、References/Appendix/provenance；ticket-02/qa/takeover-report.md） |
 | PA-02 | 切塊規則 2、3；Story 38；AGENTS「程式不能寫死字體大小」 | 測試中程式產生：(a) 不同字體大小／粗體標題的 PDF；(b) 含超過 500 tokens 單一長段落的 PDF；(c) 中英混合標點長段落；(d) 設定改為其他 Chunk 大小 | 上傳並檢視 Chunk | (a) 依「最常見字級為內文、較大或粗體為標題」偵測，不依賴 12pt 或 NimbusRomNo9L；(b) 只有該長段落在句子邊界切開，相鄰片段重疊約 10%，其餘 Chunk 以整段段落裝到約設定大小、段落間不重疊、且不超過設定大小；(c) 在 。！？ 與英文標點邊界切；(d) 設定值改變會改變切塊結果（可配置） | DET | #02、#10、#11（設定值）；可配置性：#02 一句話帶過 | PASS（#02 QA：160/160 facts、11 Chunks max498、256/500/800、相對字級與整段裝填；同報告） |
 | PA-03 | 範圍「完全偵測不到標題」；CONTEXT「Section」 | 程式產生完全沒有標題的 PDF | 上傳後提問 | 以固定長度切出虛擬 Section，處理成功、可提問、有回答與引用（頁碼仍正確） | DET | #02 | PASS（#02 QA：6 virtual Sections、App + browser ask/source；同報告） |
-| PA-04 | AGENTS「Section 超過 8,500 tokens 先切開，各自摘要，再合併」 | 程式產生單一 Section 超過 8,500 tokens 的 PDF | 上傳 | 該 Section 的摘要呼叫被拆成多次，每次 prompt ≤ 8,500、合計後再合併成一個 Section Summary；沒有 guard raise | DET | GAP（#05 未寫） | NOT_EXECUTED（實作前草稿） |
+| PA-04 | AGENTS「Section 超過 8,500 tokens 先切開，各自摘要，再合併」 | 程式產生單一 Section 超過 8,500 tokens 的 PDF，另含多個合法 Table Chunk（Review HCOM8563） | 經 public upload 上傳 | 該 Section 的摘要呼叫被拆成多次，每次 prompt ≤ 8,500、合計後再合併成一個 Section Summary；沒有 guard raise；完整 Table Chunk 的 caption、表頭與列不得被切散，所有來源文字與 provenance 保留 | DET | #05 | 原版0663db0 long-table RED；ca66429 fresh Review PASS，獨立 QA 待執行 |
 
 ## D. 表格
 

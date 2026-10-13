@@ -11,7 +11,7 @@ Status: in-progress
 |---|---|
 | Orchestrator | Codex `gpt-6-astra` high（HCOM `nova`）；本 session turn_context 已核對 workspace-write / on-request |
 | Implementer | Codex `gpt-6.1-sol`、`model_reasoning_effort=high`，透過 HCOM；每票新 context，依 /implement |
-| Reviewer | Claude `claude-opus-5-5` medium，獨立 context，透過 HCOM；啟動後核對 |
+| Reviewer | Codex `gpt-6-sol` high，獨立 context，workspace-write / on-request；依使用者 D04 改派，啟動後核對 |
 | QA | Codex `gpt-6.1-sol` medium，獨立 context，workspace-write / on-request；啟動後核對 |
 
 整合分支：`main`。每票在 `.worktrees/<NN>-<slug>/`、分支 `lat/<NN>-<slug>` 開發；合併前 rebase 到最新 `main`，以 `--ff-only` 合併。
@@ -28,15 +28,15 @@ Status: in-progress
 | 04 | 上傳進度與快取 | 01（實際排在 02 之後：共用 ingest 流程） | W3 | Ingestion Jobs、快取、上傳 API、前端上傳進度 | done（4eee3d2；Review APPROVE；獨立 QA 5/5 AC PASS，192 tests PASS） |
 | 03 | 表格重建（Q3） | 02（實際排在 06 之後：共用 Context Packer） | W3 | Parser 表格、Table Chunk 連結、Lookup 檢索、Citation 彈窗表格 | done（5d6204c；Review APPROVE；QA structural/UI PASS、238 tests；Q3 品質仍 #11 FAIL）|
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
-| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | 8433e9f 複審 APPROVE；sari/guru 正接上 main5d6204c，整合再審與 live Q1 報告|
-| 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 僅選文 preflight（nova-i10-fimo）；實作/eval 仍等 #03/#05 |
+| 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | ca66429 已整合；fresh Review APPROVE、265 tests PASS；獨立 QA 執行中（尚未 done）|
+| 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | 僅選文 preflight（nova-i10-fimo）；實作/eval 仍等 #05（#03 已完成） |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | 僅唯讀 evidence preflight（nova-i11-meme）；正式實作仍等全部依賴 |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
 ## 每票完成條件
 
-實作 + 必要測試 → Claude Reviewer（/code-review）→ GPT 修正 → 複查 → rebase 並合併到 `main` → 在整合後版本跑驗收條件 → QA 驗證（UI 用真實瀏覽器並保存證據）→ 更新本表與 issue 的 `Status:` → 收尾 Agent 與 worktree。
+實作 + 必要測試 → 獨立 Reviewer（/code-review；D04 後 GPT6-sol high）→ GPT 修正 → 複查 → rebase 並合併到 `main` → 在整合後版本跑驗收條件 → QA 驗證（UI 用真實瀏覽器並保存證據）→ 更新本表與 issue 的 `Status:` → 收尾 Agent 與 worktree。
 
 驗收逐項標記 `PASS`／`FAIL`／`UNPROVEN`／`NOT_EXECUTED`，附證據。
 
@@ -89,6 +89,7 @@ Status: in-progress
 | #02 Review | 框線內、沒有編號的標題（陰影底上的「Conclusion」、緊貼 teaser caption 的「Abstract」）可能被濾掉 | #10 |
 | #07 QA | 錯誤後狀態列仍是暫定的斜體；句子間沒空白時 Unverified 標籤緊貼下一句 | #09 |
 | #02 QA | Citation 原文面板標題寫「p.7」，旁註寫「p.7–8」 | #09 |
+| #05 D04 Review | Q1 中文回答宣稱四個領域／指標全面勝過含 GraphRAG 的基線，與 Mix Overall 相反；Q1/中文 cases 缺少既有 not_all_datasets fact，尚未證明同一 fact 的 Judge 誤判；原摘要未保存，來源位置未定 | #11（補既有 fact 覆蓋與 meaningful regression；保留逐字證據要求及失敗原文） |
 
 ## 主控狀態快照（2026-10-13 08:55，levi 暫停排程）
 
@@ -147,3 +148,15 @@ Status: in-progress
 - #03 獨立 QA source-freeze released（HCOM8043）：256 labelled PDF numerical cells、421 tokens、10 independent layouts、CJK/page provenance、browser Table2/uncertain-source PASS，238 tests PASS。fresh real Q3 N=3 仍 FAIL：兩項 numeric exceptions0/3、forbidden pass2/3、baseline1/3、ablation meaning0/3，部分 judge evidence 非逐字遭拒。報告 `docs/verification/ticket-03/qa/takeover-q3-live-n3.md`；AC6 如實報告與最終品質通過分開，#11 不豁免。正式 QA 報告核對後才標 #03 done。
 
 - #03 Main 已核對完整獨立 QA 報告與 uncertain-source screenshot；AC1–5 PASS、AC6 如實報告 PASS，正式標 done。Reviewer 兩個 child transcripts 各13次 assistant actualmodel Opus5.5 / effort+perTurnEffort medium 已核對。收尾自己的三個角色及 merged worktree，最終 Q3 品質不豁免。
+
+- 使用者直接指示 Reviewer 改成 GPT6-sol high（D04，原文與 session 已記錄）。未完成 #05/#09 review 轉交新的獨立 context；既有完成證據保留模型/版本。Implementer/QA/Main 設定不變；所有 Codex sandbox/approval 與實際模型須核對。
+
+- D04 生效核對：nova-r05sol-zero（session01a13305-1d9b-77a2-ac89-6e579549025b）terminal + actual turn_context 確認 gpt-6-sol/high/workspace-write/on-request。guru/kobe 已停止、保留完整/partial handoff、清理並關閉；#09 下次整合審查另派同設定新 context。
+
+- D04 Review 分流核對：原生 inherited children effort 曾重設 medium，已在審查前停止且不採結果；新 explicit GPT6-sol/high Standards與Spec contexts 的全部現有 turn_context 已核對 high/workspace-write/on-request，設定阻塞解除。
+
+- #05 D04 Reviewer 的獨立 probe 找到長 Section 摘要以字元切開 Table Chunk、後批次遺失表頭的 deterministic defect（HCOM8563）；Implementer 以真實12頁 PDF＋本地 bge-m3＋guarded ScriptedLLM 的 public upload 路徑重現 RED，改為完整 Chunk 邊界批次，targeted27 PASS，待 full suite／獨立複查。原 Q1／中文回答品質失敗及 forbidden coverage 缺口仍歸 #11，不以本次修正宣稱解決。
+
+- 流程更新：已完整重讀現行 LAT/hcom-spawn 與 Main AGENTS 自查要求；複審改派 fresh context、以上次 reviewed head 為 base，QA 先備情境批次、最多3個同時實作、文件隨下次合併提交。#05 修正 ca66429 自0663db0起由 nova-r05fix-nano 獨立複審（session01a13317-a4ed-7a20-8d96-93b4dcc78014；actual GPT6-sol/high/workspace-write/on-request 已核對）。#09 nova-r09sol-duma 同設定已核對，僅待整合版本；原 Review 證據保留。接續資訊 `/private/tmp/rag-lat-main-handoff.md`；既有清單與授權不變。
+
+- #05 ca66429 ff-only 整合：Main 已核對完整 full Review＋fresh correction Review（Standards0／Spec0 findings）；兩個 Review child actualmodel/effort/permissions 均符合。15個受保護來源檔與原 main d371b79 位元組相同；整合後全部 source/tests/frontend/scripts/eval-config 檔與 candidate 相同，證據 `docs/verification/ticket-05/integration-source-identity.json`。QA05 已先備20項情境，整合後依固定 SHA 執行；#09 僅在自身 worktree rebase，#10 仍等 QA05。
