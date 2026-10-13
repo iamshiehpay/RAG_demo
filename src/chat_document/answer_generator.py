@@ -41,7 +41,7 @@ def answer_messages(
 ) -> list[dict[str, str]]:
     language_reference = (
         f"\n\nCurrent user question (language reference): {current_question}"
-        if current_question is not None
+        if current_question is not None and current_question != standalone_question
         else ""
     )
     # Match Router's Chinese-script rule, anchored to the current question.
@@ -51,6 +51,11 @@ def answer_messages(
             "when ambiguous, use Traditional Chinese (繁體中文), even after English history."
         )
     system = source_system_prompt(sources)
+    question_label = (
+        "Current user question (language reference)"
+        if current_question == standalone_question
+        else "Question"
+    )
     if sources == "summary":
         system += (
             "\nThese are Summary Tree sources covering the whole Document. "
@@ -79,7 +84,7 @@ def answer_messages(
         {
             "role": "user",
             "content": (
-                f"Document excerpts:\n{context}\n\nQuestion: {standalone_question}"
+                f"Document excerpts:\n{context}\n\n{question_label}: {standalone_question}"
                 f"{language_reference}"
             ),
         },
@@ -87,8 +92,9 @@ def answer_messages(
 
 
 class AnswerGenerator:
-    def __init__(self, gateway: LLMGateway):
+    def __init__(self, gateway: LLMGateway, *, think: Literal["low", "medium"] | None = None):
         self.gateway = gateway
+        self.think = think
 
     async def generate(
         self,
@@ -112,7 +118,7 @@ class AnswerGenerator:
             formatter = CitationText(citations)
             try:
                 async for event in self.gateway.generate(
-                    "answer", messages, **({"think": "low"} if attempt else {})
+                    "answer", messages, think="low" if attempt else self.think
                 ):
                     if isinstance(event, DeltaEvent):
                         text = formatter.feed(event.text)

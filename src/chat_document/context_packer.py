@@ -100,10 +100,19 @@ class ContextPacker:
                 query_ranked = await index.retrieve(query, len(index.chunks))
                 retrieved.extend(query_ranked[: self.settings.sub_query_top_k])
                 for item in query_ranked:
-                    if item.score > scores[item.chunk.id].score:
+                    if (item.ranking_score if item.ranking_score is not None else item.score) > (
+                        scores[item.chunk.id].ranking_score
+                        if scores[item.chunk.id].ranking_score is not None
+                        else scores[item.chunk.id].score
+                    ):
                         scores[item.chunk.id] = item
         unique = {item.chunk.id: scores[item.chunk.id] for item in retrieved}
-        seeds = sorted(unique.values(), key=lambda item: -item.score)
+        seeds = sorted(
+            unique.values(),
+            key=lambda item: (
+                -(item.ranking_score if item.ranking_score is not None else item.score)
+            ),
+        )
         linked = []
         for item in seeds:
             for chunk_id in item.chunk.linked_chunk_ids:

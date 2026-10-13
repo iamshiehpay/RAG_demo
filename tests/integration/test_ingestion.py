@@ -95,7 +95,7 @@ async def test_image_only_document_reports_missing_text_layer_before_embedding()
 
 @pytest.mark.parametrize("body_size", [8, 13])
 async def test_relative_headings_preserve_paragraphs_section_boundaries_and_pages(body_size):
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
     events = [e async for e in app.upload_document(structured_pdf(body_size), "structure.pdf")]
     assert events[-1].type == "ready"
     document = app.document
@@ -121,7 +121,7 @@ async def test_heading_free_document_uses_bounded_virtual_sections_and_can_be_as
             "The Document contains ordinary body text. [C1]",
         ]
     )
-    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    app = Application(OllamaEmbedder(), LLMGateway(llm), chunk_token_target=500)
     events = [e async for e in app.upload_document(heading_free_pdf(), "plain.pdf")]
     assert events[-1].type == "ready"
     assert len(app.document.sections) > 1
@@ -141,7 +141,7 @@ async def test_heading_free_document_uses_bounded_virtual_sections_and_can_be_as
 
 async def test_long_paragraph_overlap_starts_on_a_complete_word():
     words = [f"encyclopediawordnumber{i}" for i in range(400)]
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
     events = [e async for e in app.upload_document(paragraph_pdf(" ".join(words)), "words.pdf")]
     assert events[-1].type == "ready"
     chunks = app.document.chunks
@@ -196,7 +196,7 @@ async def test_long_paragraphs_split_at_sentence_boundaries_with_overlap(cjk):
         if cjk
         else " ".join(f"Sentence {i} describes the Document and its evidence!" for i in range(100))
     )
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
     events = [e async for e in app.upload_document(paragraph_pdf(text, cjk=cjk), "sentences.pdf")]
     assert events[-1].type == "ready"
     chunks = app.document.chunks
@@ -431,7 +431,7 @@ async def test_wrapped_chinese_paragraph_splits_only_between_complete_sentences(
         f"第{n}項觀察顯示，月球玄武岩的鐵含量在區域{n}中達到{n * 3 + 7}個單位。"
         for n in range(1, 161)
     ]
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
     events = [
         e
         async for e in app.upload_document(

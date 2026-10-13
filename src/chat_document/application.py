@@ -2,7 +2,6 @@
 
 import asyncio
 import logging
-import os
 from collections.abc import AsyncIterator
 from contextlib import suppress
 from uuid import uuid4
@@ -39,7 +38,6 @@ from .policy import (
     EMBEDDING_BATCH_CHUNKS,
     HISTORY_ROUND_LIMIT,
     QUESTION_TOKEN_LIMIT,
-    SUMMARY_CONCURRENCY,
 )
 from .router import Router
 from .settings import RetrievalSettings
@@ -48,6 +46,20 @@ from .summary_tree import SummaryTreeBuilder
 from .tokens import count_tokens
 
 logger = logging.getLogger(__name__)
+
+
+def http_failure_message(stage: str, exc: httpx.HTTPError) -> str:
+    label = stage.replace("_", " ").capitalize()
+    if isinstance(exc, httpx.HTTPStatusError):
+        return (
+            f"{label} failed: Ollama HTTP {exc.response.status_code}. "
+            f"Check model availability. Details: {exc}"
+        )
+    reason = "timed out" if isinstance(exc, httpx.TimeoutException) else "connection failed"
+    return (
+        f"{label} {reason}. Check that the local Ollama daemon is running, "
+        f"then retry. Details: {exc}"
+    )
 
 
 class Application:
@@ -61,22 +73,23 @@ class Application:
         cache: ProcessingCache | None = None,
         summary_concurrency: int | None = None,
     ):
-        settings = settings or RetrievalSettings()
+        settings = settings or RetrievalSettings.from_env()
         if chunk_token_target is not None:
             settings = RetrievalSettings(
                 **(settings.model_dump() | {"chunk_token_target": chunk_token_target})
             )
+        if summary_concurrency is not None:
+            settings = settings.model_copy(update={"summary_concurrency": summary_concurrency})
+        self.settings = settings
         self.chunk_token_target = settings.chunk_token_target
         self.embedder = embedder
         self.cache = cache
-        self.answer_generator = AnswerGenerator(gateway)
+        self.answer_generator = AnswerGenerator(gateway, think=settings.answer_think)
         self.router = Router(gateway)
         self.context_packer = ContextPacker(gateway, settings)
         self.summary_builder = SummaryTreeBuilder(
             gateway,
-            concurrency=summary_concurrency
-            if summary_concurrency is not None
-            else int(os.environ.get("SUMMARY_CONCURRENCY", SUMMARY_CONCURRENCY)),
+            concurrency=settings.summary_concurrency,
         )
         self.document: Document | None = None
         self.index: Index | None = None
@@ -171,6 +184,7 @@ class Application:
                     document.chunks,
                     np.asarray(cached.embeddings, dtype=np.float32),
                     self.embedder,
+                    bm25_weight=self.settings.bm25_weight,
                 )
                 yield self._publish_document(document, index)
                 return
@@ -193,7 +207,12 @@ class Application:
                 vectors.append(await self.embedder.embed([chunk.context for chunk in batch]))
                 completed += len(batch)
                 yield StageEvent(stage="embedding", completed=completed, total=len(chunks))
-            index = Index(chunks, np.concatenate(vectors), self.embedder)
+            index = Index(
+                chunks,
+                np.concatenate(vectors),
+                self.embedder,
+                bm25_weight=self.settings.bm25_weight,
+            )
             document = Document(id=document_id, name=name, sections=sections, chunks=chunks)
             stage = "summary"
             async for item in self.summary_builder.build(document):
@@ -216,15 +235,9 @@ class Application:
         except DocumentError as exc:
             yield ErrorEvent(code="invalid_document", message=str(exc))
         except httpx.HTTPError as exc:
-            message = (
-                "Embedding failed. Check that the local Ollama daemon is running and "
-                f"bge-m3 is installed, then retry. Details: {exc}"
-                if stage == "embedding"
-                else f"Document {stage} failed: {exc}"
-            )
             yield ErrorEvent(
                 code=f"{stage}_failed",
-                message=message,
+                message=http_failure_message(stage, exc),
             )
         except ValueError as exc:
             yield ErrorEvent(
@@ -309,10 +322,11 @@ class Application:
                 )
                 citations = citation_map(chunks)
                 yield CitationMapEvent(citations=citations)
-                stage = "answer"
+                stage = "fact_extraction"
                 context = await self.context_packer.pack(
                     plan, chunks, citations, calls, current_question=question
                 )
+            stage = "answer"
             answer = ""
             async for event in self.answer_generator.generate(
                 plan.standalone_question,
@@ -357,16 +371,17 @@ class Application:
         except httpx.HTTPError as exc:
             if calls:
                 yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
-            reason = "timed out" if isinstance(exc, httpx.TimeoutException) else "connection failed"
             yield ErrorEvent(
                 code=f"{stage}_failed",
-                message=f"{stage.capitalize()} {reason}. Check that the local Ollama daemon "
-                f"is running, then retry. Details: {exc}",
+                message=http_failure_message(stage, exc),
             )
         except ValueError as exc:
             if calls:
                 yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
-            yield ErrorEvent(code="answer_failed", message=f"Answer failed: {exc}")
+            yield ErrorEvent(
+                code=f"{stage}_failed",
+                message=f"{stage.replace('_', ' ').capitalize()} failed: {exc}",
+            )
         except Exception:
             logger.exception("Unexpected answer failure")
             if calls:

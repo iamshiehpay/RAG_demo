@@ -45,7 +45,7 @@
 6. 移除 References；附錄保留，並標示為 Appendix。
 7. 檢索時，視需要帶出相鄰的 Chunk，以及和 Table Chunk 互相連結的段落。前後文靠這一步補足，所以段落之間不需要重疊。
 
-500 tokens 只是起始值。切塊程式完成後，用 Golden Facts 比較幾種大小，由數據決定。
+500 tokens 是 #11 以真實處理／Router 的 256 / 500 / 800 與 top-k／加權 BM25 比較後選定的值。dense、Lookup 5／Synthesis 3／Sub-query 2 在此設定下涵蓋 Table 2、成本與增量更新，三個來源排名的 MRR=1.0；結果與限制見 `eval/reports/issue11/retrieval-controlled.md`。回答 medium 保留 3,000、summary concurrency=4；low/medium 的 N=1 比較使用 800-token dense，僅作探索觀察，不是最終設定的顯著性證明。最終 N=3 使用選定的 500-token dense。
 
 不用固定長度加重疊，原因有兩個：
 

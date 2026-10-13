@@ -55,6 +55,12 @@ NOT_ALL_BEST = GoldenFact(
     "Full LightRAG is best on every dataset and every metric (not merely balanced or often "
     "better).",
 )
+NOT_ALL_DATASETS = GoldenFact(
+    "not_all_datasets",
+    "forbidden",
+    "LightRAG beats GraphRAG on all datasets (a universal assertion, not a "
+    "negation or a qualified often-better statement).",
+)
 COST = GoldenFact(
     "retrieval_cost",
     "judge",
@@ -113,6 +119,7 @@ LIGHTRAG_CASES = (
                 "and shows stronger answer quality, especially diversity.",
             ),
             NOT_ALL_BEST,
+            NOT_ALL_DATASETS,
             semantic(
                 "conclusion",
                 "Section 6: conclusion combines effective, efficient graph-based retrieval "
@@ -142,12 +149,7 @@ LIGHTRAG_CASES = (
                 "Table 3 / Section 4.4 (p.8-9): case study LLM judge favors LightRAG on "
                 "comprehensiveness, diversity, empowerment and overall.",
             ),
-            GoldenFact(
-                "not_all_datasets",
-                "forbidden",
-                "LightRAG beats GraphRAG on all datasets (a universal assertion, not a "
-                "negation or a qualified often-better statement).",
-            ),
+            NOT_ALL_DATASETS,
         ),
         "Synthesis",
     ),

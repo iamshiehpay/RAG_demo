@@ -10,7 +10,7 @@ from .fixtures import paragraph_pdf
 
 
 async def test_uploaded_oversized_paragraph_keeps_decimals_and_abbreviations():
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
     text = "Win rate 64.8% vs 60.0%, e.g. an ablation. " * 100
     result = [e async for e in app.upload_document(paragraph_pdf(text), "numbers.pdf")]
     assert result[-1].type == "ready"
@@ -23,7 +23,7 @@ async def test_uploaded_oversized_paragraph_keeps_decimals_and_abbreviations():
 
 
 async def test_uploaded_cjk_paragraph_splits_on_characters_with_overlap():
-    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
     text = "".join(f"龜測試{i:04d}" for i in range(600))
     result = [e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "cjk.pdf")]
     assert result[-1].type == "ready"

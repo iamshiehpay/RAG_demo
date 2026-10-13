@@ -1,0 +1,1954 @@
+{
+  "provenance": {
+    "Revision": "7cf91851f9f86527d69c95910f9eadd58cf7b357",
+    "Uncommitted changes": "yes",
+    "Pipeline version": "ingest-v2-76497bdc95e6423c3604bd7984d2295a1c9a5cab5c2898dab68dd23812041f54",
+    "LLM": "gpt-oss:120b-cloud",
+    "Embedder": "bge-m3",
+    "Created": "2026-10-13T11:25:11.192922+00:00"
+  },
+  "uploads": [
+    {
+      "chunk_target": 256,
+      "latency_ms": 15.723250107839704,
+      "errors": [],
+      "calls": [],
+      "chunk_count": 57,
+      "q2_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG vs GraphRAG architecture",
+          "LightRAG vs GraphRAG performance metrics",
+          "LightRAG vs GraphRAG cost and maintenance"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "q3_plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "Performance of ablated versions of LightRAG.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "router_calls": []
+    },
+    {
+      "chunk_target": 500,
+      "latency_ms": 14.093375066295266,
+      "errors": [],
+      "calls": [],
+      "chunk_count": 42,
+      "q2_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG vs GraphRAG architecture",
+          "LightRAG vs GraphRAG performance metrics",
+          "LightRAG vs GraphRAG cost and maintenance"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "q3_plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "Performance of ablated versions of LightRAG.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "router_calls": []
+    },
+    {
+      "chunk_target": 800,
+      "latency_ms": 11.284040985628963,
+      "errors": [],
+      "calls": [],
+      "chunk_count": 37,
+      "q2_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG vs GraphRAG architecture",
+          "LightRAG vs GraphRAG performance metrics",
+          "LightRAG vs GraphRAG cost and maintenance"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "q3_plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "Performance of ablated versions of LightRAG.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "router_calls": []
+    }
+  ],
+  "rows": [
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 1091.663833009079
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 872.0960828941315
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "2 RETRIEVAL-AUGMENTED GENERATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4824,
+      "latency_ms": 852.0808750763535
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 935.651124920696
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 989.0067910309881
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "2 RETRIEVAL-AUGMENTED GENERATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4824,
+      "latency_ms": 952.9527081176639
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 853.8372500333935
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 843.7988329678774
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4633,
+      "latency_ms": 861.1671670805663
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 2,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 0.6666666666666666,
+      "retrieved_sections": {
+        "lookup": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4550,
+      "latency_ms": 832.0882078260183
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 2,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 0.6666666666666666,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4550,
+      "latency_ms": 830.5010420735925
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 2,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 0.6666666666666666,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4960,
+      "latency_ms": 825.4229170270264
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 825.8438750635833
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 838.1956659723073
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 6392,
+      "latency_ms": 844.8416669853032
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 811.9891250971705
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 841.7520408984274
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 6392,
+      "latency_ms": 835.852624848485
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 833.7844589259475
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 903.9455000311136
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION"
+        ]
+      },
+      "context_tokens": 5294,
+      "latency_ms": 857.115917140618
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 823.941458016634
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 853.135250043124
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 979.3521671090275
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 973.3425839804113
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 1307.8260831534863
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 6392,
+      "latency_ms": 1079.5361660420895
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 974.700250197202
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 979.0936661884189
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 6392,
+      "latency_ms": 986.515625147149
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 978.6793750245124
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 986.4889997988939
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5393,
+      "latency_ms": 1238.0985419731587
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 1136.5714999847114
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 987.8422920592129
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 1207.3282080236822
+    }
+  ],
+  "experimental_design": "Fixed actual Router plan pair across all configurations; reuse measured original Chunks/vectors because parser/chunker/embedder and explicit Chunk targets are unchanged. Old Summary Trees are not final-cache evidence.",
+  "ingestion_version": "ingest-v2-d6cc86232977edb2c4cd1a1e6fd3deb5755d2b0e85e3a858d999fd23b1e62058",
+  "selection": {
+    "lookup_top_k": 5,
+    "synthesis_top_k": 3,
+    "sub_query_top_k": 2,
+    "chunk_token_target": 500,
+    "answer_think": "medium",
+    "bm25_weight": 0.0,
+    "summary_concurrency": 4
+  },
+  "selection_reason": "Maximize actual Router evidence coverage, then MRR; ties prefer dense and documented defaults."
+}

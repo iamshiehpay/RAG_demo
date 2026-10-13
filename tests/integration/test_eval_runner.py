@@ -181,7 +181,9 @@ async def test_canonical_router_cases_convert_history_and_isolate_independent_qu
                         "sub_queries": [],
                     }
                 ),
-                "Evidence [C1]",
+                "證據 [C1]"
+                if any("\u4e00" <= ch <= "\u9fff" for ch in case.question)
+                else "Evidence [C1]",
             ]
         )
     llm = ScriptedLLM(scripts)

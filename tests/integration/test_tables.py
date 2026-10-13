@@ -253,7 +253,7 @@ async def test_synthesis_small_evidence_budget_drops_are_counted():
             assert (
                 page.insert_textbox(
                     pymupdf.Rect(50, 100 + i * 1400, 950, 1300 + i * 1400),
-                    f"Measurement {i}. " + "cost " * 950,
+                    f"Measurement {i}. " + "cost " * 1100,
                     fontsize=10,
                 )
                 >= 0
@@ -264,7 +264,7 @@ async def test_synthesis_small_evidence_budget_drops_are_counted():
     app = Application(
         OllamaEmbedder(),
         LLMGateway(llm),
-        settings=RetrievalSettings(synthesis_top_k=5, chunk_token_target=1000),
+        settings=RetrievalSettings(synthesis_top_k=5, chunk_token_target=1200),
     )
     assert [e async for e in app.upload_document(data, "measurements.pdf")][-1].type == "ready"
     events = [e async for e in app.ask(question)]

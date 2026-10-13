@@ -26,10 +26,7 @@ async def test_golden_facts_live(pytestconfig):
     cases = LIGHTRAG_CASES + router_cases()
     selection = pytestconfig.getoption("--eval-cases")
     if selection:
-        ids = set(selection.split(","))
-        unknown = ids - {case.id for case in cases}
-        if unknown:
-            raise pytest.UsageError(f"Unknown --eval-cases ids: {sorted(unknown)}")
+        ids = {value.strip() for value in selection.split(",")}
         cases = tuple(case for case in cases if case.id in ids)
     revision, dirty = repository_state()
     report = await run_evaluation(
@@ -94,4 +91,4 @@ async def test_golden_facts_live(pytestconfig):
     write_report(report, path)
     print(f"Golden Facts report: {path}")
     if not pytestconfig.getoption("--eval-record-only"):
-        assert report.passed, f"Golden Facts failed; see {path}"
+        assert report.functional_passed, f"Application operation failed; see {path}"

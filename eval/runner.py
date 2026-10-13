@@ -2,6 +2,8 @@
 
 import hashlib
 import inspect
+import json
+import re
 from collections.abc import AsyncIterator, Callable
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
@@ -9,6 +11,7 @@ from pathlib import Path
 from time import perf_counter
 
 from chat_document.application import Application
+from chat_document.cache import PIPELINE_VERSION
 from chat_document.events import (
     DeltaEvent,
     ErrorEvent,
@@ -30,14 +33,23 @@ class RecordingGateway(LLMGateway):
     def __init__(self, adapter, **kwargs):
         super().__init__(adapter, **kwargs)
         self.calls: list[LLMCallTrace] = []
+        self.active_by_type: dict[str, int] = {}
+        self.maximum_active_by_type: dict[str, int] = {}
 
     async def generate(
         self, call_type, messages, **kwargs
     ) -> AsyncIterator[DeltaEvent | TraceEvent]:
-        async for event in super().generate(call_type, messages, **kwargs):
-            if isinstance(event, TraceEvent):
-                self.calls.extend(event.calls)
-            yield event
+        self.active_by_type[call_type] = self.active_by_type.get(call_type, 0) + 1
+        self.maximum_active_by_type[call_type] = max(
+            self.maximum_active_by_type.get(call_type, 0), self.active_by_type[call_type]
+        )
+        try:
+            async for event in super().generate(call_type, messages, **kwargs):
+                if isinstance(event, TraceEvent):
+                    self.calls.extend(event.calls)
+                yield event
+        finally:
+            self.active_by_type[call_type] -= 1
 
 
 @dataclass
@@ -73,6 +85,52 @@ class EvaluationReport:
     upload_error: str = ""
     runs: list[QuestionRun] = field(default_factory=list)
     judge_probes: list[QuestionRun] = field(default_factory=list)
+
+    def call_audit(self) -> dict:
+        calls = self.upload_calls + [c for run in self.runs + self.judge_probes for c in run.calls]
+        return {
+            "calls": len(calls),
+            "maximum_estimated_prompt_plus_reservation": max(
+                (c.estimated_prompt_tokens + c.num_predict for c in calls), default=0
+            ),
+            "maximum_reported_prompt_plus_reservation": max(
+                (
+                    c.prompt_eval_count + c.num_predict
+                    for c in calls
+                    if c.prompt_eval_count is not None
+                ),
+                default=0,
+            ),
+            "missing_reported_prompt_counts": sum(c.prompt_eval_count is None for c in calls),
+            "budget_violations": sum(
+                c.estimated_prompt_tokens + c.num_predict > c.context_budget
+                or c.prompt_eval_count is not None
+                and c.prompt_eval_count + c.num_predict > c.context_budget
+                for c in calls
+            ),
+            "length_attempts": [
+                {"call_type": c.call_type, "think": c.think, "num_predict": c.num_predict}
+                for c in calls
+                if c.done_reason == "length"
+            ],
+            "router_answer_length_attempts": sum(
+                c.done_reason == "length" and c.call_type in {"router", "answer"} for c in calls
+            ),
+        }
+
+    @property
+    def functional_passed(self) -> bool:
+        return (
+            bool(self.runs)
+            and not self.upload_error
+            and all(run.answer and not run.error for run in self.runs)
+            and not self.call_audit()["budget_violations"]
+            and not any(
+                f.harness_bug or f.fact_id == "fixed_reply" and not f.passed
+                for run in self.runs
+                for f in run.facts
+            )
+        )
 
     @property
     def status(self) -> str:
@@ -160,6 +218,14 @@ async def run_evaluation(
     content = document_path.read_bytes()
     report = EvaluationReport(
         document_path.name, hashlib.sha256(content).hexdigest(), repeats, metadata=metadata or {}
+    )
+    report.metadata.update(
+        {
+            "Effective settings": json.dumps(application.settings.model_dump(), sort_keys=True)
+            if hasattr(application, "settings")
+            else "unavailable for non-Application test adapter",
+            "Pipeline version": PIPELINE_VERSION,
+        }
     )
     upload_start = len(gateway.calls)
     try:
@@ -287,6 +353,35 @@ async def run_evaluation(
                         if run.error
                         else await check_fact(run.answer, fact, gateway)
                     )
+                if not run.error and re.search(r"[\u4e00-\u9fff]", case.question):
+                    import opencc
+
+                    traditional = opencc.OpenCC("s2t.json")
+                    variants = opencc.OpenCC("t2tw.json")
+                    simplified = variants.convert(
+                        traditional.convert(case.question)
+                    ) != variants.convert(case.question)
+                    converter = opencc.OpenCC("t2s.json") if simplified else traditional
+                    converted = converter.convert(run.answer)
+                    matches = bool(re.search(r"[\u4e00-\u9fff]", run.answer)) and (
+                        converted == run.answer
+                        if simplified
+                        else variants.convert(converted) == variants.convert(run.answer)
+                    )
+                    run.facts.append(
+                        FactResult(
+                            "answer_script",
+                            "property",
+                            matches,
+                            f"Question script={'Simplified' if simplified else 'Traditional'}; "
+                            + (
+                                "no opposing forms found (shared forms inconclusive)"
+                                if matches
+                                else "opposing script forms found"
+                            ),
+                            run.answer,
+                        )
+                    )
             except Exception as exc:
                 run.error = f"{type(exc).__name__}: {exc}"
                 recorded = {fact.fact_id for fact in run.facts}
@@ -302,4 +397,5 @@ async def run_evaluation(
                     call.latency_ms for call in run.calls if call.call_type == "judge"
                 )
                 report.runs.append(run)
+    report.metadata["Peak guarded calls by type"] = json.dumps(gateway.maximum_active_by_type)
     return report

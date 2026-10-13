@@ -1,0 +1,1196 @@
+{
+  "label": "held-out generalization smoke, not Golden Facts N3",
+  "source": "Field calibration protocol. A coastal monitoring station uses six independent sensors. Each complete calibration takes seventeen minutes. Operators place the sensors in the same reference chamber, collect readings, and compare every channel with the reference instrument. The reference instrument records a stable baseline before the calibration starts. A supervisor reviews the individual residuals and records the final configuration. The protocol separates calibration from ordinary monitoring, so the duration does not describe continuous observation. After calibration, the station resumes normal sampling. The report describes routine validation, maintenance responsibilities and the limitations of the chamber procedure. It does not identify a manufacturer or provide procurement terms. The supervisor keeps the original observations so that a later reader can reproduce the comparison and understand the local setup. Weather forecasts and emergency procedures are outside this report's scope. Operators repeat the same preparation for each calibration, without assuming that an earlier configuration is still valid. They document interruptions and repeat incomplete measurements before declaring a run complete.",
+  "effective_settings": {
+    "lookup_top_k": 5,
+    "synthesis_top_k": 3,
+    "sub_query_top_k": 2,
+    "chunk_token_target": 500,
+    "answer_think": "medium",
+    "bm25_weight": 0.0,
+    "summary_concurrency": 4
+  },
+  "questions": [
+    {
+      "question": "How many independent sensors are used, and how long is calibration?",
+      "events": [
+        {
+          "type": "plan",
+          "question_type": "Lookup",
+          "standalone_question": "How many independent sensors are used, and how long is calibration?",
+          "sub_queries": [],
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "type": "retrieval",
+          "chunks": [
+            {
+              "chunk": {
+                "id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+                "section_id": "virtual-1",
+                "section": "Virtual Section 1",
+                "page_start": 1,
+                "page_end": 1,
+                "text": "Field calibration protocol. A coastal monitoring station uses six independent sensors. Each\ncomplete calibration takes seventeen minutes. Operators place the sensors in the same\nreference chamber, collect readings, and compare every channel with the reference\ninstrument. The reference instrument records a stable baseline before the calibration starts.\nA supervisor reviews the individual residuals and records the final configuration. The\nprotocol separates calibration from ordinary monitoring, so the duration does not describe\ncontinuous observation. After calibration, the station resumes normal sampling. The report\ndescribes routine validation, maintenance responsibilities and the limitations of the chamber\nprocedure. It does not identify a manufacturer or provide procurement terms. The supervisor\nkeeps the original observations so that a later reader can reproduce the comparison and\nunderstand the local setup. Weather forecasts and emergency procedures are outside this\nreport's scope. Operators repeat the same preparation for each calibration, without\nassuming that an earlier configuration is still valid. They document interruptions and repeat\nincomplete measurements before declaring a run complete.",
+                "order": 0,
+                "kind": "text",
+                "table_label": null,
+                "table_caption": null,
+                "table_meaning": "",
+                "table_headers": [],
+                "table_rows": [],
+                "table_reconstructed": false,
+                "linked_chunk_ids": []
+              },
+              "score": 0.7177972793579102,
+              "ranking_score": null
+            }
+          ],
+          "dropped_chunk_count": 0
+        },
+        {
+          "type": "citation_map",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ]
+        },
+        {
+          "type": "thinking",
+          "text": "We need to answer"
+        },
+        {
+          "type": "thinking",
+          "text": " using only supplied"
+        },
+        {
+          "type": "thinking",
+          "text": " document"
+        },
+        {
+          "type": "thinking",
+          "text": " excerpts. The question: \""
+        },
+        {
+          "type": "thinking",
+          "text": "How many independent sensors are used"
+        },
+        {
+          "type": "thinking",
+          "text": ", and how long"
+        },
+        {
+          "type": "thinking",
+          "text": " is calibration"
+        },
+        {
+          "type": "thinking",
+          "text": "?\" From"
+        },
+        {
+          "type": "thinking",
+          "text": " C"
+        },
+        {
+          "type": "thinking",
+          "text": "1: \"A"
+        },
+        {
+          "type": "thinking",
+          "text": " coastal monitoring station uses six independent"
+        },
+        {
+          "type": "thinking",
+          "text": " sensors. Each complete"
+        },
+        {
+          "type": "thinking",
+          "text": " calibration takes seventeen minutes.\" So"
+        },
+        {
+          "type": "thinking",
+          "text": " answer: six independent sensors,"
+        },
+        {
+          "type": "thinking",
+          "text": " calibration takes seventeen"
+        },
+        {
+          "type": "thinking",
+          "text": " minutes. Need"
+        },
+        {
+          "type": "thinking",
+          "text": " citations"
+        },
+        {
+          "type": "thinking",
+          "text": ": [C1] for"
+        },
+        {
+          "type": "thinking",
+          "text": " both facts"
+        },
+        {
+          "type": "thinking",
+          "text": ". Provide answer"
+        },
+        {
+          "type": "thinking",
+          "text": " in English ("
+        },
+        {
+          "type": "thinking",
+          "text": "current"
+        },
+        {
+          "type": "thinking",
+          "text": " user"
+        },
+        {
+          "type": "thinking",
+          "text": " language). Provide"
+        },
+        {
+          "type": "thinking",
+          "text": " citations after"
+        },
+        {
+          "type": "thinking",
+          "text": " each claim"
+        },
+        {
+          "type": "thinking",
+          "text": ". Probably combine"
+        },
+        {
+          "type": "thinking",
+          "text": ": \"The"
+        },
+        {
+          "type": "thinking",
+          "text": " station uses six independent sensors,"
+        },
+        {
+          "type": "thinking",
+          "text": " and each complete calibration takes seventeen"
+        },
+        {
+          "type": "thinking",
+          "text": " minutes.\" Cite"
+        },
+        {
+          "type": "thinking",
+          "text": " ["
+        },
+        {
+          "type": "thinking",
+          "text": "C1] after"
+        },
+        {
+          "type": "thinking",
+          "text": " each claim"
+        },
+        {
+          "type": "thinking",
+          "text": " or after whole"
+        },
+        {
+          "type": "thinking",
+          "text": " sentence. Use ["
+        },
+        {
+          "type": "thinking",
+          "text": "C1] citation."
+        },
+        {
+          "type": "delta",
+          "text": "The station uses six independent"
+        },
+        {
+          "type": "delta",
+          "text": " sensors, and each complete calibration"
+        },
+        {
+          "type": "delta",
+          "text": " takes seventeen minutes. "
+        },
+        {
+          "type": "delta",
+          "text": "[C1]"
+        },
+        {
+          "type": "final",
+          "answer": "The station uses six independent sensors, and each complete calibration takes seventeen minutes. [C1]",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ],
+          "unverified": []
+        },
+        {
+          "type": "trace",
+          "calls": [
+            {
+              "call_type": "router",
+              "estimated_prompt_tokens": 828,
+              "prompt_eval_count": 489,
+              "eval_count": 102,
+              "think": "low",
+              "num_predict": 600,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "We need to classify. Asking \"How many independent sensors are used, and how long is calibration?\" Likely lookup: specific fact. So question_type Lookup, sub_queries [].\n\nStandalone_question: replace pronouns: \"How many independent sensors are used, and how long is calibration?\" Already standalone. So output JSON.",
+              "latency_ms": 710.3733750991523,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": "router",
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            },
+            {
+              "call_type": "answer",
+              "estimated_prompt_tokens": 840,
+              "prompt_eval_count": 615,
+              "eval_count": 154,
+              "think": "medium",
+              "num_predict": 3000,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "We need to answer using only supplied document excerpts. The question: \"How many independent sensors are used, and how long is calibration?\" From C1: \"A coastal monitoring station uses six independent sensors. Each complete calibration takes seventeen minutes.\" So answer: six independent sensors, calibration takes seventeen minutes. Need citations: [C1] for both facts. Provide answer in English (current user language). Provide citations after each claim. Probably combine: \"The station uses six independent sensors, and each complete calibration takes seventeen minutes.\" Cite [C1] after each claim or after whole sentence. Use [C1] citation.",
+              "latency_ms": 792.5734170712531,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": null,
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            }
+          ],
+          "invalid_citation_count": 0,
+          "dropped_chunk_count": 0,
+          "summary_level": null
+        }
+      ]
+    },
+    {
+      "question": "校準需要多少分鐘？",
+      "events": [
+        {
+          "type": "plan",
+          "question_type": "Lookup",
+          "standalone_question": "校準需要多少分鐘？",
+          "sub_queries": [],
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "type": "retrieval",
+          "chunks": [
+            {
+              "chunk": {
+                "id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+                "section_id": "virtual-1",
+                "section": "Virtual Section 1",
+                "page_start": 1,
+                "page_end": 1,
+                "text": "Field calibration protocol. A coastal monitoring station uses six independent sensors. Each\ncomplete calibration takes seventeen minutes. Operators place the sensors in the same\nreference chamber, collect readings, and compare every channel with the reference\ninstrument. The reference instrument records a stable baseline before the calibration starts.\nA supervisor reviews the individual residuals and records the final configuration. The\nprotocol separates calibration from ordinary monitoring, so the duration does not describe\ncontinuous observation. After calibration, the station resumes normal sampling. The report\ndescribes routine validation, maintenance responsibilities and the limitations of the chamber\nprocedure. It does not identify a manufacturer or provide procurement terms. The supervisor\nkeeps the original observations so that a later reader can reproduce the comparison and\nunderstand the local setup. Weather forecasts and emergency procedures are outside this\nreport's scope. Operators repeat the same preparation for each calibration, without\nassuming that an earlier configuration is still valid. They document interruptions and repeat\nincomplete measurements before declaring a run complete.",
+                "order": 0,
+                "kind": "text",
+                "table_label": null,
+                "table_caption": null,
+                "table_meaning": "",
+                "table_headers": [],
+                "table_rows": [],
+                "table_reconstructed": false,
+                "linked_chunk_ids": []
+              },
+              "score": 0.5692210793495178,
+              "ranking_score": null
+            }
+          ],
+          "dropped_chunk_count": 0
+        },
+        {
+          "type": "citation_map",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ]
+        },
+        {
+          "type": "thinking",
+          "text": "The"
+        },
+        {
+          "type": "thinking",
+          "text": " user asks in"
+        },
+        {
+          "type": "thinking",
+          "text": " Chinese: \"校準需要"
+        },
+        {
+          "type": "thinking",
+          "text": "多少分鐘？\" ("
+        },
+        {
+          "type": "thinking",
+          "text": "How"
+        },
+        {
+          "type": "thinking",
+          "text": " many minutes does"
+        },
+        {
+          "type": "thinking",
+          "text": " calibration take?). We"
+        },
+        {
+          "type": "thinking",
+          "text": " have document excerpt"
+        },
+        {
+          "type": "thinking",
+          "text": " C1: \"Each"
+        },
+        {
+          "type": "thinking",
+          "text": " complete calibration takes seventeen minutes.\""
+        },
+        {
+          "type": "thinking",
+          "text": " So answer: 17 minutes"
+        },
+        {
+          "type": "thinking",
+          "text": ". Must cite ["
+        },
+        {
+          "type": "thinking",
+          "text": "C1]. Must"
+        },
+        {
+          "type": "thinking",
+          "text": " answer"
+        },
+        {
+          "type": "thinking",
+          "text": " in Chinese,"
+        },
+        {
+          "type": "thinking",
+          "text": " preserving script"
+        },
+        {
+          "type": "thinking",
+          "text": " ("
+        },
+        {
+          "type": "thinking",
+          "text": "Traditional)."
+        },
+        {
+          "type": "thinking",
+          "text": " So answer"
+        },
+        {
+          "type": "thinking",
+          "text": ": \""
+        },
+        {
+          "type": "thinking",
+          "text": "校準"
+        },
+        {
+          "type": "thinking",
+          "text": "需要十"
+        },
+        {
+          "type": "thinking",
+          "text": "七"
+        },
+        {
+          "type": "thinking",
+          "text": "分鐘。\" with"
+        },
+        {
+          "type": "thinking",
+          "text": " citation."
+        },
+        {
+          "type": "delta",
+          "text": "校準"
+        },
+        {
+          "type": "delta",
+          "text": "需要十"
+        },
+        {
+          "type": "delta",
+          "text": "七分鐘。"
+        },
+        {
+          "type": "delta",
+          "text": "[C1]"
+        },
+        {
+          "type": "final",
+          "answer": "校準需要十七分鐘。[C1]",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ],
+          "unverified": []
+        },
+        {
+          "type": "trace",
+          "calls": [
+            {
+              "call_type": "router",
+              "estimated_prompt_tokens": 834,
+              "prompt_eval_count": 495,
+              "eval_count": 96,
+              "think": "low",
+              "num_predict": 600,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "We need to output JSON. The question: \"校準需要多少分鐘？\" It's a lookup? Asking a fact: how many minutes calibration takes. Likely lookup. So question_type \"Lookup\". standalone_question replace pronoun: \"校準需要多少分鐘？\" Already standalone. sub_queries [].\n\nReturn JSON.",
+              "latency_ms": 686.7417499888688,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": "router",
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            },
+            {
+              "call_type": "answer",
+              "estimated_prompt_tokens": 863,
+              "prompt_eval_count": 638,
+              "eval_count": 94,
+              "think": "medium",
+              "num_predict": 3000,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "The user asks in Chinese: \"校準需要多少分鐘？\" (How many minutes does calibration take?). We have document excerpt C1: \"Each complete calibration takes seventeen minutes.\" So answer: 17 minutes. Must cite [C1]. Must answer in Chinese, preserving script (Traditional). So answer: \"校準需要十七分鐘。\" with citation.",
+              "latency_ms": 679.5106250792742,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": null,
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            }
+          ],
+          "invalid_citation_count": 0,
+          "dropped_chunk_count": 0,
+          "summary_level": null
+        }
+      ]
+    },
+    {
+      "question": "校准使用多少个独立传感器？",
+      "events": [
+        {
+          "type": "plan",
+          "question_type": "Lookup",
+          "standalone_question": "校准使用多少个独立传感器？",
+          "sub_queries": [],
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "type": "retrieval",
+          "chunks": [
+            {
+              "chunk": {
+                "id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+                "section_id": "virtual-1",
+                "section": "Virtual Section 1",
+                "page_start": 1,
+                "page_end": 1,
+                "text": "Field calibration protocol. A coastal monitoring station uses six independent sensors. Each\ncomplete calibration takes seventeen minutes. Operators place the sensors in the same\nreference chamber, collect readings, and compare every channel with the reference\ninstrument. The reference instrument records a stable baseline before the calibration starts.\nA supervisor reviews the individual residuals and records the final configuration. The\nprotocol separates calibration from ordinary monitoring, so the duration does not describe\ncontinuous observation. After calibration, the station resumes normal sampling. The report\ndescribes routine validation, maintenance responsibilities and the limitations of the chamber\nprocedure. It does not identify a manufacturer or provide procurement terms. The supervisor\nkeeps the original observations so that a later reader can reproduce the comparison and\nunderstand the local setup. Weather forecasts and emergency procedures are outside this\nreport's scope. Operators repeat the same preparation for each calibration, without\nassuming that an earlier configuration is still valid. They document interruptions and repeat\nincomplete measurements before declaring a run complete.",
+                "order": 0,
+                "kind": "text",
+                "table_label": null,
+                "table_caption": null,
+                "table_meaning": "",
+                "table_headers": [],
+                "table_rows": [],
+                "table_reconstructed": false,
+                "linked_chunk_ids": []
+              },
+              "score": 0.6054970622062683,
+              "ranking_score": null
+            }
+          ],
+          "dropped_chunk_count": 0
+        },
+        {
+          "type": "citation_map",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ]
+        },
+        {
+          "type": "thinking",
+          "text": "The"
+        },
+        {
+          "type": "thinking",
+          "text": " user asks in"
+        },
+        {
+          "type": "thinking",
+          "text": " Chinese: \"校"
+        },
+        {
+          "type": "thinking",
+          "text": "准使用多少个独立"
+        },
+        {
+          "type": "thinking",
+          "text": "传感器？\" Means"
+        },
+        {
+          "type": "thinking",
+          "text": " \"How"
+        },
+        {
+          "type": "thinking",
+          "text": " many independent"
+        },
+        {
+          "type": "thinking",
+          "text": " sensors are used for"
+        },
+        {
+          "type": "thinking",
+          "text": " calibration?\" We"
+        },
+        {
+          "type": "thinking",
+          "text": " need to answer using"
+        },
+        {
+          "type": "thinking",
+          "text": " only supplied"
+        },
+        {
+          "type": "thinking",
+          "text": " document excerpts. In"
+        },
+        {
+          "type": "thinking",
+          "text": " C"
+        },
+        {
+          "type": "thinking",
+          "text": "1, it"
+        },
+        {
+          "type": "thinking",
+          "text": " says:"
+        },
+        {
+          "type": "thinking",
+          "text": " \"A coastal monitoring station uses"
+        },
+        {
+          "type": "thinking",
+          "text": " six independent sensors.\""
+        },
+        {
+          "type": "thinking",
+          "text": " So answer: uses"
+        },
+        {
+          "type": "thinking",
+          "text": " six independent sensors. Must"
+        },
+        {
+          "type": "thinking",
+          "text": " cite ["
+        },
+        {
+          "type": "thinking",
+          "text": "C1]. Provide answer"
+        },
+        {
+          "type": "thinking",
+          "text": " in Chinese"
+        },
+        {
+          "type": "thinking",
+          "text": ","
+        },
+        {
+          "type": "thinking",
+          "text": " preserving script"
+        },
+        {
+          "type": "thinking",
+          "text": " ("
+        },
+        {
+          "type": "thinking",
+          "text": "Traditional). So answer: 校"
+        },
+        {
+          "type": "thinking",
+          "text": "准使用六"
+        },
+        {
+          "type": "thinking",
+          "text": "个"
+        },
+        {
+          "type": "thinking",
+          "text": "独立传感器。["
+        },
+        {
+          "type": "thinking",
+          "text": "C1]"
+        },
+        {
+          "type": "delta",
+          "text": "校准使用六"
+        },
+        {
+          "type": "delta",
+          "text": "個"
+        },
+        {
+          "type": "delta",
+          "text": "獨"
+        },
+        {
+          "type": "delta",
+          "text": "立傳"
+        },
+        {
+          "type": "delta",
+          "text": "感器。"
+        },
+        {
+          "type": "delta",
+          "text": "[C1]"
+        },
+        {
+          "type": "final",
+          "answer": "校准使用六個獨立傳感器。[C1]",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ],
+          "unverified": []
+        },
+        {
+          "type": "trace",
+          "calls": [
+            {
+              "call_type": "router",
+              "estimated_prompt_tokens": 839,
+              "prompt_eval_count": 500,
+              "eval_count": 112,
+              "think": "low",
+              "num_predict": 600,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "We need to output JSON. Determine type: asking \"校准使用多少个独立传感器？\" That's a lookup: a fact about number of independent sensors used in calibration. So question_type \"Lookup\". standalone_question replace pronouns: \"校准使用多少个独立传感器？\" Already standalone. sub_queries [].\n\nReturn JSON.",
+              "latency_ms": 885.260040871799,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": "router",
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            },
+            {
+              "call_type": "answer",
+              "estimated_prompt_tokens": 868,
+              "prompt_eval_count": 643,
+              "eval_count": 123,
+              "think": "medium",
+              "num_predict": 3000,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "The user asks in Chinese: \"校准使用多少个独立传感器？\" Means \"How many independent sensors are used for calibration?\" We need to answer using only supplied document excerpts. In C1, it says: \"A coastal monitoring station uses six independent sensors.\" So answer: uses six independent sensors. Must cite [C1]. Provide answer in Chinese, preserving script (Traditional). So answer: 校准使用六个独立传感器。[C1]",
+              "latency_ms": 1370.6770830322057,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": null,
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            }
+          ],
+          "invalid_citation_count": 0,
+          "dropped_chunk_count": 0,
+          "summary_level": null
+        }
+      ]
+    },
+    {
+      "question": "Which manufacturer supplied the sensors?",
+      "events": [
+        {
+          "type": "plan",
+          "question_type": "Lookup",
+          "standalone_question": "Which manufacturer supplied the sensors?",
+          "sub_queries": [],
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "type": "retrieval",
+          "chunks": [
+            {
+              "chunk": {
+                "id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+                "section_id": "virtual-1",
+                "section": "Virtual Section 1",
+                "page_start": 1,
+                "page_end": 1,
+                "text": "Field calibration protocol. A coastal monitoring station uses six independent sensors. Each\ncomplete calibration takes seventeen minutes. Operators place the sensors in the same\nreference chamber, collect readings, and compare every channel with the reference\ninstrument. The reference instrument records a stable baseline before the calibration starts.\nA supervisor reviews the individual residuals and records the final configuration. The\nprotocol separates calibration from ordinary monitoring, so the duration does not describe\ncontinuous observation. After calibration, the station resumes normal sampling. The report\ndescribes routine validation, maintenance responsibilities and the limitations of the chamber\nprocedure. It does not identify a manufacturer or provide procurement terms. The supervisor\nkeeps the original observations so that a later reader can reproduce the comparison and\nunderstand the local setup. Weather forecasts and emergency procedures are outside this\nreport's scope. Operators repeat the same preparation for each calibration, without\nassuming that an earlier configuration is still valid. They document interruptions and repeat\nincomplete measurements before declaring a run complete.",
+                "order": 0,
+                "kind": "text",
+                "table_label": null,
+                "table_caption": null,
+                "table_meaning": "",
+                "table_headers": [],
+                "table_rows": [],
+                "table_reconstructed": false,
+                "linked_chunk_ids": []
+              },
+              "score": 0.4590699076652527,
+              "ranking_score": null
+            }
+          ],
+          "dropped_chunk_count": 0
+        },
+        {
+          "type": "citation_map",
+          "citations": [
+            {
+              "id": "C1",
+              "source_id": "7f75fcdac21f46d68fc6fa5ed4deb542:chunk-1",
+              "section": "Virtual Section 1",
+              "page_start": 1,
+              "page_end": 1
+            }
+          ]
+        },
+        {
+          "type": "thinking",
+          "text": "The"
+        },
+        {
+          "type": "thinking",
+          "text": " user asks: \"Which manufacturer"
+        },
+        {
+          "type": "thinking",
+          "text": " supplied the sensors?\" We"
+        },
+        {
+          "type": "thinking",
+          "text": " need to answer based only on"
+        },
+        {
+          "type": "thinking",
+          "text": " the supplied"
+        },
+        {
+          "type": "thinking",
+          "text": " document excerpts. The excerpt"
+        },
+        {
+          "type": "thinking",
+          "text": " C1 says: \"It"
+        },
+        {
+          "type": "thinking",
+          "text": " does not identify a manufacturer or"
+        },
+        {
+          "type": "thinking",
+          "text": " provide procurement terms.\" So"
+        },
+        {
+          "type": "thinking",
+          "text": " the"
+        },
+        {
+          "type": "thinking",
+          "text": " answer: Not"
+        },
+        {
+          "type": "thinking",
+          "text": " mentioned in the document. Must"
+        },
+        {
+          "type": "thinking",
+          "text": " follow language"
+        },
+        {
+          "type": "thinking",
+          "text": ": The"
+        },
+        {
+          "type": "thinking",
+          "text": " current user question language"
+        },
+        {
+          "type": "thinking",
+          "text": " is English."
+        },
+        {
+          "type": "thinking",
+          "text": " So answer: \"Not mentioned"
+        },
+        {
+          "type": "thinking",
+          "text": " in the document.\""
+        },
+        {
+          "type": "delta",
+          "text": "Not mentioned in the document."
+        },
+        {
+          "type": "final",
+          "answer": "Not mentioned in the document.",
+          "citations": [],
+          "unverified": []
+        },
+        {
+          "type": "trace",
+          "calls": [
+            {
+              "call_type": "router",
+              "estimated_prompt_tokens": 821,
+              "prompt_eval_count": 482,
+              "eval_count": 63,
+              "think": "low",
+              "num_predict": 600,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "We need to classify. Asking \"Which manufacturer supplied the sensors?\" That's a lookup of a fact. So question_type Lookup. sub_queries [].\n\nReturn JSON.",
+              "latency_ms": 745.0172498356551,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": "router",
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            },
+            {
+              "call_type": "answer",
+              "estimated_prompt_tokens": 833,
+              "prompt_eval_count": 608,
+              "eval_count": 89,
+              "think": "medium",
+              "num_predict": 3000,
+              "context_budget": 10000,
+              "safety_margin": 300,
+              "thinking": "The user asks: \"Which manufacturer supplied the sensors?\" We need to answer based only on the supplied document excerpts. The excerpt C1 says: \"It does not identify a manufacturer or provide procurement terms.\" So the answer: Not mentioned in the document. Must follow language: The current user question language is English. So answer: \"Not mentioned in the document.\"",
+              "latency_ms": 714.2028748057783,
+              "done_reason": "stop",
+              "discarded_fact_lines": 0,
+              "plan_source": null,
+              "fallback_reason": null,
+              "rewrite_language_mismatch": false,
+              "router_standalone_question": null
+            }
+          ],
+          "invalid_citation_count": 0,
+          "dropped_chunk_count": 0,
+          "summary_level": null
+        }
+      ]
+    }
+  ],
+  "upload_events": [
+    {
+      "type": "stage",
+      "stage": "parsing",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "type": "stage",
+      "stage": "chunking",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "type": "stage",
+      "stage": "embedding",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "type": "stage",
+      "stage": "embedding",
+      "completed": 1,
+      "total": 1
+    },
+    {
+      "type": "stage",
+      "stage": "summary",
+      "completed": 0,
+      "total": 2
+    },
+    {
+      "type": "stage",
+      "stage": "summary",
+      "completed": 1,
+      "total": 2
+    },
+    {
+      "type": "stage",
+      "stage": "summary",
+      "completed": 2,
+      "total": 2
+    },
+    {
+      "type": "stage",
+      "stage": "complete",
+      "completed": 1,
+      "total": 1
+    },
+    {
+      "type": "ready",
+      "document_id": "7f75fcdac21f46d68fc6fa5ed4deb542",
+      "name": "field-calibration.pdf",
+      "chunk_count": 1,
+      "document_summary": "The report describes a coastal monitoring station that calibrates six independent sensors in a reference chamber. Each full calibration takes seventeen minutes. Operators place all sensors together, collect readings, and compare each channel to a stable baseline recorded by a reference instrument. A supervisor reviews the residuals, records the final configuration, and retains the original observations for reproducibility. Calibration is performed separately from routine monitoring; after calibration the station resumes normal sampling. The report details routine validation, maintenance duties, and chamber‑procedure limitations, but does not name a manufacturer, give procurement terms, or address weather forecasts or emergency procedures. Operators repeat the preparation for each run, document interruptions, and repeat incomplete measurements before declaring a run complete."
+    }
+  ],
+  "calls": [
+    {
+      "call_type": "section_summary",
+      "estimated_prompt_tokens": 837,
+      "prompt_eval_count": 612,
+      "eval_count": 156,
+      "think": "low",
+      "num_predict": 1200,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary of this section. 80 tokens.",
+      "latency_ms": 1585.5567920953035,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "document_summary",
+      "estimated_prompt_tokens": 776,
+      "prompt_eval_count": 551,
+      "eval_count": 163,
+      "think": "low",
+      "num_predict": 2500,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to produce summary of this document. Only info given.",
+      "latency_ms": 1356.8912909831852,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 828,
+      "prompt_eval_count": 489,
+      "eval_count": 102,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to classify. Asking \"How many independent sensors are used, and how long is calibration?\" Likely lookup: specific fact. So question_type Lookup, sub_queries [].\n\nStandalone_question: replace pronouns: \"How many independent sensors are used, and how long is calibration?\" Already standalone. So output JSON.",
+      "latency_ms": 710.3733750991523,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 840,
+      "prompt_eval_count": 615,
+      "eval_count": 154,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to answer using only supplied document excerpts. The question: \"How many independent sensors are used, and how long is calibration?\" From C1: \"A coastal monitoring station uses six independent sensors. Each complete calibration takes seventeen minutes.\" So answer: six independent sensors, calibration takes seventeen minutes. Need citations: [C1] for both facts. Provide answer in English (current user language). Provide citations after each claim. Probably combine: \"The station uses six independent sensors, and each complete calibration takes seventeen minutes.\" Cite [C1] after each claim or after whole sentence. Use [C1] citation.",
+      "latency_ms": 792.5734170712531,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 834,
+      "prompt_eval_count": 495,
+      "eval_count": 96,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to output JSON. The question: \"校準需要多少分鐘？\" It's a lookup? Asking a fact: how many minutes calibration takes. Likely lookup. So question_type \"Lookup\". standalone_question replace pronoun: \"校準需要多少分鐘？\" Already standalone. sub_queries [].\n\nReturn JSON.",
+      "latency_ms": 686.7417499888688,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 863,
+      "prompt_eval_count": 638,
+      "eval_count": 94,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "The user asks in Chinese: \"校準需要多少分鐘？\" (How many minutes does calibration take?). We have document excerpt C1: \"Each complete calibration takes seventeen minutes.\" So answer: 17 minutes. Must cite [C1]. Must answer in Chinese, preserving script (Traditional). So answer: \"校準需要十七分鐘。\" with citation.",
+      "latency_ms": 679.5106250792742,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 839,
+      "prompt_eval_count": 500,
+      "eval_count": 112,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to output JSON. Determine type: asking \"校准使用多少个独立传感器？\" That's a lookup: a fact about number of independent sensors used in calibration. So question_type \"Lookup\". standalone_question replace pronouns: \"校准使用多少个独立传感器？\" Already standalone. sub_queries [].\n\nReturn JSON.",
+      "latency_ms": 885.260040871799,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 868,
+      "prompt_eval_count": 643,
+      "eval_count": 123,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "The user asks in Chinese: \"校准使用多少个独立传感器？\" Means \"How many independent sensors are used for calibration?\" We need to answer using only supplied document excerpts. In C1, it says: \"A coastal monitoring station uses six independent sensors.\" So answer: uses six independent sensors. Must cite [C1]. Provide answer in Chinese, preserving script (Traditional). So answer: 校准使用六个独立传感器。[C1]",
+      "latency_ms": 1370.6770830322057,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "router",
+      "estimated_prompt_tokens": 821,
+      "prompt_eval_count": 482,
+      "eval_count": 63,
+      "think": "low",
+      "num_predict": 600,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "We need to classify. Asking \"Which manufacturer supplied the sensors?\" That's a lookup of a fact. So question_type Lookup. sub_queries [].\n\nReturn JSON.",
+      "latency_ms": 745.0172498356551,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": "router",
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    },
+    {
+      "call_type": "answer",
+      "estimated_prompt_tokens": 833,
+      "prompt_eval_count": 608,
+      "eval_count": 89,
+      "think": "medium",
+      "num_predict": 3000,
+      "context_budget": 10000,
+      "safety_margin": 300,
+      "thinking": "The user asks: \"Which manufacturer supplied the sensors?\" We need to answer based only on the supplied document excerpts. The excerpt C1 says: \"It does not identify a manufacturer or provide procurement terms.\" So the answer: Not mentioned in the document. Must follow language: The current user question language is English. So answer: \"Not mentioned in the document.\"",
+      "latency_ms": 714.2028748057783,
+      "done_reason": "stop",
+      "discarded_fact_lines": 0,
+      "plan_source": null,
+      "fallback_reason": null,
+      "rewrite_language_mismatch": false,
+      "router_standalone_question": null
+    }
+  ],
+  "maximum_estimated_plus_reservation": 3868,
+  "maximum_reported_plus_reservation": 3643
+}

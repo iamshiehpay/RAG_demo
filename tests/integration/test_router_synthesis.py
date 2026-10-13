@@ -339,7 +339,13 @@ async def test_configurable_top_k_counts_and_global_uses_summary_tree():
         assert {item.chunk.id for item in primary} <= {item.chunk.id for item in events[1].chunks}
         assert any(e.type == "final" for e in events)
     assert RetrievalSettings().model_dump() == dict(
-        lookup_top_k=5, synthesis_top_k=3, sub_query_top_k=2, chunk_token_target=500
+        lookup_top_k=5,
+        synthesis_top_k=3,
+        sub_query_top_k=2,
+        chunk_token_target=500,
+        answer_think="medium",
+        bm25_weight=0.0,
+        summary_concurrency=4,
     )
 
 

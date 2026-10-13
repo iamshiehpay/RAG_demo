@@ -1,6 +1,7 @@
 """Markdown reports preserve per-fact results and every LLM call's measured costs."""
 
 import html
+import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -51,6 +52,11 @@ def write_report(report: EvaluationReport, path: Path) -> Path:
         f"Repetitions per question: {report.repeats}",
         "",
         f"Result: {report.status}",
+        "",
+        f"Functional operations: {'PASS' if report.functional_passed else 'FAIL'} "
+        "(separate from D05 semantic rates)",
+        "",
+        "Call audit: " + cell(json.dumps(report.call_audit(), sort_keys=True)),
         "",
         "Router classification requires plan_source=router. Fallback plans fail "
         "with status FALLBACK, even when their Question Type matches. "

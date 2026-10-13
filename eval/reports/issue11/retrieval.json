@@ -1,0 +1,3590 @@
+{
+  "provenance": {
+    "Revision": "7cf91851f9f86527d69c95910f9eadd58cf7b357",
+    "Uncommitted changes": "yes",
+    "Pipeline version": "ingest-v2-d6cc86232977edb2c4cd1a1e6fd3deb5755d2b0e85e3a858d999fd23b1e62058",
+    "LLM": "gpt-oss:120b-cloud",
+    "Embedder": "bge-m3",
+    "Created": "2026-10-13T10:51:28.780016+00:00"
+  },
+  "uploads": [
+    {
+      "chunk_target": 256,
+      "latency_ms": 105209.07445810735,
+      "errors": [],
+      "calls": [
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1674,
+          "prompt_eval_count": 1449,
+          "eval_count": 200,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary 156 tokens.",
+          "latency_ms": 9238.808166934177,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 882,
+          "prompt_eval_count": 657,
+          "eval_count": 104,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 80 tokens.",
+          "latency_ms": 9278.284749947488,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1145,
+          "prompt_eval_count": 920,
+          "eval_count": 245,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 2. Include motivation, methods, settings, findings, conclusions, limitations as reported. The evidence only describes RAG framework, components, formal definition, and target points. No findings or limitations. So summary will state described framework and goals.",
+          "latency_ms": 9249.239499913529,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1617,
+          "prompt_eval_count": 1392,
+          "eval_count": 222,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary ~142 tokens.",
+          "latency_ms": 10173.756167059764,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 878,
+          "prompt_eval_count": 653,
+          "eval_count": 129,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary ~80 tokens.",
+          "latency_ms": 12703.243667026982,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1183,
+          "prompt_eval_count": 958,
+          "eval_count": 169,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~80 tokens.",
+          "latency_ms": 16006.399125093594,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 802,
+          "prompt_eval_count": 577,
+          "eval_count": 108,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary 80 tokens.",
+          "latency_ms": 16802.818292053416,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 756,
+          "prompt_eval_count": 531,
+          "eval_count": 163,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 4. Use only evidence. So summarize motivation (research questions), methods (empirical evaluations on benchmark data), findings not given. No findings reported. So summary includes that they conduct empirical evaluations to assess effectiveness addressing RQ1-4. No results.",
+          "latency_ms": 16322.67754105851,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1743,
+          "prompt_eval_count": 1518,
+          "eval_count": 319,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 4.1. Include datasets, question generation, baselines, implementation, evaluation method. 165 tokens.",
+          "latency_ms": 5769.823292037472,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3589,
+          "prompt_eval_count": 3322,
+          "eval_count": 179,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids for summary. Choose enough to near 277 tokens of source text. Let's pick E2 caption, E3 prose, E4 prose, maybe a row from table? Table rows are large; but we have already caption and maybe include part of table? Could include E2 and E3 and E4 and maybe a specific row excerpt from U2 but we don't have separate span. Could create span referencing part of U2 but not allowed new. So use existing spans only. Count tokens: E3 166, E4 119, E2 24 = 309 >277 but okay within 80-500. Include note and warning tokens accounted separately but not needed. Provide JSON with span_ids list.",
+          "latency_ms": 3821.674041915685,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3576,
+          "prompt_eval_count": 3309,
+          "eval_count": 284,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering section. Include caption and some rows. Choose rows from table maybe a few. Need near 280 tokens of source text. Let's pick E1,E2,E3, plus some rows from E4? Actually rows are in table not separate spans. Table rows are in U2 text but not separate spans. We can include whole U2 as one span? It's large. Might exceed. We need include numeric rows examples. Could select part of U2 containing header and a few rows. But spans only defined as E3 caption, not rows. We cannot create new spans. So we can only select existing spans. Table rows are not separate spans, so cannot include them. Might be okay to just include caption and description. Need 280 tokens; we have E1(41)+E2(58)+E3(22)+E4(231)+E5(63)+E6(106)=521 tokens >500. Need 80-500 tokens. Choose subset to approx 280. Let's pick E1,E2,E3,E4 (41+58+22+231=352) within 500. Add note tokens 10+20 =382. Good. Return span_ids list.",
+          "latency_ms": 4824.912207899615,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 4419,
+          "prompt_eval_count": 4152,
+          "eval_count": 431,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering about 158 tokens of original text. Choose captions, some prose, and a few rows. Provide JSON with span_ids list. Include source-scope note and maybe uncertainty warning. Must not add text. So list ids: E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12, E13, E14, E15, E16, E17, E18, E19, E20, E24, E25, E26, E27, E28, E29, E30, E31, E32, E33, E34, E35, E36, E37, E38, E39, E40, E41, E42, E43, E44, E45 maybe too many. Need ~158 tokens. Count tokens roughly: E1 95, E2 113 too many already. Need total ~158. So pick smaller set. Maybe E1 (95) + E3 (caption) (21) =116, add E4 (13)=129, add E24 (20)=149, add E45 (51) would exceed. Need ~158, so add E45 (51) would be 200. Instead add E5 (18) =>167. Slightly over but okay within 80-500. So span_ids: E1,E3,E4,E5,E24. That's about 95+21+13+18+20=167 tokens. Include source-scope note and uncertainty warning? Need reserve 10 tokens for note and 20 for warning when needed. We have uncertainty in U2 \"結構未能可靠重建\". Could include warning. Add warning token not counted? We just need to include note in output? Probably not, just ensure within token budget. Provide JSON.",
+          "latency_ms": 5630.857959156856,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1258,
+          "prompt_eval_count": 1033,
+          "eval_count": 172,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 92 tokens.",
+          "latency_ms": 5191.662166966125,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 935,
+          "prompt_eval_count": 710,
+          "eval_count": 124,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce 80-token summary.",
+          "latency_ms": 4765.0220829527825,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 925,
+          "prompt_eval_count": 700,
+          "eval_count": 163,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce 80-token summary.",
+          "latency_ms": 4463.073167018592,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 785,
+          "prompt_eval_count": 560,
+          "eval_count": 164,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 6. Use only evidence. Summarize motivation, methods, settings, findings, conclusions, limitations if any. No limitations mentioned. So summary ~80 tokens.\n\nLet's craft ~80 tokens.",
+          "latency_ms": 3282.0148339960724,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 802,
+          "prompt_eval_count": 577,
+          "eval_count": 94,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of this section. 80 tokens.",
+          "latency_ms": 2166.7422498576343,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 737,
+          "prompt_eval_count": 512,
+          "eval_count": 145,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of Section 7. Include motivation, methods, settings, findings, conclusions, limitations if any. Evidence mentions elaboration of methodologies and experimental settings, steps for extracting entities/relationships, LLM usage, prompt templates and configurations, evaluation criteria and dimensions used to assess performance against baselines. No explicit findings or limitations. So summary includes those.",
+          "latency_ms": 3415.153207955882,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 776,
+          "prompt_eval_count": 551,
+          "eval_count": 199,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, methods, settings, findings, conclusions, limitations as reported. The text describes a case example of retrieval-augmented generation. It explains process. No limitations mentioned. So summary: they illustrate retrieve-and-generate; LLM extracts low/high keywords; guides dual-level retrieval on knowledge graph; retrieves entities, relationships, text chunks; feeds to LLM to generate answer. That's it. 80 tokens.",
+          "latency_ms": 7571.346041979268,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 752,
+          "prompt_eval_count": 527,
+          "eval_count": 91,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary.",
+          "latency_ms": 8126.0419161990285,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 814,
+          "prompt_eval_count": 589,
+          "eval_count": 195,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 7. Include motivation, methods, settings, findings, conclusions, limitations if any. Evidence mentions elaboration of methodologies, steps for extracting entities/relationships, LLM usage, prompt templates, configurations, evaluation criteria and dimensions used to assess performance against baselines. No explicit findings or limitations reported. So summary includes those points. Target ~120 tokens.",
+          "latency_ms": 8420.02195911482,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 879,
+          "prompt_eval_count": 654,
+          "eval_count": 145,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. At least 80 tokens, target 120. Include all details.",
+          "latency_ms": 9794.95970881544,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 766,
+          "prompt_eval_count": 541,
+          "eval_count": 161,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Use only evidence. Summarize motivation, methods, settings, findings, conclusions, limitations if any. Here: describes prompt for query generation, outlines framework identifying user roles, objectives, defines five users, five tasks each, five questions each. No limitations mentioned. So summary.",
+          "latency_ms": 9398.755208123475,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 741,
+          "prompt_eval_count": 516,
+          "eval_count": 95,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of this section. 80 tokens.",
+          "latency_ms": 9154.493917012587,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 829,
+          "prompt_eval_count": 604,
+          "eval_count": 221,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, methods, findings, conclusions, limitations if any. The evidence only describes the prompt design. No findings or limitations. So summary will state that the prompt extracts and structures entity-relationship info, identifies entities of types organization, person, location, event, provides descriptions, identifies relationships, gives explanations, strength scores, summarises with keywords. No other claims. Target ~120 tokens.",
+          "latency_ms": 10720.53079190664,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3934,
+          "prompt_eval_count": 3667,
+          "eval_count": 186,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering section summary. Include caption and some rows. Provide JSON with span_ids list. Must be 80-500 tokens of source text. Let's select E3 (caption), and a few rows like E27-E31 etc. Also include E2 for prose about prompts. Count tokens approx: E2 78, E3 21, E27 20, E28 17, E29 17, E30 21, E31 8 = total ~182 tokens. Add 10 scope note and 20 warning tokens not counted? They are reserved but not part of source. Just output ids.",
+          "latency_ms": 8548.29924996011,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 832,
+          "prompt_eval_count": 607,
+          "eval_count": 167,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, methods, findings, conclusions, limitations if any. No limitations mentioned. So summary ~80 tokens.\n\n",
+          "latency_ms": 3115.418874891475,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 818,
+          "prompt_eval_count": 593,
+          "eval_count": 156,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, method, findings, conclusions, limitations if any. Only given info: describes a method for extracting keywords, distinguishes high/low, returns JSON with two fields. No limitations mentioned. So summary ~120 tokens.",
+          "latency_ms": 4994.613707996905,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "group_summary",
+          "estimated_prompt_tokens": 4884,
+          "prompt_eval_count": 4659,
+          "eval_count": 1181,
+          "think": "low",
+          "num_predict": 2500,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary using only evidence.",
+          "latency_ms": 15106.167874997482,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "document_summary",
+          "estimated_prompt_tokens": 2164,
+          "prompt_eval_count": 1939,
+          "eval_count": 1134,
+          "think": "low",
+          "num_predict": 2500,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~500 tokens.",
+          "latency_ms": 24570.409583160654,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ],
+      "chunk_count": 57,
+      "q2_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG vs GraphRAG architecture",
+          "LightRAG vs GraphRAG performance metrics",
+          "LightRAG vs GraphRAG cost and maintenance"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "q3_plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "Performance of ablated versions of LightRAG.",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "router_calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 824,
+          "prompt_eval_count": 485,
+          "eval_count": 137,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. It's a comparison => Synthesis. Provide standalone_question: \"Compare LightRAG with GraphRAG.\" sub_queries 2-3. Provide queries like \"LightRAG architecture vs GraphRAG\", \"LightRAG performance metrics compared to GraphRAG\", \"LightRAG and GraphRAG cost and maintenance\". Output.",
+          "latency_ms": 10058.951332932338,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 825,
+          "prompt_eval_count": 486,
+          "eval_count": 102,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. It's asking \"Performance of ablated versions of LightRAG.\" That's likely looking for results from a table/figure about ablated versions. That's a Lookup (specific results). So question_type \"Lookup\". standalone_question same: \"Performance of ablated versions of LightRAG.\" sub_queries [].\n\nReturn JSON.",
+          "latency_ms": 6132.89074995555,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ]
+    },
+    {
+      "chunk_target": 500,
+      "latency_ms": 109631.69762515463,
+      "errors": [],
+      "calls": [
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 882,
+          "prompt_eval_count": 657,
+          "eval_count": 101,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 80 tokens.",
+          "latency_ms": 3781.770542031154,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1145,
+          "prompt_eval_count": 920,
+          "eval_count": 258,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 2. Include motivation, methods, settings, findings, conclusions, limitations as reported. The evidence only describes RAG framework, components, formal definition, and target points. No findings or limitations. So summary will state description and goals.",
+          "latency_ms": 5170.310416026041,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1593,
+          "prompt_eval_count": 1368,
+          "eval_count": 270,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary ~142 tokens.",
+          "latency_ms": 6545.460790861398,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1674,
+          "prompt_eval_count": 1449,
+          "eval_count": 215,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 156 tokens.",
+          "latency_ms": 7492.657291935757,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1183,
+          "prompt_eval_count": 958,
+          "eval_count": 157,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary ~80 tokens.",
+          "latency_ms": 4663.887083064765,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 802,
+          "prompt_eval_count": 577,
+          "eval_count": 108,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary 80 tokens.",
+          "latency_ms": 11220.16541683115,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 878,
+          "prompt_eval_count": 653,
+          "eval_count": 126,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary.",
+          "latency_ms": 10115.696166176349,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 756,
+          "prompt_eval_count": 531,
+          "eval_count": 140,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of Section 4. Evidence lists research questions. No findings. So summary includes motivation and methods (empirical evaluations on benchmark data) and RQs. No results.",
+          "latency_ms": 10048.38154092431,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1743,
+          "prompt_eval_count": 1518,
+          "eval_count": 262,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary ~165 tokens.",
+          "latency_ms": 10106.405750149861,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3454,
+          "prompt_eval_count": 3187,
+          "eval_count": 310,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering needed summary. Include caption, header, and some rows. Provide JSON with span_ids list. Must near 277 tokens of source text. Let's pick E1 (36), E2 (24), E3 (166), and a few rows from table: maybe include one row excerpt? But rows are within E2? Actually rows are in U2 text but not separate spans. We could include the whole table text as one span E2? Actually E2 is caption only. Need header and rows. Not provided as separate span. Could include part of U2 as prose? Not defined. We only have spans E1-E5. Table rows are not separate spans, so cannot select them. But we need table-dominant summary, need include caption and maybe header? Not available. Could only include caption (E2) and maybe mention that rows are in U2 but not selected. Might be insufficient. However we can only select existing spans. So include E1, E2, E3, E4, E5 gives about 36+24+166+119+190=535 tokens > limit 500. Need 80-500 tokens. Let's pick E1, E2, E3, E4 (total ~36+24+166+119=345) within range. Provide span_ids accordingly.",
+          "latency_ms": 5588.441250147298,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3430,
+          "prompt_eval_count": 3163,
+          "eval_count": 239,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering table and key prose. Aim ~280 tokens source text. Include caption, header, and some rows. Choose maybe a few rows. Provide ids: E1,E2,E3,E4 plus selected rows from table (need ids? Table rows are within U2 but not separate spans. We only have span E3 for caption, header not separate. We need to include rows by referencing span? No spans for rows. Might need to include whole U2 as one span? Not provided. Only E3 caption. No span for table rows. Can't select them. So we can only select existing spans. Provide those ids. That's about 41+58+22+273+106=500 tokens > limit. Need 80-500 tokens. We can drop some. Maybe include E1,E2,E3,E4 (41+58+22+273=394) within limit. Add note token 10+20 = 424. OK. Return JSON with span_ids.",
+          "latency_ms": 6804.258082993329,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 4416,
+          "prompt_eval_count": 4149,
+          "eval_count": 251,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering about 158 tokens of original text. Choose captions, some prose, and a few rows. Provide JSON with span_ids list. Include source-scope note and maybe uncertainty warning. Must not add prose. So list ids: E1, E2, E3, E4, E5, E24, E29, E34, E40 maybe. Count tokens approx: E1 95, E2 113, that's already >158. Need total 80-500 tokens. We can select fewer. Maybe E1 (95) + E3 (caption) (21) + E4 (13) + E24 (20) = about 149. Add uncertainty warning token reserve 20. That's fine. Provide span_ids: [\"E1\",\"E3\",\"E4\",\"E24\"].\n\nAdd note? The instruction: Reserve 10 tokens for source-scope note and another 20 for uncertainty warning when needed. We can include them implicitly? Probably not needed in JSON. Just list ids.\n\nReturn JSON only.",
+          "latency_ms": 8070.627416018397,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1258,
+          "prompt_eval_count": 1033,
+          "eval_count": 187,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 92 tokens.",
+          "latency_ms": 7862.389707937837,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 935,
+          "prompt_eval_count": 710,
+          "eval_count": 125,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce 80-token summary.",
+          "latency_ms": 10257.194792153314,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 900,
+          "prompt_eval_count": 675,
+          "eval_count": 268,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of Section 5.2. Include motivation, methods categories, examples. 80 tokens.",
+          "latency_ms": 10224.456666968763,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 785,
+          "prompt_eval_count": 560,
+          "eval_count": 142,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 6. Use only evidence. Summarize motivation, methods, settings, findings, conclusions, limitations if any. No limitations mentioned. So summary ~80 tokens.",
+          "latency_ms": 10206.559291109443,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 737,
+          "prompt_eval_count": 512,
+          "eval_count": 140,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of Section 7. Include motivation, methods, settings, findings, conclusions, limitations if any. Evidence mentions elaboration of methodologies and experimental settings, steps for extracting entities/relationships, LLM usage, prompt templates and configurations, evaluation criteria and dimensions used to assess performance against baselines. No explicit findings or limitations. So summary includes those.",
+          "latency_ms": 10856.977791991085,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 802,
+          "prompt_eval_count": 577,
+          "eval_count": 97,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of this section. 80 tokens.",
+          "latency_ms": 21069.4082910195,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 776,
+          "prompt_eval_count": 551,
+          "eval_count": 189,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, methods, settings, findings, conclusions, limitations if any. The evidence describes a case example of retrieval-augmented generation. No limitations mentioned. So summary: describes process: query, LLM extracts low/high-level keywords, dual-level retrieval on knowledge graph, retrieves entities, relationships, text chunks, feeds to LLM to generate answer. 80 tokens.",
+          "latency_ms": 20467.106374911964,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 752,
+          "prompt_eval_count": 527,
+          "eval_count": 92,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary.",
+          "latency_ms": 19365.279417019337,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 814,
+          "prompt_eval_count": 589,
+          "eval_count": 196,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 7. Include motivation, methods, settings, findings, conclusions, limitations if any. Evidence mentions elaboration of methodologies, steps for extracting entities/relationships, LLM usage, prompt templates, configurations, evaluation criteria and dimensions used to assess performance against baselines. No explicit findings or limitations reported. So summary includes those points. Target ~120 tokens.",
+          "latency_ms": 18821.427915943787,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 879,
+          "prompt_eval_count": 654,
+          "eval_count": 138,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. At least 80 tokens, target 120. Include all details.",
+          "latency_ms": 10363.913707900792,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 766,
+          "prompt_eval_count": 541,
+          "eval_count": 169,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~80 tokens. Summarize motivation, methods, settings, findings, conclusions, limitations as reported. Here only description of prompt. So summary: authors present query generation prompt that defines framework to identify user roles, objectives, tasks, and high-level questions. No limitations mentioned. Let's craft ~80 tokens.",
+          "latency_ms": 11744.72075002268,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 829,
+          "prompt_eval_count": 604,
+          "eval_count": 220,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, methods, findings, conclusions, limitations if any. The evidence only describes the prompt design. No limitations mentioned. So summary: describes prompt for graph generation extracting ER info, identifies entities types, attributes, relationships, strength scores, keywords. 120 tokens target.",
+          "latency_ms": 19369.934582849964,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 741,
+          "prompt_eval_count": 516,
+          "eval_count": 126,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation? Not really. Methods: prompt for keyword extraction distinguishing high/low level, returns JSON with two fields. Findings? none. Limitations? none. So summary ~ 45 tokens.",
+          "latency_ms": 19481.07354203239,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3931,
+          "prompt_eval_count": 3664,
+          "eval_count": 225,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids for a table-dominant summary. Choose caption E3 and some rows from table: maybe include query and decisions. Include E4-E5 (query), E6-E10 (NaiveRAG excerpt), E16-E19 (LightRAG excerpt), and decision rows E27-E46. Ensure token count ~116 original text. Let's count roughly: E3 (21), E4 (14), E5 (5), E6 (18), E7 (18), E8 (14), E9 (15), E10 (3) =107 so far. Add maybe E27 (20) brings to 127. Need around 116, okay within 80-500. We'll include up to E27. Provide span_ids list.",
+          "latency_ms": 13006.502165924758,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 832,
+          "prompt_eval_count": 607,
+          "eval_count": 131,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to summarize.",
+          "latency_ms": 11630.386583972722,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 818,
+          "prompt_eval_count": 593,
+          "eval_count": 163,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, method, findings, conclusions, limitations if any. Only given info: describes a method for extracting keywords, distinguishing high vs low, returned in JSON with two fields. No limitations mentioned. So summary ~120 tokens.",
+          "latency_ms": 6400.98874992691,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "group_summary",
+          "estimated_prompt_tokens": 5034,
+          "prompt_eval_count": 4809,
+          "eval_count": 1219,
+          "think": "low",
+          "num_predict": 2500,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce summary using only evidence.",
+          "latency_ms": 10123.740541981533,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "document_summary",
+          "estimated_prompt_tokens": 2202,
+          "prompt_eval_count": 1977,
+          "eval_count": 1189,
+          "think": "low",
+          "num_predict": 2500,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~500 tokens.",
+          "latency_ms": 10851.811292115599,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ],
+      "chunk_count": 42,
+      "q2_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG architecture vs GraphRAG architecture",
+          "LightRAG vs GraphRAG performance metrics",
+          "LightRAG vs GraphRAG limitations and scalability"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "q3_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "What is the performance of the ablated versions of LightRAG?",
+        "sub_queries": [
+          "LightRAG ablation study results",
+          "performance metrics of LightRAG ablated models",
+          "comparison of full LightRAG vs ablated versions"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "router_calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 824,
+          "prompt_eval_count": 485,
+          "eval_count": 114,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. The question is a comparison, so Synthesis. Provide standalone_question: \"Compare LightRAG with GraphRAG.\" sub_queries 2-3 short queries. Provide maybe mechanisms, performance, limitations. Output.",
+          "latency_ms": 11473.172249970958,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 825,
+          "prompt_eval_count": 486,
+          "eval_count": 181,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. The question: \"Performance of ablated versions of LightRAG.\" This is asking about performance of ablated versions, likely comparing across sections. That's Synthesis. Standalone question: need to make it complete: \"What is the performance of the ablated versions of LightRAG?\" That's English. sub_queries: maybe \"LightRAG ablation study results\", \"performance metrics of LightRAG ablated models\", \"comparison of LightRAG full vs ablated versions\". Provide 2-3. Output JSON.",
+          "latency_ms": 23530.327833956107,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ]
+    },
+    {
+      "chunk_target": 800,
+      "latency_ms": 156700.67399996333,
+      "errors": [],
+      "calls": [
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1674,
+          "prompt_eval_count": 1449,
+          "eval_count": 209,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~156 tokens.",
+          "latency_ms": 12207.389583112672,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1145,
+          "prompt_eval_count": 920,
+          "eval_count": 294,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 2. Include motivations, methods, settings, findings, conclusions, limitations as reported. The evidence includes description of RAG, formal definition, LightRAG architecture, and key points targeted. No findings or limitations reported. So summary will state what authors describe.",
+          "latency_ms": 13951.780959032476,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 882,
+          "prompt_eval_count": 657,
+          "eval_count": 103,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary ~80 tokens.",
+          "latency_ms": 14441.506708972156,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1593,
+          "prompt_eval_count": 1368,
+          "eval_count": 261,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary ~142 tokens.",
+          "latency_ms": 15530.763082904741,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1183,
+          "prompt_eval_count": 958,
+          "eval_count": 176,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~80 tokens.",
+          "latency_ms": 18212.07566699013,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 802,
+          "prompt_eval_count": 577,
+          "eval_count": 155,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 3.3. Use only statements. Summarize motivation, methods, findings, conclusions, limitations if any. Here only methods described. No findings. So summary includes utilization of retrieved info and context integration. 80 tokens.",
+          "latency_ms": 17380.837416974828,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 878,
+          "prompt_eval_count": 653,
+          "eval_count": 117,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary 80 tokens.",
+          "latency_ms": 17583.645333070308,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 756,
+          "prompt_eval_count": 531,
+          "eval_count": 163,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 4. Use only evidence. So summarize motivation (research questions), methods (empirical evaluations on benchmark data), findings not given. No findings reported. So summary includes that they conduct empirical evaluations to assess effectiveness addressing RQ1-4. No results.",
+          "latency_ms": 17490.906750084832,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1743,
+          "prompt_eval_count": 1518,
+          "eval_count": 358,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 4.1. Include datasets, question generation, baselines, implementation, evaluation method. 165 tokens.",
+          "latency_ms": 12980.663416907191,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3454,
+          "prompt_eval_count": 3187,
+          "eval_count": 264,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids for summary. Choose caption and some rows. Include caption (E2) and header? Header is part of U2 but not separate span. We need include header context maybe via selecting a span that includes header? Not provided as span. Could include whole table row excerpt includes header implicitly? Probably need include caption and a few rows. Provide span_ids list.\n\nSelect E2 (caption), and maybe rows: choose NaiveRAG / LightRAG Comprehensiveness row, GraphRAG / LightRAG Overall row. Those are within E2? Actually rows are in U2 text, but spans not defined for each row. Only whole table text is in U2 as one span? Actually E2 is caption, but rows are part of U2 but not separate spans. No span for rows. So we cannot select rows individually. Might need to select U2 whole as one span? There's no span id for that. Only E2 caption. So we cannot include rows. Could only include caption and prose. Provide E1, E2, E3 maybe. Provide those ids.\n\nReturn JSON with span_ids list.",
+          "latency_ms": 14021.380458027124,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3430,
+          "prompt_eval_count": 3163,
+          "eval_count": 427,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering table and key prose. Aim ~280 tokens of source text. Include caption, header, and some rows. Choose rows maybe a few. Include E3 (caption), header is part of U2 header but not separate span; need include header via span? header not separate span. We can include span that contains header? Not present. Might need to include the table rows which include header implicitly. We'll select E3 and some rows from U2 text (the table rows are in U2 original_text but not split into spans). Actually spans only listed E1-E5. No span for table rows. So cannot select rows. We can only select existing spans. Need table-dominant summary, but we lack row spans. Might be okay to include caption and maybe mention that rows are in U2 but not separate spans. We can include E3 and maybe note that table rows are in U2 but not separate. However must only output span_ids. So choose E1, E2, E3, E4, E5. That's 5 spans, total source tokens ~41+58+22+273+106=500 approx. That's within 80-500 tokens? 500 tokens borderline. Need near 280 tokens. Maybe drop E4 (273) too large. Keep E1, E2, E3, E5 = 41+58+22+106=227 tokens. Add maybe part of E4? can't partial. Could include E4 but then exceed. 227 is okay but need near 280, can add another small? No more spans. Could include E4 and drop something else. If include E4 (273) plus E3 (22) =295 plus maybe E1 small exceed. Might be okay 295 within 500. Let's do E3, E4, E5 maybe 22+273+106=401. That's okay. Provide span_ids list.",
+          "latency_ms": 16211.726458044723,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 4416,
+          "prompt_eval_count": 4149,
+          "eval_count": 315,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids covering about 158 tokens of original text. Choose captions, some prose, and a few rows. Include E3 caption, E4 query, maybe some rows E5-E11, plus E24-E27 etc. Count tokens approx. Let's pick:\n\nE1 (95), E3 (21), E4 (13), E5 (18), E6 (15), E7 (18), E8 (22), E9 (32), E10 (22), E24 (20), E25 (23), E26 (22). Sum ~ 301 >158. Need reduce. Maybe drop some rows. Aim ~158.\n\nTake E1 (95), E3 (21) =>116, add E4 (13)=>129, add E5 (18)=>147, add E24 (20)=>167 slightly over. Could drop E5. Then 149. Add small like E45 (51) too big. Maybe add E25 (23) instead of E5: 129+23=152. Good.\n\nThus span_ids: E1, E3, E4, E24, E25. That's 95+21+13+20+23=172 slightly over. Need ~158. Drop maybe E24 (20) keep E25 (23). Then 152. Good.\n\nReturn JSON with span_ids list.",
+          "latency_ms": 16154.718541074544,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 1258,
+          "prompt_eval_count": 1033,
+          "eval_count": 180,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 92 tokens.",
+          "latency_ms": 13296.34683392942,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 935,
+          "prompt_eval_count": 710,
+          "eval_count": 124,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "Need to produce 80-token summary.",
+          "latency_ms": 12185.179042164236,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 900,
+          "prompt_eval_count": 675,
+          "eval_count": 266,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of Section 5.2. Include motivation, methods categories, examples. No extra. 80 tokens.",
+          "latency_ms": 10887.951625045389,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 785,
+          "prompt_eval_count": 560,
+          "eval_count": 112,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary 80 tokens.",
+          "latency_ms": 10825.061332900077,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 737,
+          "prompt_eval_count": 512,
+          "eval_count": 164,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of Section 7. Use evidence. Summarize motivation, methods, settings, findings, conclusions, limitations if any. Evidence mentions elaboration of methodologies and experimental settings, steps for extracting entities/relationships, LLM usage, prompt templates and configurations, evaluation criteria and dimensions used to assess performance against baselines. No findings or limitations mentioned. So summary includes those. 80 tokens.",
+          "latency_ms": 30915.80658289604,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 802,
+          "prompt_eval_count": 577,
+          "eval_count": 108,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce a section summary of this evidence. 80 tokens. Summarize the dataset stats.",
+          "latency_ms": 30634.102542186156,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 776,
+          "prompt_eval_count": 551,
+          "eval_count": 190,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, methods, settings, findings, conclusions, limitations as reported. Here only description of process. So summary: authors illustrate retrieve-and-generate example where query triggers LLM to extract low/high-level keywords, guide dual-level retrieval on knowledge graph, retrieve entities, relationships, text chunks, feed to LLM to produce answer. No limitations mentioned. 80 tokens.",
+          "latency_ms": 30224.31695810519,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 752,
+          "prompt_eval_count": 527,
+          "eval_count": 100,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~80 tokens.",
+          "latency_ms": 30032.318209065124,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 814,
+          "prompt_eval_count": 589,
+          "eval_count": 189,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of Section 7. Include motivation, methods, settings, findings, conclusions, limitations if any. Evidence only mentions elaboration of methodologies, steps for extracting entities/relationships, LLM usage, prompt templates, configurations, evaluation criteria and dimensions against baselines. No findings or limitations reported. So summary includes those. Target ~120 tokens.",
+          "latency_ms": 15908.204874955118,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 879,
+          "prompt_eval_count": 654,
+          "eval_count": 145,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. At least 80 tokens, target 120. Include all details.",
+          "latency_ms": 16155.333584174514,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 766,
+          "prompt_eval_count": 541,
+          "eval_count": 165,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Use only evidence. Summarize motivation, methods, settings, findings, conclusions, limitations if any. Here: describes prompt for query generation, outlines framework identifying user roles, objectives, defines five users, five tasks each, five questions each. No limitations mentioned. So summary ~80 tokens.",
+          "latency_ms": 21436.41695799306,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 741,
+          "prompt_eval_count": 516,
+          "eval_count": 93,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary of this section. 80 tokens.",
+          "latency_ms": 21635.221750009805,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 3931,
+          "prompt_eval_count": 3664,
+          "eval_count": 278,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output span_ids for a table-dominant summary. Choose caption E3 and some rows from table: include query and maybe decision rows. Include E4,E5 for query, E27-E46 for decisions. Also include caption. Ensure token count ~116 original. Let's pick: E3 (caption), E4,E5 (query), E27 (Comprehensiveness winner), E28,E30,E31 (explanation), E32 (Diversity winner), E33,E34,E35,E36, E37 (Empowerment winner), E38,E39,E40,E41, E42 (Overall winner), E43,E44,E45,E46. That's many but okay. Provide JSON list.",
+          "latency_ms": 12029.994833050296,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 832,
+          "prompt_eval_count": 607,
+          "eval_count": 135,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need summary 80 tokens.",
+          "latency_ms": 12132.451792014763,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "section_summary",
+          "estimated_prompt_tokens": 818,
+          "prompt_eval_count": 593,
+          "eval_count": 173,
+          "think": "low",
+          "num_predict": 1200,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary of this section. Include motivation, method, findings, conclusions, limitations if any. Only given info: prompt describes method for extracting keywords, distinguishing high-level vs low-level, returned in JSON with two fields. No limitations mentioned. So summary ~120 tokens.",
+          "latency_ms": 7238.411041907966,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "group_summary",
+          "estimated_prompt_tokens": 5165,
+          "prompt_eval_count": 4940,
+          "eval_count": 1050,
+          "think": "low",
+          "num_predict": 2500,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary using only evidence. Let's craft.",
+          "latency_ms": 16136.101000010967,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "document_summary",
+          "estimated_prompt_tokens": 2029,
+          "prompt_eval_count": 1804,
+          "eval_count": 1037,
+          "think": "low",
+          "num_predict": 2500,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to produce summary ~500 tokens.",
+          "latency_ms": 16485.853334190324,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ],
+      "chunk_count": 37,
+      "q2_plan": {
+        "type": "plan",
+        "question_type": "Synthesis",
+        "standalone_question": "Compare LightRAG with GraphRAG.",
+        "sub_queries": [
+          "LightRAG vs GraphRAG architecture",
+          "LightRAG and GraphRAG performance comparison",
+          "LightRAG and GraphRAG cost and maintenance"
+        ],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "q3_plan": {
+        "type": "plan",
+        "question_type": "Lookup",
+        "standalone_question": "What is the performance of the ablated versions of LightRAG?",
+        "sub_queries": [],
+        "plan_source": "router",
+        "fallback_reason": null,
+        "rewrite_language_mismatch": false,
+        "router_standalone_question": null
+      },
+      "router_calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 824,
+          "prompt_eval_count": 485,
+          "eval_count": 138,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. It's a comparison => Synthesis. Provide standalone_question: \"Compare LightRAG with GraphRAG.\" sub_queries 2-3. Provide queries like \"LightRAG architecture vs GraphRAG architecture\", \"LightRAG performance metrics compared to GraphRAG\", \"LightRAG and GraphRAG cost and maintenance\". Output.",
+          "latency_ms": 16746.749917045236,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        },
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 825,
+          "prompt_eval_count": 486,
+          "eval_count": 110,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to output JSON. Determine type: asking about performance of ablated versions of LightRAG – likely lookup of results from a table. Could be synthesis across sections? Probably lookup. Use Lookup. sub_queries [].\n\nstandalone_question: \"What is the performance of the ablated versions of LightRAG?\" Ensure language English.\n\nReturn JSON.",
+          "latency_ms": 10390.118333976716,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null,
+          "rewrite_language_mismatch": false,
+          "router_standalone_question": null
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 975.4705000668764
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 1068.2140421122313
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "2 RETRIEVAL-AUGMENTED GENERATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4824,
+      "latency_ms": 998.6058750655502
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 1053.0729999300092
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 1090.075665852055
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "1 INTRODUCTION",
+          "2 RETRIEVAL-AUGMENTED GENERATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4824,
+      "latency_ms": 1133.8995839469135
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 1319.3382918834686
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4414,
+      "latency_ms": 965.8560000825673
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 0.8333333333333334,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4633,
+      "latency_ms": 855.9354168828577
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 2,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 0.6666666666666666,
+      "retrieved_sections": {
+        "lookup": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4550,
+      "latency_ms": 1767.585374880582
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 2,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 0.6666666666666666,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4550,
+      "latency_ms": 963.3419578894973
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 256,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 2,
+        "cost": 2,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 0.6666666666666666,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 4960,
+      "latency_ms": 1099.6822498273104
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 3078,
+      "latency_ms": 1230.4440410807729
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 3078,
+      "latency_ms": 1130.4058330133557
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 4333,
+      "latency_ms": 1322.4992498289794
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 3078,
+      "latency_ms": 1322.2917919047177
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 3078,
+      "latency_ms": 1153.054374968633
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 4333,
+      "latency_ms": 1276.8554999493062
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 2950,
+      "latency_ms": 1212.0451249647886
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 2950,
+      "latency_ms": 1154.5964998658746
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 3334,
+      "latency_ms": 1136.9712501764297
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 2950,
+      "latency_ms": 1141.2053329404444
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": false,
+        "update": false
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)"
+        ]
+      },
+      "context_tokens": 2950,
+      "latency_ms": 1129.146457882598
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 500,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ],
+        "synthesis": [
+          "1 INTRODUCTION",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5228,
+      "latency_ms": 1164.1602499876171
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 1070.6265829503536
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 818.3958330191672
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.0,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 6392,
+      "latency_ms": 921.3123749941587
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 851.9292499404401
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 917.4816249869764
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.1,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "6 CONCLUSION",
+          "Appendix — 7.3.4 PROMPTS FOR RAG EVALUATION",
+          "Appendix — 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG"
+        ]
+      },
+      "context_tokens": 6392,
+      "latency_ms": 974.6297081001103
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 860.5531249195337
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "1 INTRODUCTION",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 954.5787919778377
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.25,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+          "6 CONCLUSION",
+          "7 APPENDIX"
+        ],
+        "synthesis": [
+          "ABSTRACT",
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5393,
+      "latency_ms": 963.2681659422815
+    },
+    {
+      "settings": {
+        "lookup_top_k": 3,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 919.7198750916868
+    },
+    {
+      "settings": {
+        "lookup_top_k": 5,
+        "synthesis_top_k": 3,
+        "sub_query_top_k": 2,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5009,
+      "latency_ms": 891.6107912082225
+    },
+    {
+      "settings": {
+        "lookup_top_k": 7,
+        "synthesis_top_k": 5,
+        "sub_query_top_k": 3,
+        "chunk_token_target": 800,
+        "answer_think": "medium",
+        "bm25_weight": 0.5,
+        "summary_concurrency": 4
+      },
+      "first_relevant_rank": {
+        "table2": 1,
+        "cost": 1,
+        "update": 1
+      },
+      "context_coverage": {
+        "table2": true,
+        "cost": true,
+        "update": true
+      },
+      "mrr": 1.0,
+      "retrieved_sections": {
+        "lookup": [
+          "ABSTRACT",
+          "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+          "4 EVALUATION",
+          "4.1 EXPERIMENTAL SETTINGS",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ],
+        "synthesis": [
+          "4 EVALUATION",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+          "4.3 ABLATION STUDIES (RQ2)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.4 CASE STUDY (RQ3)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+          "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)"
+        ]
+      },
+      "context_tokens": 5137,
+      "latency_ms": 855.8645418379456
+    }
+  ],
+  "selection": {
+    "lookup_top_k": 5,
+    "synthesis_top_k": 3,
+    "sub_query_top_k": 2,
+    "chunk_token_target": 800,
+    "answer_think": "medium",
+    "bm25_weight": 0.0,
+    "summary_concurrency": 4
+  },
+  "selection_reason": "Maximize actual Router evidence coverage, then MRR; ties prefer dense and documented defaults."
+}

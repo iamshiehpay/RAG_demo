@@ -23,6 +23,10 @@ DOCUMENT_SUMMARY_TARGET_TOKENS = 500
 LOOKUP_TOP_K = 5
 SYNTHESIS_TOP_K = 3
 SUB_QUERY_TOP_K = 2
+BM25_WEIGHT = 0.0
+BM25_K1 = 1.5
+BM25_B = 0.75
+RRF_K = 60
 # Conservative allowances for tokenization at prompt joins and repeated source labels.
 PACKING_JOIN_TOKEN_ALLOWANCE = 32
 SOURCE_LABEL_TOKEN_ALLOWANCE = 8

@@ -104,6 +104,7 @@ export type RetrievalEvent = {
 export type RetrievedChunk = {
   chunk: Chunk;
   score: number;
+  ranking_score: number | null;
 };
 
 export type RetryEvent = {

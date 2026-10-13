@@ -20,6 +20,7 @@ export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount
       </dl>}
       <p className={invalidCitationCount ? 'error' : 'muted'}>Invalid Citations: {invalidCitationCount}</p>
       <p className="muted">Chunks dropped because of Context Budget: {droppedChunkCount}</p>
+      <p className="muted">Highest retrieved cosine similarity: {chunks.length ? Math.max(...chunks.map(item => item.score)).toFixed(4) : 'Not retrieved'}</p>
       {summaryLevel && <p className="muted">Summary Tree level: {summaryLevel}</p>}
       {calls.map((call, i) => <section className="trace-call" key={i} aria-label={`LLM call ${i + 1}`}>
         <h4><span>{String(i + 1).padStart(2, '0')} / {call.call_type}</span><span className="call-think">think={call.think}</span></h4>
@@ -38,6 +39,7 @@ export function Trace({ calls, chunks, plan, thinking = '', invalidCitationCount
       {chunks.length > 0 && <div className="retrieved-chunks"><h4>檢索到的 Chunks · cosine similarity</h4>
         {chunks.map(item => <details key={item.chunk.id}>
           <summary>{pageRange(item.chunk)} · {item.chunk.section}<span className="similarity">{item.score.toFixed(4)}</span></summary>
+          {item.ranking_score != null && <p className="muted">Weighted RRF score: {item.ranking_score.toFixed(6)}</p>}
           <pre>{item.chunk.text}</pre>
         </details>)}
       </div>}

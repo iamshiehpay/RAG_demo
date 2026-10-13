@@ -79,7 +79,12 @@ async def test_second_document_real_ingestion_and_golden_facts(pytestconfig):
             app,
             gateway,
             DOCUMENT,
-            SECOND_DOCUMENT_CASES,
+            tuple(
+                c
+                for c in SECOND_DOCUMENT_CASES
+                if not pytestconfig.getoption("--eval-cases")
+                or c.id in {v.strip() for v in pytestconfig.getoption("--eval-cases").split(",")}
+            ),
             repeats=pytestconfig.getoption("--eval-repeats"),
             metadata={
                 "Revision": revision,

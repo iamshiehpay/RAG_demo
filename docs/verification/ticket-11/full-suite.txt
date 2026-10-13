@@ -1,0 +1,321 @@
+........................................................................ [ 22%]
+..............................................................F......... [ 44%]
+........................................................................ [ 66%]
+.......................................F................................ [ 88%]
+...............FFF...................                                    [100%]
+=================================== FAILURES ===================================
+_ test_english_current_question_after_chinese_history_controls_answer_language _
+
+    async def test_english_current_question_after_chinese_history_controls_answer_language():
+        question = "Performance of ablated versions of LightRAG"
+        llm = ScriptedLLM(
+            [
+                json.dumps(
+                    dict(
+                        question_type="Synthesis",
+                        standalone_question="LightRAG 的消融版本的性能如何？",
+                        sub_queries=["LightRAG ablation"],
+                    )
+                ),
+                "Not mentioned in the document.",
+            ]
+        )
+        app = Application(FixedEmbedder(), LLMGateway(llm))
+        assert [e async for e in app.upload_document(text_pdf(), "sample.pdf")][-1].type == "ready"
+        events = [
+            e
+            async for e in app.ask(
+                question, history=[ConversationTurn(question="它的成本呢？", answer="文件中未提及")]
+            )
+        ]
+        assert events[0].standalone_question == question
+        assert events[0].rewrite_language_mismatch
+        messages = llm.ask_calls[-1].messages
+        assert "CURRENT USER QUESTION controls the answer language" in messages[0]["content"]
+>       assert f"Current user question (language reference): {question}" in messages[-1]["content"]
+E       AssertionError: assert 'Current user question (language reference): Performance of ablated versions of LightRAG' in 'Document excerpts:\n[C1] Virtual Section 1 (p.1)\nhello Document\n\nQuestion: Performance of ablated versions of LightRAG'
+
+tests/integration/test_question_language.py:75: AssertionError
+____________ test_synthesis_small_evidence_budget_drops_are_counted ____________
+
+    async def test_synthesis_small_evidence_budget_drops_are_counted():
+        import pymupdf
+    
+        from chat_document.settings import RetrievalSettings
+    
+        from .test_router_synthesis import router_script
+    
+        with pymupdf.open() as pdf:
+            page = pdf.new_page(width=1000, height=8000)
+            page.insert_text((50, 50), "1 Measurements", fontsize=14)
+            for i in range(5):
+                assert (
+                    page.insert_textbox(
+                        pymupdf.Rect(50, 100 + i * 1400, 950, 1300 + i * 1400),
+                        f"Measurement {i}. " + "cost " * 950,
+                        fontsize=10,
+                    )
+                    >= 0
+                )
+            data = pdf.tobytes()
+        question = "cost " * 900
+        llm = ScriptedLLM([router_script("Synthesis", question), "Supported cost [C1]."])
+        app = Application(
+            OllamaEmbedder(),
+            LLMGateway(llm),
+            settings=RetrievalSettings(synthesis_top_k=5, chunk_token_target=1000),
+        )
+        assert [e async for e in app.upload_document(data, "measurements.pdf")][-1].type == "ready"
+        events = [e async for e in app.ask(question)]
+        assert not any(e.type == "error" for e in events)
+        retrieval = next(e for e in events if e.type == "retrieval")
+        trace = next(e for e in events if e.type == "trace")
+>       assert retrieval.dropped_chunk_count == 5 - len(retrieval.chunks) > 0
+E       AssertionError: assert (5 - 5) > 0
+E        +  where 5 = len([RetrievedChunk(chunk=Chunk(id='3638e948a6e04fe0b8fccfcedb372a8f:chunk-1', section_id='section-1', section='1 Measurem...aders=[], table_rows=[], table_reconstructed=False, linked_chunk_ids=[]), score=0.680865466594696, ranking_score=None)])
+E        +    where [RetrievedChunk(chunk=Chunk(id='3638e948a6e04fe0b8fccfcedb372a8f:chunk-1', section_id='section-1', section='1 Measurem...aders=[], table_rows=[], table_reconstructed=False, linked_chunk_ids=[]), score=0.680865466594696, ranking_score=None)] = RetrievalEvent(type='retrieval', chunks=[RetrievedChunk(chunk=Chunk(id='3638e948a6e04fe0b8fccfcedb372a8f:chunk-1', sec... table_reconstructed=False, linked_chunk_ids=[]), score=0.680865466594696, ranking_score=None)], dropped_chunk_count=0).chunks
+
+tests/integration/test_tables.py:274: AssertionError
+______ test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed ______
+
+tmp_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-303/test_router_lookup_passes_but_0')
+
+    async def test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed(tmp_path):
+        class ScriptedApplication:
+            async def upload_document(self, content, name):
+                yield ReadyEvent(document_id="d", name=name, chunk_count=0)
+    
+            async def ask(self, question, *, history):
+                yield plans.pop(0)
+                yield FinalEvent(answer="Evidence", citations=[])
+    
+        plans = [
+            PlanEvent(
+                question_type="Lookup",
+                standalone_question="Question?",
+                sub_queries=[],
+                plan_source="router",
+            ),
+            PlanEvent(
+                question_type="Lookup",
+                standalone_question="Question?",
+                sub_queries=[],
+                plan_source="fallback",
+                fallback_reason="invalid_json",
+            ),
+        ]
+        path = tmp_path / "document.pdf"
+        path.write_bytes(b"scripted Document")
+        case = EvaluationCase("lookup", "Question?", expected_question_type="Lookup")
+>       report = await run_evaluation(
+            ScriptedApplication(), RecordingGateway(ScriptedLLM([])), path, (case,), repeats=2
+        )
+
+tests/unit/test_eval_plan.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+application = <test_eval_plan.test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed.<locals>.ScriptedApplication object at 0x10d34dd00>
+gateway = <eval.runner.RecordingGateway object at 0x10d34e600>
+document_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-303/test_router_lookup_passes_but_0/document.pdf')
+cases = (EvaluationCase(id='lookup', question='Question?', facts=(), expected_question_type='Lookup', history=(), minimum_cita...ections=0, required_citation_page=None, required_citation_term=None, standalone_terms=(), accepted_question_types=()),)
+repeats = 2, metadata = None, progress = None
+
+    async def run_evaluation(
+        application: Application,
+        gateway: RecordingGateway,
+        document_path: Path,
+        cases: tuple[EvaluationCase, ...],
+        *,
+        repeats: int = 1,
+        metadata: dict[str, str] | None = None,
+        progress: Callable[[str], None] | None = None,
+    ) -> EvaluationReport:
+        if repeats < 1:
+            raise ValueError("repeats must be a positive integer")
+        if not cases or len({case.id for case in cases}) != len(cases):
+            raise ValueError("Provide nonempty cases with unique ids")
+        content = document_path.read_bytes()
+        report = EvaluationReport(
+            document_path.name, hashlib.sha256(content).hexdigest(), repeats, metadata=metadata or {}
+        )
+        report.metadata.update(
+            {
+>               "Effective settings": json.dumps(application.settings.model_dump(), sort_keys=True),
+                                                 ^^^^^^^^^^^^^^^^^^^^
+                "Pipeline version": PIPELINE_VERSION,
+            }
+        )
+E       AttributeError: 'ScriptedApplication' object has no attribute 'settings'
+
+eval/runner.py:224: AttributeError
+________ test_follow_up_must_change_and_resolve_the_canonical_referents ________
+
+tmp_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-303/test_follow_up_must_change_and0')
+
+    async def test_follow_up_must_change_and_resolve_the_canonical_referents(tmp_path):
+        from eval.golden_facts import router_cases
+    
+        class ScriptedApplication:
+            async def upload_document(self, content, name):
+                yield ReadyEvent(document_id="d", name=name, chunk_count=0)
+    
+            async def ask(self, question, *, history):
+                yield plans.pop(0)
+                yield FinalEvent(answer="Evidence", citations=[])
+    
+        cost, comparison = router_cases()[10:12]
+        plans = [
+            PlanEvent(question_type="Lookup", standalone_question=cost.question, sub_queries=[]),
+            PlanEvent(
+                question_type="Lookup",
+                standalone_question="What is its retrieval cost?",
+                sub_queries=[],
+            ),
+            PlanEvent(
+                question_type="Lookup",
+                standalone_question="LightRAG 的檢索成本是多少？",
+                sub_queries=[],
+            ),
+            PlanEvent(
+                question_type="Synthesis",
+                standalone_question="Compare GraphRAG with it.",
+                sub_queries=[],
+            ),
+            PlanEvent(
+                question_type="Synthesis",
+                standalone_question="Compare LightRAG with GraphRAG.",
+                sub_queries=[],
+            ),
+        ]
+        path = tmp_path / "document.pdf"
+        path.write_bytes(b"scripted Document")
+        gateway = RecordingGateway(ScriptedLLM([]))
+>       cost_report = await run_evaluation(ScriptedApplication(), gateway, path, (cost,), repeats=3)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/unit/test_eval_plan.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+application = <test_eval_plan.test_follow_up_must_change_and_resolve_the_canonical_referents.<locals>.ScriptedApplication object at 0x10d34cce0>
+gateway = <eval.runner.RecordingGateway object at 0x10d34c9b0>
+document_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-303/test_follow_up_must_change_and0/document.pdf')
+cases = (EvaluationCase(id='ROUTER_11', question='那 LightRAG 呢？', facts=(), expected_question_type='Lookup', history=(('user',..._terms=(('LightRAG',), ('retrieval cost', 'retrieval costs', 'cost of retrieval', '成本')), accepted_question_types=()),)
+repeats = 3, metadata = None, progress = None
+
+    async def run_evaluation(
+        application: Application,
+        gateway: RecordingGateway,
+        document_path: Path,
+        cases: tuple[EvaluationCase, ...],
+        *,
+        repeats: int = 1,
+        metadata: dict[str, str] | None = None,
+        progress: Callable[[str], None] | None = None,
+    ) -> EvaluationReport:
+        if repeats < 1:
+            raise ValueError("repeats must be a positive integer")
+        if not cases or len({case.id for case in cases}) != len(cases):
+            raise ValueError("Provide nonempty cases with unique ids")
+        content = document_path.read_bytes()
+        report = EvaluationReport(
+            document_path.name, hashlib.sha256(content).hexdigest(), repeats, metadata=metadata or {}
+        )
+        report.metadata.update(
+            {
+>               "Effective settings": json.dumps(application.settings.model_dump(), sort_keys=True),
+                                                 ^^^^^^^^^^^^^^^^^^^^
+                "Pipeline version": PIPELINE_VERSION,
+            }
+        )
+E       AttributeError: 'ScriptedApplication' object has no attribute 'settings'
+
+eval/runner.py:224: AttributeError
+________ test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite ________
+
+tmp_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-303/test_flagged_language_mismatch0')
+
+    async def test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite(tmp_path):
+        from eval.golden_facts import router_cases
+    
+        class ScriptedApplication:
+            async def upload_document(self, content, name):
+                yield ReadyEvent(document_id="d", name=name, chunk_count=0)
+    
+            async def ask(self, question, *, history):
+                yield PlanEvent(
+                    question_type="Lookup",
+                    standalone_question="LightRAG 的檢索成本是多少？",
+                    sub_queries=[],
+                    rewrite_language_mismatch=True,
+                    router_standalone_question="What is LightRAG's retrieval cost?",
+                )
+                yield FinalEvent(answer="Evidence", citations=[])
+    
+        path = tmp_path / "document.pdf"
+        path.write_bytes(b"scripted Document")
+>       report = await run_evaluation(
+            ScriptedApplication(), RecordingGateway(ScriptedLLM([])), path, (router_cases()[10],)
+        )
+
+tests/unit/test_eval_plan.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+application = <test_eval_plan.test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite.<locals>.ScriptedApplication object at 0x10d34cbc0>
+gateway = <eval.runner.RecordingGateway object at 0x10d34c380>
+document_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-303/test_flagged_language_mismatch0/document.pdf')
+cases = (EvaluationCase(id='ROUTER_11', question='那 LightRAG 呢？', facts=(), expected_question_type='Lookup', history=(('user',..._terms=(('LightRAG',), ('retrieval cost', 'retrieval costs', 'cost of retrieval', '成本')), accepted_question_types=()),)
+repeats = 1, metadata = None, progress = None
+
+    async def run_evaluation(
+        application: Application,
+        gateway: RecordingGateway,
+        document_path: Path,
+        cases: tuple[EvaluationCase, ...],
+        *,
+        repeats: int = 1,
+        metadata: dict[str, str] | None = None,
+        progress: Callable[[str], None] | None = None,
+    ) -> EvaluationReport:
+        if repeats < 1:
+            raise ValueError("repeats must be a positive integer")
+        if not cases or len({case.id for case in cases}) != len(cases):
+            raise ValueError("Provide nonempty cases with unique ids")
+        content = document_path.read_bytes()
+        report = EvaluationReport(
+            document_path.name, hashlib.sha256(content).hexdigest(), repeats, metadata=metadata or {}
+        )
+        report.metadata.update(
+            {
+>               "Effective settings": json.dumps(application.settings.model_dump(), sort_keys=True),
+                                                 ^^^^^^^^^^^^^^^^^^^^
+                "Pipeline version": PIPELINE_VERSION,
+            }
+        )
+E       AttributeError: 'ScriptedApplication' object has no attribute 'settings'
+
+eval/runner.py:224: AttributeError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/shiehpay/Desktop/resume/rag/.worktrees/11-tuning-and-acceptance/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_question_language.py::test_english_current_question_after_chinese_history_controls_answer_language
+FAILED tests/integration/test_tables.py::test_synthesis_small_evidence_budget_drops_are_counted
+FAILED tests/unit/test_eval_plan.py::test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed
+FAILED tests/unit/test_eval_plan.py::test_follow_up_must_change_and_resolve_the_canonical_referents
+FAILED tests/unit/test_eval_plan.py::test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite
+5 failed, 320 passed, 3 deselected, 6 warnings in 259.81s (0:04:19)
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

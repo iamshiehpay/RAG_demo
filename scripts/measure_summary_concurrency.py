@@ -8,8 +8,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
 
+from chat_document.cache import PIPELINE_VERSION
 from chat_document.llm_adapter import OllamaLLM
 from chat_document.summary_tree import summary_messages
+from eval.provenance import repository_state
 from eval.runner import RecordingGateway
 
 
@@ -81,6 +83,11 @@ async def main():
         "model": "gpt-oss:120b-cloud",
         "calls_per_level": args.calls,
         "measurements": [],
+        "revision": repository_state()[0],
+        "dirty": repository_state()[1],
+        "pipeline_version": PIPELINE_VERSION,
+        "limitation": "Short synthetic prompts; observed client in-flight success "
+        "is not a universal service ceiling.",
     }
     for level in levels:
         result = await measure(level, args.calls)

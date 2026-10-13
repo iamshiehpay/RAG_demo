@@ -1,112 +1,118 @@
 # Chat with Document
 
-Upload one PDF with a text layer, ask a question, and open its `[C#]` Chunk or `[S#]` Summary Citations to check the source text and page range. Trace shows retrieved Chunks, cosine similarity and each LLM call's Context Budget.
+Upload one PDF with a text layer, ask questions, and check the Section/page Citations against the original source. Global questions use the upload-time Summary Tree; Synthesis retrieves across Sub-queries; Lookup retrieves original Chunks and linked tables/paragraphs. Answers stream provisionally until completion. Trace exposes routing, retrieval, thinking, tokens, discarded evidence and retries.
 
-## Run locally
+## Start locally — Python and Ollama
 
-Prerequisites: Python 3.12+, [uv](https://docs.astral.sh/uv/getting-started/installation/), and a running [Ollama](https://ollama.com/) daemon. No Node.js or API key is needed to run the committed frontend.
-
-Prepare Ollama once:
+Install **Python 3.12+** and [Ollama](https://ollama.com/). Start the local Ollama daemon, then prepare its models/account once:
 
 ```sh
 ollama signin
 ollama pull bge-m3
 ```
 
-The answer model is `gpt-oss:120b-cloud`, accessed through the local daemon's native `/api/chat`. Your Ollama account must have cloud-model access. Embedding stays local; retrieved Document text is sent to Ollama Cloud to generate answers.
+The account needs access to `gpt-oss:120b-cloud`. No API key or Node.js is required to run the committed frontend. Embeddings run locally with `bge-m3`; Document excerpts and summaries are sent to Ollama Cloud for text generation. Only PDFs with a text layer are supported; scanned, non-PDF and unreadable damaged files receive upload errors.
 
-From this repository, start the whole website with one command:
-
-```sh
-uv run uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8101
-```
-
-Open **http://127.0.0.1:8101**. Upload a PDF, wait for Ready, then ask a question. Expand Trace to inspect tokens and retrieved Chunks. Click a Citation to open the source below the conversation. `OLLAMA_BASE_URL` can override the daemon address (default `http://localhost:11434`).
-
-Download the fixed LightRAG test Document before testing or demoing:
+From a clean repository checkout:
 
 ```sh
-bash scripts/fetch_data.sh
+python3 --version                 # must be 3.12 or newer
+python3 -m venv .venv
+.venv/bin/python -m pip install -e .
+.venv/bin/python -m uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8101
 ```
 
-Example question (Q3): `Performance of ablated versions of LightRAG`.
+Open **http://127.0.0.1:8101**. FastAPI serves the committed `frontend/dist/`, including local Noto Serif TC fonts. Choose a PDF, wait for Ready and its Document overview, then Ask. `OLLAMA_BASE_URL` overrides the daemon URL (default `http://localhost:11434`). On Windows, substitute `.venv\Scripts\python.exe` for `.venv/bin/python`.
 
-## Current scope (#01, #02, #03, #04, #05, #06, #07)
+If [uv](https://docs.astral.sh/uv/) is already installed, the locked equivalent is:
 
-Upload returns HTTP 202 with a `job_id` and `events_url` after receiving the PDF bytes. Processing runs independently in a background job; GET `events_url` streams parsing → chunking → embedding n/N → summary n/N → complete, ending in `ready` or `error`. Progress can be replayed after disconnecting, and the UI offers reconnection if the progress stream is interrupted. A lost progress job (for example after server restart) releases upload controls and asks the user to choose the PDF again; HTTP 409 displays its backend detail. The question box explains why it is disabled during processing, and the backend rejects asks until ready. A successful replacement swaps Document/Index and clears conversation state together; a failed replacement retains the current Document and conversation. Concurrent replacement attempts, including during an active ask, receive HTTP 409.
+```sh
+uv run --frozen --no-dev uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8101
+```
 
-Ingestion results are stored atomically in gitignored `.cache/`: complete Document metadata/Chunks, embedding vectors and Summary Tree. The cache key includes the PDF content hash, `PIPELINE_VERSION` in `cache.py`, and processing configuration (embedding model, effective Chunk token target and summary model). The version is `ingest-v2` plus a digest of parser, table reconstruction, Chunker, embedder, domain models, cache format, tokenizer and numeric-policy sources, so changes automatically invalidate prior records on restart. Re-uploading the same content, even with a new filename or after restarting, skips parsing/Chunking/embedding/summary generation and emits `ready` directly. New processing modules must join `PIPELINE_SOURCES` when integrated; #03 includes `tables.py` and `embedder.py`; #05 includes its Summary Tree builder, summary context, answer prompt, adapter and shared Gateway dependencies. Invalid cache records are reprocessed. Failed ingestion cannot publish a partial cache entry. A cache write failure logs a warning and still publishes the fully built Document; a later upload simply reprocesses it. Answers and conversation history are never cached. The production factory anchors this cache to the repo root, independent of the working directory; application-level tests inject temporary cache directories when exercising it.
+## Fixed test Documents
 
-Relative font sizes and bold heading lines identify Sections; split Section numbers/titles and wrapped titles are combined, including numbered body-size small-caps subsections. Two-column pages are ordered by column and position; short labels inside caption-identified figures are filtered while captioned tables become separate Table Chunks. References are excluded, Appendix is retained and labelled, and heading-free Documents use fixed-length virtual Sections. Whole paragraphs are packed into roughly 500-token Chunks within each Section; only oversized paragraphs split at English/Chinese sentence boundaries with about 10% overlap, snapping to complete words when needed. Chunk page ranges follow their actual paragraphs. A guarded JSON Router produces Question Type, Standalone Question and Sub-queries in one low-thinking call. Lookup selects five primary Chunks, adds reciprocal table/paragraph links, then fills remaining budget with adjacent Chunks by primary rank. Synthesis retrieves three for the Standalone Question and two per Sub-query, deduplicated with linked tables/paragraphs in Document order. Trace counts Chunks omitted for lack of budget. Global bypasses query embedding and Chunk retrieval, selects the most detailed complete Summary Tree level that fits the answer prompt, and generates an answer with [S#] Citations in the requested format and language. Context Packer batches oversized evidence into cited facts and merges them again when needed, retaining original Citation IDs. Active Document and conversation state remain in memory and reset on restart or successful replacement upload.
-
-Upload builds Section Summaries (~15% of original text, target 80–500 tokens) concurrently; `SUMMARY_CONCURRENCY` sets the maximum in-flight calls (default 4; positive integer), or pass `summary_concurrency` to `Application`. Heading-only Sections with zero Chunks are skipped, while Table-only Sections are included. Oversized Sections are packed at whole-Chunk boundaries before the 8,500-token prompt cap, summarized in parts and merged; Table Chunk captions, headers and rows stay together. Adjacent Group Summaries are built when a level exceeds the conservative answer capacity after reserving both supported question fields and prompt overhead (within the 6,000-token evidence cap), continuing until it fits. The unchanged Section level remains available for shorter questions. The Document Summary appears as 文件概覽 after ready and remains visible throughout the conversation. Summary sources show page ranges and the covered Section titles; provenance stores all original Chunk IDs. Uncertain-table reconstruction warnings survive every summary and remain visible in its source text. Truncated/empty/failed summaries fail upload before Document publication or cache writes. Cache keys include the summary model and pipeline sources, and cache hits restore the full tree. Trace identifies the Global summary level.
-
-Coordinate table reconstruction retains caption, dataset/metric labels and comparison baselines. Tables above 2,000 tokens split between rows with repeated headers; ambiguous layouts keep raw text with「結構未能可靠重建」and the answer prompt requires disclosure. Citation source views render reconstructed tables as tables and display a limitation hint for raw fallbacks. Table 1/2 cells and Q3 evidence coverage have deterministic tests; Q3 live measurements are in `eval/reports/table-reconstruction-q3-n3.md` and `eval/reports/table-reconstruction-q3-generic-n3.md` (both record remaining answer-quality failures; the held-out Table 1 answer is recorded in `eval/reports/table-reconstruction-heldout.md`). The final Tufte design is a later ticket. Streamed text is provisional until `final`. A truncated answer retries once with `think=low`, clearing the first attempt and showing「重新產生中」. If that retry also fails, the UI clears partial text and shows a retry button. Router, query-embedding and answer connection failures stop downstream work and emit a terminal error (preceded by available Trace records). Connection errors identify the Router, query embedding or answer stage and advise checking the local Ollama daemon. Manual Retry is available on the latest turn. Invalid Citation IDs are removed, their sentence offsets are sent as structured Unverified spans for UI badges「未驗證 · Unverified」, and Trace counts the invalid occurrences; answer text and conversation history contain no UI markup; uncited sentences are not flagged (D01). Space-separated Citations and ranges are normalized, with ranges expanded only when every ID is supplied. Streamed model thinking appears in collapsed Trace details.
-
-
-Conversation history stays in memory. Only the latest two successful rounds reach Router, capped at 500 tokens per round; answer generation receives the Standalone Question, evidence and current question as its language reference. The current question controls answer language. Questions over 1,000 tokens emit an explicit `rejected` event without calling an LLM.
-Chinese answers preserve the current question's Traditional/Simplified script; ambiguous
-shared characters default to Traditional Chinese. Source numbers remain unchanged.
-
-Router names the JSON keys in its prompt and also sends the schema through Ollama `format`.
-It tolerates the observed `type` alias and extra keys. A missing Standalone Question uses the
-original question only without history; with history it records a failed rewrite. Trace shows
-`plan_source` (`router` or `fallback`) and any `fallback_reason`, so fallback Lookup is visible.
-The output reservation remains 600 tokens including thinking.
-If a rewrite switches between Chinese and non-Chinese script, the current question is used
-while preserving Question Type and Sub-queries. Trace records `rewrite_language_mismatch`
-and the original `router_standalone_question`; no second Router call or translation is made.
-For a dependent follow-up this may leave its reference unresolved, which the flag makes
-visible. This script check does not distinguish languages using the same script.
-
-Chunk size can be configured using the `CHUNK_TOKEN_TARGET` environment variable (default 500), or the keyword-only `chunk_token_target` argument to `Application`. The same value is validated by `RetrievalSettings.from_env()` and bounds virtual Sections too. Valid PDFs without a text layer are rejected as scanned Documents. Non-PDF and unreadable damaged inputs receive a distinct invalid-PDF reason; repaired PDFs with readable text are accepted with a logged warning. Citation side-notes show page ranges and Section titles, and open the original Chunk.
-
-Retrieval counts can be configured using `LOOKUP_TOP_K`, `SYNTHESIS_TOP_K`, and `SUB_QUERY_TOP_K` environment variables (defaults 5, 3, and 2), or by passing `RetrievalSettings` to `Application` for eval. Values must be positive integers.
-
-Every LLM call goes through the same Gateway: `o200k_harmony` counts the prompt, 300 tokens cover template overhead, and the policy reserves output including model thinking. Router JSON schema tokens are included in the estimate as well. Answer calls use `think=medium`, reserve 3,000 tokens and enforce the 6,700 raw-prompt-token cap. The Gateway raises before calling the adapter when the Context Budget would exceed 10,000. Trace records the estimate including the safety margin alongside Ollama's actual counts.
-
-## Checks
-
-The deterministic suite exercises the upload/ask application operations with a scripted, recording LLM and **real local bge-m3**. Ollama and bge-m3 must be available; the tests do not silently skip them. The suite also contains HTTP/SSE contract tests and a generated-event-type parity check. It does not call the cloud LLM.
+Download both public pinned versions (requires bash, curl and network):
 
 ```sh
 bash scripts/fetch_data.sh
-uv run pytest
-uv run ruff check src tests scripts/generate_event_types.py
-uv run ruff format --check src tests scripts/generate_event_types.py
-uv run python scripts/generate_event_types.py --check
 ```
 
-The default suite excludes cloud LLM evaluations. Run the 12-case live Router smoke explicitly:
+The script verifies SHA-256 on new and existing files and only publishes a complete verified download. A mismatching existing file is reported rather than silently accepted. PDFs are not committed.
 
-```bash
-uv run pytest -q -m eval tests/integration/test_router_smoke_eval.py
+| Document | Fixed source | Local path |
+|---|---|---|
+| LightRAG | [arXiv 2410.05779v3](https://arxiv.org/pdf/2410.05779v3) | `data/lightrag.pdf` |
+| Long non-RAG industrial robotics review | [arXiv 2603.06749v1](https://arxiv.org/pdf/2603.06749v1), 109 pages | `data/industrial-robotics.pdf` |
+
+Try `Summarize this document.`, `Compare LightRAG with GraphRAG.`, or `Performance of ablated versions of LightRAG`. A Chinese question receives a Chinese answer; numeric source values are preserved. A dependent follow-up is rewritten by the same Router call using only the latest two successful rounds, each capped at 500 tokens.
+
+## Processing, Citations and budgets
+
+Uploads return HTTP 202 and background SSE progress: parsing → chunking → embedding in batches of eight → summaries n/N → complete. Ready enables questions; a failed replacement retains the previous Document/conversation. Section-aware Chunks do not cross Sections; References are removed, Appendices retained. Coordinate-reconstructed tables keep their labels/baselines; uncertain reconstruction is flagged in source and answer instructions.
+
+Section Summaries retain original source IDs. Long Documents have Group layers; Global chooses the most detailed complete layer fitting its question. `[C#]` opens original Chunks; `[S#]` opens summary content, page range and covered Sections. Invalid IDs are removed with an explicit Unverified sentence marker, never silently made trustworthy. Uncited sentences are not automatically marked (D01).
+
+Every text-generation call crosses one budget guard: `o200k_harmony` prompt estimate plus 300-token template margin plus output reservation must stay within **10,000**. Router uses low/600, answers reserve 3,000 including thinking, Judge low/1,000. Trace and eval report both estimated and provider counts. `done_reason=length` fails that attempt; answer retries once with low, replacing provisional text. Discarded summary attempts may also retry without publishing truncated drafts. Questions over 1,000 tokens are rejected before LLM calls.
+
+The ingestion-only cache lives in `.cache/`, keyed by PDF content, source-derived pipeline version, embedding/summary models and effective Chunk target. It stores Document/Chunks/vectors/Summary Tree atomically. It stores no answers or conversation history. Source or ingestion-setting changes invalidate incompatible records. Final cache manifests and observed zero-model-call reuploads are recorded in `eval/reports/issue11/cache-manifest.json`; actual caches stay gitignored and must be retained/transferred for a demo.
+
+## Settings and reproducible evaluation
+
+Environment controls are read by the HTTP factory and Application/eval. Explicit `RetrievalSettings` injection is also supported. Current defaults and chosen experiment results are documented in `AGENTS.md` and `eval/reports/issue11/`.
+
+| Variable | Purpose |
+|---|---|
+| `CHUNK_TOKEN_TARGET` | Section-local paragraph target; experiments compare 256/500/800 |
+| `LOOKUP_TOP_K` | Lookup primary hits before table links/neighbors |
+| `SYNTHESIS_TOP_K`, `SUB_QUERY_TOP_K` | Main question/Sub-query hit counts |
+| `BM25_WEIGHT` | 0=dense; 0–1 weighted reciprocal-rank fusion of dense and BM25 |
+| `ANSWER_THINK` | `low` or `medium`, keeping the same 3,000 reservation |
+| `SUMMARY_CONCURRENCY` | Positive upload Summary call concurrency (default four) |
+
+BM25 uses a basic Unicode word tokenizer; Chinese queries without English lexical overlap keep dense ranking. Cosine and weighted RRF scores are distinguished in Trace. The concurrency experiment measures short guarded prompts; success through a tested in-flight count does not prove a universal cloud service ceiling.
+
+Install developer tools with `uv sync --frozen`, or `pip install pytest pytest-asyncio opencc ruff` in the environment. Run from the repository root:
+
+```sh
+PYTHONPATH=src:. uv run --frozen pytest
+PYTHONPATH=src:. uv run --frozen pytest -m eval -s --eval-cases Q1,Q2,Q3 --eval-repeats 3
+PYTHONPATH=src:. uv run --frozen pytest -m eval -s --eval-cases SECOND_NUMBER,SECOND_SUMMARY --eval-repeats 3
 ```
 
-This requires the local Ollama daemon and cloud login. It records raw responses, plans and token
-traces in a new timestamped `eval/reports/router-smoke-*.json`, resolved against the repository
-root. It reports the 12 canonical cases and eight held-out cases separately, requiring at least
-10/12 and 7/8 correct types, no fallbacks, and resolved historical topics. OpenCC (dev dependency)
-flags Simplified-to-Traditional changes in Chinese rewrites; unchanged/shared characters are
-inconclusive. Existing evidence files are never overwritten by the smoke.
+Default tests use scripted LLMs plus actual local bge-m3; Ollama must be running. They do not call the cloud LLM. `-m eval` is opt-in. `--eval-cases` excludes unrelated live tests; the 20-case Router smoke remains separately runnable with `tests/integration/test_router_smoke_eval.py`. Reports include each fact's raw rate, evidence/reason, effective settings/pipeline, all LLM counts/reservations/latencies/done reasons, separate functional status and all length attempts. Semantic/forbidden FAIL remains a known defect under D05; it is never relabelled PASS. Functional failures remain failures.
+
+The Issue11 driver uses the same Application/Gateway, real PDF processing and models, with reusable ingestion caches:
+
+```sh
+PYTHONPATH=src:. uv run --frozen python -m scripts.tune retrieval
+PYTHONPATH=src:. uv run --frozen python -m scripts.tune retrieval-controlled
+PYTHONPATH=src:. uv run --frozen python -m scripts.tune answers
+PYTHONPATH=src:. uv run --frozen python -m scripts.measure_summary_concurrency --output eval/reports/issue11/concurrency.json
+PYTHONPATH=src:. uv run --frozen python -m scripts.tune final
+```
+
+Final selected settings must match production defaults/environment before `final`. Tuning and final eval were bounded to three elapsed hours by D05; the final reports preserve measured defects rather than promising 100%. Final reports completed 27 actual answers with operational PASS and raw Golden Facts FAIL; all nine absent-answer runs passed fixed-refusal checks. No formal Router/Answer call truncated. The second-document numeric source-Citation check passed 2/3: one valid reference pointed to a different table. Detailed causes and manual numeric comparisons are in `eval/reports/issue11/conclusions.md`.
+
+## Known limitations
+
+- Reloading the page during an unfinished upload loses the frontend job identity; automatic resume across that reload is **UNPROVEN**. Keep the page open through Ready; select/upload again if needed. Restart also clears the active in-memory Document and conversation. No resume endpoint or persistence feature is claimed.
+- Answer completeness, exact Chinese script following, universal comparison overclaims and some missing per-bullet Citations have been observed. Inspect original sources; current raw N=3 outcomes/failure analysis are in the final reports. UI/table rendering PASS does not establish answer-quality PASS.
+- Judge excerpts can be nonverbatim, and the numeric binder can falsely reject correct values or falsely accept reversed table direction. Raw checker results and manual source comparisons remain separate; facts are not silently regraded.
+- Mixed-font split numeric headings can attach the numeral to the wrong Section; uncertain tables keep their raw text and warning. This preexisting parser/provenance limitation is documented, not reported as passed.
+- The second Document postdates the original August 2025 gpt-oss release, but exact hosted model weights/training provenance are opaque and **not proven**. No claim that the hosted model could never have seen it is made.
+- Only one active Document, local execution, text-layer PDFs; no Docker, OCR, cloud deployment, RAG frameworks or conversation summaries.
 
 ## Frontend development
 
-Node.js 20.19+ is needed only to edit/build the frontend. FastAPI serves committed `frontend/dist/`; Vite development runs on port 5101 and proxies `/api` to backend port 8101.
+Only developers need Node.js 20.19+. The approved paper/serif/Citation-margin design is preserved.
 
 ```sh
 npm ci --prefix frontend
-npm run dev --prefix frontend
+npm run dev --prefix frontend          # Vite 5101 proxies /api to backend 8101
 npm run typecheck --prefix frontend
 npm run build --prefix frontend
+PYTHONPATH=src:. uv run python scripts/generate_event_types.py --check
 ```
 
-After changing frontend source, rebuild and commit `frontend/dist/`. After changing backend event models, regenerate `frontend/src/events.ts`:
-
-```sh
-uv run python scripts/generate_event_types.py
-```
-
-## Implementation seams
-
-`src/chat_document/application.py` owns `upload_document` and `ask`; HTTP starts background upload through `start_upload` and subscribes through `upload_events`. HTTP and tests consume the same typed event streams. `ingestion.py` owns replayable job progress; `cache.py` owns versioned atomic ingestion records. `events.py` is the event-contract source of truth. Separate modules own PDF parsing, Chunking, embedding, Index, Router, Context Packer, LLM adapters/Gateway, Answer Generator and Citation mapping. `ScriptedLLM` records complete guarded requests and can simulate stream fragments or failures. These modules let later tickets extend their paths without changing the two application seams.
+After frontend edits, rebuild and commit `frontend/dist/`. `events.py` defines the SSE contract and generates `frontend/src/events.ts`. The Application's upload/ask seams own all processing; HTTP only transports their events. A standalone Python wheel does not include frontend assets; run from the full source checkout as shown above.

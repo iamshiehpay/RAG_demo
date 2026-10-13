@@ -99,6 +99,7 @@ class SummaryTree(BaseModel):
 class RetrievedChunk(BaseModel):
     chunk: Chunk
     score: float
+    ranking_score: float | None = None
 
 
 class Citation(BaseModel):
