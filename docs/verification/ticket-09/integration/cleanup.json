@@ -1,0 +1,15 @@
+{
+  "stopped_owned_pids": [
+    43808,
+    68114
+  ],
+  "ports_closed": {
+    "8190": true,
+    "8191": true
+  },
+  "browser_session": "nova-i09; final command log confirms closed",
+  "removed_temp": "/private/tmp/nova-i09-public",
+  "uv_cache": "/private/tmp/nova-i09-uv-cache retained; inactive",
+  "cloud_llm_calls": 0,
+  "containers": 0
+}

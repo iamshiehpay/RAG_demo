@@ -1,0 +1,5 @@
+
+> chat-with-document-frontend@0.1.0 test:source
+> node scripts/test_source_content.mjs
+
+SourceContent: uncertain source note and reconstructed cells passed

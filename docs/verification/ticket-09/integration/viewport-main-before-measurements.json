@@ -1,0 +1,19 @@
+[
+  {
+    "scenario": "six-short-Global-composer",
+    "bottom": -2321.859375,
+    "clientHeight": 96,
+    "intersectsViewport": false,
+    "overflow": false,
+    "questionCount": 6,
+    "readable": false,
+    "scrollHeight": 96,
+    "scrollY": 2740,
+    "text": "文件概覽設計稿示例：LightRAG 以 graph-based indexing 與 dual-level retrieval 回答文件問題，並討論增量更新、成本與實驗結果。此概覽為設計審閱用腳本，並非模型產生的結果。",
+    "top": -2417.640625,
+    "viewport": [
+      1280,
+      720
+    ]
+  }
+]

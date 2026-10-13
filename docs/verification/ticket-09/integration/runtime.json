@@ -1,0 +1,21 @@
+{
+  "session_id": "01a132c3-adb9-7940-b006-2a5686d9ca2b",
+  "evidence": "current rollout last turn_context",
+  "timestamp": "2026-10-13T02:44:37.600Z",
+  "runtime": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "approval_policy": "on-request",
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/Users/shiehpay/.hcom"
+      ],
+      "network_access": true,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    },
+    "cwd": "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design"
+  },
+  "developer_approvals_reviewer": "auto_review"
+}

@@ -1,6 +1,8 @@
 # Issue 09 candidate handoff
 
-Current correction candidate: `32926292e3735f18561bfea23ec83c0278ca46d7`. See [CRLF correction](crlf/REPORT.md) for the delta against approved `71925e2`, and [earlier review corrections](review-corrections/REPORT.md) for M1/m1/m2 evidence. The remainder of this report records the first candidate and its checks. Historical `frontend/review/DESIGN.md` pending-approval wording is preserved as draft evidence; D02 v1 is the current approved direction.
+Current integrated source checkpoint: `ee383e5dacab62897bb4e4ec24963e8fdff3f7c6`, rebased onto Main `0718466`. See [current integration and persistent-overview handoff](integration/REPORT.md) for typed #03/#05 sources, measured viewport RED→GREEN, current checks and Main self-check items. The frozen evidence head is supplied via HCOM for fresh Reviewer `nova-r09sol-duma` full-base review.
+
+Historical approved correction: source `32926292e3735f18561bfea23ec83c0278ca46d7`, frozen `e8b266c`. See [CRLF correction](crlf/REPORT.md) and [earlier review corrections](review-corrections/REPORT.md). The remainder below is historical first-candidate evidence; its status/source wording does not replace the current integration report. Historical `frontend/review/DESIGN.md` pending-approval wording remains preserved as draft evidence; D02 v1 is the approved direction.
 
 This is implementation evidence for Main nova to assign independent review and QA. It is not an Issue done claim, independent review, independent QA, or integration approval.
 

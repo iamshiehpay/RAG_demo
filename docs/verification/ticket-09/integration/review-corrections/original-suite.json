@@ -1,0 +1,5 @@
+{
+  "path": "docs/verification/ticket-09/review-corrections/browser-regressions.py",
+  "sha256": "e816e1e9e384df215a2c44e11da43330f8f5709882484e1432e337687945453f",
+  "adaptation": "Only evidence output, ROOT, and existing scripted-events.js paths changed."
+}

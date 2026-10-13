@@ -1,0 +1,5 @@
+{
+  "path": "docs/verification/ticket-09/crlf/browser-regressions.py",
+  "sha256": "05122a6833ef50ba1af51a2625f334f595a9532551a776c77f014bb583395647",
+  "adaptation": "Only evidence output, ROOT, and existing scripted-events.js paths changed."
+}
