@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
 import { AnswerProcess } from './AnswerProcess';
@@ -46,6 +46,7 @@ export function App() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadName, setUploadName] = useState('');
   const [uploadStage, setUploadStage] = useState<StageEvent | null>(null);
   const [uploadEventsUrl, setUploadEventsUrl] = useState('');
   const [error, setError] = useState('');
@@ -54,13 +55,41 @@ export function App() {
   const [sourceError, setSourceError] = useState('');
   const [sourceCitation, setSourceCitation] = useState('');
   const sourceRequest = useRef(0);
-  // null = follow the screen-size default; a boolean records the person's own choice.
+  // Wide screens: columns are open or collapsed (null = follow the screen-size default).
   const [leftPref, setLeftPref] = useState<boolean | null>(null);
   const [rightPref, setRightPref] = useState<boolean | null>(null);
+  // Narrow screens: at most one overlay at a time, kept apart from the wide-screen choice so a
+  // citation click at narrow width never changes the layout the person gets back on a wide screen.
+  // undefined = default (Document overlay only while no Document is loaded).
+  const [overlay, setOverlay] = useState<'left' | 'right' | null | undefined>(undefined);
   const narrow = useMediaQuery('(max-width: 900px)');
   const roomy = useMediaQuery('(min-width: 1200px)');
-  const leftOpen = leftPref ?? (narrow ? !document : true);
-  const rightOpen = rightPref ?? (narrow ? false : roomy);
+  const leftOpen = narrow ? (overlay === undefined ? !document : overlay === 'left') : leftPref ?? true;
+  const rightOpen = narrow ? overlay === 'right' : rightPref ?? roomy;
+  useEffect(() => setOverlay(undefined), [narrow]);
+  const setLeft = (open: boolean) => narrow ? setOverlay(open ? 'left' : null) : setLeftPref(open);
+  const setRight = (open: boolean) => narrow ? setOverlay(open ? 'right' : null) : setRightPref(open);
+  // Focus handling for the Source overlay: heading on open, the clicked Citation on close.
+  const returnFocus = useRef<HTMLElement | null>(null);
+  const sourceHeading = useRef<HTMLDivElement>(null);
+  const leftToggle = useRef<HTMLButtonElement>(null);
+  const [sourceOpenTick, setSourceOpenTick] = useState(0);
+  useEffect(() => { if (sourceOpenTick && narrow) sourceHeading.current?.focus(); }, [sourceOpenTick, narrow]);
+  function closeRight() {
+    setRight(false);
+    if (narrow) { const target = returnFocus.current; if (target?.isConnected) target.focus(); }
+  }
+  function closeLeft() { setLeft(false); if (narrow) leftToggle.current?.focus(); }
+  // Escape closes whichever overlay is open (narrow screens only).
+  useEffect(() => {
+    if (!narrow) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (rightOpen) closeRight(); else if (leftOpen && overlay !== undefined) closeLeft();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
 
   const clearSource = useCallback(() => {
     sourceRequest.current++;
@@ -83,7 +112,7 @@ export function App() {
   }, [turns]);
 
   async function upload(file: File) {
-    clearSource(); setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
+    clearSource(); setUploadName(file.name); setBusy(true); setUploading(true); setUploadStage(null); setUploadEventsUrl(''); setError('');
     const form = new FormData(); form.append('document', file);
     let eventsUrl = '';
     try {
@@ -113,7 +142,7 @@ export function App() {
       if (event.type === 'stage') setUploadStage(event);
       else if (event.type === 'ready') {
         setDocument(event); setTurns([]); clearSource(); setQuestion(''); setError('');
-        setUploading(false); setUploadEventsUrl('');
+        setUploading(false); setUploadEventsUrl(''); setOverlay(undefined);
       } else if (event.type === 'error') {
         setError(event.message); setUploading(false); setUploadEventsUrl('');
       }
@@ -176,7 +205,9 @@ export function App() {
   const showSource = useCallback(async (citation: Citation) => {
     const request = ++sourceRequest.current;
     setSource(null); setSourceError(''); setSourceLoading(true); setSourceCitation(citation.id);
-    setRightPref(true);
+    if (narrow) setOverlay('right'); else setRightPref(true);
+    returnFocus.current = globalThis.document.activeElement instanceof HTMLElement ? globalThis.document.activeElement : null;
+    setSourceOpenTick(tick => tick + 1);
     try {
       const response = await fetch(`/api/sources/${encodeURIComponent(citation.source_id)}`);
       if (!response.ok) throw new Error(response.status === 404 ? '找不到這段來源。' : '無法載入來源，請再點一次。');
@@ -187,7 +218,7 @@ export function App() {
     } finally {
       if (request === sourceRequest.current) setSourceLoading(false);
     }
-  }, []);
+  }, [narrow]);
 
   const unavailableReason = uploading ? '文件處理中，完成後即可提問。' : !document ? '請先在「文件」欄上傳有文字層的 PDF，完成後即可提問。' : busy ? '回答產生中，請稍候。' : '回答以文件為依據；點回答中的編號可查看原文。';
   const placeholder = uploading ? '文件處理中…' : !document ? '上傳文件後即可提問' : busy ? '回答產生中…' : '輸入問題，Enter 送出、Shift+Enter 換行';
@@ -204,28 +235,28 @@ export function App() {
       <div className="header-right">
         <span className="header-models">回答模型 {LLM_MODEL} · 檢索模型 {EMBEDDING_MODEL}</span>
         <div className="header-toggles">
-          <button className="secondary-button" aria-expanded={leftOpen} onClick={() => setLeftPref(!leftOpen)}>文件</button>
-          <button className="secondary-button" aria-expanded={rightOpen} onClick={() => setRightPref(!rightOpen)}>來源</button>
+          <button className="secondary-button" aria-expanded={leftOpen} ref={leftToggle} onClick={() => setLeft(!leftOpen)}>文件</button>
+          <button className="secondary-button" aria-expanded={rightOpen} onClick={() => rightOpen ? closeRight() : setRight(true)}>來源</button>
         </div>
       </div>
     </header>
     <div className="workspace">
       {leftOpen ? <aside className="pane pane-left" aria-label="文件" data-open="true">
         <div className="pane-head"><span className="label">文件</span>
-          <button className="icon-button" aria-label="收合文件欄" onClick={() => setLeftPref(false)}><PaneIcon side="left" open /></button></div>
-        <DocumentPane document={document} uploading={uploading} busy={busy} uploadStage={uploadStage}
+          <button className="icon-button" aria-label="收合文件欄" onClick={closeLeft}><PaneIcon side="left" open /></button></div>
+        <DocumentPane document={document} uploadName={uploadName} uploading={uploading} busy={busy} uploadStage={uploadStage}
           canReconnect={uploading && !busy && !!uploadEventsUrl} error={error}
           onUpload={file => void upload(file)} onReconnect={() => void reconnectUpload()} />
       </aside> : <aside className="rail rail-left" aria-label="文件（已收合）" data-open="false">
-        <button className="icon-button" aria-label="展開文件欄" onClick={() => setLeftPref(true)}><PaneIcon side="left" open={false} /></button>
+        <button className="icon-button" aria-label="展開文件欄" onClick={() => setLeft(true)}><PaneIcon side="left" open={false} /></button>
       </aside>}
 
       <main className="chat">
-        <div className="messages" ref={scroller} onScroll={onScroll} role="log" aria-label="對話">
+        <div className="messages" ref={scroller} onScroll={onScroll} role="region" aria-label="對話">
           <div className="messages-inner">
             {!turns.length && <div className="empty"><h2>{document ? '想從哪個問題開始？' : '先上傳文件，再提問。'}</h2>
               <p>{document ? '提問後，回答裡的來源編號可以點開，在右側核對原文。' : '在左側「文件」欄選擇一份有文字層的 PDF，處理完成後即可提問。'}</p>
-              {!document && !leftOpen && <button className="secondary-button" onClick={() => setLeftPref(true)}>開啟「文件」欄</button>}</div>}
+              {!document && !leftOpen && <button className="secondary-button" onClick={() => setLeft(true)}>開啟「文件」欄</button>}</div>}
             {turns.map(turn => <article className="turn" key={turn.id}>
               <div className="user-bubble">{turn.rejected ? '問題過長（未送出）' : turn.question}</div>
               <div className="assistant">
@@ -247,10 +278,10 @@ export function App() {
 
       {rightOpen ? <aside className="pane pane-right" aria-label="來源" data-open="true">
         <div className="pane-head"><span className="label">來源</span>
-          <button className="icon-button" aria-label="收合來源欄" onClick={() => setRightPref(false)}><PaneIcon side="right" open /></button></div>
-        <SourcePane source={source} citationId={sourceCitation} loading={sourceLoading} error={sourceError} />
+          <button className="icon-button" aria-label="收合來源欄" onClick={closeRight}><PaneIcon side="right" open /></button></div>
+        <SourcePane source={source} citationId={sourceCitation} loading={sourceLoading} error={sourceError} headingRef={sourceHeading} />
       </aside> : <aside className="rail rail-right" aria-label="來源（已收合）" data-open="false">
-        <button className="icon-button" aria-label="展開來源欄" onClick={() => setRightPref(true)}><PaneIcon side="right" open={false} /></button>
+        <button className="icon-button" aria-label="展開來源欄" onClick={() => setRight(true)}><PaneIcon side="right" open={false} /></button>
       </aside>}
     </div>
   </div>;

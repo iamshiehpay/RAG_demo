@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { isValidElement, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import Markdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -7,6 +8,7 @@ import { visit } from 'unist-util-visit';
 import type { Root, RootContent as MarkdownContent, PhrasingContent, Parents } from 'mdast';
 import type { Citation, UnverifiedSpan } from './events';
 import { pageRange, UnverifiedMark } from './Shared';
+import { ScrollBox } from './SourceContent';
 
 /** Align raw Markdown positions with a decoded text node without moving sentence marks. */
 function sourceValueOffsets(source: string, value: string): number[] | undefined {
@@ -34,6 +36,14 @@ function sourceValueOffsets(source: string, value: string): number[] | undefined
   }
   return rendered === value.length ? offsets : undefined;
 }
+
+function plainText(node: ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(plainText).join('');
+  if (isValidElement<{ children?: ReactNode }>(node)) return plainText(node.props.children);
+  return '';
+}
+const numericCell = (children: ReactNode) => { const text = plainText(children); return /\d/.test(text) && text.length <= 24; };
 
 export function Answer({ text, citations, onSource, provisional = false, unverified = [] }: {
   text: string; citations: Citation[]; onSource: (citation: Citation) => void;
@@ -117,8 +127,10 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
 
   // Stable renderers keep Citation triggers mounted while the source pane updates.
   const components = useMemo<Components>(() => ({
-      table: ({ children }) => <div className="table-scroll" tabIndex={0} role="region" aria-label="表格，可左右捲動">
-        <table>{children}</table></div>,
+      table: ({ children }) => <ScrollBox label="表格，可左右捲動"><table>{children}</table></ScrollBox>,
+      // Short cells holding a number never wrap, so a wide table scrolls instead of splitting "11.1".
+      th: ({ node: _node, children, ...rest }) => <th {...rest} className={numericCell(children) ? 'num-cell' : undefined}>{children}</th>,
+      td: ({ node: _node, children, ...rest }) => <td {...rest} className={numericCell(children) ? 'num-cell' : undefined}>{children}</td>,
       a: ({ children, href, node }) => {
         if (node?.properties['data-unverified']) return <UnverifiedMark />;
         const citation = href?.startsWith('#citation-') ? byId.get(href.slice(10)) : undefined;

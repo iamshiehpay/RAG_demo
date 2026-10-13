@@ -5,7 +5,7 @@ export function pageRange(source: Pick<Citation, 'page_start' | 'page_end'>) {
 }
 
 export function UnverifiedMark() {
-  return <span className="unverified-mark" role="note">未驗證 · Unverified</span>;
+  return <span className="unverified-mark" role="note">未驗證</span>;
 }
 
 export function ErrorState({ message, onRetry, disabled = false }: {

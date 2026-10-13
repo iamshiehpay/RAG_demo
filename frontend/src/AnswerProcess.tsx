@@ -91,12 +91,16 @@ function Models({ plan, calls, chunks, invalidCitationCount, droppedChunkCount }
   // The query embedding runs right after the router call, before any answer-side call.
   const retrievalAt = calls[0]?.call_type === 'router' ? 1 : 0;
   const seen = new Map<string, number>();
-  const rows: Array<{ kind: 'call'; call: LLMCallTrace; again: boolean } | { kind: 'retrieval' }> = [];
+  const rows: Array<{ kind: 'call'; call: LLMCallTrace; label: string } | { kind: 'retrieval' }> = [];
   calls.forEach((call, i) => {
     if (retrieves && i === retrievalAt) rows.push({ kind: 'retrieval' });
     const count = seen.get(call.call_type) ?? 0;
     seen.set(call.call_type, count + 1);
-    rows.push({ kind: 'call', call, again: count > 0 });
+    const name = stepNames[call.call_type] ?? call.call_type;
+    // fact_extraction runs once per batch; only a second answer call is a retry.
+    const label = call.call_type === 'fact_extraction' ? `${name} 第 ${count + 1} 批`
+      : call.call_type === 'answer' && count > 0 ? `${name}（重試）` : name;
+    rows.push({ kind: 'call', call, label });
   });
   if (retrieves && retrievalAt >= calls.length) rows.push({ kind: 'retrieval' });
   const over = calls.some(call => callTotal(call) > BUDGET);
@@ -115,7 +119,7 @@ function Models({ plan, calls, chunks, invalidCitationCount, droppedChunkCount }
           </span><span role="cell">—</span><span role="cell">—</span>
         </div>
         : <div className="process-row" role="row" key={`c${i}`}>
-          <span role="cell" className="step-name">{stepNames[row.call.call_type] ?? row.call.call_type}{row.again ? '（重試）' : ''}</span>
+          <span role="cell" className="step-name">{row.label}</span>
           <span role="cell">{LLM_MODEL}</span>
           <span role="cell">{thinkNames[row.call.think] ?? row.call.think}</span>
           <span role="cell"><BudgetBar call={row.call} /></span>

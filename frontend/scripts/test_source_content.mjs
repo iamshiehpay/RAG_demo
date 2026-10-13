@@ -24,7 +24,9 @@ assert.doesNotMatch(uncertain, /<table/);
 const grid = renderToStaticMarkup(createElement(exports.SourceContent, {
   source: { ...source, table_reconstructed: true },
 }));
-assert.match(grid, /<caption>Measured values<\/caption>/);
+assert.match(grid, /<p class="table-caption">Measured values<\/p>/);
+assert.doesNotMatch(grid, /<caption>/);
+assert.match(grid, /class="scroll-box"[^>]*role="region"/);
 assert.match(grid, /<th scope="row">alpha<\/th><td>12<\/td>/);
 assert.doesNotMatch(grid, /role="note"/);
 console.log('SourceContent: uncertain source note and reconstructed cells passed');

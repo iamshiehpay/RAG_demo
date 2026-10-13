@@ -5,18 +5,18 @@ import { EMBEDDING_MODEL, LLM_MODEL } from './models';
 import { ErrorState, UploadProgress } from './Shared';
 
 /** Left column: choose or replace the Document, show processing state and the Document Summary. */
-export function DocumentPane({ document, uploading, busy, uploadStage, canReconnect, error, onUpload, onReconnect }: {
-  document: ReadyEvent | null; uploading: boolean; busy: boolean; uploadStage: StageEvent | null;
+export function DocumentPane({ document, uploadName, uploading, busy, uploadStage, canReconnect, error, onUpload, onReconnect }: {
+  document: ReadyEvent | null; uploadName: string; uploading: boolean; busy: boolean; uploadStage: StageEvent | null;
   canReconnect: boolean; error: string; onUpload: (file: File) => void; onReconnect: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const summary = document?.document_summary ?? null;
   return <div className="document-pane">
     <section className="upload" aria-label="上傳文件">
-      <p className="doc-name">{document ? document.name : '尚未選擇文件'}</p>
-      <label className="upload-label" htmlFor="document">{document ? '換一份文件' : '選擇 PDF 文件'}</label>
-      <input id="document" type="file" accept="application/pdf,.pdf" disabled={busy || uploading}
+      <p className="doc-name">{uploading ? uploadName : document ? document.name : '尚未選擇檔案'}</p>
+      <input id="document" className="visually-hidden" type="file" accept="application/pdf,.pdf" disabled={busy || uploading}
         onChange={event => { const file = event.target.files?.[0]; if (file) onUpload(file); event.target.value = ''; }} />
+      <label className="file-button" htmlFor="document">{document ? '換一份文件' : '選擇 PDF'}</label>
       <p className="file-help">支援有文字層的 PDF；換文件會清空目前的對話。</p>
       {uploading && <UploadProgress stage={uploadStage} busy ready={false} />}
       {document && !uploading && <p className="document-meta">處理完成 · {document.chunk_count} 段原文 · 可提問</p>}
