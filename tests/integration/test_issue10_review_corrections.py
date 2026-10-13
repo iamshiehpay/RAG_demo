@@ -155,3 +155,30 @@ async def test_upload_and_global_answer_exclude_sequential_margin_folios(footer_
             assert all(app.source(chunk_id).id == chunk_id for chunk_id in summary.chunk_ids)
     finally:
         await app.close()
+
+
+@pytest.mark.parametrize("title_y", [68, 80])
+async def test_upload_preserves_isolated_top_margin_section_numbers(title_y):
+    with pymupdf.open() as pdf:
+        for number, title in [(1, "Evaluation"), (2, "Methods")]:
+            page = pdf.new_page(width=600, height=800)
+            page.insert_text((50, 32), str(number), fontsize=14)
+            page.insert_text((50, title_y), title, fontsize=14)
+            page.insert_text(
+                (50, 120), "Observed measurements retain their original source scope.", fontsize=10
+            )
+            page.insert_text((295, 680), str(number + 27), fontsize=10)
+        content = pdf.tobytes()
+    app = Application(DeterministicEmbedder(), LLMGateway(SummaryScriptedLLM([])))
+    try:
+        events = [e async for e in app.upload_document(content, "isolated-headings.pdf")]
+        assert events[-1].type == "ready"
+        source = "\n".join(c.context for c in app.document.chunks)
+        assert any(s.title.startswith("1 Evaluation") for s in app.document.sections)
+        assert any(s.title.startswith("2 Methods") for s in app.document.sections)
+        assert "1 Evaluation" in source and "2 Methods" in source
+        assert not any(line.strip() in {"28", "29"} for line in source.splitlines())
+        for summary in app.document.summary_tree.section_summaries:
+            assert summary.chunk_ids and all(app.source(i).id == i for i in summary.chunk_ids)
+    finally:
+        await app.close()

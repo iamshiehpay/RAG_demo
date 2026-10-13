@@ -110,24 +110,54 @@ class SummarySelection:
 
         # Applicability depends only on distinct ORIGINAL content and its atomic
         # caption/header/row context, never on a generated response succeeding.
-        def feasible(spans):
-            chosen = []
-            has_row = False
-            for span in sorted(spans, key=lambda s: s.kind not in {"row", "raw"}):
-                text, original_tokens = self.render(chosen + [span.id])
-                if count_tokens(text) > SECTION_SUMMARY_MAX_TOKENS:
-                    continue
-                chosen.append(span.id)
-                has_row |= span.kind in {"row", "raw"}
-                if has_row and original_tokens >= SECTION_SUMMARY_MIN_TOKENS:
-                    return True
-            return False
-
         try:
             parts = self.batches(self.spans, target, title)
         except LLMFailure:
             return False
-        return bool(parts) and all(feasible(part) for part in parts)
+        return bool(parts) and all(self.feasible(part) for part in parts)
+
+    def feasible(self, spans):
+        chosen = []
+        has_row = not any(s.kind in {"row", "raw"} for s in spans)
+        for span in sorted(spans, key=lambda s: s.kind not in {"row", "raw"}):
+            text, original_tokens = self.render(chosen + [span.id])
+            if count_tokens(text) > SECTION_SUMMARY_MAX_TOKENS:
+                continue
+            chosen.append(span.id)
+            has_row |= span.kind in {"row", "raw"}
+            if has_row and original_tokens >= SECTION_SUMMARY_MIN_TOKENS:
+                return True
+        return False
+
+    def preserve_candidates(self, spans, target, title):
+        """Restore only original candidates when a retained unit becomes thin.
+
+        Repacking can place a previously shared unit in its own batch. Retain
+        sufficient distinct ORIGINAL content before that happens, never a draft
+        or a warning counted toward the source minimum. Tiny complete units are
+        balanced with neighbors by batches rather than padded.
+        """
+        grouped = {}
+        for span in spans:
+            grouped.setdefault(span.source_unit, []).append(span)
+        selected = {span.id for span in spans}
+        for unit, current in grouped.items():
+            if self.feasible(current):
+                continue
+            for original in self.spans:
+                if original.source_unit != unit or original.id in selected:
+                    continue
+                before = self.render([s.id for s in current])[1]
+                candidate = current + [original]
+                if self.render([s.id for s in candidate])[1] <= before:
+                    continue  # Repeated text/context cannot manufacture length.
+                if not self.fits(candidate, target, title):
+                    continue
+                current.append(original)
+                selected.add(original.id)
+                if self.feasible(current):
+                    break
+        return [s for s in self.spans if s.id in selected]
 
     def messages(self, spans, target, title, *, partial=False, correction=""):
         sources = {}
@@ -195,6 +225,7 @@ class SummarySelection:
         )
 
     def batches(self, spans, target, title):
+        spans = self.preserve_candidates(spans, target, title)
         grouped = {}
         for span in spans:
             grouped.setdefault(span.source_unit, []).append(span)
@@ -208,6 +239,37 @@ class SummarySelection:
             current.extend(unit)
         if current:
             result.append(current)
+        for index, part in enumerate(result):
+            if self.feasible(part):
+                continue
+            # A complete tiny unit cannot be expanded. Transfer contiguous
+            # whole source units from an adjacent batch, preserving order and
+            # guarded prompt capacity on both sides.
+            for neighbor in (index - 1, index + 1):
+                if not 0 <= neighbor < len(result):
+                    continue
+                units = {}
+                for span in result[neighbor]:
+                    units.setdefault(span.source_unit, []).append(span)
+                groups = list(units.values())
+                for amount in range(1, len(groups)):
+                    moved = groups[-amount:] if neighbor < index else groups[:amount]
+                    retained = groups[:-amount] if neighbor < index else groups[amount:]
+                    moved = [s for group in moved for s in group]
+                    retained = [s for group in retained for s in group]
+                    combined = moved + part if neighbor < index else part + moved
+                    if (
+                        self.fits(combined, target, title)
+                        and self.fits(retained, target, title)
+                        and self.feasible(combined)
+                        and self.feasible(retained)
+                    ):
+                        result[neighbor], result[index] = retained, combined
+                        break
+                if self.feasible(result[index]):
+                    break
+            if not self.feasible(result[index]):
+                raise LLMFailure("Summary selection candidate batch cannot meet source length.")
         return result
 
     async def select(self, gateway, spans, target, title, calls, *, partial):
@@ -230,8 +292,10 @@ class SummarySelection:
                 if clean.startswith("```json\n") and clean.endswith("\n```"):
                     clean = clean[8:-4]
                 data = json.loads(clean)
-                if not isinstance(data, dict) or set(data) != {"span_ids"}:
-                    raise InvalidSelection("Expected only span_ids")
+                if not isinstance(data, dict) or "span_ids" not in data:
+                    raise InvalidSelection("Expected span_ids")
+                # Native providers can ignore additionalProperties:false.
+                # Consume only source IDs; no provider commentary is evidence.
                 ids = data["span_ids"]
                 if (
                     not isinstance(ids, list)
@@ -275,6 +339,7 @@ class SummarySelection:
         current = self.spans
         while True:
             parts = self.batches(current, target, title)
+            current = [span for part in parts for span in part]
             chosen = []
             for part in parts:
                 chosen.extend(
@@ -291,6 +356,7 @@ class SummarySelection:
                 return self.render(chosen)[0]
             selected = set(chosen)
             narrowed = [span for span in current if span.id in selected]
+            narrowed = self.preserve_candidates(narrowed, target, title)
             if len(narrowed) >= len(current):
                 raise LLMFailure("Summary selection did not reduce original source candidates.")
             current = narrowed

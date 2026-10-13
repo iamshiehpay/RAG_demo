@@ -41,7 +41,10 @@ def table_catalogue_pdf():
         return pdf.tobytes()
 
 
-@pytest.mark.parametrize("malformed", [False, "unknown", "duplicate", "ignored_format"])
+@pytest.mark.parametrize(
+    "malformed",
+    [False, "commentary", "unknown", "duplicate", "ignored_format", "missing", "wrong_type"],
+)
 async def test_table_summary_selects_original_spans_or_fails_closed(malformed):
     class SelectionLLM(SummaryScriptedLLM):
         async def stream(self, request):
@@ -63,8 +66,16 @@ async def test_table_summary_selects_original_spans_or_fails_closed(malformed):
                     text = (
                         "The output ignores the requested format and invents unvalidated claims."
                         if malformed == "ignored_format"
-                        else json.dumps({"span_ids": selected})
+                        else json.dumps(
+                            {"span_ids": selected, "note": "INVENTED_NOTE must never be published"}
+                            if malformed == "commentary"
+                            else {"span_ids": selected}
+                        )
                     )
+                    if malformed == "missing":
+                        text = json.dumps({"note": "No IDs"})
+                    elif malformed == "wrong_type":
+                        text = json.dumps({"span_ids": "E1"})
                 else:
                     text = (
                         "UNSUPPORTED_METHOD_CLAIM: The catalogue has no independent validation. "
@@ -79,7 +90,7 @@ async def test_table_summary_selects_original_spans_or_fails_closed(malformed):
     llm = SelectionLLM([])
     app = Application(DeterministicEmbedder(), LLMGateway(llm))
     events = [e async for e in app.upload_document(table_catalogue_pdf(), "assays.pdf")]
-    if malformed:
+    if malformed and malformed != "commentary":
         assert events[-1].type == "error" and app.document is None
         assert "selection" in events[-1].message.lower()
     else:
@@ -91,6 +102,81 @@ async def test_table_summary_selects_original_spans_or_fails_closed(malformed):
         assert "Batch | Intensity | Count" in node.text
         assert "Sample0 | 0.71 | 13" in node.text
         assert "Sample1 | 0.72 | 14" in node.text
-        assert "span_ids" not in node.text
+        assert "span_ids" not in node.text and "INVENTED_NOTE" not in node.text
         assert node.chunk_ids == [c.id for c in app.document.chunks]
     assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+
+
+async def test_upload_keeps_recursive_selection_batches_feasible_after_narrowing():
+    """Replay the native selection decisions that reached the 74-token dead end.
+
+    The replay uses fresh public PDF upload and original source validation, not
+    direct builder calls. Recorded IDs are decisions, never generated evidence.
+    Newly balanced pools use a source-only scripted selection at the same seam.
+    """
+    from collections import defaultdict, deque
+    from pathlib import Path
+
+    from eval.second_document import DOCUMENT
+
+    from .fixtures import selection_response
+
+    if not DOCUMENT.exists():
+        pytest.skip("Fetch the pinned second Document before this source regression")
+    decisions = defaultdict(deque)
+    evidence = Path("eval/reports/issue10-d06-recovery-n3.responses.jsonl")
+    for line in evidence.read_text().splitlines():
+        recorded = json.loads(line)
+        label = recorded["source_label"][-1]
+        if not label.startswith("{"):
+            continue
+        payload = json.loads(label)
+        if payload.get("section") == "Appendix C Industrial Implications":
+            key = tuple(s["id"] for s in payload["spans"])
+            try:
+                choice = json.loads(recorded["response"])
+            except ValueError:
+                continue
+            if isinstance(choice, dict) and set(choice) == {"span_ids"}:
+                decisions[key].append(recorded["response"])
+
+    class ReplayLLM(SummaryScriptedLLM):
+        async def stream(self, request):
+            if request.format and "span_ids" in str(request.format):
+                self.calls.append(request)
+                payload = json.loads(request.messages[-1]["content"])
+                key = tuple(s["id"] for s in payload["spans"])
+                script = (
+                    decisions[key].popleft()
+                    if payload["section"] == "Appendix C Industrial Implications" and decisions[key]
+                    else selection_response(request)
+                )
+                async for frame in ScriptedLLM([script]).stream(request):
+                    yield frame
+            else:
+                async for frame in super().stream(request):
+                    yield frame
+
+    llm = ReplayLLM([])
+    app = Application(DeterministicEmbedder(), LLMGateway(llm))
+    try:
+        events = [
+            e async for e in app.upload_document(DOCUMENT.read_bytes(), "narrowed-source.pdf")
+        ]
+        assert events[-1].type == "ready", events[-1]
+        requests = [
+            json.loads(c.messages[-1]["content"])
+            for c in llm.calls
+            if c.format and "span_ids" in str(c.format)
+        ]
+        appendix = [p for p in requests if p["section"] == "Appendix C Industrial Implications"]
+        assert len(appendix) > 4 and any(
+            any("original_text" not in unit for unit in p["source_units"].values())
+            for p in appendix
+        )
+        for node in app.document.summary_tree.section_summaries:
+            assert 80 <= count_tokens(node.text) <= 500
+            assert node.chunk_ids and all(app.source(i).id == i for i in node.chunk_ids)
+        assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+    finally:
+        await app.close()

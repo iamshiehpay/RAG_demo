@@ -202,6 +202,12 @@ def _page_folios(pdf: pymupdf.Document) -> set[tuple[int, tuple[float, ...]]]:
             for block in blocks
             for line in block["lines"]
         ]
+        sizes = Counter()
+        for text, text_line in text_lines:
+            if not text.isdigit():
+                for span in text_line["spans"]:
+                    sizes[round(span["size"])] += len(span["text"].strip())
+        body_size = sizes.most_common(1)[0][0] if sizes else 0
         for block in blocks:
             if len(block["lines"]) != 1:
                 continue
@@ -215,6 +221,17 @@ def _page_folios(pdf: pymupdf.Document) -> set[tuple[int, tuple[float, ...]]]:
             if 0.25 <= y <= 0.75:
                 continue
             size = max(s["size"] for s in line["spans"])
+            # A separated, left-aligned larger/bold title authenticates an
+            # upper-margin Section numeral even with a generous vertical gap.
+            if y < 0.25 and any(
+                re.search(r"[^\W\d_]", other_text)
+                and 0 < other["bbox"][1] - bbox[1] <= size * 4
+                and abs(other["bbox"][0] - bbox[0]) <= size * 2
+                and any(s["size"] > body_size + 0.5 or s["flags"] & 16 for s in other["spans"])
+                for other_text, other in text_lines
+                if other is not line
+            ):
+                continue
             # Nearby title/body labels or aligned table cells disqualify a
             # number. Ignore other isolated digits; they cannot authenticate it.
             if any(
@@ -469,7 +486,9 @@ def _section_title(lines: list[_Line], index: int, body_size: float) -> tuple[st
         if (
             following.page == line.page
             and _heading(following, body_size, numbered=True)
-            and abs(following.bbox[1] - line.bbox[1]) <= line.size * 2
+            and abs(following.bbox[1] - line.bbox[1])
+            <= line.size
+            * (4 if line.size > body_size + 0.5 and abs(following.size - line.size) < 0.5 else 2)
             and (
                 (
                     abs(following.bbox[1] - line.bbox[1]) < line.size * 0.5
