@@ -1,0 +1,102 @@
+WARNING: The directory '/Users/shiehpay/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Obtaining file:///private/tmp/nova-i11-clean-clone
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting fastapi<1,>=0.115 (from chat-with-document==0.1.0)
+  Downloading fastapi-0.143.0-py3-none-any.whl.metadata (26 kB)
+Collecting httpx<1,>=0.28 (from chat-with-document==0.1.0)
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting numpy<3,>=2 (from chat-with-document==0.1.0)
+  Downloading numpy-2.5.4-cp312-cp312-macosx_14_0_arm64.whl.metadata (6.6 kB)
+Collecting pymupdf<2,>=1.25 (from chat-with-document==0.1.0)
+  Downloading pymupdf-1.28.2-cp310-abi3-macosx_11_0_arm64.whl.metadata (26 kB)
+Collecting python-multipart<1,>=0.0.20 (from chat-with-document==0.1.0)
+  Downloading python_multipart-0.0.32-py3-none-any.whl.metadata (2.1 kB)
+Collecting tiktoken<1,>=0.9 (from chat-with-document==0.1.0)
+  Downloading tiktoken-0.14.0-cp312-cp312-macosx_11_0_arm64.whl.metadata (6.7 kB)
+Collecting uvicorn<1,>=0.34 (from chat-with-document==0.1.0)
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting starlette>=0.46.0 (from fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading starlette-1.8.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting pydantic>=2.9.0 (from fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading pydantic-2.14.1-py3-none-any.whl.metadata (133 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Collecting opentelemetry-api>=1.44.0 (from fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading opentelemetry_api-1.45.1-py3-none-any.whl.metadata (1.4 kB)
+Collecting anyio (from httpx<1,>=0.28->chat-with-document==0.1.0)
+  Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting certifi (from httpx<1,>=0.28->chat-with-document==0.1.0)
+  Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx<1,>=0.28->chat-with-document==0.1.0)
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx<1,>=0.28->chat-with-document==0.1.0)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.28->chat-with-document==0.1.0)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting regex (from tiktoken<1,>=0.9->chat-with-document==0.1.0)
+  Downloading regex-2026.9.29-cp312-cp312-macosx_11_0_arm64.whl.metadata (40 kB)
+Collecting requests (from tiktoken<1,>=0.9->chat-with-document==0.1.0)
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting click>=7.0 (from uvicorn<1,>=0.34->chat-with-document==0.1.0)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.1 (from pydantic>=2.9.0->fastapi<1,>=0.115->chat-with-document==0.1.0)
+  Downloading pydantic_core-2.50.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (6.5 kB)
+Collecting charset_normalizer<4,>=2 (from requests->tiktoken<1,>=0.9->chat-with-document==0.1.0)
+  Downloading charset_normalizer-3.5.2-cp312-cp312-macosx_10_13_universal2.whl.metadata (46 kB)
+Collecting urllib3<3,>=1.26 (from requests->tiktoken<1,>=0.9->chat-with-document==0.1.0)
+  Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Downloading fastapi-0.143.0-py3-none-any.whl (144 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading numpy-2.5.4-cp312-cp312-macosx_14_0_arm64.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 25.4 MB/s eta 0:00:00
+Downloading pymupdf-1.28.2-cp310-abi3-macosx_11_0_arm64.whl (23.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.9/23.9 MB 27.3 MB/s eta 0:00:00
+Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+Downloading tiktoken-0.14.0-cp312-cp312-macosx_11_0_arm64.whl (1.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 36.5 MB/s eta 0:00:00
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading opentelemetry_api-1.45.1-py3-none-any.whl (60 kB)
+Downloading pydantic-2.14.1-py3-none-any.whl (488 kB)
+Downloading pydantic_core-2.50.1-cp312-cp312-macosx_11_0_arm64.whl (2.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 29.9 MB/s eta 0:00:00
+Downloading starlette-1.8.0-py3-none-any.whl (79 kB)
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+Downloading regex-2026.9.29-cp312-cp312-macosx_11_0_arm64.whl (293 kB)
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading charset_normalizer-3.5.2-cp312-cp312-macosx_10_13_universal2.whl (367 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Building wheels for collected packages: chat-with-document
+  Building editable for chat-with-document (pyproject.toml): started
+  Building editable for chat-with-document (pyproject.toml): finished with status 'done'
+  Created wheel for chat-with-document: filename=chat_with_document-0.1.0-py3-none-any.whl size=1214 sha256=d30a2c616a04027adff3146e1884d51a7a81e3ab46125a025f80f3852ceefeb6
+  Stored in directory: /private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pip-ephem-wheel-cache-4_su5rxc/wheels/57/ca/dd/07b6c79436976fe2e5d8786dfcd31fc358560dd0e4b32deaf0
+Successfully built chat-with-document
+Installing collected packages: urllib3, typing-extensions, regex, python-multipart, pymupdf, numpy, idna, h11, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, pydantic-core, opentelemetry-api, httpcore, anyio, tiktoken, starlette, pydantic, httpx, fastapi, chat-with-document
+Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 certifi-2026.7.22 charset_normalizer-3.5.2 chat-with-document-0.1.0 click-8.5.0 fastapi-0.143.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 numpy-2.5.4 opentelemetry-api-1.45.1 pydantic-2.14.1 pydantic-core-2.50.1 pymupdf-1.28.2 python-multipart-0.0.32 regex-2026.9.29 requests-2.34.2 starlette-1.8.0 tiktoken-0.14.0 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0 uvicorn-0.54.0
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: /private/tmp/nova-i11-clean-clone/.venv/bin/python -m pip install --upgrade pip
