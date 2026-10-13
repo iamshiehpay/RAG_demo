@@ -440,6 +440,8 @@ async def test_wrapped_chinese_paragraph_splits_only_between_complete_sentences(
     assert all(count_tokens(sentence) < 50 for sentence in sentences)
     assert all(c.text.rstrip().endswith("。") for c in chunks)
     assert all(count_tokens(c.text) <= 500 for c in chunks)
+    source = "\n\n".join(p for s in app.document.sections for p in s.paragraphs)
+    assert all(f"區域{n}中達到{n * 3 + 7}個單位" in source for n in range(1, 161))
     combined = "".join(c.text.replace("\n", "") for c in chunks)
     assert all(sentence in combined for sentence in sentences)
     for chunk in chunks:
@@ -612,6 +614,19 @@ async def test_labelled_cjk_numeric_rows_keep_source_and_chunk_separators(text):
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     try:
         events = [e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "rows.pdf")]
+        assert events[-1].type == "ready"
+        assert app.document.sections[0].paragraphs == [text]
+        assert app.document.chunks[0].text == text
+    finally:
+        await app.close()
+
+
+async def test_genuine_cjk_wrap_with_a_full_final_line_keeps_source_text_intact():
+    # Two naturally wrapped prose lines; the final one is almost as long as the first.
+    text = "觀察記錄" * 52 + "。"
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+    try:
+        events = [e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "flow.pdf")]
         assert events[-1].type == "ready"
         assert app.document.sections[0].paragraphs == [text]
         assert app.document.chunks[0].text == text

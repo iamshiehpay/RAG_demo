@@ -43,7 +43,7 @@ class _Line:
     fonts: tuple[str, ...]
     flow_width: float
     page_first: bool = False
-    ragged_block: bool = False
+    flowing_block: bool = False
     small_caps: bool = False
     font_change: bool = False
     shared_row: bool = False
@@ -203,13 +203,17 @@ def _lines(pdf: pymupdf.Document) -> tuple[list[_Line], float]:
             block_lines = [line for line in page_lines if line.block == block_number]
             width = max(line.bbox[2] - line.bbox[0] for line in block_lines)
             last = block_lines[-1]
-            # Equal-width rows supply no evidence of wrapping; a ragged last line
-            # establishes that this block contains text flowing against its right edge.
-            ragged = len(block_lines) > 1 and (
+            # A ragged final line or completed sentence spanning the page/column
+            # gives evidence beyond comparing each row to its own block width.
+            flowing = len(block_lines) > 1 and (
                 last.bbox[2] - last.bbox[0] < width * _LINE_WRAP_WIDTH_RATIO
+                or (
+                    width >= last.flow_width * _LINE_WRAP_WIDTH_RATIO
+                    and bool(_SENTENCE_END.search(last.text))
+                )
             )
             for line in block_lines:
-                line.ragged_block = ragged
+                line.flowing_block = flowing
         lines.extend(page_lines)
     body_size = sizes.most_common(1)[0][0] if sizes else 0
     body_fonts = Counter(
@@ -398,7 +402,7 @@ def _wraps_line(previous: _Line, following: _Line) -> bool:
             )
             or _continues_on_next_page(previous, following)
         )
-        and (previous.ragged_block or previous.page != following.page)
+        and (previous.flowing_block or previous.page != following.page)
         and previous.bbox[2] - previous.bbox[0] >= block_width * _LINE_WRAP_WIDTH_RATIO
         and not _NUMERIC_LINE.fullmatch(previous.text)
         and not _NUMERIC_LINE.fullmatch(following.text)

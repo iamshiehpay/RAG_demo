@@ -22,9 +22,17 @@ local bge-m3 and ScriptedLLM. No internal parser mock or live cloud LLM is used.
   2 passed**, so consecutive CJK label/numeric-cell rows are also excluded from
   normalization. Exact source paragraph and Chunk text are asserted.
 - Combined focused checks: **16 passed** before the shorter-final-value case.
-  Final complete ingestion suite: **49 passed**, 17.34 s, five existing PyMuPDF
+  Initial complete ingestion suite: **49 passed**, 17.34 s, five existing PyMuPDF
   deprecation warnings. Existing 160-sentence coverage, bounded Chunks,
   numeric-only rows, Latin spacing and short CJK sentence overlaps are retained.
+- Original QA replay revealed a nearly full-width final prose line: raggedness
+  alone retained genuine layout newlines. A new public-upload regression failed
+  first; page/column-width evidence plus a completed final sentence now also
+  permits normalization. The focused prose/labelled-row/number-wrap subset then
+  passed **5 tests**. The 160-sentence test now also requires every measurement
+  phrase (`區域N中達到V個單位`) in the source text without removing newlines.
+  Punctuation-adjacent layout separators are retained. The original replay checks this
+  stronger source condition too; its runner is [replay_r1_r2.py](replay_r1_r2.py).
 
 Production changes are confined to `pdf_parser.py`; `chunker.py`, Application,
 cache, event and frontend sources are unchanged. The source-derived processing
