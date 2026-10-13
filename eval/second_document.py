@@ -42,8 +42,14 @@ SECOND_DOCUMENT_CASES = (
                     ("0.762",),
                 ),
                 value_bindings=(
-                    NumericBinding(("All",), "0.966"),
-                    NumericBinding(("InfoFound",), "0.951"),
+                    NumericBinding(("All",), "447", ("N", "count", "evaluated", "evaluations")),
+                    NumericBinding(
+                        ("InfoFound",), "304", ("N", "count", "evaluated", "evaluations")
+                    ),
+                    NumericBinding(("All",), "0.966", ("accuracy", "Acy")),
+                    NumericBinding(("InfoFound",), "0.951", ("accuracy", "Acy")),
+                    NumericBinding(("All",), "0.762", ("F1",)),
+                    NumericBinding(("InfoFound",), "0.762", ("F1",)),
                 ),
             ),
             GoldenFact(

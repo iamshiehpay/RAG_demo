@@ -13,6 +13,8 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.tables import LIMITATION
 from chat_document.tokens import count_tokens
 
+from .fixtures import selection_response
+
 
 def table_only_pdf(section_count):
     with pymupdf.open() as pdf:
@@ -41,7 +43,7 @@ async def test_table_only_sections_keep_all_sources_caveat_and_global_cache(
         async def stream(self, request):
             self.scripts.append(
                 {
-                    "section_summary": "Measured result. " * (95 if section_count > 1 else 1),
+                    "section_summary": "Measured result. " * (95 if section_count > 1 else 25),
                     "group_summary": "Grouped measurement.",
                     "document_summary": "Overview.",
                     "router": json.dumps(
@@ -132,7 +134,11 @@ async def test_section_summary_partitions_preserve_complete_table_chunks():
 
     class SummariesLLM(ScriptedLLM):
         async def stream(self, request):
-            self.scripts.append("Measured finding.")
+            self.scripts.append(
+                selection_response(request)
+                if request.format and "span_ids" in str(request.format)
+                else "Measured finding. " * 25
+            )
             async for frame in super().stream(request):
                 yield frame
 
@@ -152,5 +158,27 @@ async def test_section_summary_partitions_preserve_complete_table_chunks():
     assert app.document.summary_tree.section_summaries[0].chunk_ids == [c.id for c in chunks]
     assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
     for chunk in chunks:
-        complete_parts = [r for r in requests if chunk.text in r.messages[-1]["content"]]
+        complete_parts = []
+        for request in requests:
+            if request.format and "span_ids" in str(request.format):
+                original = json.loads(request.messages[-1]["content"])["source_units"].values()
+                if any(
+                    unit["chunk_id"] == chunk.id and unit.get("original_text") == chunk.text
+                    for unit in original
+                ):
+                    complete_parts.append(request)
+            elif chunk.text in request.messages[-1]["content"]:
+                complete_parts.append(request)
         assert len(complete_parts) == 1, f"{chunk.id} was split inside a Table Chunk"
+    originals = {chunk.id: chunk for chunk in chunks}
+    for request in requests:
+        if not (request.format and "span_ids" in str(request.format)):
+            continue
+        payload = json.loads(request.messages[-1]["content"])
+        for span in payload["spans"]:
+            source = payload["source_units"][span["source_unit"]]
+            original = originals[source["chunk_id"]]
+            assert span["text"] in original.text, "A generated draft replaced original evidence"
+            if span["kind"] == "row":
+                assert source["caption"] == original.table_caption
+                assert source["header"] == " | ".join(original.table_headers)

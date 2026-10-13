@@ -69,44 +69,112 @@ def has_term(text: str, term: str) -> bool:
     return re.search(term_pattern(term), text) is not None
 
 
-def binding_matches(evidence: str, binding: NumericBinding) -> bool:
-    # Keep row/clause boundaries before whitespace normalization. An intervening
-    # model or another percentage prevents assigning its value to this variant.
-    clauses = re.split(r"[\n;；。!?]|(?<=\.)\s+", evidence)
-    model_pattern = (
+def binding_matches(
+    evidence: str, binding: NumericBinding, *, bindings: tuple[NumericBinding, ...] = ()
+) -> bool:
+    """Bind each number to its nearest declared entity, metric and source scope.
+
+    Semicolons can continue one entity's statement. They do not reset the
+    subject, while a new entity, metric or dataset is an association barrier.
+    All settings/dimensions come from the fact schema; no new paper-specific
+    names are maintained in this verifier. Legacy variant spellings remain
+    barriers so full-model anchors cannot absorb another model's measurements.
+    """
+    related = bindings or (binding,)
+    entities = {name for item in related for name in item.variants}
+    metrics = {name for item in related for name in item.metrics}
+    contexts = {name for item in related for name in item.contexts}
+    legacy_variants = (
         r"lightrag(?:(?:\s*-\s*|\s+)(?:high|low|origin))?"
         r"|graphrag|naiverag|-(?:high|low|origin)|完整版"
     )
-    for clause in clauses:
+    entity_pattern = "|".join(
+        [*sorted((term_pattern(name) for name in entities), key=len, reverse=True), legacy_variants]
+    )
+    number = re.compile(r"(?<![\w.])\d+(?:\.\d+)?%?(?![\w.])")
+
+    def dimension(text, position, aliases, candidates):
+        if not aliases:
+            return None
+        spans = sorted(
+            (m for term in candidates for m in re.finditer(term_pattern(term), text)),
+            key=lambda m: m.start(),
+        )
+        before = [m for m in spans if m.end() <= position]
+        selected = before[-1] if before else None
+        if selected is None:
+            after = [m for m in spans if m.start() >= position]
+            selected = after[0] if after else None
+        if selected is None or not any(has_term(selected.group(), term) for term in aliases):
+            return False
+        return selected
+
+    # Hard sentence/row boundaries prevent context leaking from another claim.
+    # Decimal points are not sentence ends; both semicolon forms retain subject.
+    for clause in re.split(r"[\n。!?]|(?<=\.)\s+", evidence):
+        if "|" in clause:
+            continue  # Tables are associated by cells below, never flattened.
         text = normalize(clause)
-        model_spans = list(re.finditer(model_pattern, text))
-        for variant in binding.variants:
-            for name in re.finditer(term_pattern(variant), text):
-                for value in re.finditer(term_pattern(binding.value), text):
-                    left, right = sorted((name, value), key=lambda match: match.start())
-                    between = text[left.end() : right.start()]
-                    if re.search(r"\d+(?:\.\d+)?%", between):
-                        continue
-                    if any(left.end() <= model.start() < right.start() for model in model_spans):
-                        continue
-                    return True
+        names = list(re.finditer(entity_pattern, text))
+        for value in re.finditer(term_pattern(binding.value), text):
+            before = [m for m in names if m.end() <= value.start()]
+            owner = (
+                before[-1] if before else next((m for m in names if m.start() >= value.end()), None)
+            )
+            if owner is None or not any(has_term(owner.group(), term) for term in binding.variants):
+                continue
+            metric = dimension(text, value.start(), binding.metrics, metrics)
+            context = dimension(text, value.start(), binding.contexts, contexts)
+            if metric is False or context is False:
+                continue
+            if owner.start() > value.start():
+                between = text[value.end() : owner.start()]
+            else:
+                left = max(
+                    owner.end(),
+                    metric.end() if metric is not None and metric.end() <= value.start() else 0,
+                )
+                between = text[left : value.start()]
+            if number.search(between):
+                continue
+            return True
+
     headers = None
+    preamble = ""
     for row in evidence.splitlines():
         if "|" not in row:
+            preamble = normalize(row)
+            headers = None
             continue
         cells = [normalize(cell) for cell in row.strip().strip("|").split("|")]
-        if any(re.search(model_pattern, cell) for cell in cells) and not any(
-            re.search(r"\d+(?:\.\d+)?%", cell) for cell in cells
+        if all(not cell or re.fullmatch(r":?-+:?", cell) for cell in cells):
+            continue
+        if not any(number.search(cell) for cell in cells) and any(
+            re.search(entity_pattern, cell) or any(has_term(cell, term) for term in metrics)
+            for cell in cells
         ):
             headers = cells
             continue
-        if headers and len(headers) == len(cells):
-            if any(
-                any(has_term(header, variant) for variant in binding.variants)
-                and has_term(value, binding.value)
-                for header, value in zip(headers, cells, strict=True)
+        if not headers or len(headers) != len(cells):
+            continue
+        for index, cell in enumerate(cells):
+            if not has_term(cell, binding.value):
+                continue
+            column_entity = any(has_term(headers[index], term) for term in binding.variants)
+            row_entity = any(any(has_term(c, term) for term in binding.variants) for c in cells)
+            if not column_entity and not row_entity:
+                continue
+            metric_text = " ".join(cells[:index]) if column_entity else headers[index]
+            scope_text = preamble + " " + " ".join(cells[:index])
+            if binding.metrics and not any(
+                has_term(metric_text + " " + preamble, term) for term in binding.metrics
             ):
-                return True
+                continue
+            if binding.contexts and not any(
+                has_term(scope_text, term) for term in binding.contexts
+            ):
+                continue
+            return True
     return False
 
 
@@ -192,7 +260,10 @@ async def check_fact(answer: str, fact: GoldenFact, gateway: LLMGateway) -> Fact
             "Numeric evidence lacks the required variant/dataset/metric/value context",
             evidence,
         )
-    if any(not binding_matches(evidence, binding) for binding in fact.value_bindings):
+    if any(
+        not binding_matches(evidence, binding, bindings=fact.value_bindings)
+        for binding in fact.value_bindings
+    ):
         return result(
             False, "Numeric variant/value do not co-occur in the same clause or row", evidence
         )

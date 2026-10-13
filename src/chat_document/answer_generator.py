@@ -60,10 +60,19 @@ def answer_messages(
             "analyses and experimental settings, without item-by-item repetition. "
             "System extraction warnings are processing limitations, not statements "
             "by the Document authors. Do not invent methodological limitations. "
+            "Extractive summaries contain source excerpts selected by this system, not "
+            "by the authors. Selected rows do not establish population ranges, frequencies "
+            "or extrema without an explicit source statement. Do not attribute processing "
+            "conditions to the authors or present them as additional author conclusions. "
+            "A local absence in one source does not contradict an affirmative finding "
+            "in another source; preserve the specific population, experiment and scope. "
+            "Describe only explicit author limitations, never extrapolate from silence. "
             "Explain the main ideas and findings when supported by the sources. "
             "Preserve comparison baselines, qualifiers and measured exceptions. "
             "Keep every metric attached to the operation it measures. "
-            "Cite each factual claim with the supplied [S#] IDs."
+            "End EVERY factual sentence or factual list item with supplied [S#] Citations, "
+            "including limitations, scope qualifications and the final conclusion. "
+            "Do not add an uncited explanatory paragraph or separate scope list."
         )
     return [
         {"role": "system", "content": system},

@@ -134,9 +134,14 @@ async def test_second_document_real_ingestion_and_golden_facts(pytestconfig):
             flush=True,
         )
         if not pytestconfig.getoption("--eval-record-only"):
-            assert report.passed, f"Golden Facts failed; see {path}"
+            # D05: report semantic/forbidden pass rates honestly; they do not
+            # replace or disable functional ingestion/provenance/budget guards.
+            assert report.upload_error is None, f"Document processing failed; see {path}"
             assert statistics["section_summary_tokens"] > 6000, f"No >6K actual summaries: {path}"
             assert statistics["group_levels"] >= 1, f"No Group layer: {path}"
+            assert all(80 <= s["tokens"] <= 500 for s in statistics["sections"]), (
+                f"Section Summary length contract failed: {path}"
+            )
             assert tree and {
                 s.page_start for s in tree.section_summaries if s.page_start >= 71
             } == {71, 74, 77, 92}

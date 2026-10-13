@@ -22,6 +22,7 @@ PIPELINE_SOURCES = (
     "tokens.py",
     "policy.py",
     "summary_tree.py",
+    "summary_selection.py",
     "summary_context.py",
     "context_packer.py",
     "llm_gateway.py",

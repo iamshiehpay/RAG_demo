@@ -8,6 +8,8 @@ from typing import Literal
 class NumericBinding:
     variants: tuple[str, ...]
     value: str
+    metrics: tuple[str, ...] = ()
+    contexts: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

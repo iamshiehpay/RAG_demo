@@ -27,6 +27,7 @@ _NUMERIC_LINE = re.compile(r"[\d\s.,%+\-−]+")
 _LABELLED_NUMERIC_ROW = re.compile(r"\S.*\s[\d\s.,%+\-−]+$")
 _CAPTION = re.compile(r"(?:Table|Figure)\s+[A-Z]?\d", re.I)
 _APPENDIX = re.compile(r"^(?:appendix\b|附錄|supplementary\b|補充)", re.I)
+_ABSTRACT = re.compile(r"(?P<label>abstract|摘要)(?:\s*[:：]\s*(?P<body>.*))?", re.I)
 
 
 class DocumentError(ValueError):
@@ -473,6 +474,9 @@ def _titles(lines: list[_Line], body_size: float) -> dict[int, tuple[str, int]]:
     index = 0
     while index < len(lines):
         title, consumed = _section_title(lines, index, body_size)
+        abstract = _ABSTRACT.fullmatch(lines[index].text)
+        if abstract and not abstract.group("body"):
+            title, consumed = abstract.group("label"), 1
         if title:
             titles[index] = (title, consumed)
         index += consumed
@@ -489,7 +493,7 @@ def _titles(lines: list[_Line], body_size: float) -> dict[int, tuple[str, int]]:
                 lines[i].size <= body_size + 0.5
                 and not (number and number.group(1) in main_numbers)
                 and not _APPENDIX.match(normalized)
-                and normalized not in {"references", "bibliography", "參考文獻"}
+                and normalized not in {"references", "bibliography", "參考文獻", "abstract", "摘要"}
             ):
                 del titles[i]
     return titles
@@ -641,10 +645,13 @@ def _sections(
     index = 0
     numbered = [i for i, (title, _) in titles.items() if re.match(r"^\d+(?:\.\d+)*\.?\s", title)]
     if numbered and 0 in titles and lines[0].size > lines[numbered[0]].size + 0.5:
-        # Keep the document title as heading-only metadata, while excluding its
-        # author/affiliation preamble from the Section Summary hierarchy.
+        # Keep the title as metadata and exclude author/affiliation lines, but
+        # resume at substantive Abstract content before the numbered hierarchy.
         current.title = titles[0][0]
-        index = numbered[0]
+        index = next(
+            (i for i in range(titles[0][1], numbered[0]) if _ABSTRACT.fullmatch(lines[i].text)),
+            numbered[0],
+        )
     while index < len(lines):
         line = lines[index]
         if index in table_lines:
@@ -654,6 +661,21 @@ def _sections(
                 table.paragraph_index = len(current.paragraphs)
                 current.tables.append(table)
                 current.page_end = max(current.page_end, table.page_end)
+            previous = None
+            index += 1
+            continue
+        abstract = _ABSTRACT.fullmatch(line.text)
+        if abstract and abstract.group("body"):
+            flush_section()
+            current = Section(
+                id=f"section-{len(sections) + 1}",
+                title=abstract.group("label"),
+                page_start=line.page,
+                page_end=line.page,
+                paragraphs=[abstract.group("body")],
+                paragraph_pages=[(line.page, line.page)],
+            )
+            detected = True
             previous = None
             index += 1
             continue

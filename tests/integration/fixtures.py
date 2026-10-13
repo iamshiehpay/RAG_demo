@@ -1,6 +1,43 @@
+import json
+
 import pymupdf
 
 from chat_document.llm_adapter import ScriptedLLM
+from chat_document.tokens import count_tokens
+
+
+def summary_response(label="Scripted Section Summary"):
+    """Contract-sized synthetic response; it is not evidence of model fidelity."""
+    return (
+        f"{label}. This response is a deterministic test fixture for upload processing, "
+        "source identity, progress, cache replay and Citation selection. Its content "
+        "does not establish any property of the uploaded Document or a real model. "
+        "The test controls the response so that unrelated state transitions can be "
+        "examined under the published Section length contract. Tests of actual "
+        "summary quality use real evidence and a real provider separately. Failure "
+        "fixtures explicitly supply invalid lengths or truncated frames when those "
+        "behaviors are the subject of the regression."
+    )
+
+
+def selection_response(request):
+    """Supply protocol-valid source IDs for unrelated lifecycle/layout tests."""
+    payload = json.loads(request.messages[-1]["content"])
+    spans = payload["spans"]
+    chosen, text = [], []
+    # Select actual complete row context; never manufacture text to meet length.
+    candidates = sorted(spans, key=lambda s: s["kind"] not in {"row", "raw"})
+    for span in candidates:
+        source = payload["source_units"][span["source_unit"]]
+        context = [source["caption"], source["header"]] if span["kind"] in {"row", "raw"} else []
+        candidate = list(dict.fromkeys([*text, *context, span["text"]]))
+        if count_tokens("\n".join(candidate)) > 440:
+            continue
+        chosen.append(span["id"])
+        text = candidate
+        if count_tokens("\n".join(text)) >= 90:
+            break
+    return json.dumps({"span_ids": chosen})
 
 
 class SummaryScriptedLLM(ScriptedLLM):
@@ -17,7 +54,13 @@ class SummaryScriptedLLM(ScriptedLLM):
     async def stream(self, request):
         if request.call_type.endswith("summary"):
             self.calls.append(request)
-            scripted = ScriptedLLM(["A faithful Document summary."])
+            scripted = ScriptedLLM(
+                [
+                    selection_response(request)
+                    if request.format and "span_ids" in str(request.format)
+                    else summary_response()
+                ]
+            )
             async for frame in scripted.stream(request):
                 yield frame
             return

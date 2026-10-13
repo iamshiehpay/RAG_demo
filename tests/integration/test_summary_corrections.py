@@ -15,7 +15,7 @@ from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_gateway import LLMGateway
 
-from .fixtures import SummaryScriptedLLM, text_pdf
+from .fixtures import SummaryScriptedLLM, summary_response, text_pdf
 
 
 class FixedEmbedder:
@@ -210,7 +210,9 @@ async def test_each_oversized_section_part_and_merge_retains_section_title():
 
     from .test_summary_tree import summary_pdf
 
-    llm = ScriptedLLM(["First evidence", "Second evidence", "Merged evidence", "Overview"])
+    llm = ScriptedLLM(
+        ["First evidence", "Second evidence", summary_response("Merged evidence"), "Overview"]
+    )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     events = [
         e async for e in app.upload_document(summary_pdf(words=2200, height=18000), "oversized.pdf")
@@ -218,6 +220,9 @@ async def test_each_oversized_section_part_and_merge_retains_section_title():
     assert events[-1].type == "ready"
     requests = [c for c in llm.calls if c.call_type == "section_summary"]
     assert len(requests) == 3
+    assert all("incomplete part" in c.messages[-1]["content"] for c in requests[:2])
+    assert "Partial evidence summary 1/2" in requests[-1].messages[-1]["content"]
+    assert "Partial evidence summary 2/2" in requests[-1].messages[-1]["content"]
     title = app.document.sections[0].title
     assert all(f"Section: {title}\n" in c.messages[-1]["content"] for c in requests)
     assert app.document.summary_tree.section_summaries[0].chunk_ids == [
@@ -289,7 +294,11 @@ async def test_oversized_section_recursively_merges_multiple_rounds_with_provena
         async def stream(self, request):
             evidence = request.messages[-1]["content"]
             if request.call_type == "section_summary":
-                text = "Partial " * 1100 if "SOURCE_EVIDENCE" in evidence else "Final finding."
+                text = (
+                    "Partial " * 1100
+                    if "SOURCE_EVIDENCE" in evidence
+                    else summary_response("Final finding")
+                )
             elif request.call_type == "group_summary":
                 text = "First " * 2400 if "Partial " in evidence else "Second " * 300
             else:

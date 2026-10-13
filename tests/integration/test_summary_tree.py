@@ -11,7 +11,7 @@ from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
-from .fixtures import structured_pdf
+from .fixtures import structured_pdf, summary_response
 
 
 def summary_pdf(section_count=1, *, words=100, height=1800):
@@ -27,7 +27,14 @@ def summary_pdf(section_count=1, *, words=100, height=1800):
 
 
 async def test_upload_builds_proportional_section_summaries_and_overview():
-    llm = ScriptedLLM(["Introduction summary", "Methods summary", "Appendix summary", "Overview"])
+    llm = ScriptedLLM(
+        [
+            summary_response("Introduction summary"),
+            summary_response("Methods summary"),
+            summary_response("Appendix summary"),
+            "Overview",
+        ]
+    )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     events = [e async for e in app.upload_document(structured_pdf(), "Document.pdf")]
     assert events[-1].type == "ready"
@@ -60,9 +67,9 @@ async def test_global_uses_summary_sources_without_query_embedding_and_cache_reu
 
     llm = ScriptedLLM(
         [
-            "Introduction summary",
-            "Methods summary",
-            "Appendix summary",
+            summary_response("Introduction summary"),
+            summary_response("Methods summary"),
+            summary_response("Appendix summary"),
             "Overview",
             json.dumps(
                 {"question_type": "Global", "standalone_question": "Summarize", "sub_queries": []}
@@ -82,7 +89,7 @@ async def test_global_uses_summary_sources_without_query_embedding_and_cache_reu
     final = next(e for e in events if e.type == "final")
     assert final.citations[0].id == "S1"
     source = app.source(final.citations[0].source_id)
-    assert source.text == "Introduction summary"
+    assert source.text == summary_response("Introduction summary")
     assert (source.page_start, source.page_end) == (1, 2)
     assert source.section_ids == [app.document.sections[0].id]
     assert llm.calls[-1].think == "medium" and llm.calls[-1].call_type == "answer"
@@ -139,7 +146,12 @@ async def test_long_document_builds_adjacent_groups_and_global_uses_best_fitting
 
 async def test_oversized_section_is_split_and_merged_before_budget_guard():
     llm = ScriptedLLM(
-        ["First evidence summary", "Second evidence summary", "Merged summary", "Overview"]
+        [
+            "First evidence summary",
+            "Second evidence summary",
+            summary_response("Merged summary"),
+            "Overview",
+        ]
     )
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     uploaded = [
@@ -190,7 +202,7 @@ async def test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled(
 
     class HeldLLM(ScriptedLLM):
         def __init__(self):
-            super().__init__(["Summary"] * 7)
+            super().__init__([summary_response("Summary")] * 7)
             self.active = self.maximum = 0
             self.entered = asyncio.Event()
             self.release = asyncio.Event()
@@ -222,7 +234,7 @@ async def test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled(
 
 @pytest.mark.parametrize("words", [1, 200, 1000])
 async def test_section_summary_length_target_covers_minimum_proportional_and_maximum(words):
-    llm = ScriptedLLM(["Section Summary", "Overview"])
+    llm = ScriptedLLM([summary_response("Section Summary"), "Overview"])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
     uploaded = [e async for e in app.upload_document(summary_pdf(words=words), "Document.pdf")]
     assert uploaded[-1].type == "ready"
@@ -239,7 +251,7 @@ async def test_failed_summary_replacement_keeps_previous_document_and_no_partial
 
     llm = ScriptedLLM(
         [
-            "Original Section Summary",
+            summary_response("Original Section Summary"),
             "Original Overview",
             [LLMFrame(content="Truncated summary"), LLMFrame(done=True, done_reason="length")],
         ]

@@ -15,7 +15,7 @@ from chat_document.llm_adapter import LLMFrame, ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
 
-from .fixtures import SummaryScriptedLLM
+from .fixtures import SummaryScriptedLLM, summary_response
 
 
 class DeterministicEmbedder:
@@ -250,14 +250,14 @@ async def test_truncated_summary_is_discarded_before_retry_and_every_call_is_rec
                 LLMFrame(content="FAILED_DRAFT must not be published."),
                 LLMFrame(done=True, done_reason="length"),
             ],
-            "Complete supported summary.",
+            summary_response("Complete supported summary"),
             "Overview.",
         ]
     )
     app = Application(DeterministicEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(content, "retry.pdf")][-1].type == "ready"
     tree = app.document.summary_tree
-    assert tree.section_summaries[0].text == "Complete supported summary."
+    assert tree.section_summaries[0].text == summary_response("Complete supported summary")
     assert "FAILED_DRAFT" not in tree.document_summary.text
     assert [c.done_reason for c in tree.calls] == ["length", "stop", "stop"]
     assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in tree.calls)
@@ -369,7 +369,9 @@ async def test_summary_length_correction_uses_original_source_not_the_failed_dra
             (50, 100), "SOURCE_TRUTH: the measurement is supported by evidence.", fontsize=10
         )
         content = pdf.tobytes()
-    llm = ScriptedLLM(["UNSUPPORTED_DRAFT claim. " * 100, "Supported measurement.", "Overview."])
+    llm = ScriptedLLM(
+        ["UNSUPPORTED_DRAFT claim. " * 100, summary_response("Supported measurement"), "Overview."]
+    )
     app = Application(DeterministicEmbedder(), LLMGateway(llm))
     assert [e async for e in app.upload_document(content, "measurements.pdf")][-1].type == "ready"
     corrective = llm.calls[1].messages[-1]["content"]
