@@ -2,6 +2,8 @@
 
 Upload one PDF with a text layer, ask questions, and check the Section/page Citations against the original source. Global questions use the upload-time Summary Tree; Synthesis retrieves across Sub-queries; Lookup retrieves original Chunks and linked tables/paragraphs. Answers stream provisionally until completion. Trace exposes routing, retrieval, thinking, tokens, discarded evidence and retries.
 
+The public ask seam uses a request-scoped LangGraph `StateGraph`: validate → plan → Summary Tree evidence (Global) or ContextPacker evidence (Lookup/Synthesis) → generate → finalize. Existing native Ollama, budget guard, retrieval and retry modules remain responsible for their work. Custom events stream incrementally; cancellation joins the graph and provider cleanup before releasing the Document. No checkpoint persistence or agent loop is enabled.
+
 ## Start locally — Python and Ollama
 
 Install **Python 3.12+** and [Ollama](https://ollama.com/). Start the local Ollama daemon, then prepare its models/account once:
@@ -22,7 +24,7 @@ python3 -m venv .venv
 .venv/bin/python -m uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8101
 ```
 
-Open **http://127.0.0.1:8101**. FastAPI serves the committed `frontend/dist/`, including local Noto Serif TC fonts. Choose a PDF, wait for Ready and its Document overview, then Ask. `OLLAMA_BASE_URL` overrides the daemon URL (default `http://localhost:11434`). On Windows, substitute `.venv\Scripts\python.exe` for `.venv/bin/python`.
+Open **http://127.0.0.1:8101**. FastAPI serves the committed `frontend/dist/`, including local Noto Serif TC fonts. Choose a PDF, wait for Ready, then Ask. `OLLAMA_BASE_URL` overrides the daemon URL (default `http://localhost:11434`). On Windows, substitute `.venv\Scripts\python.exe` for `.venv/bin/python`.
 
 If [uv](https://docs.astral.sh/uv/) is already installed, the locked equivalent is:
 

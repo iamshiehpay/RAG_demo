@@ -1,5 +1,6 @@
 import re
 from collections.abc import AsyncIterator
+from contextlib import aclosing
 from typing import Literal
 
 from .citation import CitationText
@@ -120,20 +121,23 @@ class AnswerGenerator:
         for attempt in range(2):
             formatter = CitationText(citations)
             try:
-                async for event in self.gateway.generate(
-                    "answer", messages, think="low" if attempt else self.think
-                ):
-                    if isinstance(event, DeltaEvent):
-                        text = formatter.feed(event.text)
-                        if text:
-                            yield DeltaEvent(text=text)
-                    elif isinstance(event, TraceEvent):
-                        remaining = formatter.flush()
-                        if remaining:
-                            yield DeltaEvent(text=remaining)
-                        yield event
-                    else:
-                        yield event
+                async with aclosing(
+                    self.gateway.generate(
+                        "answer", messages, think="low" if attempt else self.think
+                    )
+                ) as events:
+                    async for event in events:
+                        if isinstance(event, DeltaEvent):
+                            text = formatter.feed(event.text)
+                            if text:
+                                yield DeltaEvent(text=text)
+                        elif isinstance(event, TraceEvent):
+                            remaining = formatter.flush()
+                            if remaining:
+                                yield DeltaEvent(text=remaining)
+                            yield event
+                        else:
+                            yield event
                 return
             except LLMTruncated:
                 if attempt:

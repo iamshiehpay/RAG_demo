@@ -1,0 +1,35 @@
+Screen 47x148  cursor (43,2)
+ready=true  prompt_empty=true  input_text=""
+
+    0:      ~/Desktop/resume/rag/.worktrees/14-langgraph-ask
+    3: › Bootstrap HOLD only. Report your native session locator to mira via uvx hcom send --name YOURNAME --intent request. Do not read source/docs or
+    4:   review until explicit RELEASE. Required model gpt-6-luna effort max Fast priority workspace-write on-request. No children. Workdir is shared; you
+    5:   are read-only reviewer once released. English HCOM only, no user-window progress.
+    7:   When done, send your result back to @mira via hcom.
+   10: • Ran uvx hcom status --help --name lulu
+   11:   └   hcom status                     Installation status and diagnostics
+   12:       hcom status --logs              Include recent errors and warnings
+   13:       hcom status --json              Machine-readable output
+   14:     + 2 lines (⌃t to expand)
+   16: • Ran uvx hcom status --json --name lulu
+   17:   └ → hcom v0.7.29 available — run `hcom update`
+   18:     {"config_errors":[],"config_valid":true,"delivery":{},"hcom_dir":"/Users/shiehpay/.hcom","hcom_dir_override":true,"hcom_exists":true,"hcom_writ…
+   19:     + 1 line (⌃t to expand)
+   21: • Ran uvx hcom list --help --name lulu
+   22:   └   [CLAUDE] [GEMINI] [CODEX] [OPENCODE] [KILO] [PI] [OMP] [ANTIGRAVITY] [CURSOR] [KIMI] [COPILOT] [GROK]  hcom-launched, automatic delivery
+   23:       [CLAUDE*]   hooks or process not bound (starting up, or lost); see: list <name>
+   24:       [AD-HOC]    no hooks, checks messages manually
+   25:     + 29 lines (⌃t to expand)
+   27: • Ran uvx hcom list self --json --name lulu
+   28:   └ → hcom v0.7.29 available — run `hcom update`
+   29:     {"agent_id":null,"directory":"/Users/shiehpay/Desktop/resume/rag/.worktrees/14-langgraph-ask","name":"lulu","parent_name":null,"session_id":"01…
+   30:     + 1 line (⌃t to expand)
+   32: • Ran uvx hcom send @mira --intent request --name lulu -- 'Bootstrap HOLD. Native Codex session_id: 01a13888-9a1f-7c41-a0a7-f6691c1c11d7. Worktree:…
+   33:   └ Sent to: ▶ nova-graph-mira
+   35:     [tip] intent=request: You signaled you expect a response. You'll be auto-notified if they end their turn or stop without responding. Safe to mo…
+   36:     + 2 lines (⌃t to expand)
+   38: • Sent the native session locator to @mira via HCOM. I’m on HOLD pending explicit RELEASE.
+   40:   Worked for 28s • 11:51
+   43: › Ask Codex to do anything
+   45:   GPT-6-Luna max fast · ~/Desktop/resume/rag/.worktrees/14-langgraph-ask · Context 9% used · 01a13888-9a1f-7c41-a0a7-f6691c1c11d7
+   46:   ? for shortcuts                                                                                                          ⚠ 1 warning · f2 to view

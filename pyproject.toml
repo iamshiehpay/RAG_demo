@@ -3,7 +3,17 @@ name = "chat-with-document"
 version = "0.1.0"
 description = "Local Chat with Document with grounded answers and Context Budget Trace"
 requires-python = ">=3.12"
-dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "python-multipart>=0.0.20,<1", "pymupdf>=1.25,<2", "tiktoken>=0.9,<1", "numpy>=2,<3", "httpx>=0.28,<1"]
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.34,<1",
+    "python-multipart>=0.0.20,<1",
+    "pymupdf>=1.25,<2",
+    "tiktoken>=0.9,<1",
+    "numpy>=2,<3",
+    "httpx>=0.28,<1",
+    "langgraph==1.2.15",
+    "anyio>=4,<5",
+]
 
 [dependency-groups]
 dev = [

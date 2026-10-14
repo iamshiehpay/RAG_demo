@@ -3,47 +3,34 @@
 import asyncio
 import logging
 from collections.abc import AsyncIterator
-from contextlib import suppress
+from contextlib import aclosing, suppress
 from uuid import uuid4
 
 import httpx
 import numpy as np
 
 from .answer_generator import AnswerGenerator
+from .ask_graph import AskWorkflow
 from .cache import ProcessingCache
 from .chunker import chunk_sections
-from .citation import citation_map, validate_citations
 from .context_packer import ContextPacker
 from .embedder import Embedder
 from .events import (
-    CitationMapEvent,
-    DeltaEvent,
     ErrorEvent,
     Event,
-    FinalEvent,
     ReadyEvent,
-    RejectedEvent,
-    RetrievalEvent,
-    RetryEvent,
     StageEvent,
-    ThinkingEvent,
     TraceEvent,
 )
 from .index import Index
 from .ingestion import IngestionJob, UploadBusy
-from .llm_gateway import BudgetExceeded, LLMFailure, LLMGateway
-from .models import Chunk, ConversationTurn, Document, LLMCallTrace, Summary
+from .llm_gateway import BudgetExceeded, LLMGateway
+from .models import Chunk, ConversationTurn, Document, Summary
 from .pdf_parser import DocumentError, parse_pdf
-from .policy import (
-    EMBEDDING_BATCH_CHUNKS,
-    HISTORY_ROUND_LIMIT,
-    QUESTION_TOKEN_LIMIT,
-)
+from .policy import EMBEDDING_BATCH_CHUNKS
 from .router import Router
 from .settings import RetrievalSettings
-from .summary_context import select_summary_context
 from .summary_tree import SummaryTreeBuilder
-from .tokens import count_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -270,122 +257,42 @@ class Application:
     async def ask(
         self, question: str, *, history: list[ConversationTurn] | None = None
     ) -> AsyncIterator[Event]:
-        calls: list[LLMCallTrace] = []
-        summary_level: str | None = None
-        stage = "router"
+        workflow = AskWorkflow(self, question, history)
         self._asking += 1
-        dropped_chunk_count = 0
         try:
-            index = self.index
-            if self._active_upload is not None or index is None:
-                yield ErrorEvent(
-                    code="document_not_ready",
-                    message="Wait until Document processing is complete before asking.",
-                )
-                return
-            if not question.strip():
-                yield ErrorEvent(code="invalid_question", message="Please enter a question.")
-                return
-            question_tokens = count_tokens(question)
-            if question_tokens > QUESTION_TOKEN_LIMIT:
-                yield RejectedEvent(
-                    message=f"Question must not exceed {QUESTION_TOKEN_LIMIT:,} tokens.",
-                    question_tokens=question_tokens,
-                    token_limit=QUESTION_TOKEN_LIMIT,
-                )
-                return
-            plan = await self.router.plan(
-                question, self.history if history is None else history, calls
-            )
-            yield plan
-            if plan.question_type == "Global":
-                stage = "answer"
-                if self.document is None or self.document.summary_tree is None:
-                    raise LLMFailure("Document has no Summary Tree. Please upload it again.")
-                context, citations, summary_level = select_summary_context(
-                    self.document.summary_tree,
-                    plan.standalone_question,
-                    current_question=question,
-                )
-                chunks = []
-                yield RetrievalEvent(chunks=[])
-                yield CitationMapEvent(citations=citations)
-            else:
-                stage = "embedding"
-                retrieved = await self.context_packer.retrieve(
-                    index, plan, current_question=question
-                )
-                dropped_chunk_count = retrieved.dropped_chunk_count
-                yield retrieved
-                chunks = sorted(
-                    (item.chunk for item in retrieved.chunks), key=lambda chunk: chunk.order
-                )
-                citations = citation_map(chunks)
-                yield CitationMapEvent(citations=citations)
-                stage = "fact_extraction"
-                context = await self.context_packer.pack(
-                    plan, chunks, citations, calls, current_question=question
-                )
-            stage = "answer"
-            answer = ""
-            async for event in self.answer_generator.generate(
-                plan.standalone_question,
-                chunks,
-                citations,
-                context=context,
-                current_question=question,
-                sources="summary" if plan.question_type == "Global" else "chunk",
-            ):
-                if isinstance(event, DeltaEvent):
-                    answer += event.text
+            async with aclosing(workflow.stream()) as events:
+                async for event in events:
                     yield event
-                elif isinstance(event, TraceEvent):
-                    calls.extend(event.calls)
-                elif isinstance(event, RetryEvent):
-                    answer = ""
-                    yield event
-                elif isinstance(event, ThinkingEvent):
-                    yield event
-            if not answer.strip():
-                raise LLMFailure("LLM returned an empty answer. Please retry.")
-            validated = validate_citations(answer, citations)
-            answer = validated.answer
-            if history is None:
-                self.history = (
-                    self.history + [ConversationTurn(question=question, answer=answer)]
-                )[-HISTORY_ROUND_LIMIT:]
-            yield FinalEvent(
-                answer=answer, citations=validated.citations, unverified=validated.unverified
-            )
-            if calls:
-                yield TraceEvent(
-                    calls=calls,
-                    invalid_citation_count=validated.invalid_citation_count,
-                    dropped_chunk_count=dropped_chunk_count,
-                    summary_level=summary_level,
-                )
         except BudgetExceeded as exc:
-            if calls:
-                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
+            if workflow.calls:
+                yield TraceEvent(
+                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
+                )
             yield ErrorEvent(code="budget_exceeded", message=str(exc))
         except httpx.HTTPError as exc:
-            if calls:
-                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
+            if workflow.calls:
+                yield TraceEvent(
+                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
+                )
             yield ErrorEvent(
-                code=f"{stage}_failed",
-                message=http_failure_message(stage, exc),
+                code=f"{workflow.stage}_failed",
+                message=http_failure_message(workflow.stage, exc),
             )
         except ValueError as exc:
-            if calls:
-                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
+            if workflow.calls:
+                yield TraceEvent(
+                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
+                )
             yield ErrorEvent(
-                code=f"{stage}_failed",
-                message=f"{stage.replace('_', ' ').capitalize()} failed: {exc}",
+                code=f"{workflow.stage}_failed",
+                message=f"{workflow.stage.replace('_', ' ').capitalize()} failed: {exc}",
             )
         except Exception:
             logger.exception("Unexpected answer failure")
-            if calls:
-                yield TraceEvent(calls=calls, dropped_chunk_count=dropped_chunk_count)
+            if workflow.calls:
+                yield TraceEvent(
+                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
+                )
             yield ErrorEvent(
                 code="answer_failed", message="Unexpected answer failure. Please retry."
             )
