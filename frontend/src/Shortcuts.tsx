@@ -3,7 +3,7 @@ export const LIGHTRAG_QUESTIONS = [
   'Summary this document.',
   'Compare LightRAG with GraphRAG.',
   'Performance of ablated versions of LightRAG.',
-  '這篇論文有什麼限制？',
+  '這篇論文使用哪些資料集進行實驗？',
   'LightRAG 在 HotpotQA 上的分數是多少？',
 ] as const;
 const GENERAL_QUESTIONS = [LIGHTRAG_QUESTIONS[0]] as const;

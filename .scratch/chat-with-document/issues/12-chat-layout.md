@@ -86,3 +86,7 @@ D20已由「目前都先指派 gpt 6.1 sol medium 改，先不呼叫 claude」�
 7d3794a（已審code/test1c364b8、product8e15852）已ff-only整合。獨立Standards與Spec對D21呈現變更零finding，Main核對來源diff與圖片。390px連續兩種來源後Escape的瀏覽器停滯在新舊版本都重現，仍保留未解FAIL；沒有宣稱全部行動操作通過。接續Main一次完整測試及D9／D12–D14人工操作。A9後端未修复，不影響此UI變更範圍，亦不被豁免。
 
 Main fd1034f整合完整327PASS／3eval deselected／zeroSKIP／269.93s／exit0；8101所有新靜態檔HTTP200且與dist相同。詳見[整合證據](../../../docs/verification/ticket-12/overview/integration.md)。新UI已提供，待D9／D12–D14人工結果；A9未修復與窄螢幕基準FAIL不改判。
+
+### D23 單一快捷題替換完成
+
+使用者真人msg_01a13862明確要求委派修改並自行驗證。GPT6.1 medium將「這篇論文有什麼限制？」換成「這篇論文使用哪些資料集進行實驗？」；只改Shortcuts字串及重建dist。Vite build成功，index指向index-Cq1TPKfr.js；原本機缺少react-markdown，以既有lockfile npm ci恢復未追蹤依賴，沒有package／lockfile修改。tests／live eval／typecheck／browser／HTTP／獨立Review均依要求NOT_EXECUTED。使用者重新整理網站後自行操作新題，未宣稱新題品質通過。A9凍結已知缺陷，後端／LangGraph不變。

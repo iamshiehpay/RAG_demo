@@ -37,7 +37,7 @@ Status: in-progress
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | done（3bb0c64／Main7cf9185；限定Review兩軸PASS／整合316PASS／獨立QA功能PASS；N3品質FAIL與已知限制按D05/D06保留） |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL；D14 B交#13有界修正） |
 | 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（D21已審7d3794a整合；Main fd1034f完整327PASS、8101提供新UI；D9／D12–D14待人工，既有窄螢幕停滯FAIL保留） |
-| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | ready-for-agent（D21純診斷b0b7710：14次真實呼叫未建立修復；產品保持58586f7，原FAIL與舊9715538未採用狀態保留） |
+| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | wontfix（D23使用者核准本輪凍結目前後端、A9保留已知缺陷；D21/D22證據與舊9715538未採用狀態保留） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -49,7 +49,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D01–D17與D19–D21均有對應真人答覆。D21本輪角色皆GPT6.1 medium，沒有新Claude呼叫，D20已解除。D18僅保留舊9715538候選採用／缺陷豁免待決，沒有被D21自動接受。新D21介面已整合到Main fd1034f並由8101提供；單次Main完整測試327PASS／3eval deselected／zeroSKIP／exit0，269.93s。A9有界診斷已完成14次真實呼叫但未建立修復，失敗實驗已撤回產品程式，純證據保留於ticket-13/d21/。原Global原因仍未知，來源齊備的Synthesis拒答可重現；新舊UI皆有獨立Chromium窄螢幕停滯，人工D14待驗。不宣稱全部驗收通過。
+D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9列已知缺陷，停止本輪修復；D18結束為舊9715538保留不採用，不接受其中新增錯誤。快捷題已換成資料集題並重新產生dist，本次tests／live／browser／HTTP／Review均依使用者明確要求不執行，由使用者操作。D22窄螢幕問題先擱置，歷史FAIL保留。LangGraph只進入討論，未核准引入或重構。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -323,3 +323,7 @@ D01–D17與D19–D21均有對應真人答覆。D21本輪角色皆GPT6.1 medium�
 - D22真人已直接核對（msg_01a13850，02:48:51Z）：要求快速並行驗證A9主體／原文觀察／限定條件，先忽略窄螢幕。新gina真實實驗與muko獨立判讀，actualGPT6.1 medium/wswrite/onrequest已Main核對並放行；最多8次產品模型呼叫，來源／順序／題目／設定凍結，不改產品或部署。既有D21FAIL保留。
 
 - D22診斷完成：1f0fd2d純證據已核對並整合，7次新gpt-oss呼叫均stop、零retry，最高預估7262／provider6610。完整／局部的中立抽取與原回答對照、支持／缺失控制均由獨立muko按原文判讀；局部抽取語意恢復不等於回答正確。沒有通過完整抽取的候選門檻，沒有產品改動／部署。結果見ticket-13/d22/probe/final-report.md與assessment/report.md。窄螢幕依真人D22先擱置；A9仍未解。兩個角色工作結束、無自有服務／暫存，原worktree與快取由Main保管。
+
+- D23真人msg_01a13862明確核准最小快捷題替換，並說「不用驗證，我自己驗證」。委派已核對GPT6.1 medium rose，只改Shortcuts與Vite重建dist；tests／live／browser／HTTP／獨立Review／整合suite本次明確不執行，不再套舊流程攔阻。A9凍結列已知缺陷，#13本輪wontfix；D18結束為舊候選不採用。LangGraph只討論，尚未引入或實作。
+
+- D23最小修改完成：rose將快捷題改成「這篇論文使用哪些資料集進行實驗？」；Vite build成功（690ms），重建dist。Main本機缺react-markdown，依原lockfile npm ci恢復依賴後完成artifact生成，沒有依賴檔改動。所有驗證按真人要求NOT_EXECUTED，不宣稱新題回答或引用PASS；既有服務讀取更新的dist，未做HTTP／瀏覽器檢查。
