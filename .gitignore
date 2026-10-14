@@ -17,3 +17,6 @@ frontend/node_modules/
 # LAT local state and per-ticket worktrees
 .lat/
 .worktrees/
+
+# Local delivery archives (keep frontend/dist tracked)
+/dist/

@@ -6,8 +6,7 @@ from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.models import ConversationTurn
 from chat_document.router import Router
-
-from .test_router_smoke_eval import assess_answer_script, assess_rewrite
+from eval.router_checks import assess_answer_script, assess_rewrite
 
 
 @pytest.mark.parametrize(

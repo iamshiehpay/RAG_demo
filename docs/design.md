@@ -166,7 +166,7 @@ Budget guard 只負責攔截超額。把內容安排到放得下，是上游的�
 
 測試分成兩層：
 
-- **預設測試**（`pytest`，不呼叫雲端 LLM；部分測試使用真實本地 bge-m3，需要 Ollama，並非全部都能在幾秒內跑完）：
+- **非雲端回歸**（`pytest tests eval`，排除 live eval；其中整合測試使用本地 bge-m3。預設 `pytest` 僅跑不需 Ollama 的 unit）：
   - Table 2 重建後，每一格的數字都正確。
   - 沒有 Chunk 跨越 Section；References 不在索引裡。
   - Budget guard 超過額度一定會 raise。

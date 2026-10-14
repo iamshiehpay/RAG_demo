@@ -7,8 +7,7 @@ import pytest
 from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_gateway import LLMGateway
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
+from tests.support import SummaryScriptedLLM as ScriptedLLM
 
 # Transcribed from the fixed LightRAG Table 2, in printed row/column order.
 TABLE2_VALUES = [
@@ -243,8 +242,7 @@ async def test_synthesis_small_evidence_budget_drops_are_counted():
     import pymupdf
 
     from chat_document.settings import RetrievalSettings
-
-    from .test_router_synthesis import router_script
+    from tests.support import router_script
 
     with pymupdf.open() as pdf:
         page = pdf.new_page(width=1000, height=8000)
@@ -692,7 +690,7 @@ async def test_group_divider_inside_table_keeps_all_later_numeric_cells_as_uncer
 async def test_cjk_page_continuation_and_close_table_heading_preserve_numbers_and_provenance():
     import pymupdf
 
-    from .fixtures import page_continuation_pdf
+    from tests.support import page_continuation_pdf
 
     first = "觀察記錄" * 9 + "月球區域1"
     second = "4的觀察延續到第二頁才結束。本段落的內容保留原始數值與跨頁來源。"

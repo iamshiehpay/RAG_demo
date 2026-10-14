@@ -6,18 +6,17 @@ from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
-from .fixtures import (
+from tests.support import SummaryScriptedLLM as ScriptedLLM
+from tests.support import (
     cjk_layout_pdf,
     heading_free_pdf,
     page_top_interruption_pdf,
     paragraph_pdf,
+    router_script,
     scanned_pdf,
     structured_pdf,
     text_pdf,
 )
-from .test_router_synthesis import router_script
 
 
 @pytest.mark.parametrize(
@@ -224,7 +223,7 @@ async def test_long_paragraphs_split_at_sentence_boundaries_with_overlap(cjk):
     ],
 )
 async def test_wrapped_and_number_only_headings_keep_the_complete_title(case, title):
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf(case), "heading.pdf")]
@@ -235,7 +234,7 @@ async def test_wrapped_and_number_only_headings_keep_the_complete_title(case, ti
 
 @pytest.mark.parametrize("case", ["lettered", "supplementary", "chinese"])
 async def test_appendices_after_references_resume_indexing(case):
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf(case), "appendix.pdf")]
@@ -247,7 +246,7 @@ async def test_appendices_after_references_resume_indexing(case):
 
 
 async def test_two_column_reading_order_keeps_same_size_bold_headings_and_provenance():
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf("columns"), "columns.pdf")]
@@ -271,7 +270,7 @@ async def test_two_column_reading_order_keeps_same_size_bold_headings_and_proven
 
 
 async def test_body_size_numbered_small_caps_subsection_forms_a_chunk_boundary():
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf("subsection"), "subsection.pdf")]
@@ -282,7 +281,7 @@ async def test_body_size_numbered_small_caps_subsection_forms_a_chunk_boundary()
 
 
 async def test_figure_labels_are_filtered_without_discarding_short_prose_or_table_cells():
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf("figure"), "figure.pdf")]
@@ -303,7 +302,7 @@ async def test_figure_labels_are_filtered_without_discarding_short_prose_or_tabl
 
 
 async def test_references_only_document_reports_no_indexable_text():
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf("references-only"), "references.pdf")]
@@ -345,7 +344,7 @@ async def test_settings_from_env_control_real_and_virtual_chunk_bounds(monkeypat
 
 
 async def test_shaded_prose_above_a_figure_caption_preserves_every_line():
-    from .fixtures import shaded_prose_pdf
+    from tests.support import shaded_prose_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(shaded_prose_pdf(), "shaded.pdf")]
@@ -359,7 +358,7 @@ async def test_shaded_prose_above_a_figure_caption_preserves_every_line():
     "title", ["1 Introduction", "Introduction"], ids=["numbered", "unnumbered"]
 )
 async def test_page_frame_does_not_remove_the_section_heading(title):
-    from .fixtures import page_frame_pdf
+    from tests.support import page_frame_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(page_frame_pdf(title), "frame.pdf")]
@@ -370,7 +369,7 @@ async def test_page_frame_does_not_remove_the_section_heading(title):
 
 
 async def test_numbered_all_caps_period_headings_keep_their_own_appendix_content():
-    from .fixtures import review_pdf
+    from tests.support import review_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(review_pdf("period-headings"), "period.pdf")]
@@ -390,7 +389,7 @@ async def test_numbered_all_caps_period_headings_keep_their_own_appendix_content
 
 
 async def test_bold_and_larger_figure_labels_do_not_create_sections_or_enter_prose():
-    from .fixtures import styled_figure_labels_pdf
+    from tests.support import styled_figure_labels_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [e async for e in app.upload_document(styled_figure_labels_pdf(), "styled-figure.pdf")]
@@ -404,7 +403,7 @@ async def test_bold_and_larger_figure_labels_do_not_create_sections_or_enter_pro
 
 @pytest.mark.parametrize("split", [False, True], ids=["inline", "split-number"])
 async def test_numbered_uppercase_body_sentences_do_not_open_sections(split):
-    from .fixtures import numbered_sentences_pdf
+    from tests.support import numbered_sentences_pdf
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [
@@ -495,7 +494,7 @@ async def test_stacked_numeric_values_in_a_cjk_block_keep_their_separators(text)
 @pytest.mark.parametrize("cjk", [False, True], ids=["english", "chinese"])
 @pytest.mark.parametrize("finished", [False, True], ids=["continues", "new-paragraph"])
 async def test_page_break_only_ends_a_paragraph_when_the_sentence_has_finished(cjk, finished):
-    from .fixtures import page_continuation_pdf
+    from tests.support import page_continuation_pdf
 
     first, second = (
         ("第一頁的段落延續到", "第二頁才結束。")
@@ -655,3 +654,38 @@ async def test_cjk_full_final_lines_use_the_actual_column_or_text_width(two_colu
         assert app.document.chunks[0].text == "\n\n".join(texts)
     finally:
         await app.close()
+
+
+
+
+async def test_uploaded_oversized_paragraph_keeps_decimals_and_abbreviations():
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
+    text = "Win rate 64.8% vs 60.0%, e.g. an ablation. " * 100
+    result = [e async for e in app.upload_document(paragraph_pdf(text), "numbers.pdf")]
+    assert result[-1].type == "ready"
+    assert any(count_tokens(p) > 500 for s in app.document.sections for p in s.paragraphs)
+    chunks = app.document.chunks
+    assert len(chunks) > 1
+    combined = "\n".join(c.text for c in chunks)
+    assert "64.8" in combined and "60.0" in combined and "e.g." in combined
+    assert "64.\n8" not in combined and "60.\n0" not in combined
+
+
+async def test_uploaded_cjk_paragraph_splits_on_characters_with_overlap():
+    app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])), chunk_token_target=500)
+    text = "".join(f"龜測試{i:04d}" for i in range(600))
+    result = [e async for e in app.upload_document(paragraph_pdf(text, cjk=True), "cjk.pdf")]
+    assert result[-1].type == "ready"
+    chunks = app.document.chunks
+    assert len(chunks) > 1
+    assert all("\ufffd" not in c.text and count_tokens(c.text) <= 500 for c in chunks)
+    for left, right in zip(chunks, chunks[1:], strict=False):
+        shared = max(
+            (
+                size
+                for size in range(1, min(len(left.text), len(right.text)) + 1)
+                if left.text[-size:] == right.text[:size]
+            ),
+            default=0,
+        )
+        assert 40 <= count_tokens(left.text[-shared:]) <= 50

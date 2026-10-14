@@ -4,23 +4,12 @@ The deterministic Embedder and summary adapter replace external services here;
 these tests prove source parsing/provenance, never generated-summary acceptance.
 """
 
-import json
-
-import numpy as np
 import pymupdf
 import pytest
 
 from chat_document.application import Application
-from chat_document.llm_adapter import LLMFrame, ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
-from chat_document.tokens import count_tokens
-
-from .fixtures import SummaryScriptedLLM, summary_response
-
-
-class DeterministicEmbedder:
-    async def embed(self, texts):
-        return np.ones((len(texts), 2), dtype=np.float32)
+from tests.support import DeterministicEmbedder, SummaryScriptedLLM
 
 
 def appendix_layout_pdf():
@@ -104,30 +93,6 @@ async def test_numeric_cell_before_next_table_row_cannot_open_a_section():
     assert table.table_rows == [["I1", "3", "8"], ["I2", "1", "1"], ["I3", "2", "3"]]
 
 
-async def test_numbered_document_keeps_front_matter_and_emphasis_out_of_summary_boundaries():
-    with pymupdf.open() as pdf:
-        page = pdf.new_page()
-        page.insert_text((50, 40), "Measurements in Practice", fontsize=18)
-        page.insert_text((50, 70), "Ada Example and Bea Example", fontsize=12)
-        for n, y in enumerate([110, 260, 410], 1):
-            page.insert_text((50, y), f"{n} Measurements", fontsize=14)
-            page.insert_text((50, y + 30), "Emphasized observation", fontsize=10, fontname="hebo")
-            page.insert_text(
-                (50, y + 55), "EVIDENCE_ONLY documents the actual observed results.", fontsize=10
-            )
-        content = pdf.tobytes()
-    app = Application(DeterministicEmbedder(), LLMGateway(SummaryScriptedLLM([])))
-    assert [e async for e in app.upload_document(content, "structured-report.pdf")][
-        -1
-    ].type == "ready"
-    assert len(app.document.summary_tree.section_summaries) == 3
-    assert {s.section for s in app.document.summary_tree.section_summaries} == {
-        "1 Measurements",
-        "2 Measurements",
-        "3 Measurements",
-    }
-    assert all("Emphasized observation" in c.text for c in app.document.chunks)
-    assert not any("Ada Example" in c.text for c in app.document.chunks)
 
 
 async def test_letter_prefixed_appendix_table_is_typed_and_keeps_uncertain_numeric_rows():
@@ -211,56 +176,8 @@ async def test_continued_column_table_does_not_absorb_neighboring_body_prose():
     assert any(c.kind == "table" and "beta" in c.text for c in app.document.chunks)
 
 
-@pytest.mark.parametrize("correction_succeeds", [True, False])
-async def test_overlong_section_summary_is_regenerated_or_upload_fails(correction_succeeds):
-    with pymupdf.open() as pdf:
-        page = pdf.new_page()
-        page.insert_text((50, 60), "1 Measurements", fontsize=14)
-        page.insert_text(
-            (50, 100), "The measured finding is supported by source evidence.", fontsize=10
-        )
-        content = pdf.tobytes()
-    overlong = "The measured finding is supported. " * 100
-    assert 500 < count_tokens(overlong) < 1200
-    corrected = "The measured finding is supported by source evidence. " * 10
-    llm = ScriptedLLM([overlong, corrected, "Overview."] if correction_succeeds else [overlong] * 5)
-    app = Application(DeterministicEmbedder(), LLMGateway(llm))
-    events = [e async for e in app.upload_document(content, "measured.pdf")]
-    if correction_succeeds:
-        assert events[-1].type == "ready"
-        summary = app.document.summary_tree.section_summaries[0]
-        assert summary.text.strip() == corrected.strip()
-        assert summary.chunk_ids and count_tokens(summary.text) <= 500
-        assert len(llm.calls) == 3
-        assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
-    else:
-        assert events[-1].type == "error" and app.document is None
-        assert "length" in events[-1].message.lower()
 
 
-async def test_truncated_summary_is_discarded_before_retry_and_every_call_is_recorded():
-    with pymupdf.open() as pdf:
-        page = pdf.new_page()
-        page.insert_text((50, 60), "1 Measurements", fontsize=14)
-        page.insert_text((50, 100), "Source measurement has complete evidence.", fontsize=10)
-        content = pdf.tobytes()
-    llm = ScriptedLLM(
-        [
-            [
-                LLMFrame(content="FAILED_DRAFT must not be published."),
-                LLMFrame(done=True, done_reason="length"),
-            ],
-            summary_response("Complete supported summary"),
-            "Overview.",
-        ]
-    )
-    app = Application(DeterministicEmbedder(), LLMGateway(llm))
-    assert [e async for e in app.upload_document(content, "retry.pdf")][-1].type == "ready"
-    tree = app.document.summary_tree
-    assert tree.section_summaries[0].text == summary_response("Complete supported summary")
-    assert "FAILED_DRAFT" not in tree.document_summary.text
-    assert [c.done_reason for c in tree.calls] == ["length", "stop", "stop"]
-    assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in tree.calls)
 
 
 @pytest.mark.parametrize("fragmented_edges", [False, True])
@@ -296,39 +213,6 @@ async def test_captioned_single_cell_box_keeps_raw_text_and_excludes_outside_pro
     assert any(c.kind == "text" and "OUTSIDE_BODY" in c.text for c in app.document.chunks)
 
 
-async def test_global_group_context_identifies_every_covered_section():
-    from .test_summary_tree import summary_pdf
-
-    class GroupedLLM(ScriptedLLM):
-        async def stream(self, request):
-            self.scripts.append(
-                {
-                    "section_summary": "Measurements are supported. " * 100,
-                    "group_summary": "Grouped supported findings.",
-                    "document_summary": "Supported overview.",
-                    "router": json.dumps(
-                        {
-                            "question_type": "Global",
-                            "standalone_question": "Summarize",
-                            "sub_queries": [],
-                        }
-                    ),
-                    "answer": "Supported findings. [S1]",
-                }[request.call_type]
-            )
-            async for frame in super().stream(request):
-                yield frame
-
-    llm = GroupedLLM([])
-    app = Application(DeterministicEmbedder(), LLMGateway(llm))
-    assert [e async for e in app.upload_document(summary_pdf(18), "measurements.pdf")][
-        -1
-    ].type == "ready"
-    events = [e async for e in app.ask("Summarize", history=[])]
-    assert next(e for e in events if e.type == "trace").summary_level.startswith("group:")
-    prompt = next(c for c in reversed(llm.calls) if c.call_type == "answer").messages[-1]["content"]
-    assert "Covered Sections:" in prompt
-    assert all(s.title in prompt for s in app.document.sections)
 
 
 @pytest.mark.parametrize("missing_cell", [False, True])
@@ -361,18 +245,136 @@ async def test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores
         ]
 
 
-async def test_summary_length_correction_uses_original_source_not_the_failed_draft():
+
+
+@pytest.mark.parametrize("inline", [False, True])
+async def test_upload_preserves_substantive_abstract_without_author_metadata(inline):
     with pymupdf.open() as pdf:
         page = pdf.new_page()
-        page.insert_text((50, 60), "1 Measurements", fontsize=14)
-        page.insert_text(
-            (50, 100), "SOURCE_TRUTH: the measurement is supported by evidence.", fontsize=10
-        )
+        page.insert_text((50, 40), "Measurements in Practice", fontsize=18)
+        page.insert_text((50, 70), "Ada Example and Bea Example", fontsize=12)
+        if inline:
+            page.insert_text(
+                (50, 100), "Abstract: UNIQUE_ABSTRACT records the main uncertainty.", fontsize=10
+            )
+        else:
+            # Abstract headings need not be larger than the body or bold.
+            page.insert_text((50, 100), "Abstract", fontsize=10)
+            page.insert_text(
+                (50, 125), "UNIQUE_ABSTRACT records the main uncertainty.", fontsize=10
+            )
+        for n, y in enumerate([180, 330, 480], 1):
+            page.insert_text((50, y), f"{n} Measurements", fontsize=14)
+            page.insert_text((50, y + 30), "BODY_EVIDENCE records observed results.", fontsize=10)
         content = pdf.tobytes()
-    llm = ScriptedLLM(
-        ["UNSUPPORTED_DRAFT claim. " * 100, summary_response("Supported measurement"), "Overview."]
+    llm = SummaryScriptedLLM([])
+    app = Application(DeterministicEmbedder(), LLMGateway(llm))
+    assert [e async for e in app.upload_document(content, "abstract-report.pdf")][
+        -1
+    ].type == "ready"
+    abstract = next(s for s in app.document.sections if s.title == "Abstract")
+    assert "UNIQUE_ABSTRACT" in "\n".join(abstract.paragraphs)
+    assert not any("Ada Example" in c.text for c in app.document.chunks)
+    summary = next(
+        s for s in app.document.summary_tree.section_summaries if s.section == "Abstract"
+    )
+    assert summary.page_start == summary.page_end == 1
+    assert summary.chunk_ids and summary.section_ids == [abstract.id]
+    assert any(
+        "UNIQUE_ABSTRACT" in request.messages[-1]["content"]
+        for request in llm.calls
+        if request.call_type == "section_summary"
+    )
+
+
+@pytest.mark.parametrize("footer_side", ["bottom", "top"])
+@pytest.mark.parametrize("first_folio", [7, 28])
+async def test_upload_and_global_answer_exclude_sequential_margin_folios(footer_side, first_folio):
+    """A folio above the old 90% cutoff must not become a validation count."""
+    with pymupdf.open() as pdf:
+        for index in range(2):
+            page = pdf.new_page(width=600, height=800)
+            # Logical folios need not equal the physical PDF page number.
+            page.insert_text(
+                (295, 680 if footer_side == "bottom" else 32), str(index + first_folio), fontsize=10
+            )
+            if index == 0:
+                page.insert_text((50, 80), "1 Evaluation", fontsize=14)
+                page.insert_text((50, 540), "BODY_COUNT records", fontsize=10)
+                page.insert_text((50, 557), "99", fontsize=10)
+                page.insert_text((50, 630), "The pipeline was checked against", fontsize=10)
+            else:
+                page.insert_text(
+                    (50, 80), "expert judgements on three independent reports.", fontsize=10
+                )
+                page.insert_text((50, 160), "2 Measurements", fontsize=14)
+                page.insert_text((50, 200), "Table 1: Recorded counts", fontsize=10)
+                page.insert_text((50, 220), "Setting", fontsize=10)
+                page.insert_text((230, 220), "Count", fontsize=10)
+                page.insert_text((50, 240), "Control", fontsize=10)
+                page.insert_text((230, 240), "23", fontsize=10)
+                # A legitimate isolated integer near the lower margin is not a
+                # sequential recurring folio and must remain original evidence.
+                page.insert_text((50, 640), "LEGITIMATE_COUNT", fontsize=10)
+                page.insert_text((50, 658), "41", fontsize=10)
+        content = pdf.tobytes()
+    llm = SummaryScriptedLLM(
+        [
+            '{"question_type":"Global","standalone_question":"Summarize evaluation.",'
+            '"sub_queries":[]}',
+            "The pipeline was checked against expert judgements on three independent reports [S1].",
+        ]
     )
     app = Application(DeterministicEmbedder(), LLMGateway(llm))
-    assert [e async for e in app.upload_document(content, "measurements.pdf")][-1].type == "ready"
-    corrective = llm.calls[1].messages[-1]["content"]
-    assert "SOURCE_TRUTH" in corrective and "UNSUPPORTED_DRAFT" not in corrective
+    try:
+        assert [e async for e in app.upload_document(content, "margin-folios.pdf")][
+            -1
+        ].type == "ready"
+        source = "\n".join(c.text for c in app.document.chunks)
+        folios = {str(first_folio), str(first_folio + 1)}
+        assert not any(line.strip() in folios for line in source.splitlines())
+        assert all(value in source for value in ("BODY_COUNT", "99", "23", "41"))
+        assert any(s.title.startswith("2 Measurements") for s in app.document.sections)
+        assert "against" in source and "expert judgements" in source
+        summary_requests = [c for c in llm.calls if c.call_type == "section_summary"]
+        assert summary_requests and all(
+            not any(line.strip() in folios for line in c.messages[-1]["content"].splitlines())
+            for c in summary_requests
+        )
+        events = [e async for e in app.ask("Summarize evaluation.")]
+        final = next(e for e in events if e.type == "final")
+        assert "three independent reports" in final.answer and final.citations
+        assert "28 expert judgments" not in final.answer
+        for citation in final.citations:
+            summary = app.source(citation.source_id)
+            assert summary.chunk_ids
+            assert all(app.source(chunk_id).id == chunk_id for chunk_id in summary.chunk_ids)
+    finally:
+        await app.close()
+
+
+@pytest.mark.parametrize("title_y", [68, 80])
+async def test_upload_preserves_isolated_top_margin_section_numbers(title_y):
+    with pymupdf.open() as pdf:
+        for number, title in [(1, "Evaluation"), (2, "Methods")]:
+            page = pdf.new_page(width=600, height=800)
+            page.insert_text((50, 32), str(number), fontsize=14)
+            page.insert_text((50, title_y), title, fontsize=14)
+            page.insert_text(
+                (50, 120), "Observed measurements retain their original source scope.", fontsize=10
+            )
+            page.insert_text((295, 680), str(number + 27), fontsize=10)
+        content = pdf.tobytes()
+    app = Application(DeterministicEmbedder(), LLMGateway(SummaryScriptedLLM([])))
+    try:
+        events = [e async for e in app.upload_document(content, "isolated-headings.pdf")]
+        assert events[-1].type == "ready"
+        source = "\n".join(c.context for c in app.document.chunks)
+        assert any(s.title.startswith("1 Evaluation") for s in app.document.sections)
+        assert any(s.title.startswith("2 Methods") for s in app.document.sections)
+        assert "1 Evaluation" in source and "2 Methods" in source
+        assert not any(line.strip() in {"28", "29"} for line in source.splitlines())
+        for summary in app.document.summary_tree.section_summaries:
+            assert summary.chunk_ids and all(app.source(i).id == i for i in summary.chunk_ids)
+    finally:
+        await app.close()

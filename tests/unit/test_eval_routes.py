@@ -11,9 +11,7 @@ import pytest
 from chat_document.application import Application
 from eval.models import EvaluationCase
 from eval.runner import RecordingGateway, run_evaluation
-
-from .fixtures import SummaryScriptedLLM, text_pdf
-from .test_second_document import DeterministicEmbedder
+from tests.support import DeterministicEmbedder, SummaryScriptedLLM, text_pdf
 
 
 @pytest.mark.parametrize("route", ["Lookup", "Synthesis", "Global", "invalid"])

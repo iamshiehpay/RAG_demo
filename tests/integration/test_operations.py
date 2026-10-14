@@ -7,8 +7,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_gateway import LLMGateway
 from chat_document.policy import CONTEXT_BUDGET, QUESTION_TOKEN_LIMIT, SAFETY_MARGIN
 from chat_document.tokens import count_tokens
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
+from tests.support import SummaryScriptedLLM as ScriptedLLM
 
 
 @pytest.mark.asyncio
@@ -65,7 +64,7 @@ async def test_upload_document_and_ask_with_real_embedding_and_recorded_llm():
 
 
 async def test_guard_emits_error_without_final_or_llm_call():
-    from .fixtures import text_pdf
+    from tests.support import text_pdf
 
     llm = ScriptedLLM(["Should never run"])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -79,7 +78,7 @@ async def test_guard_emits_error_without_final_or_llm_call():
 
 
 async def test_scanned_document_is_rejected_before_embedding_or_llm():
-    from .fixtures import text_pdf
+    from tests.support import text_pdf
 
     llm = ScriptedLLM([])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -92,7 +91,7 @@ async def test_scanned_document_is_rejected_before_embedding_or_llm():
 
 
 async def test_questions_over_1000_tokens_never_call_llm():
-    from .fixtures import text_pdf
+    from tests.support import text_pdf
 
     llm = ScriptedLLM([])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -105,8 +104,7 @@ async def test_questions_over_1000_tokens_never_call_llm():
 
 async def test_truncated_answer_never_becomes_final():
     from chat_document.llm_adapter import LLMFrame
-
-    from .fixtures import text_pdf
+    from tests.support import text_pdf
 
     llm = ScriptedLLM(
         [
@@ -127,8 +125,7 @@ async def test_truncated_answer_never_becomes_final():
 
 async def test_citation_markers_split_across_stream_frames_remain_clickable():
     from chat_document.llm_adapter import LLMFrame
-
-    from .fixtures import text_pdf
+    from tests.support import text_pdf
 
     llm = ScriptedLLM(
         [
@@ -153,8 +150,7 @@ async def test_citation_markers_split_across_stream_frames_remain_clickable():
 
 async def test_interrupted_llm_stream_emits_error_and_failed_call_trace():
     from chat_document.llm_adapter import LLMFrame
-
-    from .fixtures import text_pdf
+    from tests.support import text_pdf
 
     llm = ScriptedLLM(["not JSON", [LLMFrame(content="Unfinished answer [C1]")]])
     app = Application(OllamaEmbedder(), LLMGateway(llm))

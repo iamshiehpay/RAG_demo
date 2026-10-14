@@ -12,8 +12,7 @@ from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tables import LIMITATION
 from chat_document.tokens import count_tokens
-
-from .fixtures import selection_response
+from tests.support import selection_response
 
 
 def table_only_pdf(section_count):

@@ -6,6 +6,16 @@
 
 > 功能與回答品質分開驗證：網站可正常操作，不代表所有回答都完整或正確；已知失敗與實測結果保留在評估報告中。
 
+## 交付內容與建議閱讀順序
+
+先看本頁啟動網站，再看 [AI 協作摘要](docs/ai-collaboration.md)，其中整理三個可追溯的決策、修正與驗證案例。
+
+- **`chat-with-document.zip`**：程式碼、前端 build、測試、使用文件與精選證據；可直接依下方步驟啟動。
+- **`chat-with-document-evidence.zip`**：其餘歷史實驗、截圖與原始紀錄；執行網站不需要。兩包解壓到同一父目錄，可合併成完整資料夾。
+- **完整 Git repository**：保留全部變更歷史。zip 內的 `CHANGELOG.txt` 與 `RELEASE.json` 提供 commit 和逐檔雜湊，方便核對交付版本。
+
+建立交付包的方式見 [開發指南](docs/development.md#交付)。
+
 ## 快速啟動
 
 需要 **Python 3.12 以上**、[Ollama](https://ollama.com/) 與能使用 `gpt-oss:120b-cloud` 的 Ollama 帳號。先啟動本機 Ollama，再準備模型：
@@ -82,9 +92,10 @@ bash scripts/fetch_data.sh
 | `frontend/package.json`、`package-lock.json`、`vite.config.ts`、`tsconfig.json`、`index.html` | 前端依賴、建置設定及入口 | 前端開發與 build 需要 |
 | `frontend/scripts/` | 來源內容呈現的測試腳本 | 開發驗證用 |
 | `frontend/review/` | 設計基準、瀏覽器驗證腳本與截圖證據 | 開發與交付證據 |
-| `tests/unit/` | 評估判定、數字關聯等單元測試 | 開發驗證用 |
-| `tests/integration/` | 上傳、檢索、摘要、HTTP、串流與失敗處理等整合測試 | 開發驗證用；部分需本地 embedding |
-| `eval/` | Golden Facts、Judge、評估執行與報告產生程式 | 回答品質評估用 |
+| `tests/unit/` | 不依賴 Ollama 的邏輯、解析與替身測試；預設 pytest 只跑這裡 | 日常快速驗證 |
+| `tests/integration/` | 上傳、檢索、摘要、HTTP、串流與失敗處理；使用本地 embedding、替身 LLM | 明確指定目錄執行；需 Ollama |
+| `tests/support.py`、`tests/data/` | 共用合成 PDF、替身與逐字 Router 回應；測試不互相 import | 開發驗證用 |
+| `eval/` | Golden Facts、Judge、Router 與回答的真實模型評估入口 | 額外執行，會呼叫雲端模型 |
 | `eval/reports/` | 原始評估結果、調參比較、通過率與失敗分析 | 交付證據，保留 |
 | `scripts/` | 下載文件、同步事件型別、調參與量測工具 | 按需使用，見下表 |
 | `spikes/`、`spikes/out/` | 早期 PDF、模型與 embedding 可行性實驗及原始輸出 | 歷史實驗證據，保留 |
@@ -100,6 +111,7 @@ bash scripts/fetch_data.sh
 | `.cache/` | 文件解析、Chunk、向量與 Summary Tree 快取 | 自動建立；刪除會重跑文件處理 |
 | `.venv/`、`frontend/node_modules/` | 本機安裝的 Python、前端依賴 | 可重新安裝；不隨 zip 交付 |
 | `__pycache__/`、`.pytest_cache/`、`.ruff_cache/` | Python、pytest、ruff 的可再生快取 | 不隨 zip 交付 |
+| `dist/` | 本地交付 zip 輸出目錄（與 `frontend/dist/` 不同） | 不提交版本庫 |
 | `.lat/`、`.worktrees/` | 本機協作狀態與隔離工作區 | 不隨 zip 交付；清理前確認沒有未提交工作 |
 
 ### 後端主要檔案
@@ -139,8 +151,9 @@ bash scripts/fetch_data.sh
 | `tune.py` | 檢索參數比較、回答比較與最終多次評估 |
 | `measure_summary_concurrency.py` | 量測摘要呼叫的並行能力與延遲 |
 | `measure_table_reading.py` | 量測表格閱讀與回答表現 |
+| `package_release.py` | 從 Git HEAD 產生程式包與補充證據包，不讀取未提交內容 |
 
-**整理原則：** 可再生的安裝環境與快取不放進交付 zip；正式原始碼、前端 dist、測試與實驗證據保留。`frontend/src/` 與 `dist/` 分別是原始碼及可執行產物，不是應刪除的重複；`spikes/` 也不能直接當作死碼。若要精簡正式程式，應另外確認 import、入口與回歸覆蓋，再逐項調整。
+**整理原則：** 可再生的安裝環境與快取不放進交付 zip；正式原始碼、前端 dist、測試與實驗證據保留。`frontend/src/` 與 `frontend/dist/` 分別是原始碼及可執行產物，不是應刪除的重複；`spikes/` 也不能直接當作死碼。若要精簡正式程式，應另外確認 import、入口與回歸覆蓋，再逐項調整。
 
 ## 評估結果與已知限制
 
@@ -157,4 +170,4 @@ bash scripts/fetch_data.sh
 - [開發指南](docs/development.md)：測試、前端 build、環境參數、評估與交付。
 - [設計規格與實測依據](docs/design.md)：切塊、摘要、檢索、Citation、Context Budget 與重試規則。
 - [LangGraph ADR](docs/adr/2026-10-14-langgraph-ask.md)：提問流程的責任邊界與遷移決策。
-- [領域術語](CONTEXT.md)、[Agent 工作規則](AGENTS.md)。
+- [AI 協作摘要](docs/ai-collaboration.md)、[領域術語](CONTEXT.md)、[Agent 工作規則](AGENTS.md)。

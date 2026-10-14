@@ -8,7 +8,7 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.models import ConversationTurn
 from chat_document.router import Router
 
-RAW_PROBES = json.loads((Path(__file__).parent / "data/router_qa_raw.json").read_text())
+RAW_PROBES = json.loads((Path(__file__).parents[1] / "data/router_qa_raw.json").read_text())
 
 
 @pytest.mark.parametrize("case", RAW_PROBES, ids=lambda case: f"{case['source']}:{case['line']}")

@@ -53,6 +53,7 @@ def test_eval_case_selection_does_not_collect_unrequested_live_workloads():
             sys.executable,
             "-m",
             "pytest",
+            "eval",
             "--collect-only",
             "-q",
             "-m",

@@ -6,19 +6,19 @@ Run the application operations and Judge with local Ollama (`bge-m3`) and
 `gpt-oss:120b-cloud`:
 
 ```sh
-uv run pytest -m eval -s
+uv run pytest eval -m eval -s
 ```
 
 This uploads `data/lightrag.pdf` and asks Q1–Q3, a three-sentence Chinese Global summary, a Chinese cost question, a
 Synthesis limitations question, three unanswerable questions and the 12 Router
 regression questions. Reports go to `eval/reports/` before asserting the Golden
-Facts result. Default `uv run pytest` excludes live eval and uses scripted LLMs.
+Facts result. Default `uv run pytest` collects only `tests/unit/`; use `uv run pytest tests eval` for all non-cloud regressions.
 Two real-Judge semantic probes are reported separately and never affect the
 Golden Facts PASS/FAIL or its per-fact rates.
 
 ```sh
-uv run pytest -m eval -s --eval-repeats 3
-uv run pytest -m eval -s --eval-cases Q3 --eval-label ablation-experiment
+uv run pytest eval -m eval -s --eval-repeats 3
+uv run pytest eval -m eval -s --eval-cases Q3 --eval-label ablation-experiment
 ```
 
 Options: `--eval-document PATH`, `--eval-report PATH`, `--eval-label NAME`,
@@ -27,7 +27,7 @@ Options: `--eval-document PATH`, `--eval-report PATH`, `--eval-label NAME`,
 report still says FAIL. It does not certify answer quality.
 
 ```sh
-uv run pytest -m eval -s --eval-record-only --eval-label router-provenance \
+uv run pytest eval -m eval -s --eval-record-only --eval-label router-provenance \
   --eval-report eval/reports/router-provenance-baseline.md
 ```
 

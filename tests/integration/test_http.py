@@ -8,10 +8,9 @@ from chat_document.application import Application
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import LLMFrame
 from chat_document.llm_gateway import LLMGateway
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
-from .fixtures import structured_pdf, text_pdf
-from .test_ingestion_jobs import RecordingEmbedder
+from tests.integration.support import RecordingEmbedder
+from tests.support import SummaryScriptedLLM as ScriptedLLM
+from tests.support import structured_pdf, text_pdf
 
 
 def events(response):

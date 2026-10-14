@@ -6,14 +6,27 @@
 
 ```sh
 uv sync --frozen
-PYTHONPATH=src:. uv run --frozen pytest
+uv run --frozen pytest
 ```
 
-預設排除 `eval` marker；LLM 使用替身，但部分整合測試會呼叫本地 Ollama 的 `bge-m3`，須先啟動 Ollama 並下載模型。不要把整套測試描述成完全離線、純單元測試或幾秒就能完成。
+預設只收集 `tests/unit/`，不需要 Ollama 或雲端模型。測試會在本機建立合成 PDF、使用模型與 embedding 替身；這些結果驗證程式契約，不代表真實模型回答品質。
+
+| 要驗證的內容 | 命令 | 前置條件 |
+|---|---|---|
+| 快速邏輯與替身測試 | `uv run --frozen pytest` | Python 開發依賴；打包測試另外使用 Git |
+| 真實本地 embedding 與模組整合 | `uv run --frozen pytest tests/integration` | Ollama 執行中，已下載 bge-m3；部分測試需先執行 `bash scripts/fetch_data.sh` |
+| 完整非雲端回歸 | `uv run --frozen pytest tests eval` | 同整合測試；預設排除 eval marker |
+| 雲端回答品質 | `uv run --frozen pytest eval -m eval` | 另需雲端模型權限；見下方評估說明 |
+
+`unit`、`integration` 標記由根目錄 `conftest.py` 依位置加入；雲端入口保留 `eval` marker。沒有把外部服務換成替身後，宣称真實服務驗證通過。
+
+測試依功能命名：`test_router_synthesis.py` 收納分流/抽取/追問；`test_ingestion.py` 與 `test_document_layout.py` 區分真實 embedding 路徑及合成版面回歸；`test_summary_tree.py`、`test_summary_limits.py` 與 `test_summaries.py` 分別涵蓋摘要樹、容量/失敗邊界、離線來源契約。先前 review/issue 編號的檔案已依責任合併，不刪除回歸斷言。
+
+共用合成 PDF 與模型替身放在 `tests/support.py`；需要真實服務的 helper 放在 `tests/integration/support.py`。測試檔不互相 import；Router live 檢查函式放在 `eval/router_checks.py`，不為取得 helper 而載入 live test module。
 
 不使用 uv 時，先按 README 建立環境，再於該環境安裝 `pytest pytest-asyncio opencc ruff`；這條替代路徑不提供與 `uv.lock` 相同的鎖定保證。
 
-只改文件時，核對相對連結、命令、設定與現行行為即可，不需重跑完整測試或付費模型呼叫。修改程式依影響範圍選擇測試；功能驗證與模型回答品質分開報告。
+只改文件時核對連結、命令與現行行為即可；修改測試結構時，比較案例收集清單並跑完整非雲端回歸，避免因搬檔而漏跑。功能驗證與模型回答品質分開報告。
 
 ## 前端開發
 
@@ -53,11 +66,11 @@ BM25 使用基本 Unicode 詞彙斷詞；中文問題缺少英文詞彙重疊時
 下列命令會呼叫真實雲端 LLM/Judge；需 Ollama 登入、雲端模型權限、本地 embedding 與已下載 PDF。
 
 ```sh
-PYTHONPATH=src:. uv run --frozen pytest -m eval -s --eval-cases Q1,Q2,Q3 --eval-repeats 3
-PYTHONPATH=src:. uv run --frozen pytest -m eval -s --eval-cases SECOND_NUMBER,SECOND_SUMMARY --eval-repeats 3
+PYTHONPATH=src:. uv run --frozen pytest eval -m eval -s --eval-cases Q1,Q2,Q3 --eval-repeats 3
+PYTHONPATH=src:. uv run --frozen pytest eval -m eval -s --eval-cases SECOND_NUMBER,SECOND_SUMMARY --eval-repeats 3
 ```
 
-`--eval-cases` 用來排除不相關的 live 案例；Router smoke 另見 `tests/integration/test_router_smoke_eval.py`。評分方式、CLI 選項和逐字證據檢查見 [eval 說明](../eval/README.md)。目前案例定義在 `eval/golden_facts.py`、`eval/second_document.py`，不要在設計文件維護第二份可執行題庫。
+`--eval-cases` 用來排除不相關的 live 案例；Router smoke 另見 `eval/test_router_live.py`。評分方式、CLI 選項和逐字證據檢查見 [eval 說明](../eval/README.md)。目前案例定義在 `eval/golden_facts.py`、`eval/second_document.py`，不要在設計文件維護第二份可執行題庫。
 
 調參工具：
 
@@ -84,7 +97,20 @@ PYTHONPATH=src:. uv run --frozen python -m scripts.tune final --output eval/repo
 
 ## 交付
 
-交付方式為私人 GitHub repository，並以 zip 備份。原定交付日為 2026-10-19；10/13 的開發排程屬歷史，不再作為每日開發指令。
+完整 repository 保留歷史；交付包將日常程式與大量原始證據分開。先完成提交，再執行：
+
+```sh
+python3 scripts/package_release.py --output dist/release-$(git rev-parse --short HEAD)
+```
+
+此命令只讀 **Git HEAD** 的檔案內容，不包含未提交或未追蹤資料；輸出目錄必須不存在，避免覆寫前一次交付。產生：
+
+- `chat-with-document.zip`：可執行網站、原始碼、測試、文件及 [AI 協作摘要](ai-collaboration.md) 連到的精選證據。
+- `chat-with-document-evidence.zip`：剩餘歷史實驗與 QA 證據；與程式包不重複覆寫檔案，兩包可解壓到同一父目錄。
+
+每包附版本與逐檔 SHA-256，程式包另附 commit 紀錄。精選文件的本地 Markdown 連結會一併收錄；歷史報告的行內路徑仍可能指向補充證據包。zip 不附 Git 資料庫；需要逐次 diff 時查看完整 repository。
+
+打包不會寄信、上傳或邀請任何人。
 
 保留原始碼、鎖定依賴、`frontend/dist/`、測試、`spikes/`（含輸出）、`eval/reports/`、題目筆記與協作證據。完整用途見 [README](../README.md#資料夾與檔案用途)。不包含公司內部 PDF、下載的 arXiv PDF、`.venv/`、`node_modules/`、本機快取與隔離工作區。
 

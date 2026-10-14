@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-import pymupdf
 import pytest
 
 from chat_document.application import Application
@@ -10,20 +9,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tokens import count_tokens
-
-from .fixtures import structured_pdf, summary_response
-
-
-def summary_pdf(section_count=1, *, words=100, height=1800):
-    with pymupdf.open() as pdf:
-        for index in range(section_count):
-            page = pdf.new_page(width=1200, height=height)
-            page.insert_text((72, 60), f"{index + 1} Summary Section", fontsize=14)
-            text = (f"Evidence{index} improves measurements. " * words).strip()
-            assert (
-                page.insert_textbox(pymupdf.Rect(72, 90, 1128, height - 60), text, fontsize=8) >= 0
-            )
-        return pdf.tobytes()
+from tests.support import structured_pdf, summary_pdf, summary_response
 
 
 async def test_upload_builds_proportional_section_summaries_and_overview():
@@ -172,7 +158,7 @@ async def test_oversized_section_is_split_and_merged_before_budget_guard():
 
 
 async def test_heading_only_sections_are_skipped():
-    from .fixtures import SummaryScriptedLLM
+    from tests.support import SummaryScriptedLLM
 
     llm = SummaryScriptedLLM([])
     app = Application(OllamaEmbedder(), LLMGateway(llm))

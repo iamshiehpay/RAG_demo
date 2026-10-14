@@ -15,8 +15,7 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.settings import RetrievalSettings
 from eval.models import EvaluationCase, GoldenFact
 from eval.runner import RecordingGateway, run_evaluation
-
-from .fixtures import SummaryScriptedLLM, text_pdf
+from tests.support import SummaryScriptedLLM, text_pdf
 
 
 async def test_environment_answer_think_reaches_guarded_public_ask(monkeypatch):

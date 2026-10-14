@@ -2,7 +2,7 @@
 
 Status: in-progress
 
-依據：`PRD.md`（ready-for-agent）、`issues/01`～`15`、`AGENTS.md`（工作限制與設計文件入口）、`CONTEXT.md`（術語）。
+依據：`PRD.md`（ready-for-agent）、`issues/01`～`16`、`AGENTS.md`（工作限制與設計文件入口）、`CONTEXT.md`（術語）。
 需求與 Spec 已由使用者確認，本輪略過討論與重寫 Spec，只依既有 issues 推進。
 
 **現行驗收／流程：D05（2026-10-13 15:43 真人核准，Main直接核對原對話）。** #10品質調整到17:45；#11調參＋最終eval時限為18:33:01–21:33:01（已正式開工）。Q1–Q3與第二份文件每題N=3、報告每fact通過率與失敗原因，含forbidden的品質缺陷不阻擋交付。10K、Citation、固定拒答、確定性測試、獨立Review維持。剩餘QA只在#10合併後及交付前；改查commit與測試，不逐檔byte/hash比對；新證據保留結論與最終run，既有歷史保留。下方歷史嚴格品質gate／每trial保存／byte比對要求均以D05覆蓋。
@@ -40,6 +40,7 @@ Status: in-progress
 | 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | wontfix（D23使用者核准本輪凍結目前後端、A9保留已知缺陷；D21/D22證據與舊9715538未採用狀態保留） |
 | 14 | LangGraph提問流程 | 現有Main5f5e35f | W8 | application/newgraph/tests/deps/README；Main獨占規範與tracker | ready-for-human（已審24fba26，Main a5b70a0整合335PASS／exit0；Luna max/Fast双軸完成，8101已更新；F1–F3放行、待使用者操作） |
 | 15 | 開發指引與中文README | Main52e18c9 | W9 | AGENTS/README/按需docs；Main獨占tracker | ready-for-human（使用者取消agent委派，主對話自行完成中文README／AGENTS與用途盤點；只驗證文件、不刪程式） |
+| 16 | 精簡交付與測試入口 | Main1960fba | 主對話自行處理 | tests/eval helper/package工具/docs；不改產品行為 | in-progress（不委派agent；原斷言保留、交付與歷史證據分包） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 

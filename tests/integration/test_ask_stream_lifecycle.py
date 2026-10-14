@@ -9,8 +9,7 @@ from chat_document.embedder import OllamaEmbedder
 from chat_document.ingestion import UploadBusy
 from chat_document.llm_adapter import LLMFrame
 from chat_document.llm_gateway import LLMGateway
-
-from .fixtures import SummaryScriptedLLM, text_pdf
+from tests.support import SummaryScriptedLLM, text_pdf
 
 
 async def test_cancel_pending_answer_closes_provider_and_releases_document():

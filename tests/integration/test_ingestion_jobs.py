@@ -7,27 +7,9 @@ from chat_document.application import Application
 from chat_document.cache import ProcessingCache
 from chat_document.embedder import OllamaEmbedder
 from chat_document.llm_gateway import LLMGateway
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
-from .fixtures import paragraph_pdf, structured_pdf, text_pdf
-
-
-class RecordingEmbedder(OllamaEmbedder):
-    """Record calls and optionally hold real bge-m3 at the external dependency seam."""
-
-    def __init__(self, *, hold=False):
-        super().__init__()
-        self.calls = []
-        self.entered = asyncio.Event()
-        self.release = asyncio.Event()
-        if not hold:
-            self.release.set()
-
-    async def embed(self, texts):
-        self.calls.append(texts)
-        self.entered.set()
-        await self.release.wait()
-        return await super().embed(texts)
+from tests.integration.support import RecordingEmbedder
+from tests.support import SummaryScriptedLLM as ScriptedLLM
+from tests.support import paragraph_pdf, structured_pdf, text_pdf
 
 
 async def test_upload_returns_job_before_embedding_and_progress_replays_to_ready():

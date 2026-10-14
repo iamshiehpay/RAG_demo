@@ -5,9 +5,8 @@ from chat_document.embedder import OllamaEmbedder
 from eval.models import EvaluationCase, GoldenFact
 from eval.report import write_report
 from eval.runner import RecordingGateway, run_evaluation
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
-from .fixtures import text_pdf
+from tests.support import SummaryScriptedLLM as ScriptedLLM
+from tests.support import text_pdf
 
 LOOKUP_PLAN = json.dumps(
     {"question_type": "Lookup", "standalone_question": "What does it say?", "sub_queries": []}

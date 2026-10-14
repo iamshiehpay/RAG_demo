@@ -1,5 +1,6 @@
 import json
 
+import numpy as np
 import pymupdf
 
 from chat_document.llm_adapter import ScriptedLLM
@@ -389,3 +390,28 @@ def numbered_sentences_pdf(*, split=False):
             (50, 320), "BODY_AFTER_LICENSE also belongs to the Introduction Section.", fontsize=10
         )
         return document.tobytes()
+
+
+class DeterministicEmbedder:
+    async def embed(self, texts):
+        return np.ones((len(texts), 2), dtype=np.float32)
+
+
+def router_script(question_type="Lookup", question="Standalone question", sub_queries=None):
+    return json.dumps(
+        dict(
+            question_type=question_type, standalone_question=question, sub_queries=sub_queries or []
+        )
+    )
+
+
+def summary_pdf(section_count=1, *, words=100, height=1800):
+    with pymupdf.open() as pdf:
+        for index in range(section_count):
+            page = pdf.new_page(width=1200, height=height)
+            page.insert_text((72, 60), f"{index + 1} Summary Section", fontsize=14)
+            text = (f"Evidence{index} improves measurements. " * words).strip()
+            assert (
+                page.insert_textbox(pymupdf.Rect(72, 90, 1128, height - 60), text, fontsize=8) >= 0
+            )
+        return pdf.tobytes()

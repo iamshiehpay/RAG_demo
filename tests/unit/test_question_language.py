@@ -10,9 +10,8 @@ from chat_document.llm_gateway import LLMGateway
 from chat_document.models import Chunk, ConversationTurn
 from chat_document.router import Router
 from chat_document.settings import RetrievalSettings
-
-from .fixtures import SummaryScriptedLLM as ScriptedLLM
-from .fixtures import text_pdf
+from tests.support import SummaryScriptedLLM as ScriptedLLM
+from tests.support import text_pdf
 
 
 @pytest.mark.parametrize(
