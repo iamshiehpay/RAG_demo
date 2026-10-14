@@ -17,8 +17,8 @@ export function QuestionShortcuts({ documentName, disabled, onPick }: {
   // Other Documents never see LightRAG-specific questions, and the group is not labelled as tailored to them.
   const tailored = !documentName || isLightRagDocument(documentName);
   const questions = tailored ? LIGHTRAG_QUESTIONS : GENERAL_QUESTIONS;
-  return <div className="shortcuts" role="group" aria-labelledby="shortcut-label">
-    <span id="shortcut-label" className="label">{tailored ? 'LightRAG 論文範例問題' : '範例問題'}</span>
+  // The group name is accessible-only (no visible heading); aria-label keeps it out of the visible text.
+  return <div className="shortcuts" role="group" aria-label={tailored ? 'LightRAG 論文範例問題' : '範例問題'}>
     <div className="shortcut-list">
       {/* aria-disabled instead of disabled: a disabled button drops keyboard focus while an answer is generating. */}
       {questions.map(question => <button type="button" key={question} className="shortcut" aria-disabled={disabled}

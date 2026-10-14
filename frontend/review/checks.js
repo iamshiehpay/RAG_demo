@@ -85,8 +85,10 @@
   const expectedQuestions = ['Summary this document.', 'Compare LightRAG with GraphRAG.', 'Performance of ablated versions of LightRAG.', '這篇論文有什麼限制？', 'LightRAG 在 HotpotQA 上的分數是多少？'];
   check(shortcutGroup?.getAttribute('role') === 'group' && shortcutGroup.compareDocumentPosition(document.querySelector('.composer-box')) & Node.DOCUMENT_POSITION_PRECEDING, 'shortcut group sits below the composer box');
   check(shortcuts.every(button => button.tagName === 'BUTTON' && button.type === 'button'), 'shortcuts are real, non-submitting buttons');
-  if (lightRag) check(JSON.stringify(shortcuts.map(button => button.textContent)) === JSON.stringify(expectedQuestions) && /LightRAG 論文範例問題/.test(shortcutGroup.textContent), 'five exact LightRAG example questions under a LightRAG-labelled group');
-  else check(shortcuts.length === 1 && shortcuts[0].textContent === expectedQuestions[0] && !/LightRAG/.test(shortcutGroup.textContent), 'other Documents get only the general summary question, not labelled as LightRAG-specific');
+  const visibleGroupText = shortcutGroup?.textContent ?? '';
+  check(!/範例問題/.test(visibleGroupText) && !shortcutGroup.querySelector('.label, #shortcut-label, [aria-labelledby]') && !shortcutGroup.hasAttribute('aria-labelledby'), 'shortcut group has no visible heading text');
+  if (lightRag) check(JSON.stringify(shortcuts.map(button => button.textContent)) === JSON.stringify(expectedQuestions) && shortcutGroup.getAttribute('aria-label') === 'LightRAG 論文範例問題', 'five exact LightRAG example questions in a group whose accessible name is LightRAG 論文範例問題');
+  else check(shortcuts.length === 1 && shortcuts[0].textContent === expectedQuestions[0] && shortcutGroup.getAttribute('aria-label') === '範例問題' && !/LightRAG/.test(visibleGroupText + shortcutGroup.getAttribute('aria-label')), 'other Documents get only the general summary question, with the neutral accessible name 範例問題');
   // aria-disabled (not the disabled attribute) so keyboard focus stays on a shortcut while an answer is generating
   check(shortcuts.every(button => (button.getAttribute('aria-disabled') === 'true') === !!document.querySelector('#question')?.disabled), 'shortcut buttons are unavailable exactly when the composer is (no Document, uploading or generating)');
   check(shortcuts.every(button => { const c = getComputedStyle(button).borderTopColor.match(/[\d.]+/g).map(Number); return contrast(`rgb(${c[0]}, ${c[1]}, ${c[2]})`, 'rgb(251, 250, 246)') >= 3; }), 'shortcut button border has at least 3:1 contrast against the page');

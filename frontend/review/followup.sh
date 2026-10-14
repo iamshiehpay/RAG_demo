@@ -137,7 +137,7 @@ AB screenshot "$OUT/09-shortcuts-disabled-uploading-1440.png" >/dev/null
 AB eval 'window.__t09.release()' >/dev/null; sleep 1.2
 run "once Ready they are enabled" '[...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") !== "true")'
 boot 1440 900 industrial-robotics.pdf
-run "another Document gets only the general question under a neutral label" 'document.querySelectorAll(".shortcut").length === 1 && document.querySelector(".shortcut").textContent === "Summary this document." && document.querySelector("#shortcut-label").textContent === "範例問題" && !document.querySelector(".shortcuts").textContent.includes("LightRAG")'
+run "another Document gets only the general question, no visible heading, neutral accessible name" 'document.querySelectorAll(".shortcut").length === 1 && document.querySelector(".shortcut").textContent === "Summary this document." && document.querySelector(".shortcuts").getAttribute("aria-label") === "範例問題" && document.querySelector(".shortcuts").textContent === "Summary this document." && !document.querySelector(".shortcuts").textContent.includes("LightRAG")'
 AB click '.shortcut' >/dev/null; sleep 1.2
 run "that general shortcut sends once" 'window.__t09.asks.length === 1 && window.__t09.asks[0] === "Summary this document."'
 AB screenshot "$OUT/11-other-document-shortcuts-1440.png" >/dev/null
