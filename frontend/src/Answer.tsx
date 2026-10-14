@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { decodeString } from 'micromark-util-decode-string';
 import { visit } from 'unist-util-visit';
 import type { Root, RootContent as MarkdownContent, PhrasingContent, Parents } from 'mdast';
+import type { Element as HastElement, Root as HastRoot } from 'hast';
 import type { Citation, UnverifiedSpan } from './events';
 import { pageRange, UnverifiedMark } from './Shared';
 import { ScrollBox } from './SourceContent';
@@ -35,6 +36,23 @@ function sourceValueOffsets(source: string, value: string): number[] | undefined
     }
   }
   return rendered === value.length ? offsets : undefined;
+}
+
+const STRUCTURAL = new Set(['ul', 'ol', 'li', 'blockquote', 'table', 'thead', 'tbody', 'tr']);
+/** Markdown parsers keep the newline between block children as text. Answer paragraphs and list items preserve
+ *  soft line breaks (white-space: pre-wrap), so those structural newlines would otherwise render as blank lines. */
+function trimStructuralWhitespace() {
+  return (tree: HastRoot) => {
+    visit(tree, 'element', (node: HastElement) => {
+      if (!STRUCTURAL.has(node.tagName)) return;
+      node.children = node.children.filter(child => child.type !== 'text' || child.value.trim() !== '');
+      if (node.tagName !== 'li') return;
+      node.children.forEach((child, i) => {
+        // "item text\n" directly before a nested list: the break belongs to the block boundary.
+        if (child.type === 'text' && node.children[i + 1]?.type === 'element') child.value = child.value.replace(/\s+$/, '');
+      });
+    });
+  };
 }
 
 function plainText(node: ReactNode): string {
@@ -142,6 +160,6 @@ export function Answer({ text, citations, onSource, provisional = false, unverif
     }), [citations, onSource, unverified]);
 
   return <div className={`answer-text${provisional ? ' provisional-text' : ''}`} data-unverified-count={unverified.length}>
-    <Markdown skipHtml remarkPlugins={[remarkGfm, unverifiedSpans, citationTokens]} components={components}>{text}</Markdown>
+    <Markdown skipHtml remarkPlugins={[remarkGfm, unverifiedSpans, citationTokens]} rehypePlugins={[trimStructuralWhitespace]} components={components}>{text}</Markdown>
   </div>;
 }

@@ -9,7 +9,8 @@
   };
   const contrast = (a, b) => { const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x); return (hi + .05) / (lo + .05); };
   const check = (condition, name) => {
-    if (!condition) throw new Error(`FAIL: ${name}`);
+    // window.__collectFailures = true records every FAIL instead of stopping at the first (used for the "before" run).
+    if (!condition) { if (window.__collectFailures) { checks.push(`FAIL: ${name}`); return; } throw new Error(`FAIL: ${name}`); }
     checks.push(`PASS: ${name}`);
   };
   const wide = innerWidth > 900;
@@ -49,11 +50,83 @@
     check(left.right <= chat.left + 1 && chat.right <= right.left + 1, 'columns are laid out left to right');
     for (const [sel, name] of [['.rail-left', 'left'], ['.rail-right', 'right']]) {
       const rail = rect(sel);
-      if (rail) check(Math.abs(rail.width - 56) < 1, `collapsed ${name} column is a 56px strip`);
+      if (rail) {
+        check(Math.abs(rail.width - 64) < 1, `collapsed ${name} column is a 64px strip`);
+        const label = document.querySelector(`${sel} .rail-label`);
+        check(label && /^(文件|來源)$/.test(label.textContent) && parseFloat(getComputedStyle(label).fontSize) >= 14
+          && label.getBoundingClientRect().height >= 28, `collapsed ${name} column shows a readable label`);
+      }
     }
+    // Source pane separator (desktop only): bounds are exposed and the conversation keeps its room
+    const separator = document.querySelector('[role=separator]');
+    if (document.querySelector('.pane-right')) {
+      check(separator && separator.tabIndex === 0 && separator.getAttribute('aria-orientation') === 'vertical', 'source pane has a focusable vertical separator');
+      const [now, min, max] = ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'].map(name => Number(separator?.getAttribute(name)));
+      check(min <= now && now <= max && Math.abs(now - rect('.pane-right').width) <= 1, 'separator aria values match the pane width and sit inside [min, max]');
+      check(chat.width >= 360, 'conversation column keeps at least 360px beside the source pane');
+    } else check(!separator, 'no separator while the source pane is collapsed');
   }
   check(document.querySelector('.pane-left, .rail-left').querySelector('button[aria-label]') !== null, 'column toggles are labelled buttons');
   check([...document.querySelectorAll('.icon-button')].every(button => button.getAttribute('aria-label')), 'icon buttons have aria-label');
+
+  if (!wide) check(!document.querySelector('[role=separator]'), 'no separator on narrow screens (dragging is desktop only)');
+
+  // Removed copy (D16): the visible hint and label are gone, the accessible name stays
+  const hint = '回答以文件為依據；點回答中的編號可查看原文。';
+  check(!text.includes(hint) && !text.includes('問這份文件'), 'hint line and the visible 問這份文件 label are removed');
+  check(!document.querySelector('label[for=question]') && document.querySelector('#question')?.getAttribute('aria-label') === '問這份文件', 'textarea keeps an accessible (not visible) label');
+
+  // Click-to-send questions
+  const shortcutGroup = document.querySelector('.shortcuts');
+  const shortcuts = [...document.querySelectorAll('.shortcuts button')];
+  const headerStatus = document.querySelector('.header-status')?.textContent ?? '';
+  const lightRag = !headerStatus.includes('·') || /lightrag/i.test(headerStatus); // no Document loaded: the full LightRAG set is shown disabled
+  const expectedQuestions = ['Summary this document.', 'Compare LightRAG with GraphRAG.', 'Performance of ablated versions of LightRAG.', '這篇論文有什麼限制？', 'LightRAG 在 HotpotQA 上的分數是多少？'];
+  check(shortcutGroup?.getAttribute('role') === 'group' && shortcutGroup.compareDocumentPosition(document.querySelector('.composer-box')) & Node.DOCUMENT_POSITION_PRECEDING, 'shortcut group sits below the composer box');
+  check(shortcuts.every(button => button.tagName === 'BUTTON' && button.type === 'button'), 'shortcuts are real, non-submitting buttons');
+  if (lightRag) check(JSON.stringify(shortcuts.map(button => button.textContent)) === JSON.stringify(expectedQuestions) && /LightRAG 論文範例問題/.test(shortcutGroup.textContent), 'five exact LightRAG example questions under a LightRAG-labelled group');
+  else check(shortcuts.length === 1 && shortcuts[0].textContent === expectedQuestions[0] && !/LightRAG/.test(shortcutGroup.textContent), 'other Documents get only the general summary question, not labelled as LightRAG-specific');
+  check(shortcuts.every(button => button.disabled === !!document.querySelector('#question')?.disabled), 'shortcut buttons are disabled exactly when the composer is (no Document, uploading or generating)');
+
+  // Answers: no decorative underline anywhere, Citations stay recognisable chips
+  const decorated = [...document.querySelectorAll('.answer-text, .answer-text *, .inline-citation, .unverified-mark, .stage-indicator *')]
+    .filter(element => getComputedStyle(element).textDecorationLine !== 'none');
+  check(decorated.length === 0, 'no text-decoration underline on answer text, citations, markers or stage labels');
+  check([...document.querySelectorAll('.answer-text strong, .answer-text h1, .answer-text h2, .answer-text h3')].every(element => parseFloat(getComputedStyle(element).webkitTextStrokeWidth) > 0), 'emphasis and headings stay distinguishable without an underline (weight stroke)');
+  check([...document.querySelectorAll('.answer-text strong, .answer-text a')].every(element => getComputedStyle(element).borderBottomWidth === '0px'), 'emphasis and links use no border-bottom underline');
+  for (const chip of document.querySelectorAll('.answer-text .inline-citation')) {
+    const style = getComputedStyle(chip);
+    check(parseFloat(style.marginLeft) >= 3 && parseFloat(style.borderTopWidth) > 0 && chip.getBoundingClientRect().height <= 22,
+      'citation chip is a bordered slate chip with space before it that does not inflate the line');
+    break;
+  }
+
+  // Answer spacing rhythm: 12px between blocks, 24px above a heading, 8px under it, 4px between list items
+  let measuredGaps = 0;
+  for (const area of document.querySelectorAll('.answer-text')) {
+    const blocks = [...area.children];
+    for (let i = 1; i < blocks.length; i++) {
+      const [prev, cur] = [blocks[i - 1], blocks[i]];
+      const gap = cur.getBoundingClientRect().top - prev.getBoundingClientRect().bottom;
+      const expected = /^H[1-6]$/.test(prev.tagName) ? 8 : /^H[1-6]$/.test(cur.tagName) ? 24 : 12;
+      check(Math.abs(gap - expected) <= 1, `gap ${prev.tagName}→${cur.tagName} is ${expected}px (got ${gap.toFixed(1)})`);
+      measuredGaps++;
+    }
+    for (const list of area.querySelectorAll('ul, ol')) {
+      const items = [...list.children].filter(child => child.tagName === 'LI');
+      for (let i = 1; i < items.length; i++) {
+        const gap = items[i].getBoundingClientRect().top - items[i - 1].getBoundingClientRect().bottom;
+        check(Math.abs(gap - 4) <= 1, `list items are 4px apart (got ${gap.toFixed(1)})`);
+        measuredGaps++;
+      }
+    }
+    // A list item holding one paragraph is exactly that paragraph tall: no stray blank line, marker on the text line
+    for (const item of area.querySelectorAll('li')) {
+      const only = [...item.children].length === 1 && item.firstElementChild.tagName === 'P' ? item.firstElementChild : null;
+      if (only) check(Math.abs(item.getBoundingClientRect().height - only.getBoundingClientRect().height) <= 1, 'loose list item has no extra blank line');
+    }
+  }
+  window.__t09 && (window.__t09.measuredGaps = measuredGaps);
 
   // Narrow screens: panes are overlays and must not cover the conversation unless the person opened one
   if (!wide && document.querySelector('article.turn')) {

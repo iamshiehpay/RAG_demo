@@ -50,9 +50,17 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 /* Side panes and their collapsed rails */
 .pane { width: 280px; flex-shrink: 0; background: var(--pane); overflow-y: auto; overscroll-behavior: contain; padding: 12px 18px 24px; display: flex; flex-direction: column; gap: 16px; }
 .pane-left { border-right: 1px solid var(--line); }
-.pane-right { width: 340px; border-left: 1px solid var(--line); }
+.pane-right { width: var(--source-width, 400px); }
+.pane-resizer { width: 8px; flex-shrink: 0; position: relative; cursor: col-resize; touch-action: none; background: var(--pane); border-left: 1px solid var(--line); }
+.pane-resizer::after { content: ''; position: absolute; top: 50%; left: 2px; width: 3px; height: 40px; margin-top: -20px; border-left: 1px solid #8B8576; border-right: 1px solid #8B8576; }
+.pane-resizer:hover, .pane-resizer[data-dragging] { background: var(--chip); }
+.pane-resizer:focus-visible { outline: 2px solid var(--slate); outline-offset: -2px; background: var(--chip); }
+.workspace.resizing { user-select: none; cursor: col-resize; }
 .pane-head { display: flex; align-items: center; justify-content: space-between; min-height: 36px; }
-.rail { width: 56px; flex-shrink: 0; background: var(--pane); display: flex; flex-direction: column; align-items: center; padding-top: 12px; }
+.rail { width: 64px; flex-shrink: 0; background: var(--pane); display: flex; flex-direction: column; align-items: stretch; padding-top: 12px; }
+.rail-button { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 0 16px; border: 1px solid transparent; border-radius: 0; background: transparent; color: var(--slate); }
+.rail-button:hover { background: #ECE9E1; border-color: transparent; color: var(--ink); }
+.rail-label { writing-mode: vertical-rl; font: 14px/1 var(--sans); letter-spacing: .25em; }
 .rail-left { border-right: 1px solid var(--line); }
 .rail-right { border-left: 1px solid var(--line); }
 
@@ -87,27 +95,38 @@ progress { display: block; width: 100%; height: 8px; margin-top: 8px; accent-col
 .stage-indicator { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px; font: 12px/1.6 var(--sans); color: var(--muted); }
 .stage-indicator ol { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; gap: 4px 10px; }
 .stage-indicator li + li::before { content: '→'; margin-right: 10px; color: var(--muted); }
-.stage-indicator .current { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.stage-indicator .current { color: var(--ink); -webkit-text-stroke: .3px currentColor; }
 .stage-indicator .completed { color: var(--slate); }
 .answer-status { font-size: 13px; color: var(--slate); }
 .stage-answering .answer-status, .stage-retry .answer-status { font-style: italic; }
 .stage-error .answer-status, .stage-rejected .answer-status { color: var(--danger); }
 
-/* Answer text */
+/* Answer text: one vertical rhythm (12px between blocks, 24px above a heading, 8px under it, 4px between list items). */
 .answer-text { min-width: 0; overflow-wrap: anywhere; }
 .answer-text p, .answer-text li { white-space: pre-wrap; }
-.answer-text p { margin: 0 0 14px; }
-.answer-text > :last-child { margin-bottom: 0; }
+.answer-text > * { margin: 0; }
+.answer-text > * + * { margin-top: 12px; }
+.answer-text :is(h1, h2, h3, h4, h5, h6) { font: inherit; font-size: 17px; line-height: 1.6; font-weight: 600; font-synthesis: weight; -webkit-text-stroke: .5px currentColor; color: var(--ink); }
+.answer-text :is(h1, h2) { font-size: 19px; }
+.answer-text > :is(h1, h2, h3, h4, h5, h6) { margin-top: 24px; }
+.answer-text > :is(h1, h2, h3, h4, h5, h6) + * { margin-top: 8px; }
+.answer-text > :first-child { margin-top: 0; }
+.answer-text ul, .answer-text ol { padding-left: 24px; }
+.answer-text li + li { margin-top: 4px; }
+.answer-text li > p { margin: 0; }
+.answer-text li > p + p { margin-top: 8px; }
+.answer-text li > :is(ul, ol) { margin: 4px 0 0; }
 .provisional-text { color: var(--slate); font-style: italic; }
-.answer-text strong { font-weight: 400; text-decoration: underline; text-underline-offset: 4px; }
-.answer-text h3 { font-size: 19px; font-weight: 400; margin: 0 0 12px; }
-.answer-text ul, .answer-text ol { padding-left: 22px; margin: 0 0 14px; }
+/* No decorative underlines anywhere in an answer: emphasis is weight, links are slate, Citations are chips. */
+.answer-text, .answer-text * { text-decoration: none; }
+/* The bundled Noto face has only a regular weight and the browser's synthetic bold does not render for it, so emphasis is a hairline stroke. */
+.answer-text strong { font-weight: 600; font-synthesis: weight; -webkit-text-stroke: .4px currentColor; }
 .answer-text a { color: var(--slate); }
 .answer-text code { font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.inline-citation { display: inline; border: 1px solid var(--slate); border-radius: 4px; background: var(--chip); color: var(--slate); font: 12px/1 var(--sans); padding: 3px 5px; margin: 0 2px; vertical-align: 1px; white-space: nowrap; }
+.inline-citation { display: inline-block; border: 1px solid var(--slate); border-radius: 4px; background: var(--chip); color: var(--slate); font: 11px/1.45 var(--sans); min-width: 24px; padding: 0 5px; margin: 0 1px 0 .3em; text-align: center; vertical-align: .1em; white-space: nowrap; }
 .inline-citation:hover { background: #DCE4F0; color: var(--ink); border-color: var(--ink); }
-.unverified-mark { display: inline; margin-inline: .4em; font: 12px/1.5 var(--sans); color: var(--danger); border-bottom: 1px dotted var(--danger); white-space: normal; }
-.scroll-wrap { margin: 0 0 14px; max-width: 100%; min-width: 0; }
+.unverified-mark { display: inline-block; margin-inline: .4em; padding: 0 6px; font: 12px/1.5 var(--sans); color: var(--danger); border: 1px dotted var(--danger); border-radius: 4px; white-space: normal; }
+.scroll-wrap { max-width: 100%; min-width: 0; }
 .scroll-box { overflow-x: auto; max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
 .scroll-hint { font: 12px/1.5 var(--sans); color: var(--muted); margin-top: 4px; }
 .scroll-box table:not(.source-table) { min-width: 480px; font-size: 14px; line-height: 1.6; }
@@ -172,15 +191,24 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; margin: 8px
 }
 
 /* Composer */
-.composer { flex-shrink: 0; padding: 10px 32px 16px; border-top: 1px solid var(--line); background: var(--paper); }
-.composer-inner { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
-.composer-box { display: flex; gap: 10px; align-items: flex-end; padding: 8px 8px 8px 14px; border: 1px solid #A39D8F; border-radius: 12px; background: #fff; }
-textarea { flex: 1; min-width: 0; border: 0; resize: none; outline: none; color: var(--ink); background: transparent; line-height: 1.6; padding: 0; }
-.composer-box:focus-within { outline: 2px solid var(--slate); outline-offset: 2px; }
+.composer { flex-shrink: 0; padding: 16px 32px 16px; border-top: 1px solid var(--line); background: var(--paper); }
+.composer-inner { min-width: 0; max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.composer-box { display: flex; gap: 12px; align-items: stretch; padding: 8px 8px 8px 14px; border: 1px solid #8B8576; border-radius: 6px; background: #fff; }
+.composer-box:hover { border-color: var(--slate); }
+.composer-box:focus-within { border-color: var(--slate); outline: 2px solid var(--slate); outline-offset: 0; }
+textarea { flex: 1; min-width: 0; border: 0; resize: none; outline: none; color: var(--ink); background: transparent; line-height: 1.7; padding: 0; }
 textarea:focus-visible { outline: none; }
 textarea:disabled { color: var(--muted); cursor: not-allowed; }
-.composer-box button { height: 40px; flex-shrink: 0; font: 14px/1 var(--sans); }
-.composer-help { font: 12px/1.5 var(--sans); }
+.composer-box:has(textarea:disabled) { background: var(--pane); border-color: var(--line); }
+.composer-box:has(textarea:disabled):hover { border-color: var(--line); }
+.send-button { align-self: flex-end; height: 40px; min-width: 88px; padding: 0 20px; flex-shrink: 0; font: 600 15px/1 var(--sans); letter-spacing: .08em; }
+.send-button:disabled { opacity: 1; background: transparent; color: var(--muted); border-color: var(--line); }
+.composer-help { margin-top: 4px; font: 12px/1.5 var(--sans); }
+.shortcuts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.shortcut-list { display: contents; }
+.shortcut { background: transparent; color: var(--slate); border: 1px solid var(--line); border-radius: 6px; padding: 4px 12px; font: 13px/1.5 var(--sans); text-align: left; }
+.shortcut:hover:not(:disabled) { background: var(--chip); border-color: var(--slate); color: var(--ink); }
+.shortcut:disabled { opacity: .5; }
 
 /* Collapsing a side column gives the width to the conversation. */
 @container chat (min-width: 1000px) {
@@ -205,8 +233,7 @@ textarea:disabled { color: var(--muted); cursor: not-allowed; }
 .table-limitation { color: var(--danger); font-size: 14px; }
 
 @media (max-width: 1199px) {
-  .pane { width: 250px; }
-  .pane-right { width: 300px; }
+  .pane-left { width: 250px; }
 }
 @media (max-width: 1000px) {
   .header-models { display: none; }
@@ -220,9 +247,13 @@ textarea:disabled { color: var(--muted); cursor: not-allowed; }
   /* Narrow screens: panes slide over the conversation instead of squeezing it. */
   .pane { position: absolute; top: 0; bottom: 0; z-index: 2; width: min(360px, 100%); }
   .pane-left { left: 0; }
-  .pane-right { right: 0; width: min(360px, 100%); }
+  .pane-right { right: 0; width: min(360px, 100%); border-left: 1px solid var(--line); }
   .messages { padding: 20px 16px 8px; }
   .composer { padding: 8px 16px 12px; }
+  .composer-inner { gap: 8px; }
+  .shortcuts { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 4px; }
+  .shortcut-list { display: flex; flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 4px; gap: 8px; }
+  .shortcut { flex-shrink: 0; white-space: nowrap; min-height: 40px; }
   .user-bubble { max-width: 88%; }
 }
 @media (max-width: 480px) {

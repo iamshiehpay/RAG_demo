@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import type { Citation, LLMCallTrace, PlanEvent, ReadyEvent, RetrievedChunk, StageEvent, UnverifiedSpan } from './events';
 import { Answer } from './Answer';
 import { AnswerProcess } from './AnswerProcess';
@@ -32,6 +33,32 @@ function useMediaQuery(query: string) {
   );
 }
 
+function useViewportWidth() {
+  return useSyncExternalStore(
+    notify => { window.addEventListener('resize', notify); return () => window.removeEventListener('resize', notify); },
+    () => window.innerWidth,
+    () => 1280,
+  );
+}
+
+// Source pane width (desktop only). The conversation column always keeps at least CHAT_MIN.
+const SOURCE_MIN = 260, SOURCE_MAX = 720, SOURCE_DEFAULT = 400, CHAT_MIN = 360, SEPARATOR_WIDTH = 8, RAIL_WIDTH = 64;
+const SOURCE_WIDTH_KEY = 'chat-document.source-width';
+const leftColumnWidth = (viewport: number, open: boolean) => open ? (viewport >= 1200 ? 280 : 250) : RAIL_WIDTH;
+function sourceBounds(viewport: number, leftOpen: boolean) {
+  const room = viewport - leftColumnWidth(viewport, leftOpen) - SEPARATOR_WIDTH - CHAT_MIN;
+  return { min: SOURCE_MIN, max: Math.max(SOURCE_MIN, Math.min(SOURCE_MAX, room)) };
+}
+function storedSourceWidth(): number | null {
+  try {
+    const value = Number(window.localStorage.getItem(SOURCE_WIDTH_KEY));
+    return Number.isFinite(value) && value > 0 ? value : null;
+  } catch { return null; }
+}
+function storeSourceWidth(width: number) {
+  try { window.localStorage.setItem(SOURCE_WIDTH_KEY, String(Math.round(width))); } catch { /* storage is optional */ }
+}
+
 function PaneIcon({ side, open }: { side: 'left' | 'right'; open: boolean }) {
   // The chevron points toward where the pane will go: an open pane collapses toward its own edge.
   const chevron = side === 'left' ? (open ? 'M15 10l-2 2 2 2' : 'M13 10l2 2-2 2') : (open ? 'M9 10l2 2-2 2' : 'M11 10l-2 2 2 2');
@@ -62,11 +89,49 @@ export function App() {
   // citation click at narrow width never changes the layout the person gets back on a wide screen.
   // undefined = default (Document overlay only while no Document is loaded).
   const [overlay, setOverlay] = useState<'left' | 'right' | null | undefined>(undefined);
+  // Preferred source width; the width actually used is always re-clamped to the current window and left column.
+  const [sourcePref, setSourcePref] = useState<number | null>(storedSourceWidth);
+  const [dragging, setDragging] = useState(false);
+  const dragStart = useRef<{ x: number; width: number; last: number } | null>(null);
+  const viewport = useViewportWidth();
   const narrow = useMediaQuery('(max-width: 900px)');
   const roomy = useMediaQuery('(min-width: 1200px)');
   const leftOpen = narrow ? (overlay === undefined ? !document : overlay === 'left') : leftPref ?? true;
   const rightOpen = narrow ? overlay === 'right' : rightPref ?? roomy;
   useEffect(() => setOverlay(undefined), [narrow]);
+  const bounds = sourceBounds(viewport, leftOpen);
+  const sourceWidth = Math.min(bounds.max, Math.max(bounds.min, sourcePref ?? SOURCE_DEFAULT));
+  const resizeSource = (width: number) => setSourcePref(Math.min(bounds.max, Math.max(bounds.min, Math.round(width))));
+  function startDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.button !== 0) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragStart.current = { x: event.clientX, width: sourceWidth, last: sourceWidth };
+    setDragging(true);
+    event.preventDefault();
+  }
+  function moveDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const start = dragStart.current;
+    if (!start) return;
+    start.last = Math.min(bounds.max, Math.max(bounds.min, Math.round(start.width + (start.x - event.clientX))));
+    setSourcePref(start.last);
+  }
+  // Pointer release, pointercancel and losing capture (released outside the window) all end the drag the same way.
+  function endDrag() {
+    const start = dragStart.current;
+    if (!start) return;
+    dragStart.current = null;
+    setDragging(false);
+    storeSourceWidth(start.last);
+  }
+  function separatorKey(event: ReactKeyboardEvent<HTMLDivElement>) {
+    const step = event.shiftKey ? 64 : 16;
+    const next = event.key === 'ArrowLeft' ? sourceWidth + step : event.key === 'ArrowRight' ? sourceWidth - step
+      : event.key === 'Home' ? bounds.min : event.key === 'End' ? bounds.max : null;
+    if (next === null) return;
+    event.preventDefault();
+    resizeSource(next);
+    storeSourceWidth(Math.min(bounds.max, Math.max(bounds.min, next)));
+  }
   const setLeft = (open: boolean) => narrow ? setOverlay(open ? 'left' : null) : setLeftPref(open);
   const setRight = (open: boolean) => narrow ? setOverlay(open ? 'right' : null) : setRightPref(open);
   // Focus handling for the Source overlay: heading on open, the clicked Citation on close.
@@ -156,12 +221,15 @@ export function App() {
     finally { setBusy(false); }
   }
 
-  async function ask(askedQuestion: string, retryId?: number) {
-    if (!askedQuestion.trim() || !document || busy || uploading) return;
+  // Set synchronously so a fast double click (or Enter plus a click) can never send the same ask twice.
+  const asking = useRef(false);
+  async function ask(askedQuestion: string, retryId?: number, keepDraft = false) {
+    if (!askedQuestion.trim() || !document || busy || uploading || asking.current) return;
     if (retryId !== undefined && turns.at(-1)?.id !== retryId) return;
+    asking.current = true;
     const id = retryId ?? Date.now();
     following.current = true;
-    setBusy(true); setError(''); setQuestion('');
+    setBusy(true); setError(''); if (!keepDraft) setQuestion('');
     const freshTurn: Turn = { id, question: askedQuestion, answer: '', citations: [],
       chunks: [], calls: [], plan: null, rejected: false,
       thinking: '', unverified: [], invalidCitationCount: 0, retrying: false,
@@ -199,7 +267,7 @@ export function App() {
       });
     } catch (error) {
       updateTurn(id, turn => ({ ...turn, answer: turn.final ? turn.answer : '', error: message(error), stage: 'error' }));
-    } finally { setBusy(false); }
+    } finally { asking.current = false; setBusy(false); }
   }
 
   const showSource = useCallback(async (citation: Citation) => {
@@ -220,8 +288,8 @@ export function App() {
     }
   }, [narrow]);
 
-  const unavailableReason = uploading ? '文件處理中，完成後即可提問。' : !document ? '請先在「文件」欄上傳有文字層的 PDF，完成後即可提問。' : busy ? '回答產生中，請稍候。' : '回答以文件為依據；點回答中的編號可查看原文。';
-  const placeholder = uploading ? '文件處理中…' : !document ? '上傳文件後即可提問' : busy ? '回答產生中…' : '輸入問題，Enter 送出、Shift+Enter 換行';
+  const unavailableReason = uploading ? '文件處理中，完成後即可提問。' : !document ? '請先在「文件」欄上傳有文字層的 PDF，完成後即可提問。' : busy ? '回答產生中，請稍候。' : 'Enter 送出，Shift+Enter 換行';
+  const placeholder = uploading ? '文件處理中…' : !document ? '上傳文件後即可提問' : busy ? '回答產生中…' : '輸入問題';
   const disabled = !document || busy || uploading;
   const status = uploading ? '處理中' : document ? '可提問' : '尚未上傳';
 
@@ -240,7 +308,7 @@ export function App() {
         </div>
       </div>
     </header>
-    <div className="workspace">
+    <div className={`workspace${dragging ? ' resizing' : ''}`} style={{ '--source-width': `${sourceWidth}px` } as React.CSSProperties}>
       {leftOpen ? <aside className="pane pane-left" aria-label="文件" data-open="true">
         <div className="pane-head"><span className="label">文件</span>
           <button className="icon-button" aria-label="收合文件欄" onClick={closeLeft}><PaneIcon side="left" open /></button></div>
@@ -248,7 +316,7 @@ export function App() {
           canReconnect={uploading && !busy && !!uploadEventsUrl} error={error}
           onUpload={file => void upload(file)} onReconnect={() => void reconnectUpload()} />
       </aside> : <aside className="rail rail-left" aria-label="文件（已收合）" data-open="false">
-        <button className="icon-button" aria-label="展開文件欄" onClick={() => setLeft(true)}><PaneIcon side="left" open={false} /></button>
+        <button className="rail-button" aria-label="展開文件欄" onClick={() => setLeft(true)}><PaneIcon side="left" open={false} /><span className="rail-label" aria-hidden="true">文件</span></button>
       </aside>}
 
       <main className="chat">
@@ -273,15 +341,20 @@ export function App() {
           </div>
         </div>
         <Composer value={question} onChange={setQuestion} onSubmit={() => void ask(question)} disabled={disabled}
-          canSubmit={!disabled && !!question.trim()} busy={busy} help={unavailableReason} placeholder={placeholder} />
+          canSubmit={!disabled && !!question.trim()} busy={busy} help={unavailableReason} placeholder={placeholder}
+          documentName={document?.name} onShortcut={text => void ask(text, undefined, true)} />
       </main>
 
+      {rightOpen && !narrow && <div className="pane-resizer" role="separator" aria-orientation="vertical" aria-label="調整來源欄寬度"
+        aria-valuenow={sourceWidth} aria-valuemin={bounds.min} aria-valuemax={bounds.max} tabIndex={0}
+        data-dragging={dragging || undefined} onPointerDown={startDrag} onPointerMove={moveDrag}
+        onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onKeyDown={separatorKey} />}
       {rightOpen ? <aside className="pane pane-right" aria-label="來源" data-open="true">
         <div className="pane-head"><span className="label">來源</span>
           <button className="icon-button" aria-label="收合來源欄" onClick={closeRight}><PaneIcon side="right" open /></button></div>
         <SourcePane source={source} citationId={sourceCitation} loading={sourceLoading} error={sourceError} headingRef={sourceHeading} />
       </aside> : <aside className="rail rail-right" aria-label="來源（已收合）" data-open="false">
-        <button className="icon-button" aria-label="展開來源欄" onClick={() => setRight(true)}><PaneIcon side="right" open={false} /></button>
+        <button className="rail-button" aria-label="展開來源欄" onClick={() => setRight(true)}><PaneIcon side="right" open={false} /><span className="rail-label" aria-hidden="true">來源</span></button>
       </aside>}
     </div>
   </div>;
