@@ -12,7 +12,7 @@ from chat_document.llm_adapter import ScriptedLLM
 from chat_document.llm_gateway import LLMGateway
 from chat_document.tables import LIMITATION
 from chat_document.tokens import count_tokens
-from tests.support import selection_response
+from tests.support import DeterministicEmbedder, SummaryScriptedLLM, selection_response
 
 
 def table_only_pdf(section_count):
@@ -181,3 +181,65 @@ async def test_section_summary_partitions_preserve_complete_table_chunks():
             if span["kind"] == "row":
                 assert source["caption"] == original.table_caption
                 assert source["header"] == " | ".join(original.table_headers)
+
+
+async def test_upload_keeps_recursive_selection_batches_feasible_after_narrowing():
+    """Replay the native selection decisions that reached the 74-token dead end.
+
+    The replay uses fresh public PDF upload and original source validation, not
+    direct builder calls. Recorded IDs are decisions, never generated evidence.
+    Newly balanced pools use a source-only scripted selection at the same seam.
+    """
+    from collections import defaultdict, deque
+    from pathlib import Path
+
+    from eval.second_document import DOCUMENT
+    from tests.support import selection_response
+
+    if not DOCUMENT.exists():
+        pytest.skip("Fetch the pinned second Document before this source regression")
+    decisions = defaultdict(deque)
+    fixture = Path(__file__).parents[1] / "data/summary_selection_replay.json"
+    for recorded in json.loads(fixture.read_text())["decisions"]:
+        decisions[tuple(recorded["offered_span_ids"])].append(recorded["response"])
+
+    class ReplayLLM(SummaryScriptedLLM):
+        async def stream(self, request):
+            if request.format and "span_ids" in str(request.format):
+                self.calls.append(request)
+                payload = json.loads(request.messages[-1]["content"])
+                key = tuple(s["id"] for s in payload["spans"])
+                script = (
+                    decisions[key].popleft()
+                    if payload["section"] == "Appendix C Industrial Implications" and decisions[key]
+                    else selection_response(request)
+                )
+                async for frame in ScriptedLLM([script]).stream(request):
+                    yield frame
+            else:
+                async for frame in super().stream(request):
+                    yield frame
+
+    llm = ReplayLLM([])
+    app = Application(DeterministicEmbedder(), LLMGateway(llm))
+    try:
+        events = [
+            e async for e in app.upload_document(DOCUMENT.read_bytes(), "narrowed-source.pdf")
+        ]
+        assert events[-1].type == "ready", events[-1]
+        requests = [
+            json.loads(c.messages[-1]["content"])
+            for c in llm.calls
+            if c.format and "span_ids" in str(c.format)
+        ]
+        appendix = [p for p in requests if p["section"] == "Appendix C Industrial Implications"]
+        assert len(appendix) > 4 and any(
+            any("original_text" not in unit for unit in p["source_units"].values())
+            for p in appendix
+        )
+        for node in app.document.summary_tree.section_summaries:
+            assert 80 <= count_tokens(node.text) <= 500
+            assert node.chunk_ids and all(app.source(i).id == i for i in node.chunk_ids)
+        assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
+    finally:
+        await app.close()

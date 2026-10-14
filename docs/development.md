@@ -22,7 +22,9 @@ uv run --frozen pytest
 
 測試依功能命名：`test_router_synthesis.py` 收納分流/抽取/追問；`test_ingestion.py` 與 `test_document_layout.py` 區分真實 embedding 路徑及合成版面回歸；`test_summary_tree.py`、`test_summary_limits.py` 與 `test_summaries.py` 分別涵蓋摘要樹、容量/失敗邊界、離線來源契約。先前 review/issue 編號的檔案已依責任合併，不刪除回歸斷言。
 
-共用合成 PDF 與模型替身放在 `tests/support.py`；需要真實服務的 helper 放在 `tests/integration/support.py`。測試檔不互相 import；Router live 檢查函式放在 `eval/router_checks.py`，不為取得 helper 而載入 live test module。
+共用合成 PDF 與模型替身放在 `tests/support.py`；需要真實服務的 helper 放在 `tests/integration/support.py`。`tests/data/summary_selection_replay.json` 只保留長文件回歸需要的 14 組原始選取決策，避免日常驗證依賴整份歷史報告。下載 PDF 的回歸放在 integration，不放進預設 unit。
+
+測試檔不互相 import；Router live 檢查函式放在 `eval/router_checks.py`，不為取得 helper 而載入 live test module。
 
 不使用 uv 時，先按 README 建立環境，再於該環境安裝 `pytest pytest-asyncio opencc ruff`；這條替代路徑不提供與 `uv.lock` 相同的鎖定保證。
 

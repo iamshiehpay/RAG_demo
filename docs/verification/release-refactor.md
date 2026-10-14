@@ -6,7 +6,7 @@
 
 - 重構前：236 個 test function；335 個非雲端參數化案例，另有 3 個 live 評估入口。
 - 每個原有 test function 都仍存在，逐一比較 `assert` AST 全部相同；原有斷言未刪除。`test_eval_case_selection_does_not_collect_unrequested_live_workloads` 的子程序增加 `eval` 目錄參數，以符合新的預設收集範圍，原斷言不變。
-- 新增 4 個打包測試後：121 unit、218 integration、3 live eval。`tests/` 下 test 檔案由 32 個變成 30 個，其中 1 個 live 入口移到 `eval/`；並非靠大量刪測試減少檔案。
+- 新增 4 個打包測試並完成解壓驗證修正後：120 unit、219 integration、3 live eval。`tests/` 下 test 檔案由 32 個變成 30 個，其中 1 個 live 入口移到 `eval/`；並非靠大量刪測試減少檔案。
 - 共用 PDF／替身 helper 移至 `tests/support.py`，真實 embedding helper 移至 `tests/integration/support.py`；已確認 test module 不再互相 import。
 
 | 舊位置 | 現在位置 |
@@ -24,11 +24,11 @@
 
 ## 執行結果
 
-- `pytest --collect-only`：121 個 unit。
-- `pytest tests/integration -m integration --collect-only`：218 個 integration。
+- `pytest --collect-only`：最初 121 個 unit；解壓驗證發現一個依賴下載 PDF 的案例，移至整合層後為 120。
+- `pytest tests/integration -m integration --collect-only`：最初 218 個，PDF 回歸移入後為 219。
 - `pytest eval -m eval --collect-only`：3 個 live 入口，只有收集、沒有模型呼叫。
-- `pytest`：121 PASS，8.14 秒，5 個既有 PyMuPDF deprecation warnings。
-- 完整非雲端回歸：339 PASS、3 eval deselected、0 skip，287.18 秒；5 個既有 PyMuPDF warnings。
+- `pytest`：初版 121 PASS（8.14 秒）；最後重新分類後 120 PASS、0 SKIP（3.08 秒）。均有 5 個既有 PyMuPDF deprecation warnings。
+- 完整非雲端回歸：339 PASS、3 eval deselected、0 skip，287.18 秒；5 個既有 PyMuPDF warnings。此結果在最後的 PDF 案例歸類及 fixture 抽取前，該項修正另行執行原案例得到 1 PASS（3.81 秒），並重跑預設測試。
 - Ruff：通過；本輪新增／修改的測試、打包工具與 helper 全部檢查。
 - 現役文件本地連結與錨點：66 個通過；後續報告連結另檢查。
 
@@ -42,4 +42,8 @@
 
 ## 交付包檢查
 
-實際交付包在提交後從 HEAD 建立，再解壓驗證；完成結果待補。
+初版 `9302a45` 交付包已實際建立與解壓：程式包 384 個檔案、10,507,219 bytes；補充證據包 1,567 個檔案、117,056,868 bytes。逐檔 SHA-256、兩包互不覆寫、排除私有/安裝資料、主要文件連結均通過；解壓後 API 確認載入解壓目錄，首頁與兩個引用的 JS/CSS 資產 HTTP 200 且位元組相同。沒有重新安裝依賴；此檢查使用既有 Python 環境與解壓後的原始碼。
+
+初版解壓後預設測試為 120 PASS／1 SKIP。原因是被歸入 unit 的一個合成 embedding 測試其實仍讀取下載的 109 頁 PDF；不能把有替身直接等同於獨立於外部文件。已移到 integration，並把它從 971,862-byte 歷史模型輸出中讀取的 14 組決策，抽成 15,102-byte 固定 fixture，保留來源雜湊與原順序。此後整合回歸只需 pinned PDF 與程式包內的小 fixture，不再依賴補充證據包。原 test function 及斷言保留。
+
+最終交付將重新從修正後 HEAD 建立；實際 zip 版本、檔案数與解壓檢查結果另附於交付目錄 `VERIFICATION.json`，避免用初版數值冒充最終產物。
