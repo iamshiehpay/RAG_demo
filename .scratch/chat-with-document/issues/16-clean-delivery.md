@@ -1,6 +1,6 @@
 # #16 精簡交付與測試入口
 
-Status: in-progress
+Status: ready-for-human
 
 ## 需求與範圍
 
@@ -17,7 +17,9 @@ Status: in-progress
 - [x] 收集範圍為 120 unit、219 integration、3 live eval（新增 4 個打包測試）。
 - [x] `pytest` 預設只跑 unit；測試檔不再互相 import。
 - [x] 打包測試覆蓋只讀 committed HEAD、排除本機資料、保留前端 build、雜湊、可重現、禁止覆寫、拒絕 symlink 與兩包不互相覆寫。
-- [ ] 完整非雲端回歸與實際交付包驗證通過。
-- [ ] 保存 commit、交付包及驗證摘要。
+- [x] 完整非雲端回歸與實際交付包驗證通過。
+- [x] 保存 commit、交付包及驗證摘要。
 
 證據見 `docs/verification/release-refactor.md`。本輪沒有 agent Review 或新雲端評估。
+
+實際驗證版本 0ae39a2：解壓程式包 120 PASS／0 SKIP，HTTP 首頁與資產通過；完整非雲端回歸與後續局部修正的驗證範圍見報告。最終提交僅補完成紀錄，重新產生包並核對程式位元組；不執行任何外部傳送。

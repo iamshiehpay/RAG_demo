@@ -40,7 +40,7 @@ Status: in-progress
 | 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | wontfix（D23使用者核准本輪凍結目前後端、A9保留已知缺陷；D21/D22證據與舊9715538未採用狀態保留） |
 | 14 | LangGraph提問流程 | 現有Main5f5e35f | W8 | application/newgraph/tests/deps/README；Main獨占規範與tracker | ready-for-human（已審24fba26，Main a5b70a0整合335PASS／exit0；Luna max/Fast双軸完成，8101已更新；F1–F3放行、待使用者操作） |
 | 15 | 開發指引與中文README | Main52e18c9 | W9 | AGENTS/README/按需docs；Main獨占tracker | ready-for-human（使用者取消agent委派，主對話自行完成中文README／AGENTS與用途盤點；只驗證文件、不刪程式） |
-| 16 | 精簡交付與測試入口 | Main1960fba | 主對話自行處理 | tests/eval helper/package工具/docs；不改產品行為 | in-progress（不委派agent；原斷言保留、交付與歷史證據分包） |
+| 16 | 精簡交付與測試入口 | Main1960fba | 主對話自行處理 | tests/eval helper/package工具/docs；不改產品行為 | ready-for-human（主對話完成；339非雲端回歸PASS，最後歸類/fixture修正另驗；解壓包120PASS零SKIP；未外送） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -344,3 +344,5 @@ D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9
 - D25真人msg_01a1390e已直接核對並讀完指定文章；#15以52e18c9隔離worktree整理AGENTS／中文README，盤點用途但不刪檔。文件專用驗證，不改行為、快取、服務，不重跑LLM或完整suite；既有人工QA狀態保持。
 
 - #15後續真人指示取消agent委派，改由主對話自行修改。完成中文README與檔案用途表，AGENTS詳細規則分流至docs/design.md、docs/development.md。Streamlit僅討論，不遷移；不刪程式、不跑LLM或完整suite，採文件專用檢查。
+
+- #16精簡交付完成：原有236個test function及斷言保留，預設120 unit、本地219 integration、3 live eval另跑。打包工具只讀committed HEAD，程式包保留精選AI協作證據，完整歷史另包；源程式、前端與依賴不變。驗證版本0ae39a2解壓測試與HTTP資產通過，結果見docs/verification/release-refactor.md及交付目錄VERIFICATION.json。
