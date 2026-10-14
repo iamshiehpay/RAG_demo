@@ -87,7 +87,7 @@ migration cause or general quality regression.
 
 After this run, the bridge queue was bounded and its exceptional terminal path
 fixed. Main required one second transport smoke at the then-frozen source, not quality iteration.
-The initial TemporaryDirectory cache had already been cleaned, so final-source
+The initial TemporaryDirectory cache had already been cleaned, so second three-path
 smoke genuinely rebuilt the same small authored Document and ran three asks
 (another bounded 10 calls). `live/` records that then-frozen source (production hashes in
 `source-freeze-prior.json`); `live-initial/`
@@ -175,7 +175,7 @@ prove model stability, or change any existing accepted defect. Total genuine
 provider calls across both deliberately bounded runs: **20**. No retries/length
 failures occurred; those remain covered by deterministic public regression tests.
 
-## Final frozen-source ordinary suite
+## Original reviewed candidate frozen-source ordinary suite
 
 `source-freeze.json` hashes remained unchanged throughout the completed run:
 
@@ -184,7 +184,60 @@ failures occurred; those remain covered by deterministic public regression tests
 ```
 
 **333 passed, 3 eval deselected, zero skipped, 5 existing PyMuPDF warnings,
-271.70s** (`full-final.txt`). This is final-source complete-suite evidence;
-`full-prior.txt` and interrupted partial runs do not replace it. No new source or
-test changes are planned before independent Review. Ruff, compileall and diff
+271.70s** (`full-final.txt`). This is complete-suite evidence for d455f50,
+before the later readiness correction;
+`full-prior.txt` and interrupted partial runs do not replace it. This run preceded the original independent Review. Ruff, compileall and diff
 whitespace checks pass; prompt/module parity is retained in `prompt-parity.json`.
+
+## Independent review and readiness correction
+
+Initial candidate `d455f50d69d8061cc2aad7ff160d36f192c544d2` received separate
+fresh exact Luna max/Fast reviews. Standards: no findings
+(`review/standards-d455f50.md`). Spec: one P2 request-start readiness race
+(`review/spec-d455f50.md`), otherwise in scope. Both original reports are preserved.
+The Spec finding was initially code-path reasoning, not a measured probe.
+
+A new public interleaving regression holds the replacement upload's final native
+summary call, starts ask while the replacement is pending, then releases upload
+before asynchronous graph validation. Baseline `5f5e35f` correctly rejects both
+Lookup and Global (2 passed, `readiness-baseline.txt`). The unmodified reviewed
+candidate returns plan/retrieval/citation-map/final from the old Document instead
+(2 failed, `readiness-red.txt`). No graph mocking or internal scheduling patch is
+used; the controlled dependency is the external scripted summary adapter.
+
+Correction: capture request-start readiness synchronously beside the already
+captured index/Document, and have the existing graph validate node check that
+flag. The only production delta from the reviewed candidate is one boolean
+capture and one condition replacement in `ask_graph.py`. Prompt functions,
+other modules, event schema, models/reservations, upload and cache policy are
+unchanged. No new cloud calls were made. Recovery in each new regression asks the
+replacement Document and verifies all final Citation sources resolve to it.
+
+Targeted actual-graph public lifecycle/failure/HTTP/ingestion-job tests:
+**59 passed**, 5 existing PyMuPDF warnings, 23.39s (`readiness-green.txt`).
+Ruff passes on all changed production/tests; final whole suite runs against
+`source-freeze-readiness.json` before scoped fresh two-axis review from d455f50.
+
+Narrow-screen browser behavior remains deferred and unresolved, not verified
+PASS and not a new accepted defect waiver. Original reviewer wording describing
+existing failures as accepted is not an additional user acceptance decision.
+
+Fresh correction reviewers `mira-check-mako` / `mira-check-life` bootstrapped on
+HOLD; mira and Main directly verified native gpt-6-luna/max/workspace-write/
+on-request/correct-cwd settings and actual TUI `GPT-6-Luna max fast` before
+release. `review/correction-runtime.json` and `review/*-tui.txt` preserve proof.
+The original owned reviewer sessions were stopped after their reports were read.
+
+Readiness correction's completed frozen-source ordinary suite:
+
+```sh
+.venv/bin/python -m pytest --basetemp=/private/tmp/rag-ticket14-full-readiness -q
+```
+
+**335 passed, 3 eval deselected, zero skipped, 5 existing PyMuPDF warnings,
+266.30s** (`full-readiness.txt`). `source-freeze-readiness.json` hashes were
+unchanged throughout; Ruff/compileall/diff whitespace checks pass. This supersedes
+the original candidate's 333-case run as final corrected-source suite evidence.
+The processing fingerprint remains
+`ingest-v2-fabcd278cc5f6bbe34a64a8699925398e3bee6d9a9a275d0c0179b3430b971b8`;
+readiness changes do not affect ingestion or trigger another cache invalidation.

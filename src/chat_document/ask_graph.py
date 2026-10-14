@@ -56,6 +56,7 @@ class AskWorkflow:
         self.history = history
         self.index = application.index
         self.document = application.document
+        self.document_ready_at_start = application._active_upload is None and self.index is not None
         self.calls: list[LLMCallTrace] = []
         self.stage = "router"
         self.dropped_chunk_count = 0
@@ -146,7 +147,7 @@ class AskWorkflow:
                     producer.result()
 
     async def validate(self, state: AskState) -> AskState:
-        if self.application._active_upload is not None or self.index is None:
+        if not self.document_ready_at_start:
             await self.emit(
                 ErrorEvent(
                     code="document_not_ready",

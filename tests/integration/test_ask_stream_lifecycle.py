@@ -241,3 +241,58 @@ async def test_provider_initiated_cancellation_propagates_and_releases_document(
     assert app._asking == 0
     assert app.history == []
     assert not (set(asyncio.all_tasks()) - before)
+
+
+@pytest.mark.parametrize("question_type", ["Lookup", "Global"])
+async def test_ask_started_during_replacement_stays_rejected_when_upload_finishes(question_type):
+    import json
+
+    held = asyncio.Event()
+    release = asyncio.Event()
+
+    class HeldSummaryLLM(SummaryScriptedLLM):
+        hold = False
+
+        async def stream(self, request):
+            if request.call_type == "document_summary" and self.hold:
+                held.set()
+                await release.wait()
+            async for frame in super().stream(request):
+                yield frame
+
+    route = json.dumps(
+        {
+            "question_type": question_type,
+            "standalone_question": "Describe the Document",
+            "sub_queries": [],
+        }
+    )
+    citation = "S1" if question_type == "Global" else "C1"
+    llm = HeldSummaryLLM([route, f"Evidence [{citation}]."] * 2)
+    app = Application(OllamaEmbedder(), LLMGateway(llm))
+    original = [e async for e in app.upload_document(text_pdf("Original Document"), "old.pdf")]
+    assert original[-1].type == "ready"
+    llm.hold = True
+    replacement = app.start_upload(text_pdf("Replacement Document"), "new.pdf")
+    await asyncio.wait_for(held.wait(), 3)
+    stream = app.ask("Describe the Document")
+    # FIFO scheduling: ask begins while upload is held; releasing the final
+    # external summary call lets upload publish before asynchronous graph work.
+    pending = asyncio.create_task(anext(stream))
+    release.set()
+    first = await asyncio.wait_for(pending, 3)
+    uploaded = [e async for e in app.upload_events(replacement)]
+    assert uploaded[-1].type == "ready"
+    assert uploaded[-1].document_id != original[-1].document_id
+    events = [first, *[e async for e in stream]]
+    assert [e.type for e in events] == ["error"], [e.model_dump() for e in events]
+    assert events[0].code == "document_not_ready"
+    assert llm.ask_calls == []
+    assert app.history == []
+    assert app._asking == 0
+    recovered = [e async for e in app.ask("Describe the Document")]
+    final = next(e for e in recovered if e.type == "final")
+    assert final.citations
+    assert all(app.source(c.source_id) for c in final.citations)
+    assert all(c.source_id.startswith(uploaded[-1].document_id) for c in final.citations)
+    assert len(app.history) == 1
