@@ -2,7 +2,7 @@
    Not imported by production. Every answer/summary here is scripted evidence.
    Set window.__t09.scenario before pressing 送出. Scenarios:
    q3 (default) | compare | widetable | global | fallback | provisional | retry | error | unverified | markdown | budget | missing-source
-   | spacing (synthetic Markdown structure fixture, not model output)
+   | spacing | tightlist (synthetic Markdown structure fixtures, not model output)
    | replay-cost | replay-q3  (D16 follow-up: REPLAY of stored real model output pasted by the user in
      /private/tmp/rag-20261014-ui-feedback.md items 6 and 8, rebuilt into Markdown. Not a fresh model run.)
    window.__t09.documentName overrides the Ready name; window.__t09.asks records every /api/ask body. */
@@ -109,6 +109,7 @@
         result = `下表有 10 欄小數，窄螢幕應該左右捲動而不是把數字拆開。[C1]\n\n| ${cols.join(' | ')} |\n| ${cols.map(() => '---').join(' | ')} |\n${row('Agriculture', 11.1)}\n${row('Legal', 20.5)}\n${row('Mix', 49.6)}\n\n以上為設計審閱用腳本資料。[C1]`;
       }
       if (scenario === 'spacing') result = '## 第一層標題\n\n第一段文字，說明比較基準。[C1] 第二句接在同一段後面，確認引用不會黏住前後文字。[C1]\n\n第二段文字。\n\n### 第二層標題\n- 緊密項目一：數字 34.8 % / 65.2 %。[C1]\n- 緊密項目二，內含巢狀清單：\n  - 巢狀項目甲[C1]\n  - 巢狀項目乙[C1]\n- 緊密項目三\n\n寬鬆清單：\n\n1. 第一項，段落之間有空行。[C1]\n\n2. 第二項，也有空行。\n\n   第二項的第二段。\n\n3. 第三項。\n\n**粗體小標**\n- 緊接在粗體小標後的項目。[C1]\n\n結尾段落，含 **強調** 與 *斜體*，沒有底線。[C1]';
+      if (scenario === 'tightlist') result = '- see **this** and *that* now [C1]\n- run `npm i` now\n- **A** **B**\n- link [x](https://example.com) here\n- 中文 **粗體** 文字\n- 引用 [C1] 之後\n- two `alpha` `beta` gamma\n\n舊版 ~~已刪除~~ 內容。';
       if (scenario === 'replay-cost') result = replay.cost;
       if (scenario === 'replay-q3') result = replay.q3;
       if (scenario === 'markdown') result = '**Safe bold** and *safe emphasis*. [C1]\n\n<script>window.__unsafe = true</script>\n\n[unsafe](javascript:alert(1))\n\n| Dataset | Overall |\n| --- | --- |\n| Mix | 64.8% |';

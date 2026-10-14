@@ -20,8 +20,9 @@ export function QuestionShortcuts({ documentName, disabled, onPick }: {
   return <div className="shortcuts" role="group" aria-labelledby="shortcut-label">
     <span id="shortcut-label" className="label">{tailored ? 'LightRAG 論文範例問題' : '範例問題'}</span>
     <div className="shortcut-list">
-      {questions.map(question => <button type="button" key={question} className="shortcut" disabled={disabled}
-        onClick={() => onPick(question)}>{question}</button>)}
+      {/* aria-disabled instead of disabled: a disabled button drops keyboard focus while an answer is generating. */}
+      {questions.map(question => <button type="button" key={question} className="shortcut" aria-disabled={disabled}
+        onClick={() => { if (!disabled) onPick(question); }}>{question}</button>)}
     </div>
   </div>;
 }

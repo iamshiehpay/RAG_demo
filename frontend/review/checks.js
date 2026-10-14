@@ -63,6 +63,7 @@
       check(separator && separator.tabIndex === 0 && separator.getAttribute('aria-orientation') === 'vertical', 'source pane has a focusable vertical separator');
       const [now, min, max] = ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'].map(name => Number(separator?.getAttribute(name)));
       check(min <= now && now <= max && Math.abs(now - rect('.pane-right').width) <= 1, 'separator aria values match the pane width and sit inside [min, max]');
+      check(document.getElementById(separator.getAttribute('aria-controls')) === document.querySelector('.pane-right') && separator.getAttribute('aria-valuetext') === `來源欄寬 ${now} 像素`, 'separator controls the source pane and announces its width');
       check(chat.width >= 360, 'conversation column keeps at least 360px beside the source pane');
     } else check(!separator, 'no separator while the source pane is collapsed');
   }
@@ -86,13 +87,21 @@
   check(shortcuts.every(button => button.tagName === 'BUTTON' && button.type === 'button'), 'shortcuts are real, non-submitting buttons');
   if (lightRag) check(JSON.stringify(shortcuts.map(button => button.textContent)) === JSON.stringify(expectedQuestions) && /LightRAG 論文範例問題/.test(shortcutGroup.textContent), 'five exact LightRAG example questions under a LightRAG-labelled group');
   else check(shortcuts.length === 1 && shortcuts[0].textContent === expectedQuestions[0] && !/LightRAG/.test(shortcutGroup.textContent), 'other Documents get only the general summary question, not labelled as LightRAG-specific');
-  check(shortcuts.every(button => button.disabled === !!document.querySelector('#question')?.disabled), 'shortcut buttons are disabled exactly when the composer is (no Document, uploading or generating)');
+  // aria-disabled (not the disabled attribute) so keyboard focus stays on a shortcut while an answer is generating
+  check(shortcuts.every(button => (button.getAttribute('aria-disabled') === 'true') === !!document.querySelector('#question')?.disabled), 'shortcut buttons are unavailable exactly when the composer is (no Document, uploading or generating)');
+  check(shortcuts.every(button => { const c = getComputedStyle(button).borderTopColor.match(/[\d.]+/g).map(Number); return contrast(`rgb(${c[0]}, ${c[1]}, ${c[2]})`, 'rgb(251, 250, 246)') >= 3; }), 'shortcut button border has at least 3:1 contrast against the page');
 
   // Answers: no decorative underline anywhere, Citations stay recognisable chips
   const decorated = [...document.querySelectorAll('.answer-text, .answer-text *, .inline-citation, .unverified-mark, .stage-indicator *')]
-    .filter(element => getComputedStyle(element).textDecorationLine !== 'none');
+    .filter(element => /underline/.test(getComputedStyle(element).textDecorationLine));
   check(decorated.length === 0, 'no text-decoration underline on answer text, citations, markers or stage labels');
-  check([...document.querySelectorAll('.answer-text strong, .answer-text h1, .answer-text h2, .answer-text h3')].every(element => parseFloat(getComputedStyle(element).webkitTextStrokeWidth) > 0), 'emphasis and headings stay distinguishable without an underline (weight stroke)');
+  check([...document.querySelectorAll('.answer-text del, .answer-text s')].every(element => getComputedStyle(element).textDecorationLine === 'line-through'), 'strikethrough keeps its line-through');
+  check([...document.querySelectorAll('.answer-text a')].every(link => getComputedStyle(link, '::after').content.includes('\u2197')), 'links are told apart by an arrow, not an underline');
+  // Emphasis must still look different from the text around it, now that the underline is gone.
+  check([...document.querySelectorAll('.answer-text strong')].every(strong => {
+    const [own, around] = [getComputedStyle(strong), getComputedStyle(strong.parentElement)];
+    return own.webkitTextStrokeWidth !== around.webkitTextStrokeWidth || own.fontWeight !== around.fontWeight;
+  }), 'strong text differs visibly from the surrounding text');
   check([...document.querySelectorAll('.answer-text strong, .answer-text a')].every(element => getComputedStyle(element).borderBottomWidth === '0px'), 'emphasis and links use no border-bottom underline');
   for (const chip of document.querySelectorAll('.answer-text .inline-citation')) {
     const style = getComputedStyle(chip);
@@ -197,6 +206,13 @@
       const box = table.closest('.scroll-box');
       check(box && getComputedStyle(box).overflowX === 'auto', 'table sits in an overflow-x:auto box');
       check(box.getBoundingClientRect().right <= chat.right + 1, 'table box stays inside the middle column');
+    }
+    if (scenario === 'tightlist') {
+      // Rendered text of tight list items: inline spaces must survive ("see this and that now", not "seethis andthat now").
+      const texts = [...answerText.querySelectorAll('li')].map(item => item.textContent);
+      const expected = ['see this and that now C1', 'run npm i now', 'A B', 'link x here', '中文 粗體 文字', '引用 C1 之後', 'two alpha beta gamma'];
+      check(JSON.stringify(texts) === JSON.stringify(expected), `tight list items keep their inline spaces (${JSON.stringify(texts)})`);
+      check(answerText.querySelector('del') && getComputedStyle(answerText.querySelector('del')).textDecorationLine === 'line-through', 'strikethrough rendered with line-through');
     }
     if (scenario === 'markdown') {
       check(answerText.querySelector('strong') && answerText.querySelector('em'), 'Markdown emphasis renders');

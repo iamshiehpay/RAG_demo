@@ -119,9 +119,12 @@ progress { display: block; width: 100%; height: 8px; margin-top: 8px; accent-col
 .provisional-text { color: var(--slate); font-style: italic; }
 /* No decorative underlines anywhere in an answer: emphasis is weight, links are slate, Citations are chips. */
 .answer-text, .answer-text * { text-decoration: none; }
+.answer-text :is(del, s) { text-decoration: line-through; }
 /* The bundled Noto face has only a regular weight and the browser's synthetic bold does not render for it, so emphasis is a hairline stroke. */
 .answer-text strong { font-weight: 600; font-synthesis: weight; -webkit-text-stroke: .4px currentColor; }
 .answer-text a { color: var(--slate); }
+/* Links are told apart by a small arrow, not an underline. */
+.answer-text a::after { content: '\2197'; font: 11px/1 var(--sans); margin-left: 2px; }
 .answer-text code { font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .inline-citation { display: inline-block; border: 1px solid var(--slate); border-radius: 4px; background: var(--chip); color: var(--slate); font: 11px/1.45 var(--sans); min-width: 24px; padding: 0 5px; margin: 0 1px 0 .3em; text-align: center; vertical-align: .1em; white-space: nowrap; }
 .inline-citation:hover { background: #DCE4F0; color: var(--ink); border-color: var(--ink); }
@@ -206,9 +209,10 @@ textarea:disabled { color: var(--muted); cursor: not-allowed; }
 .composer-help { margin-top: 4px; font: 12px/1.5 var(--sans); }
 .shortcuts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
 .shortcut-list { display: contents; }
-.shortcut { background: transparent; color: var(--slate); border: 1px solid var(--line); border-radius: 6px; padding: 4px 12px; font: 13px/1.5 var(--sans); text-align: left; }
-.shortcut:hover:not(:disabled) { background: var(--chip); border-color: var(--slate); color: var(--ink); }
-.shortcut:disabled { opacity: .5; }
+.shortcut { background: transparent; color: var(--slate); border: 1px solid #8B8576; border-radius: 6px; padding: 4px 12px; font: 13px/1.5 var(--sans); text-align: left; }
+.shortcut:hover:not([aria-disabled=true]) { background: var(--chip); border-color: var(--slate); color: var(--ink); }
+.shortcut[aria-disabled=true] { opacity: .5; cursor: not-allowed; }
+.shortcut[aria-disabled=true]:hover { background: transparent; border-color: #8B8576; color: var(--slate); }
 
 /* Collapsing a side column gives the width to the conversation. */
 @container chat (min-width: 1000px) {

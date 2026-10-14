@@ -92,7 +92,7 @@ export function App() {
   // Preferred source width; the width actually used is always re-clamped to the current window and left column.
   const [sourcePref, setSourcePref] = useState<number | null>(storedSourceWidth);
   const [dragging, setDragging] = useState(false);
-  const dragStart = useRef<{ x: number; width: number; last: number } | null>(null);
+  const dragStart = useRef<{ x: number; width: number; last: number; pointerId: number } | null>(null);
   const viewport = useViewportWidth();
   const narrow = useMediaQuery('(max-width: 900px)');
   const roomy = useMediaQuery('(min-width: 1200px)');
@@ -105,13 +105,15 @@ export function App() {
   function startDrag(event: ReactPointerEvent<HTMLDivElement>) {
     if (event.button !== 0) return;
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragStart.current = { x: event.clientX, width: sourceWidth, last: sourceWidth };
+    dragStart.current = { x: event.clientX, width: sourceWidth, last: sourceWidth, pointerId: event.pointerId };
     setDragging(true);
     event.preventDefault();
   }
   function moveDrag(event: ReactPointerEvent<HTMLDivElement>) {
     const start = dragStart.current;
     if (!start) return;
+    // Another pointer, or no button pressed any more (release was missed): the drag is over.
+    if (event.pointerId !== start.pointerId || event.buttons === 0) { endDrag(); return; }
     start.last = Math.min(bounds.max, Math.max(bounds.min, Math.round(start.width + (start.x - event.clientX))));
     setSourcePref(start.last);
   }
@@ -123,6 +125,12 @@ export function App() {
     setDragging(false);
     storeSourceWidth(start.last);
   }
+  // The separator disappears when the pane collapses or the window crosses the narrow breakpoint:
+  // never leave a half-finished drag behind.
+  const separatorShown = rightOpen && !narrow;
+  useEffect(() => {
+    if (!separatorShown) { dragStart.current = null; setDragging(false); }
+  }, [separatorShown]);
   function separatorKey(event: ReactKeyboardEvent<HTMLDivElement>) {
     const step = event.shiftKey ? 64 : 16;
     const next = event.key === 'ArrowLeft' ? sourceWidth + step : event.key === 'ArrowRight' ? sourceWidth - step
@@ -345,11 +353,12 @@ export function App() {
           documentName={document?.name} onShortcut={text => void ask(text, undefined, true)} />
       </main>
 
-      {rightOpen && !narrow && <div className="pane-resizer" role="separator" aria-orientation="vertical" aria-label="調整來源欄寬度"
-        aria-valuenow={sourceWidth} aria-valuemin={bounds.min} aria-valuemax={bounds.max} tabIndex={0}
+      {separatorShown && <div className="pane-resizer" role="separator" aria-orientation="vertical" aria-label="調整來源欄寬度"
+        aria-controls="source-pane" aria-valuenow={sourceWidth} aria-valuemin={bounds.min} aria-valuemax={bounds.max}
+        aria-valuetext={`來源欄寬 ${sourceWidth} 像素`} tabIndex={0}
         data-dragging={dragging || undefined} onPointerDown={startDrag} onPointerMove={moveDrag}
         onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onKeyDown={separatorKey} />}
-      {rightOpen ? <aside className="pane pane-right" aria-label="來源" data-open="true">
+      {rightOpen ? <aside className="pane pane-right" id="source-pane" aria-label="來源" data-open="true">
         <div className="pane-head"><span className="label">來源</span>
           <button className="icon-button" aria-label="收合來源欄" onClick={closeRight}><PaneIcon side="right" open /></button></div>
         <SourcePane source={source} citationId={sourceCitation} loading={sourceLoading} error={sourceError} headingRef={sourceHeading} />

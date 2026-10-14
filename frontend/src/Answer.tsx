@@ -6,7 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { decodeString } from 'micromark-util-decode-string';
 import { visit } from 'unist-util-visit';
 import type { Root, RootContent as MarkdownContent, PhrasingContent, Parents } from 'mdast';
-import type { Element as HastElement, Root as HastRoot } from 'hast';
+import type { Element as HastElement, ElementContent, Root as HastRoot } from 'hast';
 import type { Citation, UnverifiedSpan } from './events';
 import { pageRange, UnverifiedMark } from './Shared';
 import { ScrollBox } from './SourceContent';
@@ -38,18 +38,31 @@ function sourceValueOffsets(source: string, value: string): number[] | undefined
   return rendered === value.length ? offsets : undefined;
 }
 
-const STRUCTURAL = new Set(['ul', 'ol', 'li', 'blockquote', 'table', 'thead', 'tbody', 'tr']);
+const BLOCK_TAGS = new Set(['p', 'ul', 'ol', 'li', 'pre', 'blockquote', 'table', 'thead', 'tbody', 'tr', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+// Containers whose children are all blocks: any whitespace between them is structural.
+const BLOCK_ONLY = new Set(['ul', 'ol', 'blockquote', 'table', 'thead', 'tbody', 'tr']);
+const isBlock = (node: ElementContent | undefined) => node?.type === 'element' && BLOCK_TAGS.has(node.tagName);
 /** Markdown parsers keep the newline between block children as text. Answer paragraphs and list items preserve
- *  soft line breaks (white-space: pre-wrap), so those structural newlines would otherwise render as blank lines. */
+ *  soft line breaks (white-space: pre-wrap), so those structural newlines would otherwise render as blank lines.
+ *  Only newline-only text beside a block child is dropped: a plain space between inline children
+ *  ("**a** **b**", "`x` `y`", "text [link](u) more") is content and must stay. */
 function trimStructuralWhitespace() {
   return (tree: HastRoot) => {
     visit(tree, 'element', (node: HastElement) => {
-      if (!STRUCTURAL.has(node.tagName)) return;
-      node.children = node.children.filter(child => child.type !== 'text' || child.value.trim() !== '');
+      if (node.tagName !== 'li' && !BLOCK_ONLY.has(node.tagName)) return;
+      const children = node.children;
+      node.children = children.filter((child, i) => {
+        if (child.type !== 'text' || child.value.trim() !== '') return true;
+        if (BLOCK_ONLY.has(node.tagName)) return false;
+        return !(child.value.includes('\n') && (isBlock(children[i - 1]) || isBlock(children[i + 1])));
+      });
       if (node.tagName !== 'li') return;
       node.children.forEach((child, i) => {
         // "item text\n" directly before a nested list: the break belongs to the block boundary.
-        if (child.type === 'text' && node.children[i + 1]?.type === 'element') child.value = child.value.replace(/\s+$/, '');
+        const next = node.children[i + 1];
+        if (child.type === 'text' && next?.type === 'element' && (next.tagName === 'ul' || next.tagName === 'ol')) {
+          child.value = child.value.replace(/\s+$/, '');
+        }
       });
     });
   };

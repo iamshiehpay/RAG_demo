@@ -7,6 +7,11 @@ AB() { agent-browser --session "$SESSION" "$@"; }
 DIR=${0:A:h}; FAILS=0
 OUT=${3:-$DIR/../../docs/verification/ticket-12/followup}; mkdir -p $OUT/checks
 cd $DIR/..
+# ONLY='tight unmount' runs just those sections (names: drag unmount shortcuts drag920 narrow tight checks)
+want() { [[ -z "$ONLY" || " $ONLY " == *" $1 "* ]]; }
+FRAME=$(mktemp -t followup-frame).png
+# A headless page only re-evaluates media queries when a frame is produced; force one after a viewport change.
+frame() { AB screenshot "$FRAME" >/dev/null; sleep .3; }
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1"; FAILS=$((FAILS+1)); }
 # run NAME 'js expression that evaluates to true'
@@ -25,6 +30,7 @@ sepxy() { AB eval '(()=>{const r=document.querySelector("[role=separator]").getB
 INBOUNDS='(()=>{const s=document.querySelector("[role=separator]"),n=+s.getAttribute("aria-valuenow"),lo=+s.getAttribute("aria-valuemin"),hi=+s.getAttribute("aria-valuemax");const p=document.querySelector(".pane-right").getBoundingClientRect().width,c=document.querySelector(".chat").getBoundingClientRect().width;return lo<=n&&n<=hi&&Math.abs(p-n)<=1&&c>=360&&document.documentElement.scrollWidth<=innerWidth})()'
 drag() { local x y; read x y <<< "$(sepxy)"; AB mouse move $x $y >/dev/null; AB mouse down >/dev/null; AB mouse move $(($x+$1)) $y >/dev/null; [[ -n "$2" ]] && return; AB mouse up >/dev/null; }
 
+if want drag; then
 echo "== 1440: separator, drag, keyboard =="
 boot 1440 900; ask q3 "Performance of ablated versions of LightRAG."
 AB eval 'document.querySelector(".inline-citation").click()' >/dev/null; sleep 1
@@ -61,9 +67,9 @@ AB eval 'document.querySelector("[role=separator]").focus()' >/dev/null; AB pres
 run "separator shows a visible focus ring from the keyboard" 'document.activeElement.matches("[role=separator]") && getComputedStyle(document.activeElement).outlineStyle !== "none" && parseFloat(getComputedStyle(document.activeElement).outlineWidth) >= 2'
 AB press End >/dev/null
 # window resize and collapse/expand
-AB set viewport 1000 800 >/dev/null; sleep .5
+AB set viewport 1000 800 >/dev/null; frame
 run "shrinking the window re-clamps the pane (max is now 382)" "$INBOUNDS && +document.querySelector('[role=separator]').getAttribute('aria-valuemax') <= 382"
-AB set viewport 1440 900 >/dev/null; sleep .5; run "growing the window again stays in bounds" "$INBOUNDS"
+AB set viewport 1440 900 >/dev/null; frame; run "growing the window again stays in bounds" "$INBOUNDS"
 AB click 'button[aria-label="收合文件欄"]' >/dev/null; sleep .3; run "collapsing the document column keeps the pane in bounds" "$INBOUNDS"
 AB click 'button[aria-label="展開文件欄"]' >/dev/null; sleep .3; run "expanding it again keeps the pane in bounds" "$INBOUNDS"
 AB click 'button[aria-label="收合來源欄"]' >/dev/null; sleep .3
@@ -75,19 +81,37 @@ AB eval --stdin < review/scripted-events.js >/dev/null; AB upload '#document' ..
 run "an absurd stored width is clamped on load" "$INBOUNDS"
 
 asks() { AB eval 'window.__t09.asks.length' | tr -d '"'; }
+fi
+if want unmount; then
+echo "== separator unmounted mid-drag (crossing the 900px breakpoint) =="
+boot 1440 900; ask q3 "Performance of ablated versions of LightRAG."; AB eval 'document.querySelector(".inline-citation").click()' >/dev/null; sleep 1
+Wd=$(sepw); read X Y <<< "$(sepxy)"; AB mouse move $X $Y >/dev/null; AB mouse down >/dev/null; AB mouse move $(($X-60)) $Y >/dev/null
+run "a drag is in progress (workspace is resizing)" 'document.querySelector(".workspace").classList.contains("resizing")'
+AB set viewport 800 800 >/dev/null; frame
+run "the separator is unmounted at 800px while the button is still held" '!document.querySelector("[role=separator]")'
+AB mouse up >/dev/null; AB set viewport 1440 900 >/dev/null; frame
+run "after returning to 1440 no resizing state is left behind" '!document.querySelector(".workspace").classList.contains("resizing") && !document.querySelector("[role=separator]")?.hasAttribute("data-dragging")'
+AB eval '(() => { if (!document.querySelector(".pane-right")) document.querySelector("button[aria-label=\"展開來源欄\"]")?.click(); return true; })()' >/dev/null; sleep .4
+Wb=$(sepw); read X Y <<< "$(sepxy)"; AB mouse move $(($X+40)) $Y >/dev/null; AB mouse move $(($X-90)) $(($Y+30)) >/dev/null; sleep .3
+run "hovering without a pressed button does not resize the pane (width $Wb)" "$(sepw) === $Wb"
+run "text can be selected again (user-select is not none)" 'getComputedStyle(document.querySelector(".workspace")).userSelect !== "none"'
+
+fi
+if want shortcuts; then
 echo "== 1440: shortcuts and composer =="
 boot 1440 900
-run "all five LightRAG questions are shown and enabled when a Document is Ready" 'document.querySelectorAll(".shortcut").length === 5 && [...document.querySelectorAll(".shortcut")].every(b => !b.disabled)'
+run "all five LightRAG questions are shown and enabled when a Document is Ready" 'document.querySelectorAll(".shortcut").length === 5 && [...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") !== "true")'
 AB eval 'window.__t09.scenario="provisional"' >/dev/null
 AB fill '#question' "我先寫的草稿" >/dev/null
 AB click '.shortcut:nth-child(2)' >/dev/null; sleep 1.2
 run "one click sends exactly one ask with the exact text" 'window.__t09.asks.length === 1 && window.__t09.asks[0] === "Compare LightRAG with GraphRAG."'
 run "the typed draft is kept when a shortcut is used" 'document.querySelector("#question").value === "我先寫的草稿"'
-run "while generating, every shortcut, the textarea and 送出 are disabled" '[...document.querySelectorAll(".shortcut")].every(b => b.disabled) && document.querySelector("#question").disabled && document.querySelector(".send-button").disabled'
+run "while generating, every shortcut, the textarea and 送出 are disabled" '[...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") === "true") && document.querySelector("#question").disabled && document.querySelector(".send-button").disabled'
+run "keyboard focus stays on the activated shortcut while generating" 'document.activeElement === document.querySelector(".shortcut:nth-child(2)") && !document.activeElement.disabled'
 AB eval 'document.querySelectorAll(".shortcut").forEach(b => b.click()); document.querySelector("#question").dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true}))' >/dev/null; sleep .4
 run "clicking disabled shortcuts while generating sends nothing" 'window.__t09.asks.length === 1'
 AB eval 'window.__t09.release()' >/dev/null; sleep 1.2
-run "after the answer is final the shortcuts are enabled again" '[...document.querySelectorAll(".shortcut")].every(b => !b.disabled) && document.querySelector(".turn .provisional-text") === null'
+run "after the answer is final the shortcuts are enabled again" '[...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") !== "true") && document.querySelector(".turn .provisional-text") === null'
 AB eval 'window.__t09.scenario="q3"' >/dev/null
 AB dblclick '.shortcut:nth-child(3)' >/dev/null; sleep 1.5
 run "a real double click sends exactly one more ask" 'window.__t09.asks.length === 2 && window.__t09.asks[1] === "Performance of ablated versions of LightRAG."'
@@ -98,30 +122,36 @@ run "Shift+Enter inserts a newline and sends nothing" 'window.__t09.asks.length 
 AB press Enter >/dev/null; sleep 1.5
 run "Enter sends the typed question through the same path (one ask)" 'window.__t09.asks.length === 4 && window.__t09.asks[3].startsWith("typed A")'
 AB eval 'window.__t09.scenario="error"' >/dev/null; AB click '.shortcut:nth-child(5)' >/dev/null; sleep 1.5
-run "an error answer shows 重試 and the shortcuts are usable again" 'window.__t09.asks.length === 5 && !!document.querySelector(".error-state button") && [...document.querySelectorAll(".shortcut")].every(b => !b.disabled)'
+run "an error answer shows 重試 and the shortcuts are usable again" 'window.__t09.asks.length === 5 && !!document.querySelector(".error-state button") && [...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") !== "true")'
 AB screenshot "$OUT/10-shortcuts-error-state-1440.png" >/dev/null
 
+fi
+if want shortcuts; then
 echo "== shortcuts: no Document, uploading, other Documents =="
 NOUPLOAD=1 boot 1440 900
-run "no Document: five shortcuts shown but disabled, composer disabled" 'document.querySelectorAll(".shortcut").length === 5 && [...document.querySelectorAll(".shortcut")].every(b => b.disabled) && document.querySelector("#question").disabled'
+run "no Document: five shortcuts shown but disabled, composer disabled" 'document.querySelectorAll(".shortcut").length === 5 && [...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") === "true") && document.querySelector("#question").disabled'
 AB screenshot "$OUT/08-shortcuts-disabled-no-document-1440.png" >/dev/null
 AB eval 'window.__t09.uploadHold=true' >/dev/null; AB upload '#document' ../data/lightrag.pdf >/dev/null; sleep 1
-run "while the Document is processing the shortcuts stay disabled" '[...document.querySelectorAll(".shortcut")].every(b => b.disabled) && document.querySelector("#question").disabled'
+run "while the Document is processing the shortcuts stay disabled" '[...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") === "true") && document.querySelector("#question").disabled'
 AB screenshot "$OUT/09-shortcuts-disabled-uploading-1440.png" >/dev/null
 AB eval 'window.__t09.release()' >/dev/null; sleep 1.2
-run "once Ready they are enabled" '[...document.querySelectorAll(".shortcut")].every(b => !b.disabled)'
+run "once Ready they are enabled" '[...document.querySelectorAll(".shortcut")].every(b => b.getAttribute("aria-disabled") !== "true")'
 boot 1440 900 industrial-robotics.pdf
 run "another Document gets only the general question under a neutral label" 'document.querySelectorAll(".shortcut").length === 1 && document.querySelector(".shortcut").textContent === "Summary this document." && document.querySelector("#shortcut-label").textContent === "範例問題" && !document.querySelector(".shortcuts").textContent.includes("LightRAG")'
 AB click '.shortcut' >/dev/null; sleep 1.2
 run "that general shortcut sends once" 'window.__t09.asks.length === 1 && window.__t09.asks[0] === "Summary this document."'
 AB screenshot "$OUT/11-other-document-shortcuts-1440.png" >/dev/null
 
+fi
+if want drag920; then
 echo "== 920: separator =="
 boot 920 800; ask q3 "Performance of ablated versions of LightRAG."; AB eval 'document.querySelector(".inline-citation").click()' >/dev/null; sleep 1
 run "920: separator present and in bounds (max 302)" "$INBOUNDS && +document.querySelector('[role=separator]').getAttribute('aria-valuemax') === 302"
 drag -400; sleep .3; run "920: dragging far left clamps and keeps the conversation >= 360" "$INBOUNDS"
 AB screenshot "$OUT/04-drag-max-920.png" >/dev/null
 
+fi
+if want narrow; then
 echo "== 390: overlay, focus, Escape =="
 boot 390 844; ask q3 "Performance of ablated versions of LightRAG."
 run "390: no separator, shortcut row scrolls inside itself, no page overflow" '!document.querySelector("[role=separator]") && document.documentElement.scrollWidth <= innerWidth && getComputedStyle(document.querySelector(".shortcut-list")).overflowX === "auto"'
@@ -134,15 +164,23 @@ AB eval 'window.__t09.overlayExpected=null; document.activeElement.blur()' >/dev
 for i in 1 2 3 4 5 6; do AB press Tab >/dev/null; done
 run "keyboard focus on a Citation or shortcut shows a visible ring" 'parseFloat(getComputedStyle(document.activeElement).outlineWidth) >= 2 && getComputedStyle(document.activeElement).outlineStyle !== "none"'
 
+fi
+if want tight; then
+echo "== tight list inline spaces =="
+boot 1440 900; ask tightlist "tight list"
+run "tight list items keep their inline spaces in the rendered text" 'JSON.stringify([...document.querySelectorAll(".turn:last-child .answer-text li")].map(li => li.textContent)) === JSON.stringify(["see this and that now C1","run npm i now","A B","link x here","中文 粗體 文字","引用 C1 之後","two alpha beta gamma"])'
+fi
+if want checks; then
 echo "== checks.js across widths and scenarios =="
 for W in 1440 920 390; do
   H=900; [[ $W == 390 ]] && H=844; [[ $W == 920 ]] && H=800
   boot $W $H
-  for SC in replay-cost replay-q3 spacing compare unverified error; do
+  for SC in replay-cost replay-q3 spacing tightlist compare unverified error; do
     ask $SC "scenario $SC"
     AB eval --stdin < review/checks.js > "$OUT/checks/$SC-$W.json" 2>"$OUT/checks/$SC-$W.err" && pass "checks.js $SC @ $W ($(grep -c PASS "$OUT/checks/$SC-$W.json") assertions)" || fail "checks.js $SC @ $W: $(head -c 300 "$OUT/checks/$SC-$W.err")"
     rm -f "$OUT/checks/$SC-$W.err"
     case $SC in replay-cost|replay-q3) AB screenshot "$OUT/replay-${SC#replay-}-$W.png" >/dev/null;; esac
   done
 done
+fi
 echo "FAILS=$FAILS"; exit $((FAILS>0))
