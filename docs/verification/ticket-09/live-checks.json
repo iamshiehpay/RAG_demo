@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "PASS: 16px body text",
+    "PASS: Noto Serif TC family",
+    "PASS: bundled Noto font loaded",
+    "PASS: no page horizontal overflow",
+    "PASS: all font requests local",
+    "PASS: no decorative animation",
+    "PASS: Citation margin notes rendered",
+    "PASS: inline Citation buttons rendered",
+    "PASS: Citations in right margin",
+    "PASS: token meter has fixed 10K scale/tick",
+    "PASS: token bar width matches reserved Context Budget ratio",
+    "PASS: token meter has fixed 10K scale/tick",
+    "PASS: token bar width matches reserved Context Budget ratio",
+    "PASS: thinking collapsed by default"
+  ],
+  "fontBytes": 3300,
+  "viewport": [
+    1280,
+    720
+  ]
+}

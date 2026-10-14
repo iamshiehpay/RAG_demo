@@ -1,6 +1,8 @@
 # 歷史與證據索引
 
-主分支保留目前使用的程式、必要測試、最終評估和精選協作說明。2026-10-14 整理前的完整內容保存在 Git annotated tag：
+使用者於 2026-10-14 要求復原 docs 與 ticket 紀錄：`docs/verification/`、`docs/qa/`、`docs/agents/`、`.scratch/chat-with-document/` 及完整 AI log 已恢復到主分支。ADR 從未移除；現行設計、開發指南與精選入口保留新版。
+
+歷史報告與診斷腳本保留當時內容，可能引用舊程式路徑、未復原的實驗輸出或當時環境；不作為目前版本的啟動入口。需要完整當時環境時，使用下列標籤。2026-10-14 整理前的全部內容仍保存在 Git annotated tag：
 
 ```text
 archive/before-main-cleanup-20261014

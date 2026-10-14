@@ -1,0 +1,25 @@
+{
+  "sha": "3432aa09ee7d9fcbdc9199ff9f0ee685961102e3",
+  "all345source_bytes_unchanged": true,
+  "source_sensitive_batch": "complete",
+  "affected_ui_verdict": "PASS",
+  "cloud_calls_by_qa05": 0,
+  "servers_terminated": [
+    {
+      "port": 8270,
+      "pid": 87230
+    },
+    {
+      "port": 8271,
+      "pid": 77419
+    }
+  ],
+  "server_listener_check": "no8270/8271listeners",
+  "temporary_directories_trashed": [
+    "/private/tmp/nova-qa05-revalidation",
+    "/private/tmp/nova-qa05-batch"
+  ],
+  "browser": "Main11000 sequential exact --session nova-qa05 close: exit0 Browser closed; no --all/shared kill; proof .lat/briefs/nova-qa-browser-cleanup.md",
+  "historical_quality": "English5/8 Chinese6/10 FAIL N1; finalN3 remains11",
+  "remaining_owned_resources": []
+}

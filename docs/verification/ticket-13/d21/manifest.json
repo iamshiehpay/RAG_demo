@@ -1,0 +1,119 @@
+{
+  "baseline": "58586f786bc507c1b8e1d933974e1e4eb7c46bf6",
+  "status": "final evidence-only diagnosis; A9 unresolved; product source restored",
+  "actual_provider_calls": 14,
+  "max_estimated_reserved_tokens": 7741,
+  "max_reported_used_tokens": 5017,
+  "files": [
+    {
+      "path": "docs/verification/ticket-13/d21/assessment.md",
+      "sha256": "1ad63cc5384b5a5299e0d3e9cac7c0247d5020f9c55450872ff66ae2836c228d",
+      "bytes": 5295
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/diagnosis-brief.md",
+      "sha256": "6e46a9aae50304dbd9e4ca6af92baca79933716412b24fc574b3ee54d5d51f87",
+      "bytes": 2856
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/failed-answer-candidate.patch",
+      "sha256": "af81e79b3de1132f6db8aa9fadaf1a7d3c1d012c34319fafbee3eee1b26da315",
+      "bytes": 4825
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/failed-paragraph-candidate.patch",
+      "sha256": "899c1de4ee13deaf805239f86e5dc273f2111cfc0890431a9bcf8ac581c3e03b",
+      "bytes": 3998
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/feedback.py",
+      "sha256": "cbeb7f5db450a7c1941ba57a3e6780f790ce5eb99c194c051deb293c6e6f203c",
+      "bytes": 8691
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/final-report.md",
+      "sha256": "fcf9ae314b9334c2e415e4db11470749550e3a09891425dee41b88255f6b61d3",
+      "bytes": 5197
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/history-counterfactual.json",
+      "sha256": "5ba0a845db2bf027104447146be8e35e8929a62a82febf43f0e541828c54998d",
+      "bytes": 7399
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/hypotheses.md",
+      "sha256": "765d3a20f4b84c24f2f53b9806687da615f4e3c0183488b6ac9b8c3e54f8ac3f",
+      "bytes": 2742
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/independent-diagnosis.md",
+      "sha256": "be7ad9c92228181f5854c39b61b4c488d7a4d06ffb01ce4dde3c23b7c67956f0",
+      "bytes": 3464
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/answer-scope-standalone.json",
+      "sha256": "6893af4c74b039fb82e14dcaa366b5a322e55a36fce5eb413d735d9e25a01109",
+      "bytes": 317860
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/baseline-history.json",
+      "sha256": "618a3d6123096555463ff6abde085f2a39354481797d58a48a85b13fc2148b29",
+      "bytes": 343180
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/baseline-standalone.json",
+      "sha256": "02f2148d0e06cb2a9b5d0ebe457af19bbd135e8256a7a218a7eb2d0fa374ab39",
+      "bytes": 328868
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/conditional-caveat-standalone.json",
+      "sha256": "8c8ab92e9fe1e6d39a513c8ef4b2b739f8b4a00ec655d6e760cb487944e6a01c",
+      "bytes": 382245
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/controlled-paragraph.json",
+      "sha256": "22b9b033d2e7abf785bdf222f55528395ad7ec37840fb458122433a2362013a6",
+      "bytes": 318632
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/controlled-partial-evidence.json",
+      "sha256": "da914bc6fb9234ef44c894849e40606bbf7de33226e441447774361aed3b9dd4",
+      "bytes": 393230
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/controlled-scope.json",
+      "sha256": "61c8bc01621000a92c7f3a474d5e8c28e9d1e544647790015a7ffed3425b1832",
+      "bytes": 334167
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/controlled-subject.json",
+      "sha256": "3efa87bd74ad78d274e87196f517170d160b8ae6ce140d8c600d89c20e3c1070",
+      "bytes": 390076
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/controlled-tail-scope.json",
+      "sha256": "8d49725b232bb92f30b859ec53092b17cf87b28b8bffec051a97d9393d0b404d",
+      "bytes": 338792
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/preflight.json",
+      "sha256": "466534f94f294f15d2a0b503164f52b9790185129985080ad8da6ded4fc4967c",
+      "bytes": 1778
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/replay-baseline-strict.json",
+      "sha256": "429dc33963ce6a973b46abca5c0c4263fbac6b441a8c763cb91a2570eacf9d5d",
+      "bytes": 328869
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/live/replay-baseline.json",
+      "sha256": "741e1d2dce95fa2fa63d33085e5ce708f27f76fbe28d41d9f12a1d8acc68267d",
+      "bytes": 328870
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/test_paragraph_evidence.py",
+      "sha256": "9d3696edcd398884124916359f4d004406a8d0e9933712436a26bcd2612f49ba",
+      "bytes": 2374
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+INFO:     Started server process [43808]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8190 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54077 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54077 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53526 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54077 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53526 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55844 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52053 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54216 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65367 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53526 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54077 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54077 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:54077 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:54077 - "GET /api/documents/f5f4c70d56da4db3b78c76f1aef74456/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54077 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54077 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51367 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50658 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:50658 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:50658 - "GET /api/documents/2945b7d742784743be0bf81ac020bc54/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50658 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50658 - "GET /api/sources/4799555e24b64924a0e4ff375a0e1052%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50658 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50658 - "GET /api/sources/4799555e24b64924a0e4ff375a0e1052-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54895 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60688 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60688 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60688 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:60688 - "GET /api/documents/8ff07ea077ef4a40b57c36493c7372b9/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60688 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60688 - "GET /api/sources/4799555e24b64924a0e4ff375a0e1052%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60688 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60688 - "GET /api/sources/4799555e24b64924a0e4ff375a0e1052-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65416 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59798 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65416 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65416 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59798 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61275 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62027 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64415 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65416 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59798 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62759 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:62759 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60439 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60439 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:62759 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60439 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61471 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:63455 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:54339 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:62759 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:64382 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60439 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60439 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:60439 - "GET /api/documents/592fe28e024d48e98aefcf8d827f4b54/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60439 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60439 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64382 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60439 - "GET /api/sources/4799555e24b64924a0e4ff375a0e1052%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60439 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60439 - "GET /api/sources/4799555e24b64924a0e4ff375a0e1052-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54433 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60197 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54433 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58081 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54433 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60197 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55609 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52719 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60129 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54433 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58081 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58081 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:54433 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58081 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60129 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61956 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:51385 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51385 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59747 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59747 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51385 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60040 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56959 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65006 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57225 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51385 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56959 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51385 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:56959 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51385 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65006 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59995 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53092 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56774 - "GET /assets/index-DqdgCMNN.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /assets/index-DK3xdWks.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60839 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51493 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54192 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56774 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58195 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60839 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53092 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53092 - "GET /api/documents/283a059117e544b6bd5b99c91b716227/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51380 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /api/sources/32640a584d7842448a0312b0997ea20a%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /api/sources/32640a584d7842448a0312b0997ea20a-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53092 - "GET /api/documents/c722fa75a9d9498a85f483d4741b8547/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /api/sources/e226d612818643ebb17c3249d0459cf4-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53092 - "GET /api/documents/5b06faecbe3148408516236b3a5a5d68/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /api/sources/fcd9f10647e441a7b628c71c19523aff%3Achunk-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52023 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62523 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62797 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:52479 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52479 - "GET /api/documents/1df34d9345694d74a3b318b03032c4f7/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61212 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61212 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /api/sources/9f7dfc14595c4030a973a9a2d5fbfe94%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /api/sources/9f7dfc14595c4030a973a9a2d5fbfe94-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52479 - "GET /api/documents/e888ba88aaa747f5a2a2fc4982deb2a0/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /api/sources/53d9e47256f6440f975b527fd3b0ba87-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52479 - "GET /api/documents/1c25e3d3040a44c0b4fc6266cb88452b/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "GET /api/sources/ee5faff2de31451c8b9a9fd9637425a0%3Achunk-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53033 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53033 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59962 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53033 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59962 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51738 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61999 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62855 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49965 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59962 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53033 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53033 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59962 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49965 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53033 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57498 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:51316 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51316 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51316 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62864 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55008 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62055 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50860 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51316 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59027 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59027 - "GET /api/documents/64ce7816c5e34cdbb2846d3160dafe80/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62160 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62160 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /api/sources/ac808ea5b32546b196cc7c3af84c78e7%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59027 - "GET /api/documents/ea3feee8058c4de3933ff4e203b2c2f8/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /api/sources/bb28f21132c84966a438e71ee94c7fee-summary-section-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59027 - "GET /api/documents/5b6996f021b3450abafd23c64713fb73/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /api/sources/74ecc2c3044c4dd094574b3777c7e5b7-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59027 - "GET /api/documents/4125d032527644ddacb2e5d91d59d9f2/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /api/sources/917533b9d6124320a84299e99c540834%3Achunk-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59990 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59990 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59907 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59990 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59907 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61527 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54888 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63065 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60547 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59907 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59990 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59990 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59990 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59907 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60547 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59379 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52170 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59379 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52170 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59379 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54555 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58799 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50985 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57077 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52170 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54555 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54555 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:52170 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54555 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57077 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61720 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52205 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61720 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61720 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52205 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63945 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50652 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58700 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59747 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63945 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61720 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63945 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:63945 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61720 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50652 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65015 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64178 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65015 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64178 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65015 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64168 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51797 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62438 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51883 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64178 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65015 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65015 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:65015 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62438 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64178 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55942 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:63034 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50287 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63034 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50287 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63034 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53220 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54752 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54337 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50044 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50287 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63034 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63034 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:50044 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63034 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50287 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63285 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64931 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60703 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64931 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64931 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60703 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52643 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55431 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58934 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60703 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55431 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55431 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60703 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59755 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:55431 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:64931 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:52643 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58934 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60703 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59755 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59755 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59755 - "GET /api/documents/dc062a0e3f0d42fe917a4ecaec988482/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50085 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50085 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "GET /api/sources/0b0fc30787ee47f5945511abd84e9c62%3Achunk-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59755 - "GET /api/documents/53ab5e23ad3f484dae14b177a64da453/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "GET /api/sources/232507f4dba54cb983997edc671034c9-summary-section-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59755 - "GET /api/documents/18a55bebb647494d8f1b6ca7262c24c1/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "GET /api/sources/de423843b8c34c3bb0d7893e50853a8a-summary-group-1-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/documents HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59755 - "GET /api/documents/302024b050f2406887c225a98f326267/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "POST /api/ask HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59755 - "GET /api/sources/4ec8f8125e0f420f88e562e8e532a74a%3Achunk-1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61012 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61511 - "GET /assets/index-DRyMGEGM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61012 - "GET /assets/index-DVcYlthj.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61012 - "GET /assets/noto-serif-tc-122-400-normal-BI0QEcX6.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61511 - "GET /assets/noto-serif-tc-123-400-normal-BdN1eE4J.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51846 - "GET /assets/noto-serif-tc-121-400-normal-BXiQh_E5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50472 - "GET /assets/noto-serif-tc-latin-400-normal-CtL_zBdx.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54294 - "GET /assets/noto-serif-tc-119-400-normal-BxHt5J4n.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53218 - "GET /assets/noto-serif-tc-113-400-normal-BgLXcDn1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61012 - "GET /assets/noto-serif-tc-120-400-normal-Y63pX7m5.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61511 - "GET /assets/noto-serif-tc-117-400-normal-Ev2AyU2M.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61012 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61511 - "GET /assets/noto-serif-tc-118-400-normal-DWFGy2QD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61012 - "GET /assets/noto-serif-tc-116-400-normal-r4KaBAcN.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53218 - "GET /assets/noto-serif-tc-115-400-normal-CvKsHViD.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54624 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [43808]

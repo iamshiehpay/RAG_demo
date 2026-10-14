@@ -1,0 +1,9 @@
+== separator unmounted mid-drag (crossing the 900px breakpoint) ==
+PASS: a drag is in progress (workspace is resizing)
+PASS: the separator is unmounted at 800px while the button is still held
+FAIL: after returning to 1440 no resizing state is left behind (got: false)
+PASS: hovering without a pressed button does not resize the pane (width 460)
+FAIL: text can be selected again (user-select is not none) (got: false)
+== tight list inline spaces ==
+FAIL: tight list items keep their inline spaces in the rendered text (got: false)
+FAILS=3

@@ -1,0 +1,142 @@
+[
+  {
+    "name": "processing disables composer with visible progress",
+    "pass": false
+  },
+  {
+    "name": "six ordinary turns overview visible",
+    "pass": true
+  },
+  {
+    "name": "thinking collapsed by default",
+    "pass": true
+  },
+  {
+    "name": "thinking expands",
+    "pass": true
+  },
+  {
+    "name": "fixed10K meter and proportional near-budget bar",
+    "pass": true
+  },
+  {
+    "name": "provisional Citation clickable before final",
+    "pass": true
+  },
+  {
+    "name": "source full page range",
+    "pass": true
+  },
+  {
+    "name": "modal focus contained",
+    "pass": false
+  },
+  {
+    "name": "Escape returns focus",
+    "pass": true
+  },
+  {
+    "name": "final removes provisional style",
+    "pass": true
+  },
+  {
+    "name": "retry clears tentative first answer",
+    "pass": true
+  },
+  {
+    "name": "retry final replaces initial text",
+    "pass": true
+  },
+  {
+    "name": "double length failure clears answer",
+    "pass": true
+  },
+  {
+    "name": "visible retry recovers",
+    "pass": true
+  },
+  {
+    "name": "rejected input retained",
+    "pass": true
+  },
+  {
+    "name": "Markdown safe without executable script/unsafe scheme",
+    "pass": true
+  },
+  {
+    "name": "absent thinking no empty panel",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence LF",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence CRLF",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence CR",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence mixed",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence emoji",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence quote",
+    "pass": true
+  },
+  {
+    "name": "Unverified correct sentence escape",
+    "pass": true
+  },
+  {
+    "name": "D01 uncited/refusal sentences unmarked",
+    "pass": true
+  },
+  {
+    "name": "section source range and coverage",
+    "pass": true
+  },
+  {
+    "name": "group source range and coverage",
+    "pass": true
+  },
+  {
+    "name": "document source range and coverage",
+    "pass": true
+  },
+  {
+    "name": "uncertain table warns and preserves raw source",
+    "pass": true
+  },
+  {
+    "name": "readable no overflow 1440",
+    "pass": true
+  },
+  {
+    "name": "readable no overflow 1280",
+    "pass": true
+  },
+  {
+    "name": "readable no overflow 390",
+    "pass": true
+  },
+  {
+    "name": "late source cannot reopen closed dialog",
+    "pass": true
+  },
+  {
+    "name": "restart404 clears stale states",
+    "pass": false
+  },
+  {
+    "name": "restart reupload recovers",
+    "pass": true
+  }
+]

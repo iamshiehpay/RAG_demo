@@ -1,0 +1,164 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - heading "Chat with Document" [level=1, ref=e5]
+      - paragraph
+        - StaticText "Ask a question. Follow the evidence back to your Document."
+    - region "Upload Document" [ref=e2]
+      - LabelText
+        - StaticText "PDF Document"
+      - button "PDF Document" [ref=e6]: No file chosen
+      - status
+        - paragraph
+          - StaticText "lightrag.pdf · Ready"
+    - region "Conversation" [ref=e3]
+      - article
+        - heading "Performance of ablated versions of LightRAG." [level=2, ref=e12]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The source table reports the measured results. "
+          - button "View C9, page 8, 4.3 ABLATION STUDIES (RQ2)" [ref=e13]
+            - StaticText "[C9]"
+        - complementary "Citation notes"
+          - button "[C9] · p.8 4.3 ABLATION STUDIES (RQ2)" [ref=e14]
+            - StaticText "[C9] · p.8"
+            - StaticText "4.3 ABLATION STUDIES (RQ2)"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+    - region "Citation source" [ref=e4]
+      - heading "Source · p.8 · 4.3 ABLATION STUDIES (RQ2)" [level=2, ref=e7]
+        - StaticText "Source · p.8 · 4.3 ABLATION STUDIES (RQ2)"
+      - button "Close source" [ref=e8]
+      - paragraph
+        - StaticText "每格是 NaiveRAG 勝率 / 變體勝率 (NaiveRAG win rate / variant win rate, %). These are separate comparisons against the named baseline, not direct wins against the full system. Unmodified system row: LightRAG (the named row without a '-' variant label). Include that row when comparing systems on the same metric and dataset."
+      - region "Table 2 source table" [ref=e9] focusable [tabindex]
+        - table "Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference."
+          - caption
+            - StaticText "Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference."
+          - rowgroup
+            - row
+              - columnheader "Comparison" [ref=e111]
+              - columnheader "Metric" [ref=e112]
+              - columnheader "Agriculture (baseline / variant win rate %)" [ref=e113]
+              - columnheader "CS (baseline / variant win rate %)" [ref=e114]
+              - columnheader "Legal (baseline / variant win rate %)" [ref=e115]
+              - columnheader "Mix (baseline / variant win rate %)" [ref=e116]
+          - row
+            - rowheader "NaiveRAG / LightRAG" [ref=e15]
+            - cell "Comprehensiveness" [ref=e16]
+            - cell "32.4% / 67.6%" [ref=e17]
+            - cell "38.4% / 61.6%" [ref=e18]
+            - cell "16.4% / 83.6%" [ref=e19]
+            - cell "38.8% / 61.2%" [ref=e20]
+          - row
+            - rowheader "NaiveRAG / LightRAG" [ref=e21]
+            - cell "Diversity" [ref=e22]
+            - cell "23.6% / 76.4%" [ref=e23]
+            - cell "38.0% / 62.0%" [ref=e24]
+            - cell "13.6% / 86.4%" [ref=e25]
+            - cell "32.4% / 67.6%" [ref=e26]
+          - row
+            - rowheader "NaiveRAG / LightRAG" [ref=e27]
+            - cell "Empowerment" [ref=e28]
+            - cell "32.4% / 67.6%" [ref=e29]
+            - cell "38.8% / 61.2%" [ref=e30]
+            - cell "16.4% / 83.6%" [ref=e31]
+            - cell "42.8% / 57.2%" [ref=e32]
+          - row
+            - rowheader "NaiveRAG / LightRAG" [ref=e33]
+            - cell "Overall" [ref=e34]
+            - cell "32.4% / 67.6%" [ref=e35]
+            - cell "38.8% / 61.2%" [ref=e36]
+            - cell "15.2% / 84.8%" [ref=e37]
+            - cell "40.0% / 60.0%" [ref=e38]
+          - row
+            - rowheader "NaiveRAG / -High" [ref=e39]
+            - cell "Comprehensiveness" [ref=e40]
+            - cell "34.8% / 65.2%" [ref=e41]
+            - cell "42.8% / 57.2%" [ref=e42]
+            - cell "23.6% / 76.4%" [ref=e43]
+            - cell "40.4% / 59.6%" [ref=e44]
+          - row
+            - rowheader "NaiveRAG / -High" [ref=e45]
+            - cell "Diversity" [ref=e46]
+            - cell "27.2% / 72.8%" [ref=e47]
+            - cell "36.8% / 63.2%" [ref=e48]
+            - cell "16.8% / 83.2%" [ref=e49]
+            - cell "36.0% / 64.0%" [ref=e50]
+          - row
+            - rowheader "NaiveRAG / -High" [ref=e51]
+            - cell "Empowerment" [ref=e52]
+            - cell "36.0% / 64.0%" [ref=e53]
+            - cell "42.4% / 57.6%" [ref=e54]
+            - cell "22.8% / 77.2%" [ref=e55]
+            - cell "47.6% / 52.4%" [ref=e56]
+          - row
+            - rowheader "NaiveRAG / -High" [ref=e57]
+            - cell "Overall" [ref=e58]
+            - cell "35.2% / 64.8%" [ref=e59]
+            - cell "44.0% / 56.0%" [ref=e60]
+            - cell "22.0% / 78.0%" [ref=e61]
+            - cell "42.4% / 57.6%" [ref=e62]
+          - row
+            - rowheader "NaiveRAG / -Low" [ref=e63]
+            - cell "Comprehensiveness" [ref=e64]
+            - cell "36.0% / 64.0%" [ref=e65]
+            - cell "43.2% / 56.8%" [ref=e66]
+            - cell "19.2% / 80.8%" [ref=e67]
+            - cell "36.0% / 64.0%" [ref=e68]
+          - row
+            - rowheader "NaiveRAG / -Low" [ref=e69]
+            - cell "Diversity" [ref=e70]
+            - cell "28.0% / 72.0%" [ref=e71]
+            - cell "39.6% / 60.4%" [ref=e72]
+            - cell "13.6% / 86.4%" [ref=e73]
+            - cell "33.2% / 66.8%" [ref=e74]
+          - row
+            - rowheader "NaiveRAG / -Low" [ref=e75]
+            - cell "Empowerment" [ref=e76]
+            - cell "34.8% / 65.2%" [ref=e77]
+            - cell "42.8% / 57.2%" [ref=e78]
+            - cell "16.4% / 83.6%" [ref=e79]
+            - cell "35.2% / 64.8%" [ref=e80]
+          - row
+            - rowheader "NaiveRAG / -Low" [ref=e81]
+            - cell "Overall" [ref=e82]
+            - cell "34.8% / 65.2%" [ref=e83]
+            - cell "43.6% / 56.4%" [ref=e84]
+            - cell "18.8% / 81.2%" [ref=e85]
+            - cell "35.2% / 64.8%" [ref=e86]
+          - row
+            - rowheader "NaiveRAG / -Origin" [ref=e87]
+            - cell "Comprehensiveness" [ref=e88]
+            - cell "24.8% / 75.2%" [ref=e89]
+            - cell "39.2% / 60.8%" [ref=e90]
+            - cell "16.4% / 83.6%" [ref=e91]
+            - cell "44.4% / 55.6%" [ref=e92]
+          - row
+            - rowheader "NaiveRAG / -Origin" [ref=e93]
+            - cell "Diversity" [ref=e94]
+            - cell "26.4% / 73.6%" [ref=e95]
+            - cell "44.8% / 55.2%" [ref=e96]
+            - cell "14.4% / 85.6%" [ref=e97]
+            - cell "25.6% / 74.4%" [ref=e98]
+          - row
+            - rowheader "NaiveRAG / -Origin" [ref=e99]
+            - cell "Empowerment" [ref=e100]
+            - cell "32.0% / 68.0%" [ref=e101]
+            - cell "43.2% / 56.8%" [ref=e102]
+            - cell "17.2% / 82.8%" [ref=e103]
+            - cell "45.2% / 54.8%" [ref=e104]
+          - row
+            - rowheader "NaiveRAG / -Origin" [ref=e105]
+            - cell "Overall" [ref=e106]
+            - cell "25.6% / 74.4%" [ref=e107]
+            - cell "39.2% / 60.8%" [ref=e108]
+            - cell "15.6% / 84.4%" [ref=e109]
+            - cell "44.4% / 55.6%" [ref=e110]
+    - form
+      - LabelText
+        - StaticText "Question"
+      - textbox "Question" [ref=e10]
+      - button "Ask" [disabled, ref=e11]

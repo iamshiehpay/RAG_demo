@@ -1,0 +1,42 @@
+[
+  {
+    "session_id": "01a138a1-abbf-7691-a186-fe1caba6003e",
+    "transcript": "/Users/shiehpay/.codex/sessions/2026/10/14/rollout-2026-10-14T12-18-01-01a138a1-abbf-7691-a186-fe1caba6003e.jsonl",
+    "timestamp": "2026-10-14T04:18:05.299Z",
+    "turn_id": "01a138a1-acc1-7292-bf60-4e21b8afd028",
+    "model": "gpt-6-luna",
+    "effort": "max",
+    "cwd": "/Users/shiehpay/Desktop/resume/rag/.worktrees/14-langgraph-ask",
+    "approval_policy": "on-request",
+    "approvals_reviewer": "auto_review",
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/Users/shiehpay/.hcom"
+      ],
+      "network_access": true,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    }
+  },
+  {
+    "session_id": "01a138a1-abbf-7b33-9ba2-f1770bf555a6",
+    "transcript": "/Users/shiehpay/.codex/sessions/2026/10/14/rollout-2026-10-14T12-18-01-01a138a1-abbf-7b33-9ba2-f1770bf555a6.jsonl",
+    "timestamp": "2026-10-14T04:18:04.895Z",
+    "turn_id": "01a138a1-acc1-7993-b89f-3e1ab8a37803",
+    "model": "gpt-6-luna",
+    "effort": "max",
+    "cwd": "/Users/shiehpay/Desktop/resume/rag/.worktrees/14-langgraph-ask",
+    "approval_policy": "on-request",
+    "approvals_reviewer": "auto_review",
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/Users/shiehpay/.hcom"
+      ],
+      "network_access": true,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    }
+  }
+]

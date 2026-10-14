@@ -1,0 +1,23 @@
+only -High 64.8 (Mix)                                   passed=False | Numeric evidence lacks the required variant/dataset/metric/value context
+Agri -High 64.8 vs LightRAG 67.6 for -Origin fact       passed=False | Numeric evidence lacks the required variant/dataset/metric/value context
+correct Mix -Low                                        passed=True | Required claim supported by verbatim evidence
+wrong direction text (-Low 60.0, LightRAG 64.8)         passed=False | Numeric variant/value do not co-occur in the same clause or row
+wrong dataset (CS)                                      passed=False | Numeric evidence lacks the required variant/dataset/metric/value context
+no metric                                               passed=False | Numeric evidence lacks the required variant/dataset/metric/value context
+invented evidence                                       passed=False | Judge evidence is not a nonempty verbatim excerpt
+cost: GraphRAG uses about 610 × 1,000 tokens wherea     passed=True | Required claim supported by verbatim evidence
+cost: GraphRAG needs 610,000 tokens; LightRAG <100      passed=True | Required claim supported by verbatim evidence
+cost: GraphRAG 約 610 × 1,000 tokens；LightRAG 少於 100     passed=True | Required claim supported by verbatim evidence
+cost: GraphRAG about 610k tokens, LightRAG under 10     passed=False | Numeric evidence lacks the required variant/dataset/metric/value context
+cost: GraphRAG 約 61 萬 tokens；LightRAG < 100 tokens，     passed=False | Numeric evidence lacks the required variant/dataset/metric/value context
+forbidden: Full LightRAG is best on every dataset a     passed=False | Forbidden claim asserted
+forbidden: It is false that full LightRAG is best o     passed=True | No asserted forbidden claim
+forbidden: LightRAG is not best everywhere.             passed=True | No asserted forbidden claim
+contains rejected 64.8 contains cannot check numbers; use judge with numeric context
+contains rejected 67.6% contains cannot check numbers; use judge with numeric context
+contains rejected Table 2 contains cannot check numbers; use judge with numeric context
+{'zh': '文件中未提及', 'en': 'Not mentioned in the document.'}
+refusal zh: 文件中未提及                                      passed=True | Fixed reply matched
+refusal zh: 文件中未提及。                                     passed=True | Fixed reply matched
+refusal zh: Not mentioned in the document.              passed=False | Answer differs from the fixed reply or adds unsupported content
+refusal zh: 文件中未提及 分數約為 90%                             passed=False | Answer differs from the fixed reply or adds unsupported content

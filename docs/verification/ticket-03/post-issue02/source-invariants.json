@@ -1,0 +1,50 @@
+{
+  "source_test_head": "d7d77e821e3bda67a6853076b823c93a5d9635ad",
+  "integrated_base": "e59e0960af0fe5a2cd315148fb173ebcbeff7d34",
+  "pre_rebase": "1d210237fbcb3ea0b75234c27933e39d69ce55b4",
+  "issue02_parser_definitions_unchanged": {
+    "_Line": true,
+    "_ordered_blocks": true,
+    "_figure_regions": true,
+    "_lines": true,
+    "_aligned_style": true,
+    "_measured_flow_width": true,
+    "_is_figure_label": true,
+    "_contains_prose": true,
+    "_opens_numbered_section": true,
+    "_heading": true,
+    "_section_title": true,
+    "_body_continuation_target": true,
+    "_continues_on_next_page": true,
+    "_wraps_line": true
+  },
+  "shared_files_unchanged_from_pre_rebase": {
+    "src/chat_document/application.py": true,
+    "src/chat_document/cache.py": true,
+    "src/chat_document/events.py": true,
+    "frontend/dist/assets/index-C29a4zR-.js": true,
+    "frontend/dist/assets/index-CwqF2Lty.css": true,
+    "frontend/dist/index.html": true,
+    "frontend/index.html": true,
+    "frontend/package-lock.json": true,
+    "frontend/package.json": true,
+    "frontend/scripts/test_source_content.mjs": true,
+    "frontend/src/Answer.tsx": true,
+    "frontend/src/App.tsx": true,
+    "frontend/src/Shared.tsx": true,
+    "frontend/src/SourceContent.tsx": true,
+    "frontend/src/Trace.tsx": true,
+    "frontend/src/events.ts": true,
+    "frontend/src/main.tsx": true,
+    "frontend/src/sse.ts": true,
+    "frontend/src/styles.css": true,
+    "frontend/tsconfig.json": true,
+    "frontend/vite.config.ts": true
+  },
+  "source_sha256": {
+    "src/chat_document/pdf_parser.py": "c9027c23ceb1672483e610e5c5936f3531f4ebb464d4815d103a0339fbae8ace",
+    "src/chat_document/tables.py": "672c6a0ad79ec7c4aea3bdbf8c711aa99a5286ea030b055b5ef96f0be0da0657",
+    "src/chat_document/chunker.py": "360336162cc20b46f2f2a5285870c2646fe65a7ba9e5efb846ec4c2d70e914ba",
+    "tests/integration/test_tables.py": "2114950f3be7a61deec7973c653cc916424a74fef42e0f6ebdf832ca8b1cd5e4"
+  }
+}

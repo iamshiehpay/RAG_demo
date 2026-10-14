@@ -1,0 +1,1 @@
+{"status":"Answer complete","statusClass":"status","answer":"Recovered after answer failure [C1].","answerClass":"answer-text","fontStyle":"normal","unverifiedSpans":[],"citationButtons":["[C1] | View C1, page 2, Virtual Section 2"],"error":null,"retryButton":false,"invalidCitations":"Invalid Citations: 0","traceSummary":"Trace · 2 LLM calls","turns":7}

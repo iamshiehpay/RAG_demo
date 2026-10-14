@@ -1,0 +1,378 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- /Users/shiehpay/Desktop/resume/rag/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/shiehpay/Desktop/resume/rag/.worktrees/10-second-document
+configfile: pyproject.toml
+plugins: asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 305 items / 3 deselected / 302 selected
+
+tests/integration/test_eval_allowed_routes.py::test_declared_route_set_accepts_only_valid_router_members[Lookup] PASSED [  0%]
+tests/integration/test_eval_allowed_routes.py::test_declared_route_set_accepts_only_valid_router_members[Synthesis] PASSED [  0%]
+tests/integration/test_eval_allowed_routes.py::test_declared_route_set_accepts_only_valid_router_members[Global] PASSED [  0%]
+tests/integration/test_eval_allowed_routes.py::test_declared_route_set_accepts_only_valid_router_members[invalid] PASSED [  1%]
+tests/integration/test_eval_runner.py::test_operations_report_all_calls_and_three_run_fact_rates PASSED [  1%]
+tests/integration/test_eval_runner.py::test_failed_ask_records_failed_call_without_judging_provisional_answer PASSED [  1%]
+tests/integration/test_eval_runner.py::test_upload_error_still_reports_every_expected_fact PASSED [  2%]
+tests/integration/test_eval_runner.py::test_ask_latency_excludes_judge_latency PASSED [  2%]
+tests/integration/test_eval_runner.py::test_q3_requires_a_used_citation_to_a_table_source PASSED [  2%]
+tests/integration/test_eval_runner.py::test_canonical_router_cases_convert_history_and_isolate_independent_questions PASSED [  3%]
+tests/integration/test_event_types.py::test_frontend_types_match_backend_event_models PASSED [  3%]
+tests/integration/test_failure_handling.py::test_length_with_content_retries_low_once_and_finalizes_only_replacement PASSED [  3%]
+tests/integration/test_failure_handling.py::test_two_lengths_end_in_error_without_final_or_successful_history PASSED [  4%]
+tests/integration/test_failure_handling.py::test_failed_low_retry_never_finalizes_first_or_second_attempt[] PASSED [  4%]
+tests/integration/test_failure_handling.py::test_failed_low_retry_never_finalizes_first_or_second_attempt[second1] PASSED [  4%]
+tests/integration/test_failure_handling.py::test_failed_low_retry_never_finalizes_first_or_second_attempt[second2] PASSED [  5%]
+tests/integration/test_failure_handling.py::test_invalid_citation_flags_only_its_sentence_and_counts_in_trace PASSED [  5%]
+tests/integration/test_failure_handling.py::test_thinking_streams_before_answer_and_preserves_split_citation PASSED [  5%]
+tests/integration/test_failure_handling.py::test_unverified_prose_stays_plain_and_only_invalid_sentence_has_structured_span PASSED [  6%]
+tests/integration/test_failure_handling.py::test_unverified_span_preserves_abbreviated_sentence_and_collapses_removed_id_spaces[vs.] PASSED [  6%]
+tests/integration/test_failure_handling.py::test_unverified_span_preserves_abbreviated_sentence_and_collapses_removed_id_spaces[e.g.] PASSED [  6%]
+tests/integration/test_failure_handling.py::test_unverified_span_preserves_abbreviated_sentence_and_collapses_removed_id_spaces[i.e.] PASSED [  7%]
+tests/integration/test_failure_handling.py::test_unverified_span_preserves_abbreviated_sentence_and_collapses_removed_id_spaces[et al.] PASSED [  7%]
+tests/integration/test_failure_handling.py::test_citations_after_punctuation_flag_the_preceding_sentence_only PASSED [  7%]
+tests/integration/test_failure_handling.py::test_space_and_range_citations_normalize_across_frames[[C1 C3]] PASSED [  8%]
+tests/integration/test_failure_handling.py::test_space_and_range_citations_normalize_across_frames[[C1\u2013C3]] PASSED [  8%]
+tests/integration/test_failure_handling.py::test_space_and_range_citations_normalize_across_frames[\u3010C1-C3\u3011] PASSED [  8%]
+tests/integration/test_failure_handling.py::test_space_and_range_citations_normalize_across_frames[[C1\u2014C3]] PASSED [  9%]
+tests/integration/test_failure_handling.py::test_invalid_range_is_not_expanded_into_valid_sources[[C1\u2013C3]] PASSED [  9%]
+tests/integration/test_failure_handling.py::test_invalid_range_is_not_expanded_into_valid_sources[[C1\u2013C999999999]] PASSED [  9%]
+tests/integration/test_failure_handling.py::test_invalid_range_is_not_expanded_into_valid_sources[[C3\u2013C1]] PASSED [ 10%]
+tests/integration/test_failure_handling.py::test_invalid_range_is_not_expanded_into_valid_sources[[C1\u2013S1]] PASSED [ 10%]
+tests/integration/test_failure_handling.py::test_synthesis_extraction_range_uses_each_batch_citation_map PASSED [ 10%]
+tests/integration/test_failure_handling.py::test_transport_failure_stops_downstream_work_and_same_question_can_retry[ConnectError-router] PASSED [ 11%]
+tests/integration/test_failure_handling.py::test_transport_failure_stops_downstream_work_and_same_question_can_retry[ConnectError-embedding] PASSED [ 11%]
+tests/integration/test_failure_handling.py::test_transport_failure_stops_downstream_work_and_same_question_can_retry[ConnectError-answer] PASSED [ 11%]
+tests/integration/test_failure_handling.py::test_transport_failure_stops_downstream_work_and_same_question_can_retry[ReadTimeout-router] PASSED [ 12%]
+tests/integration/test_failure_handling.py::test_transport_failure_stops_downstream_work_and_same_question_can_retry[ReadTimeout-embedding] PASSED [ 12%]
+tests/integration/test_failure_handling.py::test_transport_failure_stops_downstream_work_and_same_question_can_retry[ReadTimeout-answer] PASSED [ 12%]
+tests/integration/test_http.py::test_upload_http_emits_ready_or_error_and_serves_committed_frontend PASSED [ 13%]
+tests/integration/test_http.py::test_default_app_reads_chunk_size_from_environment_and_anchors_cache PASSED [ 13%]
+tests/integration/test_http.py::test_ask_http_sse_order_and_citation_source PASSED [ 13%]
+tests/integration/test_http.py::test_rejected_http_sse_is_terminal_without_final_or_model_call PASSED [ 14%]
+tests/integration/test_http.py::test_upload_http_returns_202_while_embedding_is_pending_and_blocks_ask PASSED [ 14%]
+tests/integration/test_ingestion.py::test_invalid_document_has_a_distinct_error_from_missing_text_layer[non-pdf] PASSED [ 14%]
+tests/integration/test_ingestion.py::test_invalid_document_has_a_distinct_error_from_missing_text_layer[empty] PASSED [ 15%]
+tests/integration/test_ingestion.py::test_invalid_document_has_a_distinct_error_from_missing_text_layer[truncated] PASSED [ 15%]
+tests/integration/test_ingestion.py::test_lightrag_sections_exclude_references_and_keep_appendix PASSED [ 15%]
+tests/integration/test_ingestion.py::test_image_only_document_reports_missing_text_layer_before_embedding PASSED [ 16%]
+tests/integration/test_ingestion.py::test_relative_headings_preserve_paragraphs_section_boundaries_and_pages[8] PASSED [ 16%]
+tests/integration/test_ingestion.py::test_relative_headings_preserve_paragraphs_section_boundaries_and_pages[13] PASSED [ 16%]
+tests/integration/test_ingestion.py::test_heading_free_document_uses_bounded_virtual_sections_and_can_be_asked PASSED [ 17%]
+tests/integration/test_ingestion.py::test_long_paragraph_overlap_starts_on_a_complete_word PASSED [ 17%]
+tests/integration/test_ingestion.py::test_configured_chunk_size_packs_whole_paragraphs_without_overlap[35] PASSED [ 17%]
+tests/integration/test_ingestion.py::test_configured_chunk_size_packs_whole_paragraphs_without_overlap[60] PASSED [ 18%]
+tests/integration/test_ingestion.py::test_long_paragraphs_split_at_sentence_boundaries_with_overlap[english] PASSED [ 18%]
+tests/integration/test_ingestion.py::test_long_paragraphs_split_at_sentence_boundaries_with_overlap[chinese] PASSED [ 18%]
+tests/integration/test_ingestion.py::test_wrapped_and_number_only_headings_keep_the_complete_title[wrapped-1. A Very Long Section Title That Wraps Onto Two Lines] PASSED [ 19%]
+tests/integration/test_ingestion.py::test_wrapped_and_number_only_headings_keep_the_complete_title[number-1. Introduction] PASSED [ 19%]
+tests/integration/test_ingestion.py::test_appendices_after_references_resume_indexing[lettered] PASSED [ 19%]
+tests/integration/test_ingestion.py::test_appendices_after_references_resume_indexing[supplementary] PASSED [ 20%]
+tests/integration/test_ingestion.py::test_appendices_after_references_resume_indexing[chinese] PASSED [ 20%]
+tests/integration/test_ingestion.py::test_two_column_reading_order_keeps_same_size_bold_headings_and_provenance PASSED [ 20%]
+tests/integration/test_ingestion.py::test_body_size_numbered_small_caps_subsection_forms_a_chunk_boundary PASSED [ 21%]
+tests/integration/test_ingestion.py::test_figure_labels_are_filtered_without_discarding_short_prose_or_table_cells PASSED [ 21%]
+tests/integration/test_ingestion.py::test_references_only_document_reports_no_indexable_text PASSED [ 21%]
+tests/integration/test_ingestion.py::test_readable_repaired_pdf_is_accepted_and_logged PASSED [ 22%]
+tests/integration/test_ingestion.py::test_configured_target_also_bounds_virtual_sections PASSED [ 22%]
+tests/integration/test_ingestion.py::test_settings_from_env_control_real_and_virtual_chunk_bounds PASSED [ 22%]
+tests/integration/test_ingestion.py::test_shaded_prose_above_a_figure_caption_preserves_every_line PASSED [ 23%]
+tests/integration/test_ingestion.py::test_page_frame_does_not_remove_the_section_heading[numbered] PASSED [ 23%]
+tests/integration/test_ingestion.py::test_page_frame_does_not_remove_the_section_heading[unnumbered] PASSED [ 23%]
+tests/integration/test_ingestion.py::test_numbered_all_caps_period_headings_keep_their_own_appendix_content PASSED [ 24%]
+tests/integration/test_ingestion.py::test_bold_and_larger_figure_labels_do_not_create_sections_or_enter_prose PASSED [ 24%]
+tests/integration/test_ingestion.py::test_numbered_uppercase_body_sentences_do_not_open_sections[inline] PASSED [ 24%]
+tests/integration/test_ingestion.py::test_numbered_uppercase_body_sentences_do_not_open_sections[split-number] PASSED [ 25%]
+tests/integration/test_ingestion.py::test_wrapped_chinese_paragraph_splits_only_between_complete_sentences PASSED [ 25%]
+tests/integration/test_ingestion.py::test_cjk_line_wraps_keep_numbers_intact_and_preserve_latin_spacing PASSED [ 25%]
+tests/integration/test_ingestion.py::test_stacked_numeric_values_in_a_cjk_block_keep_their_separators[\u5340\u57df \u6578\u503c\n1.2\n3.4\n2023\n2024] PASSED [ 26%]
+tests/integration/test_ingestion.py::test_stacked_numeric_values_in_a_cjk_block_keep_their_separators[\u6578\u503c\n2023\n2024\n2023\n2024\n2023\n2024\n2023\n2024] PASSED [ 26%]
+tests/integration/test_ingestion.py::test_stacked_numeric_values_in_a_cjk_block_keep_their_separators[\u5340\u57df \u6578\u503c\n1 234\n2 345] PASSED [ 26%]
+tests/integration/test_ingestion.py::test_page_break_only_ends_a_paragraph_when_the_sentence_has_finished[continues-english] PASSED [ 27%]
+tests/integration/test_ingestion.py::test_page_break_only_ends_a_paragraph_when_the_sentence_has_finished[continues-chinese] PASSED [ 27%]
+tests/integration/test_ingestion.py::test_page_break_only_ends_a_paragraph_when_the_sentence_has_finished[new-paragraph-english] PASSED [ 27%]
+tests/integration/test_ingestion.py::test_page_break_only_ends_a_paragraph_when_the_sentence_has_finished[new-paragraph-chinese] PASSED [ 28%]
+tests/integration/test_ingestion.py::test_short_cjk_sentence_overlap_starts_with_a_complete_sentence PASSED [ 28%]
+tests/integration/test_ingestion.py::test_page_top_caption_or_header_does_not_extend_body_provenance[Figure 3: An overview of the pipeline-False] PASSED [ 28%]
+tests/integration/test_ingestion.py::test_page_top_caption_or_header_does_not_extend_body_provenance[Table 1: Comparison of the methods-False] PASSED [ 29%]
+tests/integration/test_ingestion.py::test_page_top_caption_or_header_does_not_extend_body_provenance[\u671f\u520a\u540d\u7a31 \u7b2c\u5341\u5377-True] PASSED [ 29%]
+tests/integration/test_ingestion.py::test_lightrag_page_top_tables_do_not_enter_previous_page_body PASSED [ 29%]
+tests/integration/test_ingestion.py::test_labelled_cjk_numeric_rows_keep_source_and_chunk_separators[labelled-measurements] PASSED [ 30%]
+tests/integration/test_ingestion.py::test_labelled_cjk_numeric_rows_keep_source_and_chunk_separators[short-final-row] PASSED [ 30%]
+tests/integration/test_ingestion.py::test_labelled_cjk_numeric_rows_keep_source_and_chunk_separators[equal-width-list-items] PASSED [ 30%]
+tests/integration/test_ingestion.py::test_genuine_cjk_wrap_with_a_full_final_line_keeps_source_text_intact PASSED [ 31%]
+tests/integration/test_ingestion.py::test_cjk_full_final_lines_use_the_actual_column_or_text_width[asymmetric-margins] PASSED [ 31%]
+tests/integration/test_ingestion.py::test_cjk_full_final_lines_use_the_actual_column_or_text_width[two-columns-96-characters] PASSED [ 31%]
+tests/integration/test_ingestion.py::test_cjk_full_final_lines_use_the_actual_column_or_text_width[two-columns-120-characters] PASSED [ 32%]
+tests/integration/test_ingestion_jobs.py::test_upload_returns_job_before_embedding_and_progress_replays_to_ready PASSED [ 32%]
+tests/integration/test_ingestion_jobs.py::test_same_document_uses_persisted_cache_without_embedding_or_llm PASSED [ 32%]
+tests/integration/test_ingestion_jobs.py::test_pipeline_version_and_content_changes_reprocess_the_document PASSED [ 33%]
+tests/integration/test_ingestion_jobs.py::test_effective_chunk_target_invalidates_cache_and_preserves_section_metadata PASSED [ 33%]
+tests/integration/test_ingestion_jobs.py::test_legacy_pipeline_cache_is_not_reused PASSED [ 33%]
+tests/integration/test_ingestion_jobs.py::test_embedding_progress_reports_each_batch_and_reaches_all_chunks PASSED [ 34%]
+tests/integration/test_ingestion_jobs.py::test_failed_replacement_preserves_document_index_and_history_until_success PASSED [ 34%]
+tests/integration/test_ingestion_jobs.py::test_embedding_failure_is_stage_specific_and_leaves_no_cache_then_recovers PASSED [ 34%]
+tests/integration/test_ingestion_jobs.py::test_disconnected_progress_subscriber_does_not_cancel_background_ingestion PASSED [ 35%]
+tests/integration/test_ingestion_jobs.py::test_answers_are_never_cached_even_for_a_cached_document PASSED [ 35%]
+tests/integration/test_ingestion_jobs.py::test_cache_write_failure_does_not_block_ready_and_removes_partial_entry PASSED [ 35%]
+tests/integration/test_ingestion_jobs.py::test_invalid_embedding_is_reported_as_embedding_failed[invalid vectors] PASSED [ 36%]
+tests/integration/test_ingestion_jobs.py::test_invalid_embedding_is_reported_as_embedding_failed[zero vector] PASSED [ 36%]
+tests/integration/test_ingestion_jobs.py::test_failure_after_one_embedding_batch_leaves_no_partial_cache PASSED [ 36%]
+tests/integration/test_ingestion_jobs.py::test_unreadable_cache_reprocesses_instead_of_publishing_an_invalid_document PASSED [ 37%]
+tests/integration/test_ingestion_jobs.py::test_shutdown_ends_pending_upload_with_error_and_no_cache PASSED [ 37%]
+tests/integration/test_ingestion_jobs.py::test_shutdown_before_worker_starts_still_terminates_progress PASSED [ 37%]
+tests/integration/test_ingestion_jobs.py::test_upload_cannot_replace_document_during_an_active_ask PASSED [ 38%]
+tests/integration/test_issue10_review_corrections.py::test_upload_preserves_substantive_abstract_without_author_metadata[False] PASSED [ 38%]
+tests/integration/test_issue10_review_corrections.py::test_upload_preserves_substantive_abstract_without_author_metadata[True] PASSED [ 38%]
+tests/integration/test_issue10_review_corrections.py::test_short_section_summary_regenerates_from_original_source_or_fails[True] PASSED [ 39%]
+tests/integration/test_issue10_review_corrections.py::test_short_section_summary_regenerates_from_original_source_or_fails[False] PASSED [ 39%]
+tests/integration/test_operations.py::test_upload_document_and_ask_with_real_embedding_and_recorded_llm PASSED [ 39%]
+tests/integration/test_operations.py::test_guard_emits_error_without_final_or_llm_call PASSED [ 40%]
+tests/integration/test_operations.py::test_scanned_document_is_rejected_before_embedding_or_llm PASSED [ 40%]
+tests/integration/test_operations.py::test_questions_over_1000_tokens_never_call_llm PASSED [ 40%]
+tests/integration/test_operations.py::test_truncated_answer_never_becomes_final PASSED [ 41%]
+tests/integration/test_operations.py::test_citation_markers_split_across_stream_frames_remain_clickable PASSED [ 41%]
+tests/integration/test_operations.py::test_interrupted_llm_stream_emits_error_and_failed_call_trace PASSED [ 41%]
+tests/integration/test_question_language.py::test_cross_language_rewrite_keeps_type_and_records_original_without_reasking[How do the ablated versions perform?-\u6d88\u878d\u7248\u672c\u7684\u6027\u80fd\u5982\u4f55\uff1f] PASSED [ 42%]
+tests/integration/test_question_language.py::test_cross_language_rewrite_keeps_type_and_records_original_without_reasking[\u6d88\u878d\u7248\u672c\u7684\u8868\u73fe\u5982\u4f55\uff1f-How do the ablated versions perform?] PASSED [ 42%]
+tests/integration/test_question_language.py::test_english_current_question_after_chinese_history_controls_answer_language PASSED [ 42%]
+tests/integration/test_question_language.py::test_context_capacity_counts_current_question_language_reference PASSED [ 43%]
+tests/integration/test_question_language.py::test_answer_prompt_preserves_current_question_chinese_script_and_numbers[\u6aa2\u7d22\u968e\u6bb5\u7684\u6210\u672c\u662f\u591a\u5c11\uff1f] PASSED [ 43%]
+tests/integration/test_question_language.py::test_answer_prompt_preserves_current_question_chinese_script_and_numbers[\u68c0\u7d22\u9636\u6bb5\u7684\u6210\u672c\u662f\u591a\u5c11\uff1f] PASSED [ 43%]
+tests/integration/test_question_language.py::test_answer_prompt_preserves_current_question_chinese_script_and_numbers[\u90a3\u5b83\u7684\u6210\u672c\u5462\uff1f] PASSED [ 44%]
+tests/integration/test_question_language.py::test_english_question_does_not_take_chinese_script_rule_from_rewrite PASSED [ 44%]
+tests/integration/test_review_regressions.py::test_uploaded_oversized_paragraph_keeps_decimals_and_abbreviations PASSED [ 44%]
+tests/integration/test_review_regressions.py::test_uploaded_cjk_paragraph_splits_on_characters_with_overlap PASSED [ 45%]
+tests/integration/test_review_regressions.py::test_real_10k_budget_rejects_prompt_one_token_over_answer_cap PASSED [ 45%]
+tests/integration/test_review_regressions.py::test_comma_and_line_suffixed_citations_normalize_across_frames PASSED [ 45%]
+tests/integration/test_review_regressions.py::test_ask_accumulates_traces_from_every_gateway_call[False] PASSED [ 46%]
+tests/integration/test_review_regressions.py::test_ask_accumulates_traces_from_every_gateway_call[True] PASSED [ 46%]
+tests/integration/test_review_regressions.py::test_terminal_llm_frame_closes_adapter_before_ask_finishes PASSED [ 46%]
+tests/integration/test_review_regressions.py::test_real_10k_prompt_cap_failure_is_an_application_error_without_final PASSED [ 47%]
+tests/integration/test_review_regressions.py::test_unexpected_upload_exception_emits_generic_error PASSED [ 47%]
+tests/integration/test_review_regressions.py::test_unexpected_llm_exception_emits_generic_error_and_trace PASSED [ 47%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-q2.txt:1] PASSED [ 48%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-q2.txt:2] PASSED [ 48%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-q2.txt:3] PASSED [ 48%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-others.txt:1] PASSED [ 49%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-others.txt:2] PASSED [ 49%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-others.txt:3] PASSED [ 49%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-others.txt:4] PASSED [ 50%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-others.txt:5] PASSED [ 50%]
+tests/integration/test_router_live_qa.py::test_exact_live_qa_raw_outputs_preserve_classification[router-probe-others.txt:6] PASSED [ 50%]
+tests/integration/test_router_live_qa.py::test_known_extra_key_with_valid_follow_up_rewrite_is_ignored PASSED [ 50%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"type":"Synthesis","sub_queries":["cost","updates"],"answer":null}-history0-router-None] PASSED [ 51%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"question_type":"Lookup","sub_queries":[]}-history1-router-None] PASSED [ 51%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"type":"Global","sub_queries":[]}-history2-router-None] PASSED [ 51%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"question_type":"Lookup","sub_queries":[],"answer":null}-history3-router-None] PASSED [ 52%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"type":"Lookup","sub_queries":[]}-history4-fallback-missing_rewrite] PASSED [ 52%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"answer":"unknown","sub_queries":[]}-history5-fallback-invalid_plan] PASSED [ 52%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[{"question_type":"Synthesis","sub_queries":[],"answer_format":"Chinese"}-history6-fallback-missing_rewrite] PASSED [ 53%]
+tests/integration/test_router_live_qa.py::test_near_miss_router_shapes_record_plan_origin[not JSON-history7-fallback-invalid_json] PASSED [ 53%]
+tests/integration/test_router_review.py::test_schema_valid_router_plan_preserves_follow_up_rewrite[Synthesis-queries0-expected0] PASSED [ 53%]
+tests/integration/test_router_review.py::test_schema_valid_router_plan_preserves_follow_up_rewrite[Synthesis-queries1-expected1] PASSED [ 54%]
+tests/integration/test_router_review.py::test_schema_valid_router_plan_preserves_follow_up_rewrite[Synthesis-queries2-expected2] PASSED [ 54%]
+tests/integration/test_router_review.py::test_schema_valid_router_plan_preserves_follow_up_rewrite[Lookup-queries3-expected3] PASSED [ 54%]
+tests/integration/test_router_review.py::test_schema_valid_router_plan_preserves_follow_up_rewrite[Global-queries4-expected4] PASSED [ 55%]
+tests/integration/test_router_review.py::test_extraction_normalizes_citations_discards_headings_and_filters_sentinel PASSED [ 55%]
+tests/integration/test_router_review.py::test_lookup_with_large_top_k_fits_without_extraction PASSED [ 55%]
+tests/integration/test_router_review.py::test_truncated_router_falls_back_but_retains_its_failed_trace PASSED [ 56%]
+tests/integration/test_router_review.py::test_explicit_history_does_not_modify_session_history PASSED [ 56%]
+tests/integration/test_router_review.py::test_scripted_llm_honors_output_reservation_including_thinking PASSED [ 56%]
+tests/integration/test_router_smoke_checks.py::test_smoke_checks_history_topic_and_flags_simplified_script[\u90a3 LightRAG \u5462\uff1f-False-False] PASSED [ 57%]
+tests/integration/test_router_smoke_checks.py::test_smoke_checks_history_topic_and_flags_simplified_script[LightRAG \u7684\u6aa2\u7d22\u6210\u672c\u662f\u591a\u5c11\uff1f-True-False] PASSED [ 57%]
+tests/integration/test_router_smoke_checks.py::test_smoke_checks_history_topic_and_flags_simplified_script[LightRAG \u7684\u68c0\u7d22\u6210\u672c\u662f\u591a\u5c11\uff1f-False-True] PASSED [ 57%]
+tests/integration/test_router_smoke_checks.py::test_live_answer_script_check_flags_simplified_answer_to_traditional_question[\u90a3\u5b83\u7684\u6210\u672c\u5462\uff1f-\u68c0\u7d22\u9636\u6bb5\uff1a610 \xd7 1,000 \u4e2a token\u3002-True] PASSED [ 58%]
+tests/integration/test_router_smoke_checks.py::test_live_answer_script_check_flags_simplified_answer_to_traditional_question[\u90a3\u5b83\u7684\u6210\u672c\u5462\uff1f-\u6aa2\u7d22\u968e\u6bb5\uff1a610 \xd7 1,000 \u500b token\u3002-False] PASSED [ 58%]
+tests/integration/test_router_smoke_checks.py::test_live_answer_script_check_flags_simplified_answer_to_traditional_question[\u68c0\u7d22\u6210\u672c\u662f\u591a\u5c11\uff1f-\u68c0\u7d22\u9636\u6bb5\uff1a610 \xd7 1,000 \u4e2a token\u3002-False] PASSED [ 58%]
+tests/integration/test_router_smoke_checks.py::test_live_answer_script_check_flags_simplified_answer_to_traditional_question[\u90a3\u5b83\u7684\u6210\u672c\u5462\uff1f-\u793e\u7fa4\u7d50\u69cb\u7684\u6aa2\u7d22\u6210\u672c\u3002-False] PASSED [ 59%]
+tests/integration/test_router_synthesis.py::test_router_plan_drives_answer_and_is_recorded_with_json_schema PASSED [ 59%]
+tests/integration/test_router_synthesis.py::test_malformed_router_json_falls_back_to_lookup_with_original_question PASSED [ 59%]
+tests/integration/test_router_synthesis.py::test_too_long_question_has_explicit_rejection_event_and_zero_calls PASSED [ 60%]
+tests/integration/test_router_synthesis.py::test_router_history_keeps_only_two_rounds_each_at_most_500_tokens PASSED [ 60%]
+tests/integration/test_router_synthesis.py::test_q2_sub_queries_cover_cost_and_incremental_update_in_document_order PASSED [ 60%]
+tests/integration/test_router_synthesis.py::test_q2_sub_queries_collectively_retrieve_cost_updates_and_community_rebuild PASSED [ 61%]
+tests/integration/test_router_synthesis.py::test_oversized_synthesis_extracts_facts_and_keeps_original_citation_sources PASSED [ 61%]
+tests/integration/test_router_synthesis.py::test_extracted_facts_are_reduced_again_when_they_still_do_not_fit Timeout (0:00:30)!
+Thread 0x000000016dd07000 (most recent call first):
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 90 in _worker
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/threading.py", line 1012 in run
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00000001effcec40 (most recent call first):
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/selectors.py", line 566 in select
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/Users/shiehpay/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py", line 905 in inner
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/python.py", line 167 in pytest_pyfunc_call
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/python.py", line 1707 in runtest
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py", line 569 in runtest
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 184 in pytest_runtest_call
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 250 in <lambda>
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 361 in from_call
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 249 in call_and_report
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 139 in runtestprotocol
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 118 in pytest_runtest_protocol
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/main.py", line 408 in pytest_runtestloop
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/main.py", line 384 in _main
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/main.py", line 330 in wrap_session
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/main.py", line 377 in pytest_cmdline_main
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 121 in _multicall
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 120 in _hookexec
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pluggy/_hooks.py", line 512 in __call__
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py", line 229 in _main
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py", line 253 in _console_main
+  File "/Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/pytest/__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+PASSED [ 61%]
+tests/integration/test_router_synthesis.py::test_configurable_top_k_counts_and_global_uses_summary_tree PASSED [ 62%]
+tests/integration/test_router_synthesis.py::test_router_transport_failure_stops_before_query_embedding PASSED [ 62%]
+tests/integration/test_router_synthesis.py::test_successful_turns_supply_history_to_later_follow_up PASSED [ 62%]
+tests/integration/test_router_synthesis.py::test_query_embedding_failure_does_not_start_answer_generation PASSED [ 63%]
+tests/integration/test_router_synthesis.py::test_extraction_losing_citation_ids_fails_without_final_answer PASSED [ 63%]
+tests/integration/test_second_document.py::test_upload_resumes_split_appendix_heading_after_references PASSED [ 63%]
+tests/integration/test_second_document.py::test_upload_keeps_indented_wrapped_heading_as_one_section PASSED [ 64%]
+tests/integration/test_second_document.py::test_numeric_cell_before_next_table_row_cannot_open_a_section PASSED [ 64%]
+tests/integration/test_second_document.py::test_numbered_document_keeps_front_matter_and_emphasis_out_of_summary_boundaries PASSED [ 64%]
+tests/integration/test_second_document.py::test_letter_prefixed_appendix_table_is_typed_and_keeps_uncertain_numeric_rows PASSED [ 65%]
+tests/integration/test_second_document.py::test_repeated_header_on_next_page_keeps_table_provenance_and_raw_rows PASSED [ 65%]
+tests/integration/test_second_document.py::test_continued_column_table_does_not_absorb_neighboring_body_prose PASSED [ 65%]
+tests/integration/test_second_document.py::test_overlong_section_summary_is_regenerated_or_upload_fails[True] PASSED [ 66%]
+tests/integration/test_second_document.py::test_overlong_section_summary_is_regenerated_or_upload_fails[False] PASSED [ 66%]
+tests/integration/test_second_document.py::test_truncated_summary_is_discarded_before_retry_and_every_call_is_recorded PASSED [ 66%]
+tests/integration/test_second_document.py::test_captioned_single_cell_box_keeps_raw_text_and_excludes_outside_prose[False] PASSED [ 67%]
+tests/integration/test_second_document.py::test_captioned_single_cell_box_keeps_raw_text_and_excludes_outside_prose[True] PASSED [ 67%]
+tests/integration/test_second_document.py::test_global_group_context_identifies_every_covered_section PASSED [ 67%]
+tests/integration/test_second_document.py::test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores[False] PASSED [ 68%]
+tests/integration/test_second_document.py::test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores[True] PASSED [ 68%]
+tests/integration/test_second_document.py::test_summary_length_correction_uses_original_source_not_the_failed_draft PASSED [ 68%]
+tests/integration/test_summary_corrections.py::test_literal_summary_marker_in_chunk_keeps_chunk_citations[Lookup] PASSED [ 69%]
+tests/integration/test_summary_corrections.py::test_literal_summary_marker_in_chunk_keeps_chunk_citations[Synthesis] PASSED [ 69%]
+tests/integration/test_summary_corrections.py::test_global_non_rag_document_uses_generic_whole_document_prompt PASSED [ 69%]
+tests/integration/test_summary_corrections.py::test_supported_long_global_question_uses_upload_built_group_and_short_uses_sections PASSED [ 70%]
+tests/integration/test_summary_corrections.py::test_summary_progress_advances_during_group_and_document_calls PASSED [ 70%]
+tests/integration/test_summary_corrections.py::test_each_oversized_section_part_and_merge_retains_section_title PASSED [ 70%]
+tests/integration/test_summary_corrections.py::test_adapter_and_answer_prompt_semantics_invalidate_upload_cache PASSED [ 71%]
+tests/integration/test_summary_corrections.py::test_oversized_section_recursively_merges_multiple_rounds_with_provenance PASSED [ 71%]
+tests/integration/test_summary_corrections.py::test_multiple_group_levels_preserve_all_original_sources PASSED [ 71%]
+tests/integration/test_summary_corrections.py::test_inflight_section_siblings_cancel_and_replacement_is_transactional[False] PASSED [ 72%]
+tests/integration/test_summary_corrections.py::test_inflight_section_siblings_cancel_and_replacement_is_transactional[True] PASSED [ 72%]
+tests/integration/test_summary_corrections.py::test_nonreducing_external_summary_response_fails_without_partial_publication[False] PASSED [ 72%]
+tests/integration/test_summary_corrections.py::test_nonreducing_external_summary_response_fails_without_partial_publication[True] PASSED [ 73%]
+tests/integration/test_summary_selection.py::test_table_summary_selects_original_spans_or_fails_closed[False] PASSED [ 73%]
+tests/integration/test_summary_selection.py::test_table_summary_selects_original_spans_or_fails_closed[unknown] PASSED [ 73%]
+tests/integration/test_summary_selection.py::test_table_summary_selects_original_spans_or_fails_closed[duplicate] PASSED [ 74%]
+tests/integration/test_summary_selection.py::test_table_summary_selects_original_spans_or_fails_closed[ignored_format] PASSED [ 74%]
+tests/integration/test_summary_table_integration.py::test_table_only_sections_keep_all_sources_caveat_and_global_cache[1] PASSED [ 74%]
+tests/integration/test_summary_table_integration.py::test_table_only_sections_keep_all_sources_caveat_and_global_cache[18] PASSED [ 75%]
+tests/integration/test_summary_table_integration.py::test_section_summary_partitions_preserve_complete_table_chunks PASSED [ 75%]
+tests/integration/test_summary_tree.py::test_upload_builds_proportional_section_summaries_and_overview PASSED [ 75%]
+tests/integration/test_summary_tree.py::test_global_uses_summary_sources_without_query_embedding_and_cache_reuses_tree PASSED [ 76%]
+tests/integration/test_summary_tree.py::test_long_document_builds_adjacent_groups_and_global_uses_best_fitting_layer PASSED [ 76%]
+tests/integration/test_summary_tree.py::test_oversized_section_is_split_and_merged_before_budget_guard PASSED [ 76%]
+tests/integration/test_summary_tree.py::test_heading_only_sections_are_skipped PASSED [ 77%]
+tests/integration/test_summary_tree.py::test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled[None-4] PASSED [ 77%]
+tests/integration/test_summary_tree.py::test_summary_concurrency_is_bounded_and_progress_keeps_ask_disabled[2-2] PASSED [ 77%]
+tests/integration/test_summary_tree.py::test_section_summary_length_target_covers_minimum_proportional_and_maximum[1] PASSED [ 78%]
+tests/integration/test_summary_tree.py::test_section_summary_length_target_covers_minimum_proportional_and_maximum[200] PASSED [ 78%]
+tests/integration/test_summary_tree.py::test_section_summary_length_target_covers_minimum_proportional_and_maximum[1000] PASSED [ 78%]
+tests/integration/test_summary_tree.py::test_failed_summary_replacement_keeps_previous_document_and_no_partial_cache PASSED [ 79%]
+tests/integration/test_tables.py::test_table2_preserves_every_cell_with_dataset_metric_and_comparison_headers PASSED [ 79%]
+tests/integration/test_tables.py::test_table1_preserves_every_labelled_cell_and_cost_grid_removes_noise PASSED [ 79%]
+tests/integration/test_tables.py::test_uncertain_table_retains_source_text_and_answer_limitation_rule PASSED [ 80%]
+tests/integration/test_tables.py::test_large_table_splits_only_between_rows_and_repeats_caption_and_headers PASSED [ 80%]
+tests/integration/test_tables.py::test_q3_prompt_includes_table2_and_linked_ablation_discussion_in_document_order PASSED [ 80%]
+tests/integration/test_tables.py::test_lookup_budget_drops_are_counted_in_retrieval_and_trace PASSED [ 81%]
+tests/integration/test_tables.py::test_synthesis_small_evidence_budget_drops_are_counted PASSED [ 81%]
+tests/integration/test_tables.py::test_centred_caption_keeps_row_labels_in_aligned_table PASSED [ 81%]
+tests/integration/test_tables.py::test_lightrag_table4_preserves_statistics_and_row_labels PASSED [ 82%]
+tests/integration/test_tables.py::test_caption_below_grid_preserves_table_and_following_body_prose PASSED [ 82%]
+tests/integration/test_tables.py::test_two_column_caption_pairs_do_not_turn_body_prose_into_a_table PASSED [ 82%]
+tests/integration/test_tables.py::test_equal_cell_counts_require_column_alignment PASSED [ 83%]
+tests/integration/test_tables.py::test_math_italic_artifact_is_cleaned_in_table_cells_without_changing_identifiers PASSED [ 83%]
+tests/integration/test_tables.py::test_oversized_unreconstructed_physical_line_is_split_without_losing_text PASSED [ 83%]
+tests/integration/test_tables.py::test_virtual_sections_keep_duplicate_labels_attached_to_their_own_source PASSED [ 84%]
+tests/integration/test_tables.py::test_table_and_embedder_source_changes_invalidate_upload_cache PASSED [ 84%]
+tests/integration/test_tables.py::test_column_table_uses_the_text_gutter_instead_of_clipping_at_page_midpoint PASSED [ 84%]
+tests/integration/test_tables.py::test_heading_immediately_after_table_keeps_section_and_reconstructed_cells PASSED [ 85%]
+tests/integration/test_tables.py::test_short_list_or_equation_after_grid_stays_in_section_prose[(a) Alpha subset] PASSED [ 85%]
+tests/integration/test_tables.py::test_short_list_or_equation_after_grid_stays_in_section_prose[x = 2 + y] PASSED [ 85%]
+tests/integration/test_tables.py::test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[wrapped-prose] PASSED [ 86%]
+tests/integration/test_tables.py::test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[over-2000-tokens] PASSED [ 86%]
+tests/integration/test_tables.py::test_distinct_caption_typography_within_body_block_keeps_prior_prose PASSED [ 86%]
+tests/integration/test_tables.py::test_group_divider_inside_table_keeps_all_later_numeric_cells_as_uncertain_source[caption-above] PASSED [ 87%]
+tests/integration/test_tables.py::test_group_divider_inside_table_keeps_all_later_numeric_cells_as_uncertain_source[caption-below] PASSED [ 87%]
+tests/integration/test_tables.py::test_cjk_page_continuation_and_close_table_heading_preserve_numbers_and_provenance PASSED [ 87%]
+tests/unit/test_eval_checks.py::test_judge_cannot_pass_with_an_invented_evidence_sentence PASSED [ 88%]
+tests/unit/test_eval_checks.py::test_typography_matches_terms_but_numbers_cannot_use_contains PASSED [ 88%]
+tests/unit/test_eval_checks.py::test_wrong_variant_with_the_same_number_cannot_satisfy_numeric_fact PASSED [ 88%]
+tests/unit/test_eval_checks.py::test_forbidden_check_distinguishes_assertion_from_explicit_negation PASSED [ 89%]
+tests/unit/test_eval_checks.py::test_bad_judge_output_and_truncation_fail_closed_even_for_forbidden PASSED [ 89%]
+tests/unit/test_eval_checks.py::test_judge_guard_rejects_an_over_budget_answer_before_adapter_call PASSED [ 89%]
+tests/unit/test_eval_checks.py::test_correct_numeric_context_passes_after_typography_normalization PASSED [ 90%]
+tests/unit/test_eval_checks.py::test_forbidden_judge_with_invented_evidence_cannot_pass PASSED [ 90%]
+tests/unit/test_eval_checks.py::test_fixed_refusal_does_not_accept_extra_invented_content PASSED [ 90%]
+tests/unit/test_eval_checks.py::test_judge_evaluates_answer_properties_without_requiring_self_description PASSED [ 91%]
+tests/unit/test_eval_checks.py::test_exact_refusal_cannot_assert_a_forbidden_claim PASSED [ 91%]
+tests/unit/test_eval_checks.py::test_verbatim_evidence_tolerates_hard_breaks_and_typographic_spacing PASSED [ 91%]
+tests/unit/test_eval_checks.py::test_typography_normalization_never_accepts_an_invented_word PASSED [ 92%]
+tests/unit/test_eval_checks.py::test_numeric_evidence_does_not_swap_values_when_both_variants_are_present PASSED [ 92%]
+tests/unit/test_eval_checks.py::test_full_model_anchor_does_not_match_a_suffixed_variant PASSED [ 92%]
+tests/unit/test_eval_checks.py::test_numeric_variants_accept_compound_and_spaced_model_names PASSED [ 93%]
+tests/unit/test_eval_checks.py::test_numeric_percentages_accept_omitted_zero_decimal PASSED [ 93%]
+tests/unit/test_eval_checks.py::test_fixed_refusals_pass_without_judge_calls_and_accept_one_final_period PASSED [ 93%]
+tests/unit/test_eval_checks.py::test_budget_failure_is_a_harness_bug_not_a_quality_result PASSED [ 94%]
+tests/unit/test_eval_checks.py::test_table1_datasets_are_independently_judged_with_their_numeric_context PASSED [ 94%]
+tests/unit/test_eval_checks.py::test_numeric_binding_uses_table_columns_without_swapping_variants PASSED [ 94%]
+tests/unit/test_eval_citation.py::test_citation_prefers_a_labeled_table_chunk_when_available PASSED [ 95%]
+tests/unit/test_eval_plan.py::test_router_lookup_passes_but_fallback_lookup_is_distinctly_failed PASSED [ 95%]
+tests/unit/test_eval_plan.py::test_follow_up_must_change_and_resolve_the_canonical_referents PASSED [ 95%]
+tests/unit/test_eval_plan.py::test_flagged_language_mismatch_cannot_pass_as_a_router_rewrite PASSED [ 96%]
+tests/unit/test_eval_provenance.py::test_zip_without_git_metadata_has_unknown_provenance PASSED [ 96%]
+tests/unit/test_eval_report.py::test_judge_probe_failures_do_not_change_golden_facts_result PASSED [ 96%]
+tests/unit/test_eval_report.py::test_budget_failure_has_a_distinct_status_in_report PASSED [ 97%]
+tests/unit/test_numeric_association.py::test_semicolon_keeps_subject_but_numbers_remain_metric_scoped[Validation: Control accuracy 0.812 and F1 0.683; Filtered uses 242 items; accuracy 0.745 and F1 0.683.] PASSED [ 97%]
+tests/unit/test_numeric_association.py::test_semicolon_keeps_subject_but_numbers_remain_metric_scoped[Validation: Control accuracy 0.812 and F1 0.683; Filtered uses 242 items\uff1baccuracy 0.745 and F1 0.683.] PASSED [ 97%]
+tests/unit/test_numeric_association.py::test_swapped_settings_metrics_and_subsets_cannot_pass_affirmative_judge[Validation: Control accuracy 0.745 F1 0.683 while Filtered accuracy 0.812 F1 0.683.\nTest: Control accuracy 0.700, Filtered accuracy 0.650.] PASSED [ 98%]
+tests/unit/test_numeric_association.py::test_swapped_settings_metrics_and_subsets_cannot_pass_affirmative_judge[Validation: Control accuracy 0.683 F1 0.812 while Filtered accuracy 0.683 F1 0.745.\nTest: Control accuracy 0.700, Filtered accuracy 0.650.] PASSED [ 98%]
+tests/unit/test_numeric_association.py::test_swapped_settings_metrics_and_subsets_cannot_pass_affirmative_judge[Test: Control accuracy 0.812 F1 0.683; Filtered accuracy 0.745 F1 0.683.\nValidation: Control accuracy 0.700; Filtered accuracy 0.650.] PASSED [ 98%]
+tests/unit/test_numeric_association.py::test_reviewer_reported_reversed_settings_are_generic[False] PASSED [ 99%]
+tests/unit/test_numeric_association.py::test_reviewer_reported_reversed_settings_are_generic[True] PASSED [ 99%]
+tests/unit/test_second_document_facts.py::test_numeric_expert_fact_rejects_an_excerpt_without_the_declared_paper_subset PASSED [ 99%]
+tests/unit/test_second_document_facts.py::test_numeric_expert_fact_accepts_complete_verbatim_context_with_correct_bindings PASSED [100%]
+
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+../../.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/shiehpay/Desktop/resume/rag/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========== 302 passed, 3 deselected, 6 warnings in 243.12s (0:04:03) ===========
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

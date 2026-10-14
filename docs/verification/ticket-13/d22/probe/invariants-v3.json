@@ -1,0 +1,11 @@
+{
+  "seven_calls_only": true,
+  "all_stop": true,
+  "neutral_system_exact_full_local": true,
+  "baseline_system_exact_full_local": true,
+  "local_users_exact": true,
+  "local_source_exact_full_C5": true,
+  "local_block_exact_substring": true,
+  "local_question_tail_exact": true,
+  "wire_settings_same_all": true
+}

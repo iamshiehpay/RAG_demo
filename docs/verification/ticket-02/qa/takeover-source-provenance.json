@@ -1,0 +1,38 @@
+[
+  {
+    "section": "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+    "needle": "we draw the following conclusions",
+    "raw_pdf_page": 6,
+    "paragraph_pages": [
+      6,
+      6
+    ]
+  },
+  {
+    "section": "4.4 CASE STUDY (RQ3)",
+    "needle": "combines in-depth",
+    "raw_pdf_page": 8,
+    "paragraph_pages": [
+      8,
+      8
+    ]
+  },
+  {
+    "source_http": {
+      "id": "8ae7e46fb1794427acd405dc82ccba77:chunk-23",
+      "section_id": "section-13",
+      "section": "4.3 ABLATION STUDIES (RQ2)",
+      "page_start": 8,
+      "page_end": 8,
+      "text": "NaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\n\nComprehensiveness\n36.0%\n64.0%\n43.2%\n56.8%\n19.2%\n80.8%\n36.0%\n64.0%\nDiversity\n28.0%\n72.0%\n39.6%\n60.4%\n13.6%\n86.4%\n33.2%\n66.8%\nEmpowerment\n34.8%\n65.2%\n42.8%\n57.2%\n16.4%\n83.6%\n35.2%\n64.8%\nOverall\n34.8%\n65.2%\n43.6%\n56.4%\n18.8%\n81.2%\n35.2%\n64.8%\n\nNaiveRAG\n-Origin\nNaiveRAG\n-Origin\nNaiveRAG\n-Origin\nNaiveRAG\n-Origin\n\nComprehensiveness\n24.8%\n75.2%\n39.2%\n60.8%\n16.4%\n83.6%\n44.4%\n55.6%\nDiversity\n26.4%\n73.6%\n44.8%\n55.2%\n14.4%\n85.6%\n25.6%\n74.4%\nEmpowerment\n32.0%\n68.0%\n43.2%\n56.8%\n17.2%\n82.8%\n45.2%\n54.8%\nOverall\n25.6%\n74.4%\n39.2%\n60.8%\n15.6%\n84.4%\n44.4%\n55.6%",
+      "order": 22
+    },
+    "status": 200,
+    "raw_pdf_page": 8,
+    "verified_raw_markers": [
+      "Table 2:",
+      "-Origin",
+      "64.8"
+    ]
+  }
+]

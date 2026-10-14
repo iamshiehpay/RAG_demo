@@ -1,0 +1,25 @@
+{
+  "purpose": "read-only selection check on saved trial10 tree; actual prompt source recorded in responses.jsonl",
+  "levels": [
+    {
+      "level": "section",
+      "context_tokens": 8233,
+      "prompt_tokens": 8749,
+      "fits": false
+    },
+    {
+      "level": "group:1",
+      "context_tokens": 2797,
+      "prompt_tokens": 3314,
+      "fits": true
+    },
+    {
+      "level": "document",
+      "context_tokens": 1167,
+      "prompt_tokens": 1684,
+      "fits": true
+    }
+  ],
+  "selected": "group:1",
+  "most_detailed_fitting": true
+}

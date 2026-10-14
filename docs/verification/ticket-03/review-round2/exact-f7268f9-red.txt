@@ -1,0 +1,127 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+__ test_heading_immediately_after_table_keeps_section_and_reconstructed_cells __
+
+    async def test_heading_immediately_after_table_keeps_section_and_reconstructed_cells():
+        chunks = await uploaded_chunks(table_boundary_pdf("2 METHOD DETAILS"))
+        table = next(c for c in chunks if c.kind == "table")
+>       assert table.table_reconstructed
+E       AssertionError: assert False
+E        +  where False = Chunk(id='81ae2174a1ce444bbee988a48b9fcb63:chunk-2', section_id='section-1', section='1 Introduction', page_start=1, p...Measured accuracy.', table_meaning='', table_headers=[], table_rows=[], table_reconstructed=False, linked_chunk_ids=[]).table_reconstructed
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:534: AssertionError
+_ test_short_list_or_equation_after_grid_stays_in_section_prose[(a) Alpha subset] _
+
+following = '(a) Alpha subset'
+
+    @pytest.mark.parametrize("following", ["(a) Alpha subset", "x = 2 + y"])
+    async def test_short_list_or_equation_after_grid_stays_in_section_prose(following):
+        chunks = await uploaded_chunks(table_boundary_pdf(following))
+        table = next(c for c in chunks if c.kind == "table")
+>       assert table.table_reconstructed
+E       AssertionError: assert False
+E        +  where False = Chunk(id='4b4f221dff0b4be18c690e6edf068756:chunk-2', section_id='section-1', section='1 Introduction', page_start=1, p...Measured accuracy.', table_meaning='', table_headers=[], table_rows=[], table_reconstructed=False, linked_chunk_ids=[]).table_reconstructed
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:546: AssertionError
+___ test_short_list_or_equation_after_grid_stays_in_section_prose[x = 2 + y] ___
+
+following = 'x = 2 + y'
+
+    @pytest.mark.parametrize("following", ["(a) Alpha subset", "x = 2 + y"])
+    async def test_short_list_or_equation_after_grid_stays_in_section_prose(following):
+        chunks = await uploaded_chunks(table_boundary_pdf(following))
+        table = next(c for c in chunks if c.kind == "table")
+>       assert table.table_reconstructed
+E       AssertionError: assert False
+E        +  where False = Chunk(id='aaaf5312be1c4bd2a4e9f8a3b11e9cc8:chunk-2', section_id='section-1', section='1 Introduction', page_start=1, p...Measured accuracy.', table_meaning='', table_headers=[], table_rows=[], table_reconstructed=False, linked_chunk_ids=[]).table_reconstructed
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:546: AssertionError
+_ test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[wrapped-prose] _
+
+long = False
+
+    @pytest.mark.parametrize("long", [False, True], ids=["wrapped-prose", "over-2000-tokens"])
+    async def test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds(long):
+        chunks = await uploaded_chunks(wrapped_table_reference_pdf(long=long))
+        table = next(c for c in chunks if c.kind == "table")
+>       assert table.table_caption == "Table 1: Measured accuracy."
+E       AssertionError: assert 'The numbers ...eeds of runs.' == 'Table 1: Measured accuracy.'
+E         
+E         - Table 1: Measured accuracy.
+E         + The numbers below are drawn from independent evaluations of our measured systems. Table 1. Every value is averaged over three independent seeds of runs.
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:593: AssertionError
+_ test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[over-2000-tokens] _
+
+long = True
+
+    @pytest.mark.parametrize("long", [False, True], ids=["wrapped-prose", "over-2000-tokens"])
+    async def test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds(long):
+>       chunks = await uploaded_chunks(wrapped_table_reference_pdf(long=long))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:591: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = b'%PDF-1.7\n%\xc2\xb5\xc2\xb6\n% Written by MuPDF 1.28.2\n\n1 0 obj\n<</Type/Catalog/Pages 2 0 R/Info<</Producer(MuPDF...e 258/Root 1 0 R/ID[<C2854A3AC2B946514441C2BEC284C2AF><40E17DA9613E06B61CD611A94AA8A0CB>]>>\nstartxref\n56469\n%%EOF\n'
+
+    async def uploaded_chunks(data):
+        app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
+        events = [e async for e in app.upload_document(data, "layout.pdf")]
+>       assert events[-1].type == "ready"
+E       AssertionError: assert 'error' == 'ready'
+E         
+E         - ready
+E         + error
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:345: AssertionError
+_____ test_distinct_caption_typography_within_body_block_keeps_prior_prose _____
+
+    async def test_distinct_caption_typography_within_body_block_keeps_prior_prose():
+        import pymupdf
+    
+        with pymupdf.open() as pdf:
+            page = pdf.new_page()
+            page.insert_text((72, 60), "1 Results", fontsize=14, fontname="tibo")
+            page.insert_text(
+                (72, 90),
+                "The following measurements compare the accuracy of both systems.",
+                fontsize=10,
+                fontname="tiro",
+            )
+            page.insert_text((72, 102), "Table 1: Measured accuracy.", fontsize=9, fontname="tiro")
+            for i, row in enumerate([["Method", "Accuracy"], ["Base", "10.5"], ["Ours", "11.7"]]):
+                for x, cell in zip([72, 220], row, strict=True):
+                    page.insert_text((x, 127 + i * 12), cell, fontsize=9, fontname="tiro")
+            chunks = await uploaded_chunks(pdf.tobytes())
+        table = next(c for c in chunks if c.kind == "table")
+>       assert table.table_reconstructed and table.table_caption == "Table 1: Measured accuracy."
+E       AssertionError: assert (True and 'The followin...red accuracy.' == 'Table 1: Measured accuracy.'
+E        +  where True = Chunk(id='4672dff40d594a05b0ac1c46178f9a4e:chunk-1', section_id='section-1', section='1 Results', page_start=1, page_e...['Method', 'Accuracy'], table_rows=[['Base', '10.5'], ['Ours', '11.7']], table_reconstructed=True, linked_chunk_ids=[]).table_reconstructed
+E         
+E         - Table 1: Measured accuracy.
+E         + The following measurements compare the accuracy of both systems. Table 1: Measured accuracy.)
+
+/private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py:624: AssertionError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py::test_heading_immediately_after_table_keeps_section_and_reconstructed_cells
+FAILED ../../../../../../../private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py::test_short_list_or_equation_after_grid_stays_in_section_prose[(a) Alpha subset]
+FAILED ../../../../../../../private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py::test_short_list_or_equation_after_grid_stays_in_section_prose[x = 2 + y]
+FAILED ../../../../../../../private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py::test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[wrapped-prose]
+FAILED ../../../../../../../private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py::test_wrapped_table_reference_keeps_prose_and_real_caption_and_upload_succeeds[over-2000-tokens]
+FAILED ../../../../../../../private/tmp/nova-i03-red-f7268f9/tests/integration/test_tables.py::test_distinct_caption_typography_within_body_block_keeps_prior_prose
+6 failed, 17 deselected, 5 warnings in 7.55s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

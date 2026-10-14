@@ -1,0 +1,57 @@
+### scanned
+Chat with Document
+
+Ask a question. Follow the evidence back to your Document.
+
+PDF Document
+
+Document could not be processed. Choose another PDF.
+
+This Document has no text layer; scanned PDFs are not supported.
+
+Questions will be available when your Document is ready.
+
+Question
+Ask
+--- alert:
+[
+  "This Document has no text layer; scanned PDFs are not supported."
+]
+### notpdf
+Chat with Document
+
+Ask a question. Follow the evidence back to your Document.
+
+PDF Document
+
+Document could not be processed. Choose another PDF.
+
+Please upload a valid PDF Document.
+
+Questions will be available when your Document is ready.
+
+Question
+Ask
+--- alert:
+[
+  "Please upload a valid PDF Document."
+]
+### truncated-lightrag
+Chat with Document
+
+Ask a question. Follow the evidence back to your Document.
+
+PDF Document
+
+Document could not be processed. Choose another PDF.
+
+Please upload a valid PDF Document; this PDF is damaged.
+
+Questions will be available when your Document is ready.
+
+Question
+Ask
+--- alert:
+[
+  "Please upload a valid PDF Document; this PDF is damaged."
+]

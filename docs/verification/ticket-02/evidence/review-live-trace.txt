@@ -1,0 +1,44 @@
+Trace · 2 LLM calls
+Question plan
+Question Type
+Lookup
+Standalone Question
+What does Section 4.3 say about the ablated LightRAG variants?
+Plan source
+router
+router · think=low
+Context Budget: 1432 / 10000
+Estimated prompt (includes 300 safety margin)
+832
+prompt_eval_count
+493
+Output reservation (thinking + answer)
+600
+eval_count
+104
+Latency
+1.46 s
+done_reason
+stop
+Model thinking
+answer · think=medium
+Context Budget: 5281 / 10000
+Estimated prompt (includes 300 safety margin)
+2281
+prompt_eval_count
+2056
+Output reservation (thinking + answer)
+3000
+eval_count
+1118
+Latency
+4.79 s
+done_reason
+stop
+Model thinking
+Retrieved Chunks · cosine similarity
+p.1 · LIGHTRAG: SIMPLE AND FAST RETRIEVAL-AUGMENTED GENERATION · 0.4680
+p.6 · 4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1) · 0.4707
+p.7 · 4.3 ABLATION STUDIES (RQ2) · 0.5183
+p.8 · 4.3 ABLATION STUDIES (RQ2) · 0.4990
+p.10 · 5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS · 0.4731

@@ -1,0 +1,549 @@
+{
+  "question": "Compare LightRAG with GraphRAG",
+  "events": [
+    {
+      "type": "plan",
+      "question_type": "Synthesis",
+      "standalone_question": "Compare LightRAG with GraphRAG",
+      "sub_queries": [
+        "LightRAG architecture vs GraphRAG architecture",
+        "LightRAG performance metrics compared to GraphRAG",
+        "LightRAG limitations and maintenance compared to GraphRAG"
+      ],
+      "plan_source": "router",
+      "fallback_reason": null
+    },
+    {
+      "type": "retrieval",
+      "chunks": [
+        {
+          "chunk": {
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-13",
+            "section_id": "page-6",
+            "section": "Virtual Section 6",
+            "page_start": 6,
+            "page_end": 6,
+            "text": "• GraphRAG (Edge et al., 2024): This is a graph-enhanced RAG system that utilizes an LLM to\nextract entities and relationships from the text, representing them as nodes and edges. It generates\ncorresponding descriptions for these elements, aggregates nodes into communities, and produces a\ncommunity report to capture global information. When handling high-level queries, GraphRAG\nretrieves more comprehensive information by traversing these communities.\n\nImplementation and Evaluation Details. In our experiments, we utilize the nano vector database\nfor vector data management and access. For all LLM-based operations in LightRAG, we default\nto using GPT-4o-mini. To ensure consistency, the chunk size is set to 1200 across all datasets.\nAdditionally, the gleaning parameter is fixed at 1 for both GraphRAG and LightRAG.\n\nDefining ground truth for many RAG queries, particularly those involving complex high-level\nsemantics, poses significant challenges. To address this, we build on existing work (Edge et al.,\n2024) and adopt an LLM-based multi-dimensional comparison method. We employ a robust LLM,\nspecifically GPT-4o-mini, to rank each baseline against our LightRAG. The evaluation prompt we\nused is detailed in Appendix 7.3.4. In total, we utilize four evaluation dimensions, including:\n\ni) Comprehensiveness: How thoroughly does the answer address all aspects and details of the\nquestion? ii) Diversity: How varied and rich is the answer in offering different perspectives and\ninsights related to the question? iii) Empowerment: How effectively does the answer enable the\nreader to understand the topic and make informed judgments? iv) Overall: This dimension assesses\nthe cumulative performance across the three preceding criteria to identify the best overall answer.\n\nThe LLM directly compares two answers for each dimension and selects the superior response for\neach criterion. After identifying the winning answer for the three dimensions, the LLM combines the\nresults to determine the overall better answer. To ensure a fair evaluation and mitigate the potential\nbias that could arise from the order in which the answers are presented in the prompt, we alternate the\nplacement of each answer. We calculate win rates accordingly, ultimately leading to the final results.\n\n4.2\nCOMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+            "order": 12
+          },
+          "score": 0.6693480014801025
+        },
+        {
+          "chunk": {
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
+            "section_id": "page-7",
+            "section": "Virtual Section 7",
+            "page_start": 7,
+            "page_end": 7,
+            "text": "Comprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nThe Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora When handling large\ntoken counts and complex queries that require a thorough understanding of the dataset’s context,\ngraph-based RAG systems like LightRAG and GraphRAG consistently outperform purely chunk-\nbased retrieval methods such as NaiveRAG, HyDE, and RQRAG. This performance gap becomes\nparticularly pronounced as the dataset size increases. For instance, in the largest dataset (Legal), the\ndisparity widens significantly, with baseline methods achieving only about 20% win rates compared\nto the dominance of LightRAG. This trend underscores the advantages of graph-enhanced RAG\nsystems in capturing complex semantic dependencies within large-scale corpora, facilitating a more\ncomprehensive understanding of knowledge and leading to improved generalization performance.",
+            "order": 15
+          },
+          "score": 0.6992244720458984
+        },
+        {
+          "chunk": {
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+            "section_id": "page-8",
+            "section": "Virtual Section 8",
+            "page_start": 8,
+            "page_end": 8,
+            "text": "i) Comprehensiveness. Notably, LightRAG covers a broader range of machine learning metrics,\nshowcasing its comprehensiveness and ability to effectively discover relevant information. This\nhighlights the strength of our graph-based indexing paradigm, which excels in precise entity and\nrelation extraction as well as LLM profiling. ii) Both Diversity and Empowerment. Furthermore,\nLightRAG not only offers a more diverse array of information but also delivers more empowering\ncontent. This success is due to LightRAG’s hierarchical retrieval paradigm, which combines in-depth\n\n8",
+            "order": 20
+          },
+          "score": 0.6737582683563232
+        },
+        {
+          "chunk": {
+            "id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-22",
+            "section_id": "page-9",
+            "section": "Virtual Section 9",
+            "page_start": 9,
+            "page_end": 9,
+            "text": "Table 3: Case Study: Comparison Between LightRAG and the Baseline Method GraphRAG.",
+            "order": 21
+          },
+          "score": 0.6768410801887512
+        }
+      ]
+    },
+    {
+      "type": "citation_map",
+      "citations": [
+        {
+          "id": "C1",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-13",
+          "section": "Virtual Section 6",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "id": "C2",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
+          "section": "Virtual Section 7",
+          "page_start": 7,
+          "page_end": 7
+        },
+        {
+          "id": "C3",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
+        },
+        {
+          "id": "C4",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-22",
+          "section": "Virtual Section 9",
+          "page_start": 9,
+          "page_end": 9
+        }
+      ]
+    },
+    {
+      "type": "delta",
+      "text": "**Performance"
+    },
+    {
+      "type": "delta",
+      "text": " metrics"
+    },
+    {
+      "type": "delta",
+      "text": "**\n\n"
+    },
+    {
+      "type": "delta",
+      "text": "The"
+    },
+    {
+      "type": "delta",
+      "text": " win"
+    },
+    {
+      "type": "delta",
+      "text": "‑rate tables show that Light"
+    },
+    {
+      "type": "delta",
+      "text": "RAG consistently achieves"
+    },
+    {
+      "type": "delta",
+      "text": " higher percentages"
+    },
+    {
+      "type": "delta",
+      "text": " than"
+    },
+    {
+      "type": "delta",
+      "text": " GraphRAG across"
+    },
+    {
+      "type": "delta",
+      "text": " all"
+    },
+    {
+      "type": "delta",
+      "text": " four evaluation dimensions ("
+    },
+    {
+      "type": "delta",
+      "text": "Comprehensiveness, Diversity"
+    },
+    {
+      "type": "delta",
+      "text": ", Empowerment, Overall"
+    },
+    {
+      "type": "delta",
+      "text": ") on"
+    },
+    {
+      "type": "delta",
+      "text": " each"
+    },
+    {
+      "type": "delta",
+      "text": " dataset. For"
+    },
+    {
+      "type": "delta",
+      "text": " example, in the first set"
+    },
+    {
+      "type": "delta",
+      "text": " of results"
+    },
+    {
+      "type": "delta",
+      "text": " Light"
+    },
+    {
+      "type": "delta",
+      "text": "RAG’s win"
+    },
+    {
+      "type": "delta",
+      "text": " rates"
+    },
+    {
+      "type": "delta",
+      "text": " are 74"
+    },
+    {
+      "type": "delta",
+      "text": " % vs"
+    },
+    {
+      "type": "delta",
+      "text": ". 26"
+    },
+    {
+      "type": "delta",
+      "text": " % ("
+    },
+    {
+      "type": "delta",
+      "text": "Comprehensiveness), "
+    },
+    {
+      "type": "delta",
+      "text": "76 % vs. "
+    },
+    {
+      "type": "delta",
+      "text": "24 % (Diversity"
+    },
+    {
+      "type": "delta",
+      "text": "), 74"
+    },
+    {
+      "type": "delta",
+      "text": ".8 "
+    },
+    {
+      "type": "delta",
+      "text": "% vs. 25"
+    },
+    {
+      "type": "delta",
+      "text": ".2 % (Emp"
+    },
+    {
+      "type": "delta",
+      "text": "owerment) and 75"
+    },
+    {
+      "type": "delta",
+      "text": "."
+    },
+    {
+      "type": "delta",
+      "text": "2 % vs. "
+    },
+    {
+      "type": "delta",
+      "text": "24.8 % ("
+    },
+    {
+      "type": "delta",
+      "text": "Overall) "
+    },
+    {
+      "type": "delta",
+      "text": "[C2]. In"
+    },
+    {
+      "type": "delta",
+      "text": " the second set Light"
+    },
+    {
+      "type": "delta",
+      "text": "RAG also"
+    },
+    {
+      "type": "delta",
+      "text": " leads"
+    },
+    {
+      "type": "delta",
+      "text": ","
+    },
+    {
+      "type": "delta",
+      "text": " e.g., 54"
+    },
+    {
+      "type": "delta",
+      "text": ".4"
+    },
+    {
+      "type": "delta",
+      "text": " % vs. 45"
+    },
+    {
+      "type": "delta",
+      "text": ".6 % (Com"
+    },
+    {
+      "type": "delta",
+      "text": "prehensiveness), 77"
+    },
+    {
+      "type": "delta",
+      "text": ".2 % vs"
+    },
+    {
+      "type": "delta",
+      "text": ". 22"
+    },
+    {
+      "type": "delta",
+      "text": ".8 % (D"
+    },
+    {
+      "type": "delta",
+      "text": "iversity), 58"
+    },
+    {
+      "type": "delta",
+      "text": ".8 % vs."
+    },
+    {
+      "type": "delta",
+      "text": " 41.2 %"
+    },
+    {
+      "type": "delta",
+      "text": " (Empowerment) and"
+    },
+    {
+      "type": "delta",
+      "text": " 54"
+    },
+    {
+      "type": "delta",
+      "text": ".8 % vs."
+    },
+    {
+      "type": "delta",
+      "text": " 45.2 %"
+    },
+    {
+      "type": "delta",
+      "text": " (Overall) "
+    },
+    {
+      "type": "delta",
+      "text": "[C2].\n\n**Qual"
+    },
+    {
+      "type": "delta",
+      "text": "itative advantages"
+    },
+    {
+      "type": "delta",
+      "text": "**\n\nLight"
+    },
+    {
+      "type": "delta",
+      "text": "RAG is"
+    },
+    {
+      "type": "delta",
+      "text": " described as covering"
+    },
+    {
+      "type": "delta",
+      "text": " a broader range of machine‑"
+    },
+    {
+      "type": "delta",
+      "text": "learning metrics, providing"
+    },
+    {
+      "type": "delta",
+      "text": " more"
+    },
+    {
+      "type": "delta",
+      "text": " diverse information"
+    },
+    {
+      "type": "delta",
+      "text": ","
+    },
+    {
+      "type": "delta",
+      "text": " and delivering more empowering content."
+    },
+    {
+      "type": "delta",
+      "text": " These"
+    },
+    {
+      "type": "delta",
+      "text": " strengths"
+    },
+    {
+      "type": "delta",
+      "text": " are"
+    },
+    {
+      "type": "delta",
+      "text": " attributed to its hierarchical"
+    },
+    {
+      "type": "delta",
+      "text": " retrieval paradigm,"
+    },
+    {
+      "type": "delta",
+      "text": " which combines in‑"
+    },
+    {
+      "type": "delta",
+      "text": "depth graph"
+    },
+    {
+      "type": "delta",
+      "text": "‑based indexing"
+    },
+    {
+      "type": "delta",
+      "text": " with L"
+    },
+    {
+      "type": "delta",
+      "text": "LM profiling"
+    },
+    {
+      "type": "delta",
+      "text": " "
+    },
+    {
+      "type": "delta",
+      "text": "[C3].\n\n**Summary"
+    },
+    {
+      "type": "delta",
+      "text": "**\n\nOverall"
+    },
+    {
+      "type": "delta",
+      "text": ", LightRAG out"
+    },
+    {
+      "type": "delta",
+      "text": "performs GraphRAG"
+    },
+    {
+      "type": "delta",
+      "text": " both"
+    },
+    {
+      "type": "delta",
+      "text": " quantit"
+    },
+    {
+      "type": "delta",
+      "text": "atively (higher win‑rate"
+    },
+    {
+      "type": "delta",
+      "text": " percentages on"
+    },
+    {
+      "type": "delta",
+      "text": " all dimensions) and qualit"
+    },
+    {
+      "type": "delta",
+      "text": "atively (bro"
+    },
+    {
+      "type": "delta",
+      "text": "ader metric"
+    },
+    {
+      "type": "delta",
+      "text": " coverage, greater"
+    },
+    {
+      "type": "delta",
+      "text": " diversity, and more"
+    },
+    {
+      "type": "delta",
+      "text": " empowering answers"
+    },
+    {
+      "type": "delta",
+      "text": ") "
+    },
+    {
+      "type": "delta",
+      "text": "[C2][C3]."
+    },
+    {
+      "type": "final",
+      "answer": "**Performance metrics**\n\nThe win‑rate tables show that LightRAG consistently achieves higher percentages than GraphRAG across all four evaluation dimensions (Comprehensiveness, Diversity, Empowerment, Overall) on each dataset. For example, in the first set of results LightRAG’s win rates are 74 % vs. 26 % (Comprehensiveness), 76 % vs. 24 % (Diversity), 74.8 % vs. 25.2 % (Empowerment) and 75.2 % vs. 24.8 % (Overall) [C2]. In the second set LightRAG also leads, e.g., 54.4 % vs. 45.6 % (Comprehensiveness), 77.2 % vs. 22.8 % (Diversity), 58.8 % vs. 41.2 % (Empowerment) and 54.8 % vs. 45.2 % (Overall) [C2].\n\n**Qualitative advantages**\n\nLightRAG is described as covering a broader range of machine‑learning metrics, providing more diverse information, and delivering more empowering content. These strengths are attributed to its hierarchical retrieval paradigm, which combines in‑depth graph‑based indexing with LLM profiling [C3].\n\n**Summary**\n\nOverall, LightRAG outperforms GraphRAG both quantitatively (higher win‑rate percentages on all dimensions) and qualitatively (broader metric coverage, greater diversity, and more empowering answers) [C2][C3].",
+      "citations": [
+        {
+          "id": "C2",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-16",
+          "section": "Virtual Section 7",
+          "page_start": 7,
+          "page_end": 7
+        },
+        {
+          "id": "C3",
+          "source_id": "e4c2e5dfc2fd485bb5f9cd97fb8339dc:chunk-21",
+          "section": "Virtual Section 8",
+          "page_start": 8,
+          "page_end": 8
+        }
+      ],
+      "unverified": []
+    },
+    {
+      "type": "trace",
+      "calls": [
+        {
+          "call_type": "router",
+          "estimated_prompt_tokens": 824,
+          "prompt_eval_count": 485,
+          "eval_count": 103,
+          "think": "low",
+          "num_predict": 600,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to classify. Comparing two systems => Synthesis. Provide standalone_question: \"Compare LightRAG with GraphRAG\". sub_queries 2-3. Provide JSON.",
+          "latency_ms": 758.2285420503467,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": "router",
+          "fallback_reason": null
+        },
+        {
+          "call_type": "answer",
+          "estimated_prompt_tokens": 1632,
+          "prompt_eval_count": 1407,
+          "eval_count": 895,
+          "think": "medium",
+          "num_predict": 3000,
+          "context_budget": 10000,
+          "safety_margin": 300,
+          "thinking": "We need to compare LightRAG with GraphRAG using the supplied excerpts. We have data in C2: a table with percentages for various dimensions (Comprehensiveness, Diversity, Empowerment, Overall) for GraphRAG and LightRAG across presumably two datasets? The table seems to have two columns per method? Actually the table shows rows: first block maybe for one dataset? The formatting is confusing. Let's parse.\n\nC2 shows:\n\nComprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nThen labels: GraphRAG LightRAG GraphRAG LightRAG GraphRAG LightRAG GraphRAG LightRAG\n\nSo likely there are four datasets, each with GraphRAG and LightRAG percentages. Then second block:\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nAgain with same labels.\n\nThus we can compare LightRAG vs GraphRAG: LightRAG generally higher win rates across dimensions. Also C1 mentions GraphRAG extracts entities and relationships, aggregates nodes into communities, and LightRAG uses same gleaning parameter. C3 says LightRAG covers broader range of metrics, more diverse and empowering content due to hierarchical retrieval paradigm. So combine.\n\nThus answer: LightRAG outperforms GraphRAG in comprehensiveness, diversity, empowerment, overall win rates across datasets, and offers broader metric coverage and more diverse/empowering content thanks to hierarchical retrieval. Provide citations.\n\n",
+          "latency_ms": 3523.076542187482,
+          "done_reason": "stop",
+          "discarded_fact_lines": 0,
+          "plan_source": null,
+          "fallback_reason": null
+        }
+      ]
+    }
+  ]
+}

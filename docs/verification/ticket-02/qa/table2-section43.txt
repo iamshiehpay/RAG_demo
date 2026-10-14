@@ -1,0 +1,88 @@
+===== 6f1e63f063074deeb5a5968e16ca8001:chunk-22 7 8
+We also conduct ablation studies to evaluate the impact of our dual-level retrieval paradigm and the
+effectiveness of our graph-based text indexing in LightRAG. The results are presented in Table 2.
+
+Effectiveness of Dual-level Retrieval Paradigm. We begin by analyzing the effects of low-level and
+high-level retrieval paradigms. We compare two ablated models—each omitting one module—against
+LightRAG across four datasets. Here are our key observations for the different variants:
+
+Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference.
+
+Agriculture
+CS
+Legal
+Mix
+
+NaiveRAG
+LightRAG
+NaiveRAG
+LightRAG
+NaiveRAG
+LightRAG
+NaiveRAG
+LightRAG
+
+Comprehensiveness
+32.4%
+67.6%
+38.4%
+61.6%
+16.4%
+83.6%
+38.8%
+61.2%
+Diversity
+23.6%
+76.4%
+38.0%
+62.0%
+13.6%
+86.4%
+32.4%
+67.6%
+Empowerment
+32.4%
+67.6%
+38.8%
+61.2%
+16.4%
+83.6%
+42.8%
+57.2%
+Overall
+32.4%
+67.6%
+38.8%
+61.2%
+15.2%
+84.8%
+40.0%
+60.0% True
+67.6% True
+Table 2 True
+-High True
+LightRAG True
+===== 6f1e63f063074deeb5a5968e16ca8001:chunk-23 8 8
+
+60.0% False
+67.6% False
+Table 2 False
+-High False
+LightRAG False
+===== 6f1e63f063074deeb5a5968e16ca8001:chunk-24 8 8
+• Low-level-only Retrieval: The -High variant removes high-order retrieval, leading to a significant
+performance decline across nearly all datasets and metrics. This drop is mainly due to its emphasis
+on the specific information, which focuses excessively on entities and their immediate neighbors.
+While this approach enables deeper exploration of directly related entities, it struggles to gather
+information for complex queries that demand comprehensive insights.
+• High-level-only Retrieval: The -Low variant prioritizes capturing a broader range of content by
+leveraging entity-wise relationships rather than focusing on specific entities. This approach offers
+a significant advantage in comprehensiveness, allowing it to gather more extensive and varied
+information. However, the trade-off is a reduced depth in examining specific entities, which can
+limit its ability to provide highly detaile
+60.0% False
+67.6% False
+Table 2 False
+-High True
+LightRAG True
+[('chunk-22', 'We also conduct ablation studies to evaluate the impact of o'), ('chunk-28', 'Figure 2: Comparison of Cost in Terms of To-\nkens and API Ca')]

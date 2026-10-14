@@ -1,0 +1,124 @@
+Chat with Document
+
+Ask a question. Follow the evidence back to your Document.
+
+PDF Document
+
+lightrag.pdf · 40 Chunks · Ready
+
+What does Section 4.3 say about the ablated LightRAG variants?
+
+Answer complete
+
+Section 4.3 reports a set of ablation experiments that isolate the contributions of LightRAG’s dual‑level retrieval paradigm and its graph‑based text‑indexing component. Three “ablated” variants are evaluated against the full LightRAG model on four benchmark datasets (Agriculture, CS, Legal, Mix) and four evaluation dimensions (Comprehensiveness, Diversity, Empowerment, Overall) [C3].
+
+* **High‑level retrieval removed (NaiveRAG‑High).**  
+  When the high‑level retrieval module is omitted, the win‑rate of the system drops markedly. For example, on the Agriculture set the overall win‑rate falls from 65.2 % (full LightRAG) to 34.8 % (NaiveRAG‑High); on CS it falls from 57.2 % to 42.8 %; on Legal from 78.0 % to 22.0 %; and on Mix from 57.6 % to 42.4 % [C3].
+
+* **Low‑level retrieval removed (NaiveRAG‑Low).**  
+  Removing the low‑level retrieval module also degrades performance, though the pattern differs slightly. The overall win‑rates become 64.0 % (Agriculture), 56.8 % (CS), 81.2 % (Legal), and 64.8 % (Mix) compared with 65.2 %, 56.8 %, 81.2 %, and 64.8 % for the full model [C4].
+
+* **Origin (graph‑based indexing) removed (NaiveRAG‑Origin).**  
+  Eliminating the graph‑based text‑indexing (“origin”) component leads to the largest drops. Overall win‑rates fall to 75.2 % (Agriculture), 60.8 % (CS), 84.4 % (Legal), and 55.6 % (Mix) versus the full LightRAG scores of 74.4 %, 60.8 %, 84.4 %, and 55.6 % respectively [C4].
+
+Across all metrics and datasets, each ablated version underperforms the complete LightRAG system, confirming that both the high‑level and low‑level retrieval stages and the graph‑based indexing are essential for LightRAG’s superior performance.
+[C3] · p.7–8
+4.3 ABLATION STUDIES (RQ2)
+[C4] · p.8
+4.3 ABLATION STUDIES (RQ2)
+Trace · 2 LLM calls
+Source · p.8 · 4.3 ABLATION STUDIES (RQ2)
+Close source
+NaiveRAG
+-Low
+NaiveRAG
+-Low
+NaiveRAG
+-Low
+NaiveRAG
+-Low
+
+Comprehensiveness
+36.0%
+64.0%
+43.2%
+56.8%
+19.2%
+80.8%
+36.0%
+64.0%
+Diversity
+28.0%
+72.0%
+39.6%
+60.4%
+13.6%
+86.4%
+33.2%
+66.8%
+Empowerment
+34.8%
+65.2%
+42.8%
+57.2%
+16.4%
+83.6%
+35.2%
+64.8%
+Overall
+34.8%
+65.2%
+43.6%
+56.4%
+18.8%
+81.2%
+35.2%
+64.8%
+
+NaiveRAG
+-Origin
+NaiveRAG
+-Origin
+NaiveRAG
+-Origin
+NaiveRAG
+-Origin
+
+Comprehensiveness
+24.8%
+75.2%
+39.2%
+60.8%
+16.4%
+83.6%
+44.4%
+55.6%
+Diversity
+26.4%
+73.6%
+44.8%
+55.2%
+14.4%
+85.6%
+25.6%
+74.4%
+Empowerment
+32.0%
+68.0%
+43.2%
+56.8%
+17.2%
+82.8%
+45.2%
+54.8%
+Overall
+25.6%
+74.4%
+39.2%
+60.8%
+15.6%
+84.4%
+44.4%
+55.6%
+Question
+Ask

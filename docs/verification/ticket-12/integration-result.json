@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "command": "PYTHONPATH=src:. .venv/bin/python -m pytest -q",
+  "git_head_before": "abd7fc7c696fe4347c6a1561500772e432bba2a0",
+  "git_head_after": "abd7fc7c696fe4347c6a1561500772e432bba2a0",
+  "started_at_utc": "2026-10-13T15:19:15.524132+00:00",
+  "finished_at_utc": "2026-10-13T15:23:28.307108+00:00",
+  "elapsed_seconds": 252.76335241715424,
+  "exit_code": 0,
+  "pytest_summary": "327 passed, 3 deselected, 6 warnings in 252.49s (0:04:12)",
+  "counts": {
+    "passed": 327,
+    "failed": 0,
+    "skipped": 0,
+    "deselected": 3,
+    "warnings": 6,
+    "errors": 0
+  },
+  "runs": 1,
+  "reruns": 0,
+  "git_status_before": "",
+  "git_status_after_before_result_card_update": "?? docs/verification/ticket-12/integration-environment.json\n?? docs/verification/ticket-12/integration-full-suite.txt\n?? docs/verification/ticket-12/integration-http-readiness.json\n",
+  "worker_written_paths": [
+    "docs/verification/ticket-12/integration-environment.json",
+    "docs/verification/ticket-12/integration-full-suite.txt",
+    "docs/verification/ticket-12/integration-result.json",
+    ".lat/tasks/2026-10-13-nova-check12.md"
+  ],
+  "source_changes_by_worker": [],
+  "extra_temporary_paths": [],
+  "stdout_stderr_file": "docs/verification/ticket-12/integration-full-suite.txt",
+  "cloud_eval": "Not run; default not-eval selection retained",
+  "manual_ui_qa": "Not run; D09 human responsibility",
+  "final_git_status": "?? docs/verification/ticket-12/integration-environment.json\n?? docs/verification/ticket-12/integration-full-suite.txt\n?? docs/verification/ticket-12/integration-http-readiness.json\n?? docs/verification/ticket-12/integration-result.json\n",
+  "final_tracked_diff_names": [],
+  "final_git_head": "abd7fc7c696fe4347c6a1561500772e432bba2a0",
+  "concurrent_other_agent_paths": [
+    "docs/verification/ticket-12/integration-http-readiness.json"
+  ],
+  "warnings": [
+    "PyMuPDF SWIG builtin types missing __module__ (five warnings in pytest summary)",
+    "Starlette TestClient httpx deprecation (one warning in pytest summary)",
+    "Additional sys:1 SWIG deprecation line emitted at interpreter shutdown; retained in full output"
+  ],
+  "active_owned_processes_after_completion": []
+}

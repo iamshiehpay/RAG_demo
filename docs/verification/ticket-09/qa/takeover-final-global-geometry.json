@@ -1,0 +1,11 @@
+{
+  "bottom": 648.15625,
+  "plan": "Trace 1 LLM call \u00b7 1 ChunksQuestion TypeGlobalStandalone QuestionPerformance of ablated versions of LightRAGPlan sourcefallbackFallback reasonmissing_rewriteRewrite language mismatchOriginal question retained; Question Type preserved.Router rewriteScripted wrong-language rewriteInvalid Citations: 0Chunks dropped because of Context Budget: 001 / answerthink=mediumContext Budget5,100 / 10,000010K\u4f30\u7b97 prompt 2,100\u8f38\u51fa\u9810\u7559 3,000prompt_eval_count1875eval_count620\u5b89\u5168\u908a\u969b \u00b7 Safety margin300\u5ef6\u9072 \u00b7 Latency4.20 sdone_reasonstop\u6a21\u578b\u601d\u8003 \u00b7 Model thinkingScripted review thinking: identify the comparison baseline, then compare Overall within each dataset.\u6aa2\u7d22\u5230\u7684 Chunks \u00b7 cosine similaritypp.8\u20139 \u00b7 4.3 Ablation Study0.7218Table 2. Overall win rates of each variant against NaiveRAG.\n\nDataset       LightRAG     -Low     -Origin\nMix              60.0       64.8       63.6\nAgriculture      67.6       61.6       74.4\n\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\n\nReview fixture: this text is scripted for design approval, not extracted by the backend.",
+  "readable": true,
+  "scrollY": 3479,
+  "top": 380.109375,
+  "viewport": [
+    1280,
+    720
+  ]
+}

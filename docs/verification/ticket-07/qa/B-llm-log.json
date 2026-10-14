@@ -1,0 +1,1 @@
+{"queued":0,"llm_log":[{"kind":"router","think":"low","num_predict":600},{"kind":"answer","think":"medium","num_predict":3000},{"kind":"answer","think":"low","num_predict":3000},{"kind":"router","think":"low","num_predict":600},{"kind":"answer","think":"medium","num_predict":3000}],"embed_calls":4}

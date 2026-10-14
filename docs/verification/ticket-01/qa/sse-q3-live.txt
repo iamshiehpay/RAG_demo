@@ -1,0 +1,738 @@
+event: plan
+data: {"type":"plan","question_type":"Lookup","standalone_question":"Performance of ablated versions of LightRAG","sub_queries":[]}
+
+event: retrieval
+data: {"type":"retrieval","chunks":[{"chunk":{"id":"c9f95ee993cd4f808418babdf601f9e5:chunk-18","section_id":"page-8","section":"Virtual Section 8","page_start":8,"page_end":8,"text":"Table 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference.\n\nAgriculture\nCS\nLegal\nMix\n\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\nNaiveRAG\nLightRAG\n\nComprehensiveness\n32.4%\n67.6%\n38.4%\n61.6%\n16.4%\n83.6%\n38.8%\n61.2%\nDiversity\n23.6%\n76.4%\n38.0%\n62.0%\n13.6%\n86.4%\n32.4%\n67.6%\nEmpowerment\n32.4%\n67.6%\n38.8%\n61.2%\n16.4%\n83.6%\n42.8%\n57.2%\nOverall\n32.4%\n67.6%\n38.8%\n61.2%\n15.2%\n84.8%\n40.0%\n60.0%\n\nNaiveRAG\n-High\nNaiveRAG\n-High\nNaiveRAG\n-High\nNaiveRAG\n-High\n\nComprehensiveness\n34.8%\n65.2%\n42.8%\n57.2%\n23.6%\n76.4%\n40.4%\n59.6%\nDiversity\n27.2%\n72.8%\n36.8%\n63.2%\n16.8%\n83.2%\n36.0%\n64.0%\nEmpowerment\n36.0%\n64.0%\n42.4%\n57.6%\n22.8%\n77.2%\n47.6%\n52.4%\nOverall\n35.2%\n64.8%\n44.0%\n56.0%\n22.0%\n78.0%\n42.4%\n57.6%\n\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low","order":17},"score":0.7240828275680542},{"chunk":{"id":"c9f95ee993cd4f808418babdf601f9e5:chunk-16","section_id":"page-7","section":"Virtual Section 7","page_start":7,"page_end":7,"text":"Comprehensiveness\n26.0%\n74.0%\n41.6%\n58.4%\n26.8%\n73.2%\n40.4%\n59.6%\nDiversity\n24.0%\n76.0%\n38.8%\n61.2%\n20.0%\n80.0%\n32.4%\n67.6%\nEmpowerment\n25.2%\n74.8%\n40.8%\n59.2%\n26.0%\n74.0%\n46.0%\n54.0%\nOverall\n24.8%\n75.2%\n41.6%\n58.4%\n26.4%\n73.6%\n42.4%\n57.6%\n\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\nGraphRAG\nLightRAG\n\nComprehensiveness\n45.6%\n54.4%\n48.4%\n51.6%\n48.4%\n51.6%\n50.4%\n49.6%\nDiversity\n22.8%\n77.2%\n40.8%\n59.2%\n26.4%\n73.6%\n36.0%\n64.0%\nEmpowerment\n41.2%\n58.8%\n45.2%\n54.8%\n43.6%\n56.4%\n50.8%\n49.2%\nOverall\n45.2%\n54.8%\n48.0%\n52.0%\n47.2%\n52.8%\n50.4%\n49.6%\n\nThe Superiority of Graph-enhanced RAG Systems in Large-Scale Corpora When handling large\ntoken counts and complex queries that require a thorough understanding of the dataset’s context,\ngraph-based RAG systems like LightRAG and GraphRAG consistently outperform purely chunk-\nbased retrieval methods such as NaiveRAG, HyDE, and RQRAG. This performance gap becomes\nparticularly pronounced as the dataset size increases. For instance, in the largest dataset (Legal), the\ndisparity widens significantly, with baseline methods achieving only about 20% win rates compared\nto the dominance of LightRAG. This trend underscores the advantages of graph-enhanced RAG\nsystems in capturing complex semantic dependencies within large-scale corpora, facilitating a more\ncomprehensive understanding of knowledge and leading to improved generalization performance.","order":15},"score":0.5963612794876099},{"chunk":{"id":"c9f95ee993cd4f808418babdf601f9e5:chunk-1","section_id":"page-1","section":"Virtual Section 1","page_start":1,"page_end":1,"text":"LIGHTRAG: SIMPLE AND FAST\nRETRIEVAL-AUGMENTED GENERATION\n\nZirui Guo1,2, Lianghao Xia2, Yanhua Yu1,∗, Tu Ao1, Chao Huang2∗\n\nBeijing University of Posts and Telecommunications1\n\nUniversity of Hong Kong2\n\nzrguo101@hku.hk aka_xia@foxmail.com chaohuang75@gmail.com\n\nABSTRACT\n\nRetrieval-Augmented Generation (RAG) systems enhance large language models\n(LLMs) by integrating external knowledge sources, enabling more accurate and\ncontextually relevant responses tailored to user needs. However, existing RAG\nsystems have significant limitations, including reliance on flat data representa-\ntions and inadequate contextual awareness, which can lead to fragmented answers\nthat fail to capture complex inter-dependencies. To address these challenges, we\npropose LightRAG, which incorporates graph structures into text indexing and\nretrieval processes. This innovative framework employs a dual-level retrieval sys-\ntem that enhances comprehensive information retrieval from both low-level and\nhigh-level knowledge discovery. Additionally, the integration of graph structures\nwith vector representations facilitates efficient retrieval of related entities and their\nrelationships, significantly improving response times while maintaining contextual\nrelevance. This capability is further enhanced by an incremental update algorithm\nthat ensures the timely integration of new data, allowing the system to remain\neffective and responsive in rapidly changing data environments. Extensive experi-\nmental validation demonstrates considerable improvements in retrieval accuracy\nand efficiency compared to existing approaches. We have made our LightRAG\nopen-source and available at the link: https://github.com/HKUDS/LightRAG.\n\n1\nINTRODUCTION\n\narXiv:2410.05779v3  [cs.IR]  28 Apr 2025","order":0},"score":0.5907468795776367},{"chunk":{"id":"c9f95ee993cd4f808418babdf601f9e5:chunk-28","section_id":"page-10","section":"Virtual Section 10","page_start":10,"page_end":10,"text":"This work introduces an advancement in Retrieval-Augmented Generation (RAG) through the\nintegration of a graph-based indexing approach that enhances both efficiency and comprehension\nin information retrieval. LightRAG utilizes a comprehensive knowledge graph to facilitate rapid\nand relevant document retrieval, enabling a deeper understanding of complex queries. Its dual-level\nretrieval paradigm allows for the extraction of both specific and abstract information, catering to\ndiverse user needs. Furthermore, LightRAG’s seamless incremental update capability ensures that\nthe system remains current and responsive to new information, thereby maintaining its effectiveness\nover time. Overall, LightRAG excels in both efficiency and effectiveness, significantly improving the\nspeed and quality of information retrieval and generation while reducing costs for LLM inference.\n\n10","order":27},"score":0.5857195854187012},{"chunk":{"id":"c9f95ee993cd4f808418babdf601f9e5:chunk-21","section_id":"page-8","section":"Virtual Section 8","page_start":8,"page_end":8,"text":"i) Comprehensiveness. Notably, LightRAG covers a broader range of machine learning metrics,\nshowcasing its comprehensiveness and ability to effectively discover relevant information. This\nhighlights the strength of our graph-based indexing paradigm, which excels in precise entity and\nrelation extraction as well as LLM profiling. ii) Both Diversity and Empowerment. Furthermore,\nLightRAG not only offers a more diverse array of information but also delivers more empowering\ncontent. This success is due to LightRAG’s hierarchical retrieval paradigm, which combines in-depth\n\n8","order":20},"score":0.5637774467468262}]}
+
+event: citation_map
+data: {"type":"citation_map","citations":[{"id":"C1","source_id":"c9f95ee993cd4f808418babdf601f9e5:chunk-1","section":"Virtual Section 1","page_start":1,"page_end":1},{"id":"C2","source_id":"c9f95ee993cd4f808418babdf601f9e5:chunk-16","section":"Virtual Section 7","page_start":7,"page_end":7},{"id":"C3","source_id":"c9f95ee993cd4f808418babdf601f9e5:chunk-18","section":"Virtual Section 8","page_start":8,"page_end":8},{"id":"C4","source_id":"c9f95ee993cd4f808418babdf601f9e5:chunk-21","section":"Virtual Section 8","page_start":8,"page_end":8},{"id":"C5","source_id":"c9f95ee993cd4f808418babdf601f9e5:chunk-28","section":"Virtual Section 10","page_start":10,"page_end":10}]}
+
+event: delta
+data: {"type":"delta","text":"**A"}
+
+event: delta
+data: {"type":"delta","text":"blated LightRAG"}
+
+event: delta
+data: {"type":"delta","text":" vs"}
+
+event: delta
+data: {"type":"delta","text":". NaiveRAG"}
+
+event: delta
+data: {"type":"delta","text":" (baseline)**  \n\nThe"}
+
+event: delta
+data: {"type":"delta","text":" study"}
+
+event: delta
+data: {"type":"delta","text":" evaluates"}
+
+event: delta
+data: {"type":"delta","text":" four"}
+
+event: delta
+data: {"type":"delta","text":" ab"}
+
+event: delta
+data: {"type":"delta","text":"lated versions of Light"}
+
+event: delta
+data: {"type":"delta","text":"RAG (one"}
+
+event: delta
+data: {"type":"delta","text":" for each dataset"}
+
+event: delta
+data: {"type":"delta","text":") and compares them"}
+
+event: delta
+data: {"type":"delta","text":" with"}
+
+event: delta
+data: {"type":"delta","text":" the corresponding"}
+
+event: delta
+data: {"type":"delta","text":" NaiveRAG baseline"}
+
+event: delta
+data: {"type":"delta","text":". All"}
+
+event: delta
+data: {"type":"delta","text":" four"}
+
+event: delta
+data: {"type":"delta","text":" quality"}
+
+event: delta
+data: {"type":"delta","text":" dimensions"}
+
+event: delta
+data: {"type":"delta","text":"—"}
+
+event: delta
+data: {"type":"delta","text":"Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness, Diversity,"}
+
+event: delta
+data: {"type":"delta","text":" Empowerment, and Overall—"}
+
+event: delta
+data: {"type":"delta","text":"show"}
+
+event: delta
+data: {"type":"delta","text":" large"}
+
+event: delta
+data: {"type":"delta","text":" gains for"}
+
+event: delta
+data: {"type":"delta","text":" LightRAG across"}
+
+event: delta
+data: {"type":"delta","text":" the four domains ("}
+
+event: delta
+data: {"type":"delta","text":"Agriculture, Computer"}
+
+event: delta
+data: {"type":"delta","text":"‑"}
+
+event: delta
+data: {"type":"delta","text":"Science, Legal, Mix)"}
+
+event: delta
+data: {"type":"delta","text":" "}
+
+event: delta
+data: {"type":"delta","text":"[C3].\n\n| Domain"}
+
+event: delta
+data: {"type":"delta","text":" | Metric |"}
+
+event: delta
+data: {"type":"delta","text":" Na"}
+
+event: delta
+data: {"type":"delta","text":"iveRAG (baseline)"}
+
+event: delta
+data: {"type":"delta","text":" | LightRAG (abl"}
+
+event: delta
+data: {"type":"delta","text":"ated) |\n|--------|"}
+
+event: delta
+data: {"type":"delta","text":"--------|---------------------"}
+
+event: delta
+data: {"type":"delta","text":"|--------------------"}
+
+event: delta
+data: {"type":"delta","text":"|\n| **"}
+
+event: delta
+data: {"type":"delta","text":"Agriculture** | Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness | 32"}
+
+event: delta
+data: {"type":"delta","text":".4 "}
+
+event: delta
+data: {"type":"delta","text":"% | **"}
+
+event: delta
+data: {"type":"delta","text":"67.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Diversity"}
+
+event: delta
+data: {"type":"delta","text":" | 23.6 "}
+
+event: delta
+data: {"type":"delta","text":"% | **"}
+
+event: delta
+data: {"type":"delta","text":"76.4 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 32.4"}
+
+event: delta
+data: {"type":"delta","text":" % | **67."}
+
+event: delta
+data: {"type":"delta","text":"6 %** |\n|"}
+
+event: delta
+data: {"type":"delta","text":" | Overall"}
+
+event: delta
+data: {"type":"delta","text":" | 32.4 "}
+
+event: delta
+data: {"type":"delta","text":"% | **67.6"}
+
+event: delta
+data: {"type":"delta","text":" %** |\n|"}
+
+event: delta
+data: {"type":"delta","text":" **Computer‑Science"}
+
+event: delta
+data: {"type":"delta","text":" (CS)** | Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness | 38"}
+
+event: delta
+data: {"type":"delta","text":".4 % | **"}
+
+event: delta
+data: {"type":"delta","text":"61.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Diversity"}
+
+event: delta
+data: {"type":"delta","text":" | 38.0"}
+
+event: delta
+data: {"type":"delta","text":" % | **"}
+
+event: delta
+data: {"type":"delta","text":"62.0 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 38.8"}
+
+event: delta
+data: {"type":"delta","text":" % | **61."}
+
+event: delta
+data: {"type":"delta","text":"2 %** |\n|"}
+
+event: delta
+data: {"type":"delta","text":" | Overall"}
+
+event: delta
+data: {"type":"delta","text":" | 38"}
+
+event: delta
+data: {"type":"delta","text":".8 % | **"}
+
+event: delta
+data: {"type":"delta","text":"61.2 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| **Legal** |"}
+
+event: delta
+data: {"type":"delta","text":" Comprehensiveness"}
+
+event: delta
+data: {"type":"delta","text":" | 16"}
+
+event: delta
+data: {"type":"delta","text":".4 % | **"}
+
+event: delta
+data: {"type":"delta","text":"83.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Diversity | "}
+
+event: delta
+data: {"type":"delta","text":"13.6 % |"}
+
+event: delta
+data: {"type":"delta","text":" **86"}
+
+event: delta
+data: {"type":"delta","text":".4 %** |\n"}
+
+event: delta
+data: {"type":"delta","text":"| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 16"}
+
+event: delta
+data: {"type":"delta","text":".4 % | **"}
+
+event: delta
+data: {"type":"delta","text":"83.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Overall | "}
+
+event: delta
+data: {"type":"delta","text":"15.2 % |"}
+
+event: delta
+data: {"type":"delta","text":" **84.8 "}
+
+event: delta
+data: {"type":"delta","text":"%** |\n| **Mix"}
+
+event: delta
+data: {"type":"delta","text":"** | Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness | 38"}
+
+event: delta
+data: {"type":"delta","text":".8 % |"}
+
+event: delta
+data: {"type":"delta","text":" **61"}
+
+event: delta
+data: {"type":"delta","text":".2 %** |\n"}
+
+event: delta
+data: {"type":"delta","text":"| | Diversity"}
+
+event: delta
+data: {"type":"delta","text":" | 32"}
+
+event: delta
+data: {"type":"delta","text":".4 % | **"}
+
+event: delta
+data: {"type":"delta","text":"67.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 42.8"}
+
+event: delta
+data: {"type":"delta","text":" % | **57."}
+
+event: delta
+data: {"type":"delta","text":"2 %** |\n|"}
+
+event: delta
+data: {"type":"delta","text":" | Overall | 40."}
+
+event: delta
+data: {"type":"delta","text":"0 % | **60"}
+
+event: delta
+data: {"type":"delta","text":".0 %** |\n\n"}
+
+event: delta
+data: {"type":"delta","text":"**High‑ablation scenario"}
+
+event: delta
+data: {"type":"delta","text":"**"}
+
+event: delta
+data: {"type":"delta","text":" (Naive"}
+
+event: delta
+data: {"type":"delta","text":"RAG‑"}
+
+event: delta
+data: {"type":"delta","text":"High vs"}
+
+event: delta
+data: {"type":"delta","text":". LightRAG"}
+
+event: delta
+data: {"type":"delta","text":" under"}
+
+event: delta
+data: {"type":"delta","text":" the same high‑ablation"}
+
+event: delta
+data: {"type":"delta","text":" condition) also"}
+
+event: delta
+data: {"type":"delta","text":" shows Light"}
+
+event: delta
+data: {"type":"delta","text":"RAG outperform"}
+
+event: delta
+data: {"type":"delta","text":"ing the"}
+
+event: delta
+data: {"type":"delta","text":" baseline, though"}
+
+event: delta
+data: {"type":"delta","text":" the gaps"}
+
+event: delta
+data: {"type":"delta","text":" are slightly"}
+
+event: delta
+data: {"type":"delta","text":" smaller "}
+
+event: delta
+data: {"type":"delta","text":"[C3].\n\n"}
+
+event: delta
+data: {"type":"delta","text":"| Domain | Metric | Na"}
+
+event: delta
+data: {"type":"delta","text":"iveRAG"}
+
+event: delta
+data: {"type":"delta","text":"‑High |"}
+
+event: delta
+data: {"type":"delta","text":" LightRAG ("}
+
+event: delta
+data: {"type":"delta","text":"high‑ablation) |\n"}
+
+event: delta
+data: {"type":"delta","text":"|--------|--------|---------------"}
+
+event: delta
+data: {"type":"delta","text":"|---------------------------"}
+
+event: delta
+data: {"type":"delta","text":"|\n| Agriculture | Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness | 34"}
+
+event: delta
+data: {"type":"delta","text":".8 % | **"}
+
+event: delta
+data: {"type":"delta","text":"65.2 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| |"}
+
+event: delta
+data: {"type":"delta","text":" Diversity"}
+
+event: delta
+data: {"type":"delta","text":" | 27"}
+
+event: delta
+data: {"type":"delta","text":".2 % | **"}
+
+event: delta
+data: {"type":"delta","text":"72.8 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 36.0"}
+
+event: delta
+data: {"type":"delta","text":" % | **64."}
+
+event: delta
+data: {"type":"delta","text":"0 %** |\n|"}
+
+event: delta
+data: {"type":"delta","text":" | Overall | 35."}
+
+event: delta
+data: {"type":"delta","text":"2 % | **64"}
+
+event: delta
+data: {"type":"delta","text":".8 %** |\n"}
+
+event: delta
+data: {"type":"delta","text":"| CS | Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness"}
+
+event: delta
+data: {"type":"delta","text":" | 42"}
+
+event: delta
+data: {"type":"delta","text":".8 % | **"}
+
+event: delta
+data: {"type":"delta","text":"57.2 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Diversity"}
+
+event: delta
+data: {"type":"delta","text":" | 36"}
+
+event: delta
+data: {"type":"delta","text":".8 % | **"}
+
+event: delta
+data: {"type":"delta","text":"63.2 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 42"}
+
+event: delta
+data: {"type":"delta","text":".4 % | **"}
+
+event: delta
+data: {"type":"delta","text":"57.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Overall | "}
+
+event: delta
+data: {"type":"delta","text":"44.0 % |"}
+
+event: delta
+data: {"type":"delta","text":" **56"}
+
+event: delta
+data: {"type":"delta","text":".0 %** |\n"}
+
+event: delta
+data: {"type":"delta","text":"| Legal | Comprehens"}
+
+event: delta
+data: {"type":"delta","text":"iveness | "}
+
+event: delta
+data: {"type":"delta","text":"23.6 % |"}
+
+event: delta
+data: {"type":"delta","text":" **76"}
+
+event: delta
+data: {"type":"delta","text":".4 %** |\n"}
+
+event: delta
+data: {"type":"delta","text":"| | Diversity"}
+
+event: delta
+data: {"type":"delta","text":" | 16"}
+
+event: delta
+data: {"type":"delta","text":".8 % | **"}
+
+event: delta
+data: {"type":"delta","text":"83.2 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Empower"}
+
+event: delta
+data: {"type":"delta","text":"ment | 22"}
+
+event: delta
+data: {"type":"delta","text":".8 % | **"}
+
+event: delta
+data: {"type":"delta","text":"77.2 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Overall | "}
+
+event: delta
+data: {"type":"delta","text":"22.0 % |"}
+
+event: delta
+data: {"type":"delta","text":" **78.0 %"}
+
+event: delta
+data: {"type":"delta","text":"** |\n| Mix | Com"}
+
+event: delta
+data: {"type":"delta","text":"prehensiveness | 40"}
+
+event: delta
+data: {"type":"delta","text":".4 % | **"}
+
+event: delta
+data: {"type":"delta","text":"59.6 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Diversity | "}
+
+event: delta
+data: {"type":"delta","text":"36.0 % |"}
+
+event: delta
+data: {"type":"delta","text":" **64.0"}
+
+event: delta
+data: {"type":"delta","text":" %** |\n| |"}
+
+event: delta
+data: {"type":"delta","text":" Empowerment | 47"}
+
+event: delta
+data: {"type":"delta","text":".6 % | **"}
+
+event: delta
+data: {"type":"delta","text":"52.4 %**"}
+
+event: delta
+data: {"type":"delta","text":" |\n| | Overall | "}
+
+event: delta
+data: {"type":"delta","text":"42.4 % |"}
+
+event: delta
+data: {"type":"delta","text":" **57.6 %"}
+
+event: delta
+data: {"type":"delta","text":"** |\n\n**"}
+
+event: delta
+data: {"type":"delta","text":"Interpret"}
+
+event: delta
+data: {"type":"delta","text":"ation**  \n-"}
+
+event: delta
+data: {"type":"delta","text":" Across"}
+
+event: delta
+data: {"type":"delta","text":" all"}
+
+event: delta
+data: {"type":"delta","text":" datasets, LightRAG’s"}
+
+event: delta
+data: {"type":"delta","text":" ablated versions more"}
+
+event: delta
+data: {"type":"delta","text":" than double"}
+
+event: delta
+data: {"type":"delta","text":" the scores"}
+
+event: delta
+data: {"type":"delta","text":" of"}
+
+event: delta
+data: {"type":"delta","text":" NaiveRAG for most"}
+
+event: delta
+data: {"type":"delta","text":" metrics,"}
+
+event: delta
+data: {"type":"delta","text":" especially in the Legal"}
+
+event: delta
+data: {"type":"delta","text":" domain where gains"}
+
+event: delta
+data: {"type":"delta","text":" exceed"}
+
+event: delta
+data: {"type":"delta","text":" 60"}
+
+event: delta
+data: {"type":"delta","text":" percentage"}
+
+event: delta
+data: {"type":"delta","text":" points.  \n- Even"}
+
+event: delta
+data: {"type":"delta","text":" when the same"}
+
+event: delta
+data: {"type":"delta","text":" high‑ablation constraints"}
+
+event: delta
+data: {"type":"delta","text":" are applied to"}
+
+event: delta
+data: {"type":"delta","text":" both systems"}
+
+event: delta
+data: {"type":"delta","text":", Light"}
+
+event: delta
+data: {"type":"delta","text":"RAG retains a"}
+
+event: delta
+data: {"type":"delta","text":" clear advantage, indicating"}
+
+event: delta
+data: {"type":"delta","text":" that its"}
+
+event: delta
+data: {"type":"delta","text":" graph‑enh"}
+
+event: delta
+data: {"type":"delta","text":"anced indexing"}
+
+event: delta
+data: {"type":"delta","text":" and dual"}
+
+event: delta
+data: {"type":"delta","text":"‑level retrieval remain"}
+
+event: delta
+data: {"type":"delta","text":" effective"}
+
+event: delta
+data: {"type":"delta","text":" despite"}
+
+event: delta
+data: {"type":"delta","text":" component"}
+
+event: delta
+data: {"type":"delta","text":" removal"}
+
+event: delta
+data: {"type":"delta","text":".  \n\nThese results demonstrate"}
+
+event: delta
+data: {"type":"delta","text":" that LightRAG’s architecture"}
+
+event: delta
+data: {"type":"delta","text":" contributes"}
+
+event: delta
+data: {"type":"delta","text":" substantially"}
+
+event: delta
+data: {"type":"delta","text":" to retrieval"}
+
+event: delta
+data: {"type":"delta","text":" quality"}
+
+event: delta
+data: {"type":"delta","text":", even"}
+
+event: delta
+data: {"type":"delta","text":" when parts"}
+
+event: delta
+data: {"type":"delta","text":" of the system are ab"}
+
+event: delta
+data: {"type":"delta","text":"lated. "}
+
+event: delta
+data: {"type":"delta","text":"[C3]"}
+
+event: final
+data: {"type":"final","answer":"**Ablated LightRAG vs. NaiveRAG (baseline)**  \n\nThe study evaluates four ablated versions of LightRAG (one for each dataset) and compares them with the corresponding NaiveRAG baseline. All four quality dimensions—Comprehensiveness, Diversity, Empowerment, and Overall—show large gains for LightRAG across the four domains (Agriculture, Computer‑Science, Legal, Mix) [C3].\n\n| Domain | Metric | NaiveRAG (baseline) | LightRAG (ablated) |\n|--------|--------|---------------------|--------------------|\n| **Agriculture** | Comprehensiveness | 32.4 % | **67.6 %** |\n| | Diversity | 23.6 % | **76.4 %** |\n| | Empowerment | 32.4 % | **67.6 %** |\n| | Overall | 32.4 % | **67.6 %** |\n| **Computer‑Science (CS)** | Comprehensiveness | 38.4 % | **61.6 %** |\n| | Diversity | 38.0 % | **62.0 %** |\n| | Empowerment | 38.8 % | **61.2 %** |\n| | Overall | 38.8 % | **61.2 %** |\n| **Legal** | Comprehensiveness | 16.4 % | **83.6 %** |\n| | Diversity | 13.6 % | **86.4 %** |\n| | Empowerment | 16.4 % | **83.6 %** |\n| | Overall | 15.2 % | **84.8 %** |\n| **Mix** | Comprehensiveness | 38.8 % | **61.2 %** |\n| | Diversity | 32.4 % | **67.6 %** |\n| | Empowerment | 42.8 % | **57.2 %** |\n| | Overall | 40.0 % | **60.0 %** |\n\n**High‑ablation scenario** (NaiveRAG‑High vs. LightRAG under the same high‑ablation condition) also shows LightRAG outperforming the baseline, though the gaps are slightly smaller [C3].\n\n| Domain | Metric | NaiveRAG‑High | LightRAG (high‑ablation) |\n|--------|--------|---------------|---------------------------|\n| Agriculture | Comprehensiveness | 34.8 % | **65.2 %** |\n| | Diversity | 27.2 % | **72.8 %** |\n| | Empowerment | 36.0 % | **64.0 %** |\n| | Overall | 35.2 % | **64.8 %** |\n| CS | Comprehensiveness | 42.8 % | **57.2 %** |\n| | Diversity | 36.8 % | **63.2 %** |\n| | Empowerment | 42.4 % | **57.6 %** |\n| | Overall | 44.0 % | **56.0 %** |\n| Legal | Comprehensiveness | 23.6 % | **76.4 %** |\n| | Diversity | 16.8 % | **83.2 %** |\n| | Empowerment | 22.8 % | **77.2 %** |\n| | Overall | 22.0 % | **78.0 %** |\n| Mix | Comprehensiveness | 40.4 % | **59.6 %** |\n| | Diversity | 36.0 % | **64.0 %** |\n| | Empowerment | 47.6 % | **52.4 %** |\n| | Overall | 42.4 % | **57.6 %** |\n\n**Interpretation**  \n- Across all datasets, LightRAG’s ablated versions more than double the scores of NaiveRAG for most metrics, especially in the Legal domain where gains exceed 60 percentage points.  \n- Even when the same high‑ablation constraints are applied to both systems, LightRAG retains a clear advantage, indicating that its graph‑enhanced indexing and dual‑level retrieval remain effective despite component removal.  \n\nThese results demonstrate that LightRAG’s architecture contributes substantially to retrieval quality, even when parts of the system are ablated. [C3]","citations":[{"id":"C3","source_id":"c9f95ee993cd4f808418babdf601f9e5:chunk-18","section":"Virtual Section 8","page_start":8,"page_end":8}],"unverified":[]}
+
+event: trace
+data: {"type":"trace","calls":[{"call_type":"answer","estimated_prompt_tokens":2075,"prompt_eval_count":1850,"eval_count":1750,"think":"medium","num_predict":3000,"context_budget":10000,"safety_margin":300,"thinking":"We need to answer: \"Performance of ablated versions of LightRAG\". The document includes Table 2 in C3: Performance of ablated versions of LightRAG, using NaiveRAG as reference. It shows metrics for different domains (Agriculture, CS, Legal, Mix) and also for NaiveRAG-High and NaiveRAG-Low? Actually the table includes rows for NaiveRAG and LightRAG across domains, then later rows for NaiveRAG-High and LightRAG, and NaiveRAG-Low and LightRAG? The excerpt shows:\n\nTable 2: Performance of ablated versions of LightRAG, using NaiveRAG as reference.\n\nAgriculture CS Legal Mix\n\nNaiveRAG LightRAG NaiveRAG LightRAG NaiveRAG LightRAG NaiveRAG LightRAG\n\nComprehensiveness 32.4% 67.6% 38.4% 61.6% 16.4% 83.6% 38.8% 61.2%\nDiversity 23.6% 76.4% 38.0% 62.0% 13.6% 86.4% 32.4% 67.6%\nEmpowerment 32.4% 67.6% 38.8% 61.2% 16.4% 83.6% 42.8% 57.2%\nOverall 32.4% 67.6% 38.8% 61.2% 15.2% 84.8% 40.0% 60.0%\n\nThen next block:\n\nNaiveRAG-High NaiveRAG-High NaiveRAG-High NaiveRAG-High\n\nComprehensiveness 34.8% 65.2% 42.8% 57.2% 23.6% 76.4% 40.4% 59.6%\nDiversity 27.2% 72.8% 36.8% 63.2% 16.8% 83.2% 36.0% 64.0%\nEmpowerment 36.0% 64.0% 42.4% 57.6% 22.8% 77.2% 47.6% 52.4%\nOverall 35.2% 64.8% 44.0% 56.0% 22.0% 78.0% 42.4% 57.6%\n\nThen NaiveRAG-Low ... but not shown values.\n\nThus answer should summarize performance numbers of ablated LightRAG versions compared to NaiveRAG. Provide the percentages for each metric across domains. Use citations.\n\nWe need to explain baseline: using NaiveRAG as reference. Then give LightRAG performance numbers.\n\nLet's craft answer: The ablated LightRAG versions achieve substantially higher scores than NaiveRAG across all four domains (Agriculture, CS, Legal, Mix) for each metric (Comprehensiveness, Diversity, Empowerment, Overall). Provide numbers.\n\nAlso mention the high and low ablations? The excerpt includes High ablation results. Provide those too.\n\nThus answer: For the standard ablation (presumably removing certain components), LightRAG reaches 67.6% vs 32.4% etc. For high ablation, LightRAG reaches 65.2% vs 34.8% etc. Provide table.\n\nWill cite C3 for all numbers.","latency_ms":6077.955874847248,"done_reason":"stop"}]}
+

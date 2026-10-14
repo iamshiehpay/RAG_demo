@@ -1,0 +1,82 @@
+{
+  "removed_owned_temp_directories": [
+    "/private/tmp/rag-ticket14-baseline",
+    "/private/tmp/rag-ticket14-baseline-source",
+    "/private/tmp/rag-ticket14-clean-env",
+    "/private/tmp/rag-ticket14-full",
+    "/private/tmp/rag-ticket14-full-final",
+    "/private/tmp/rag-ticket14-full-final-frozen",
+    "/private/tmp/rag-ticket14-full-readiness",
+    "/private/tmp/rag-ticket14-graph",
+    "/private/tmp/rag-ticket14-readiness-green",
+    "/private/tmp/rag-ticket14-targeted",
+    "/private/tmp/rag-ticket14-uv"
+  ],
+  "retained": [],
+  "active_owned_service_ports": [],
+  "active_owned_provider_or_graph_tasks": [],
+  "previous_retained": [
+    "worktree .venv for integration/reproduction",
+    "ignored readonly-copied data PDFs",
+    "raw review/temp evidence files pending integration"
+  ],
+  "final_closeout_removed": [
+    "/Users/shiehpay/Desktop/resume/rag/.lat/venvs/issue14-main",
+    "/private/tmp/nova-graph-main-uv",
+    "/Users/shiehpay/Desktop/resume/rag/.worktrees/14-langgraph-ask/.venv",
+    "/Users/shiehpay/Desktop/resume/rag/.worktrees/14-langgraph-ask/data/lightrag.pdf",
+    "/Users/shiehpay/Desktop/resume/rag/.worktrees/14-langgraph-ask/data/industrial-robotics.pdf",
+    "/private/tmp/rag-ticket14-cancel-propagate-green.log",
+    "/private/tmp/rag-ticket14-clean-install.log",
+    "/private/tmp/rag-ticket14-completion-final.log",
+    "/private/tmp/rag-ticket14-correction-spec.md",
+    "/private/tmp/rag-ticket14-correction-spec.md.result",
+    "/private/tmp/rag-ticket14-correction-standards.md",
+    "/private/tmp/rag-ticket14-correction-standards.md.result",
+    "/private/tmp/rag-ticket14-data-targeted.log",
+    "/private/tmp/rag-ticket14-extraction-green.log",
+    "/private/tmp/rag-ticket14-fixed-stream.log",
+    "/private/tmp/rag-ticket14-full-final-frozen.log",
+    "/private/tmp/rag-ticket14-full-final.log",
+    "/private/tmp/rag-ticket14-full-interrupted-lint.log",
+    "/private/tmp/rag-ticket14-full-readiness.log",
+    "/private/tmp/rag-ticket14-full.log",
+    "/private/tmp/rag-ticket14-live-final.log",
+    "/private/tmp/rag-ticket14-live.log",
+    "/private/tmp/rag-ticket14-producer-green.log",
+    "/private/tmp/rag-ticket14-provider-baseline.log",
+    "/private/tmp/rag-ticket14-provider-cancel-red.log",
+    "/private/tmp/rag-ticket14-readiness-baseline.log",
+    "/private/tmp/rag-ticket14-readiness-green.log",
+    "/private/tmp/rag-ticket14-readiness-red.log",
+    "/private/tmp/rag-ticket14-review-spec.md",
+    "/private/tmp/rag-ticket14-review-standard.md",
+    "/private/tmp/rag-ticket14-spec.md",
+    "/private/tmp/rag-ticket14-standards.md"
+  ],
+  "final_closeout_already_absent": [
+    "/private/tmp/nova-graph-main-pytest"
+  ],
+  "closeout_utc": "2026-10-14T04:46:32.914118+00:00",
+  "stopped_owned_children": [
+    "mira-review-silo",
+    "mira-review-lulu",
+    "mira-check-mako",
+    "mira-check-life"
+  ],
+  "protected_main_resources": [
+    "Main .venv",
+    "Main data/.cache",
+    "Main-owned PID3808 on8101",
+    "Ollama",
+    "8101/8201",
+    "other worktrees"
+  ],
+  "main_verified_closeout": {
+    "owned_agents_stopped": true,
+    "merged_worktree_removed": ".worktrees/14-langgraph-ask",
+    "merged_branch_deleted": "lat/14-langgraph-ask",
+    "listed_cleanup_paths_absent": true,
+    "production_8101_pid": 3808
+  }
+}

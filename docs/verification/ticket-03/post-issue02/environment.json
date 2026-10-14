@@ -1,0 +1,17 @@
+{
+  "python": "3.12.10 (main, May 17 2025, 13:40:56) [Clang 20.1.4 ]",
+  "packages": {
+    "pymupdf": "1.28.2",
+    "numpy": "2.5.4",
+    "tiktoken": "0.14.0",
+    "pytest": "9.1.1",
+    "ruff": "0.17.0",
+    "httpx": "0.28.1"
+  },
+  "source_test_head": "d7d77e821e3bda67a6853076b823c93a5d9635ad",
+  "pdf_sha256": "bd72eebf611df1366b251c16ce4eac7aac699e519783c586feb2c5c43899347a",
+  "platform": "Darwin-25.2.0-arm64-arm-64bit-Mach-O",
+  "cloud_llm_calls": 0,
+  "temporary_ports_used": [],
+  "frontend_source_changed_during_corrections_or_rebase": false
+}

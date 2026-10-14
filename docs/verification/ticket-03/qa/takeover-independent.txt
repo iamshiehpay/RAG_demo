@@ -1,0 +1,1 @@
+PASS: 128 labelled paired cells / 256 numerical values; 10 independent authored layout probes; real bge-m3 public Q3 prompt contains Table2 and discussion. Scripted answer is not a live GoldenFact claim.

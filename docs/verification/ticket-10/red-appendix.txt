@@ -1,0 +1,35 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_upload_resumes_split_appendix_heading_after_references __________
+
+    async def test_upload_resumes_split_appendix_heading_after_references():
+        app = Application(DeterministicEmbedder(), LLMGateway(SummaryScriptedLLM([])))
+        events = [e async for e in app.upload_document(appendix_layout_pdf(), "measurements.pdf")]
+        assert events[-1].type == "ready"
+        document = app.document
+        appendix = [s for s in document.sections if s.is_appendix]
+>       assert [s.title for s in appendix] == ["Appendix A Additional Measurements"]
+E       AssertionError: assert ['See details...2 Discussion'] == ['Appendix A ...Measurements']
+E         
+E         At index 0 diff: 'See details in the Appendix,' != 'Appendix A Additional Measurements'
+E         Left contains one more item: 'Appendix — 2 Discussion'
+E         Use -v to get more diff
+
+tests/integration/test_second_document.py:46: AssertionError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_second_document.py::test_upload_resumes_split_appendix_heading_after_references
+1 failed, 5 warnings in 0.40s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

@@ -1,0 +1,59 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - heading "Chat with Document" [level=1, ref=e5]
+      - paragraph
+        - StaticText "Ask a question. Follow the evidence back to your Document."
+    - region "Upload Document" [ref=e2]
+      - LabelText
+        - StaticText "PDF Document"
+      - button "PDF Document" [ref=e6]: No file chosen
+      - status
+        - paragraph
+          - StaticText "lightrag.pdf · Ready"
+    - region "Conversation" [ref=e3]
+      - article
+        - heading "What do the ablation studies in Table 2 show?" [level=2, ref=e11]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "Independent scripted source check. "
+          - button "View C1, page 6, 4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)" [ref=e12]
+            - StaticText "[C1]"
+          - button "View C2, page 7, 4.3 ABLATION STUDIES (RQ2)" [ref=e13]
+            - StaticText "[C2]"
+          - button "View C3, page 8, 4.3 ABLATION STUDIES (RQ2)" [ref=e14]
+            - StaticText "[C3]"
+          - button "View C4, page 9, 4.4 CASE STUDY (RQ3)" [ref=e15]
+            - StaticText "[C4]"
+          - button "View C5, page 13, Appendix — 7.1 EXPERIMENTAL DATA DETAILS" [ref=e16]
+            - StaticText "[C5]"
+        - complementary "Citation notes"
+          - button "[C1] · p.6–7 4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)" [ref=e17]
+            - StaticText "[C1] · p.6–7"
+            - StaticText "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)"
+          - button "[C2] · p.7–8 4.3 ABLATION STUDIES (RQ2)" [ref=e18]
+            - StaticText "[C2] · p.7–8"
+            - StaticText "4.3 ABLATION STUDIES (RQ2)"
+          - button "[C3] · p.8 4.3 ABLATION STUDIES (RQ2)" [ref=e19]
+            - StaticText "[C3] · p.8"
+            - StaticText "4.3 ABLATION STUDIES (RQ2)"
+          - button "[C4] · p.9 4.4 CASE STUDY (RQ3)" [ref=e20]
+            - StaticText "[C4] · p.9"
+            - StaticText "4.4 CASE STUDY (RQ3)"
+          - button "[C5] · p.13 Appendix — 7.1 EXPERIMENTAL DATA DETAILS" [ref=e21]
+            - StaticText "[C5] · p.13"
+            - StaticText "Appendix — 7.1 EXPERIMENTAL DATA DETAILS"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+    - region "Citation source" [ref=e4]
+      - heading "Source · p.8 · 4.3 ABLATION STUDIES (RQ2)" [level=2, ref=e7]
+        - StaticText "Source · p.8 · 4.3 ABLATION STUDIES (RQ2)"
+      - button "Close source" [ref=e8]
+      - StaticText "NaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\nNaiveRAG\n-Low\n\nComprehensiveness\n36.0%\n64.0%\n43.2%\n56.8%\n19.2%\n80.8%\n36.0%\n64.0%\nDiversity\n28.0%\n72.0%\n39.6%\n60.4%\n13.6%\n86.4%\n33.2%\n66.8%\nEmpowerment\n34.8%\n65.2%\n42.8%\n57.2%\n16.4%\n83.6%\n35.2%\n64.8%\nOverall\n34.8%\n65.2%\n43.6%\n56.4%\n18.8%\n81.2%\n35.2%\n64.8%\n\nNaiveRAG\n-Origin\nNaiveRAG\n-Origin\nNaiveRAG\n-Origin\nNaiveRAG\n-Origin\n\nComprehensiveness\n24.8%\n75.2%\n39.2%\n60.8%\n16.4%\n83.6%\n44.4%\n55.6%\nDiversity\n26.4%\n73.6%\n44.8%\n55.2%\n14.4%\n85.6%\n25.6%\n74.4%\nEmpowerment\n32.0%\n68.0%\n43.2%\n56.8%\n17.2%\n82.8%\n45.2%\n54.8%\nOverall\n25.6%\n74.4%\n39.2%\n60.8%\n15.6%\n84.4%\n44.4%\n55.6%"
+    - form
+      - LabelText
+        - StaticText "Question"
+      - textbox "Question" [ref=e9]
+      - button "Ask" [disabled, ref=e10]

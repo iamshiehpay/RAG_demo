@@ -1,0 +1,65 @@
+[
+  {
+    "command": [
+      "npm",
+      "run",
+      "typecheck",
+      "--prefix",
+      "frontend"
+    ],
+    "exit_code": 0,
+    "stdout": "\n> chat-with-document-frontend@0.1.0 typecheck\n> tsc --noEmit\n\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "uv",
+      "run",
+      "--no-sync",
+      "python",
+      "scripts/generate_event_types.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "stdout": "Backend and frontend event types match.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--exit-code",
+      "f15f792",
+      "--",
+      "frontend/review",
+      "frontend/src/fonts"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--exit-code",
+      "d56e092",
+      "--",
+      "frontend/src/events.ts",
+      "frontend/src/sse.ts"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

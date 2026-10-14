@@ -1,0 +1,10 @@
+[
+  {
+    "name": "source404 clear accessible error and no stale content",
+    "pass": true
+  },
+  {
+    "name": "source404 close restores Citation focus",
+    "pass": true
+  }
+]

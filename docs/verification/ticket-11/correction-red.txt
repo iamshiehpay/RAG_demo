@@ -1,0 +1,39 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_eval_retains_original_public_citation_map_and_final_events ________
+
+tmp_path = PosixPath('/private/var/folders/lc/z_86_zqs0rn4gm3vtjfrfsjr0000gn/T/pytest-of-shiehpay/pytest-306/test_eval_retains_original_pub0')
+
+    async def test_eval_retains_original_public_citation_map_and_final_events(tmp_path):
+        """Original mappings must be inspectable without reconstructing a later search."""
+        path = tmp_path / "Independent-measurement.pdf"
+        path.write_bytes(text_pdf("Independent measurement is recorded as 37 units."))
+        llm = SummaryScriptedLLM(["not JSON", "The measurement is 37 units. [C1]"])
+        gateway = RecordingGateway(llm)
+        app = Application(OllamaEmbedder(), gateway)
+        try:
+            report = await run_evaluation(
+                app, gateway, path, (EvaluationCase("measurement", "What is the measurement?"),)
+            )
+>           captured = report.runs[0].events
+                       ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'QuestionRun' object has no attribute 'events'
+
+tests/integration/test_tuning.py:178: AttributeError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_tuning.py::test_eval_retains_original_public_citation_map_and_final_events
+1 failed, 6 deselected, 5 warnings in 3.25s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

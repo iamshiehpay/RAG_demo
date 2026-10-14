@@ -1,0 +1,99 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - heading "Chat with Document" [level=1, ref=e6]
+      - paragraph
+        - StaticText "Ask a question. Follow the evidence back to your Document."
+    - region "Upload Document" [ref=e2]
+      - LabelText
+        - StaticText "PDF Document"
+      - button "PDF Document" [ref=e7]: No file chosen
+      - status
+        - paragraph
+          - StaticText "boundary.pdf · Ready"
+    - region "文件概覽" [ref=e3]
+      - heading "文件概覽" [level=2, ref=e8]
+      - StaticText "Document Overview: calibrated instruments measure seasonal conditions across the supplied Sections."
+    - region "Conversation" [ref=e4]
+      - article
+        - heading "Summarize detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail detail" [level=2, ref=e13]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, Group Summary 1.1" [ref=e14]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1–18 Group Summary 1.1" [ref=e15]
+            - StaticText "[S1] · p.1–18"
+            - StaticText "Group Summary 1.1"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+    - region "Citation source" [ref=e5]
+      - heading "Source · p.1–18 · Group Summary 1.1" [level=2, ref=e9]
+        - StaticText "Source · p.1–18 · Group Summary 1.1"
+      - button "Close source" [ref=e10]
+      - paragraph
+        - StaticText "Group Summary"
+      - list "Covered Sections"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "1 Calibration 0"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "2 Calibration 1"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "3 Calibration 2"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "4 Calibration 3"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "5 Calibration 4"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "6 Calibration 5"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "7 Calibration 6"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "8 Calibration 7"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "9 Calibration 8"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "10 Calibration 9"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "11 Calibration 10"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "12 Calibration 11"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "13 Calibration 12"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "14 Calibration 13"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "15 Calibration 14"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "16 Calibration 15"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "17 Calibration 16"
+        - listitem [level=1]
+          - ListMarker "• "
+          - StaticText "18 Calibration 17"
+      - StaticText "Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements. Grouped measurements."
+    - form
+      - LabelText
+        - StaticText "Question"
+      - textbox "Question" [ref=e11]
+      - button "Ask" [disabled, ref=e12]

@@ -1,0 +1,13 @@
+{
+  "phase": "before",
+  "commands": 57,
+  "failures": [
+    "\u2717 Evaluation error: Error: Newline boundary crlf: {\"before\":\".\"}\n    at <anonymous>:10:15\n    at <anonymous>:13:7\n",
+    "\u2717 Evaluation error: Error: Newline boundary cr: {\"before\":\".\"}\n    at <anonymous>:10:15\n    at <anonymous>:13:7\n",
+    "\u2717 Evaluation error: Error: Newline boundary entity-emoji: {\"before\":\".\"}\n    at <anonymous>:10:15\n    at <anonymous>:13:7\n",
+    "\u2717 Evaluation error: Error: Newline boundary quote: {\"before\":\".\"}\n    at <anonymous>:10:15\n    at <anonymous>:13:7\n",
+    "\u2717 Evaluation error: Error: Newline boundary list: {\"before\":\".\"}\n    at <anonymous>:10:15\n    at <anonymous>:13:7\n",
+    "\u2717 Evaluation error: Error: Newline boundary middle-list: {\"before\":\".\"}\n    at <anonymous>:10:15\n    at <anonymous>:13:7\n"
+  ],
+  "pass_assertions": 0
+}

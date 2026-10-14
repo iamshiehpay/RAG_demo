@@ -1,0 +1,7 @@
+03:52:18 "{\"status\":\"判斷問題類型\",\"statusClass\":\"status provisional\",\"answerClass\":\"answer-text provisional-text\",\"len\":0,\"fontStyle\":\"italic\",\"color\":\"rgb(92, 101, 107)\"}"
+03:52:19 "{\"status\":\"判斷問題類型\",\"statusClass\":\"status provisional\",\"answerClass\":\"answer-text provisional-text\",\"len\":0,\"fontStyle\":\"italic\",\"color\":\"rgb(92, 101, 107)\"}"
+03:52:19 "{\"status\":\"檢索\",\"statusClass\":\"status provisional\",\"answerClass\":\"answer-text provisional-text\",\"len\":0,\"fontStyle\":\"italic\",\"color\":\"rgb(92, 101, 107)\"}"
+03:52:20 "{\"status\":\"思考中\",\"statusClass\":\"status provisional\",\"answerClass\":\"answer-text provisional-text\",\"len\":0,\"fontStyle\":\"italic\",\"color\":\"rgb(92, 101, 107)\"}"
+03:52:21 "{\"status\":\"思考中\",\"statusClass\":\"status provisional\",\"answerClass\":\"answer-text provisional-text\",\"len\":0,\"fontStyle\":\"italic\",\"color\":\"rgb(92, 101, 107)\"}"
+03:52:21 "{\"status\":\"回答中 · 暫定\",\"statusClass\":\"status provisional\",\"answerClass\":\"answer-text provisional-text\",\"len\":64,\"fontStyle\":\"italic\",\"color\":\"rgb(92, 101, 107)\"}"
+03:52:22 "{\"status\":\"Answer complete\",\"statusClass\":\"status\",\"answerClass\":\"answer-text\",\"len\":190,\"fontStyle\":\"normal\",\"color\":\"rgb(36, 42, 48)\"}"

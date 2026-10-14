@@ -1,0 +1,13 @@
+INVALID  done=stop   eval=38 exp=Global    got=Global keys=['type', 'sub_queries'] | Summary this document.
+INVALID  done=stop   eval=63 exp=Global    got=Global keys=['type', 'sub_queries'] | 這篇在講什麼？
+INVALID  done=stop   eval=38 exp=Global    got=Global keys=['type', 'sub_queries'] | Give me the key takeaways of this paper.
+INVALID  done=stop   eval=146 exp=Synthesis got=Synthesis keys=['question_type', 'sub_queries'] | Compare LightRAG with GraphRAG.
+INVALID  done=stop   eval=103 exp=Synthesis got=Synthesis keys=['type', 'sub_queries'] | LightRAG 有什麼限制？
+VALID    done=stop   eval=145 exp=Synthesis got=Synthesis keys=['question_type', 'sub_queries', 'standalone_question'] | How do the experiments support the paper's claims?
+INVALID  done=stop   eval=188 exp=Lookup    got=Synthesis keys=['question_type', 'sub_queries', 'answer'] | Performance of ablated versions of LightRAG.
+INVALID  done=stop   eval=86 exp=Lookup    got=Synthesis keys=['type', 'sub_queries'] | What datasets were used?
+INVALID  done=stop   eval=71 exp=Lookup    got=None keys=['answer', 'sub_queries'] | Table 2 裡 -Origin 在 Mix 的 Overall 是多少？
+INVALID  done=stop   eval=73 exp=Lookup    got=Lookup keys=['answer', 'type', 'sub_queries'] | How many API calls does LightRAG need for retrieval?
+INVALID  done=stop   eval=63 exp=Lookup    got=None keys=['answer', 'sub_queries'] | 那 LightRAG 呢？
+INVALID  done=stop   eval=154 exp=Synthesis got=Synthesis keys=['question_type', 'sub_queries', 'answer_format'] | 那它跟 GraphRAG 比呢？
+valid 1 / 12

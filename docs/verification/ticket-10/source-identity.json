@@ -1,0 +1,23 @@
+{
+  "base": "3432aa09ee7d9fcbdc9199ff9f0ee685961102e3",
+  "pre_freeze_head": "1286357f2bed9d4d39d4ffda91a05b3f9bbb5c2d",
+  "source_state": "Current tested source before final evidence-only commit; historical dirty trial states are not implied reproducible.",
+  "source_sha256": {
+    "docs/verification/ticket-10/source_audit.py": "a8092842f42cf7d1c708aa04dd2b345d2ebc7d5642c7526cff59c7b74a006c74",
+    "eval/checks.py": "f712248225717c1cabb39d920f07169622a6c6600f181e35c8e8ca096cfa4d66",
+    "eval/models.py": "4c6824334c82b86c071b2f54b2a1794ab7422e908b2cafaceaf098d6c8c18a54",
+    "eval/runner.py": "f13a9373d00b03bc2a2fc44dc560db29eb2646dc48af435110ea6bb905327cc6",
+    "eval/second_document.py": "92bd26fdd9d263f60113322bb6ce67e6571e29be134b3b0f8e056b6468c960f4",
+    "eval/test_second_document_live.py": "b408dd91b9fe30fbb48d567141db37299d955feb450bcc63bc62160c014c0c45",
+    "scripts/fetch_data.sh": "9ed89c4a0c596b8df0569fb25fc8fd90b65723936dc123b84bf06d83d2d81a2b",
+    "src/chat_document/answer_generator.py": "4e7f78bb249c068898b133cc66a7eb8b1e9e79eb6a12e02a6bc6e38a553bf82c",
+    "src/chat_document/pdf_parser.py": "3c768bb15acb00136aca6e75853b267f592aea34de4683f4bb3883c1688e73ab",
+    "src/chat_document/summary_context.py": "1937d88ac2fc468f2635e0cca12f932fbf3e7d097e3593e6e311f5cf0e47456a",
+    "src/chat_document/summary_tree.py": "50b2459868a4fcf028a91060af8feab3f4b12d06ea889ffb2969440cd3b7d21f",
+    "src/chat_document/tables.py": "cfc63613e10a5a649b369046f8fc361bad8ee4ec910913d0163ecaf5daa07ffb",
+    "tests/integration/test_eval_allowed_routes.py": "5fcdadb1adec716d5b6fb9ede31c71321bbd2e7d8b2cba3a2254686165d0e276",
+    "tests/integration/test_second_document.py": "a3e1fb04015bd0aedb122fceded05bfa50a3976df42b7408daf487d10c597aa9",
+    "tests/integration/test_summary_corrections.py": "42451c715798723d46dc85a2e8a2dc49f736c7dc498adbe8e45d0f093fc6bd43",
+    "tests/unit/test_second_document_facts.py": "c35ea1641be83151193205a8513f2638468baca6796a380e2df3ef9c79656bd4"
+  }
+}

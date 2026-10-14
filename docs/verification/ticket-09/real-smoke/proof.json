@@ -1,0 +1,102 @@
+{
+  "source_sha": "cb4f1c9a164a40243a38358e59f2ed5c126bcf7c",
+  "question": "請用繁體中文簡述這份文件的實驗測量結果，以條列列出實驗、準確率與成本，並附引用。",
+  "calls": [
+    {
+      "id": 1,
+      "model": "gpt-oss:120b-cloud",
+      "call_type": "section_summary",
+      "think": "low",
+      "num_predict": 1200,
+      "estimated_prompt_tokens": 493,
+      "estimated_prompt_plus_reservation": 1693,
+      "latency_ms": 4521.174082998186,
+      "prompt_eval_count": 268,
+      "eval_count": 117,
+      "done_reason": "stop",
+      "actual_prompt_plus_reservation": 1468,
+      "within_budget": true
+    },
+    {
+      "id": 2,
+      "model": "gpt-oss:120b-cloud",
+      "call_type": "document_summary",
+      "think": "low",
+      "num_predict": 2500,
+      "estimated_prompt_tokens": 515,
+      "estimated_prompt_plus_reservation": 3015,
+      "latency_ms": 1327.4354578461498,
+      "prompt_eval_count": 290,
+      "eval_count": 105,
+      "done_reason": "stop",
+      "actual_prompt_plus_reservation": 2790,
+      "within_budget": true
+    },
+    {
+      "id": 3,
+      "model": "gpt-oss:120b-cloud",
+      "call_type": "router",
+      "think": "low",
+      "num_predict": 600,
+      "estimated_prompt_tokens": 864,
+      "estimated_prompt_plus_reservation": 1464,
+      "latency_ms": 1507.3290409054607,
+      "prompt_eval_count": 525,
+      "eval_count": 150,
+      "done_reason": "stop",
+      "actual_prompt_plus_reservation": 1125,
+      "within_budget": true
+    },
+    {
+      "id": 4,
+      "model": "gpt-oss:120b-cloud",
+      "call_type": "answer",
+      "think": "medium",
+      "num_predict": 3000,
+      "estimated_prompt_tokens": 892,
+      "estimated_prompt_plus_reservation": 3892,
+      "latency_ms": 1869.438833091408,
+      "prompt_eval_count": 667,
+      "eval_count": 275,
+      "done_reason": "stop",
+      "actual_prompt_plus_reservation": 3667,
+      "within_budget": true
+    }
+  ],
+  "all_stop": true,
+  "maximum_estimated_prompt_plus_reservation": 3892,
+  "maximum_actual_prompt_plus_reservation": 3667,
+  "raw_matches_final": true,
+  "invalid_citation_count": 0,
+  "real_formats": {
+    "markdown_list_items": 3,
+    "s_citations": 3,
+    "c_citations": 0,
+    "unicode_spacing": [
+      "U+202F",
+      "U+3000"
+    ],
+    "traditional_chinese_observed": true,
+    "raw_CR": 0,
+    "raw_CRLF": 0,
+    "unverified_spans": 0,
+    "inline_code": 0,
+    "tables": 0,
+    "headings": 0
+  },
+  "final_render_checks": {
+    "complete": true,
+    "inline_citations": 3,
+    "margin_citations": 3,
+    "no_horizontal_overflow": true,
+    "trace_collapsed_by_default": true,
+    "thinking_collapsed": true,
+    "source_kind": "section",
+    "source_pages": [
+      1,
+      1
+    ]
+  },
+  "product_files_identical": 345,
+  "semantic_quality": "Not scored; Issue11 still pending."
+}

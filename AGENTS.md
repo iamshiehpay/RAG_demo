@@ -38,7 +38,7 @@
 
 ## 保留與交付
 
-- 使用者於 2026-10-14 核准精簡主分支：正式程式位於 `app/`；保留 `frontend/dist/`、必要測試、`eval/results/` 最終報告及精選 AI 協作證據。歷史 issue、spikes、逐輪驗證已存入 [歸檔標籤](docs/history.md)，不重建 archive 目錄。
+- 使用者於 2026-10-14 核准精簡主分支：正式程式位於 `app/`；保留 `frontend/dist/`、必要測試、`eval/results/` 最終報告及精選 AI 協作證據。使用者後續要求恢復既有 docs 驗證紀錄、完整 AI log 及 `.scratch/` 工作項目，這些已保留在主分支；不要再次批次移除。舊 spikes、eval 中間輸出與完整當時版本仍由 [歸檔標籤](docs/history.md) 保存，不重建 archive 目錄。
 - 新實驗輸出寫入已忽略的 `eval/reports/`；只將有持續價值的最終證據納入版本庫。
 - 不提交公司內部 PDF、`data/*.pdf`、安裝環境與快取。測試 PDF 用 `scripts/fetch_data.sh` 下載固定版本。
 - 用私人 repository 與 zip 交付；邀請協作者、寄信等外部動作仍依使用者授權執行。

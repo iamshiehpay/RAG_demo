@@ -1,0 +1,79 @@
+{
+  "question": "這篇論文有什麼限制？",
+  "history": [],
+  "history_provenance": "none",
+  "llm": [
+    {
+      "call_type": "router",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply OK."
+        }
+      ],
+      "format": null,
+      "think": "low",
+      "num_predict": 600,
+      "estimated_prompt_tokens": 303,
+      "frames": [
+        {
+          "content": "",
+          "thinking": "Just",
+          "done": false,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "done_reason": ""
+        },
+        {
+          "content": "",
+          "thinking": " respond",
+          "done": false,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "done_reason": ""
+        },
+        {
+          "content": "",
+          "thinking": " OK",
+          "done": false,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "done_reason": ""
+        },
+        {
+          "content": "",
+          "thinking": ".",
+          "done": false,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "done_reason": ""
+        },
+        {
+          "content": "OK.",
+          "thinking": "",
+          "done": false,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "done_reason": ""
+        },
+        {
+          "content": "",
+          "thinking": "",
+          "done": false,
+          "prompt_eval_count": null,
+          "eval_count": null,
+          "done_reason": ""
+        },
+        {
+          "content": "",
+          "thinking": "",
+          "done": true,
+          "prompt_eval_count": 70,
+          "eval_count": 16,
+          "done_reason": "stop"
+        }
+      ]
+    }
+  ],
+  "embedding": []
+}

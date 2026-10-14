@@ -1,0 +1,1 @@
+"What license is LightRAG released under?\n\nAnswer complete\n\nNot mentioned in the document.\nTrace · 1 LLM call"

@@ -1,0 +1,8 @@
+{
+  "phase": "main-before",
+  "commands": 36,
+  "failures": [
+    "six-short-Global-composer"
+  ],
+  "measurements": 1
+}

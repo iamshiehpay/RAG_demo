@@ -6,7 +6,7 @@
 
 > 功能與回答品質分開驗證：網站可正常操作，不代表所有回答都完整或正確；已知失敗與實測結果保留在評估報告中。
 
-先依本頁啟動網站，再閱讀 [AI 協作摘要](docs/ai-collaboration.md) 與 [評估結果](eval/results/README.md)。主分支只保留持續使用的程式、測試與文件；完整開發歷史由 [Git 歸檔標籤](docs/history.md) 保存。
+先依本頁啟動網站，再閱讀 [AI 協作摘要](docs/ai-collaboration.md) 與 [評估結果](eval/results/README.md)。主分支保留正式程式、測試與文件，以及復原的 ticket／驗證紀錄；完整當時版本由 [Git 歸檔標籤](docs/history.md) 保存。
 
 ## 快速啟動
 
@@ -84,14 +84,15 @@ bash scripts/fetch_data.sh
 | `eval/` | Golden Facts、Judge、真實模型評估、調參；[執行方式](eval/README.md) |
 | `eval/results/` | 精選最終評估，含原始回答、事件與逐項分數 |
 | `scripts/` | `fetch_data.sh` 下載 PDF；`generate_event_types.py` 同步前後端事件型別 |
-| `docs/` | 設計、開發指南、AI 協作、架構決策與歷史查詢方式 |
+| `docs/` | 設計、開發指南、AI 協作、ADR，以及復原的 `verification/`、`qa/` 歷史證據 |
+| `.scratch/chat-with-document/` | 已完成的 PRD、tickets 與執行紀錄 |
 | `pyproject.toml`、`uv.lock` | Python 套件、測試設定與鎖定依賴 |
 | `conftest.py` | pytest 分層標記與評估選項註冊 |
 | `AGENTS.md`、`CLAUDE.md`、`CONTEXT.md` | Agent 工作規則、共用入口與領域術語 |
 | `data/`、`.cache/` | 下載的 PDF、處理快取；不提交 |
 | `.venv/`、`frontend/node_modules/` | 本機依賴；不提交 |
 
-後端各模組的責任與兩條執行路徑見 [程式導覽](docs/development.md#程式導覽)。原始碼與前端 build 都需要保留；本地字型保留動態文件內容需要的字元。過時的 issue、spikes、中間報告與截圖已移至 Git 歷史，不另建立 archive 目錄。
+後端各模組的責任與兩條執行路徑見 [程式導覽](docs/development.md#程式導覽)。原始碼與前端 build 都需要保留；本地字型保留動態文件內容需要的字元。既有 issue 與 docs 驗證紀錄已依要求復原；舊 spikes、完整 eval 中間結果及前端 review 仍由 Git 歷史保存，不另建立 archive 目錄。
 
 ## 評估結果與已知限制
 

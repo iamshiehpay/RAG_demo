@@ -1,0 +1,48 @@
+Chat with Document
+
+與文件對話
+
+讓每個回答，
+都有出處可循。
+
+01 / Document
+
+閱讀的起點
+
+上傳一份 PDF，從文件內容開始提問。
+
+選擇 PDF Document
+
+支援有文字層的 PDF
+
+industrial-robotics.pdf · 完成
+
+149 Chunks · 可提問
+
+Document Summary
+
+文件概覽
+System extraction warning (not an author claim): 結構未能可靠重建; do not infer missing row/column associations.
+The authors survey robotic foundation models (RFMs) to assess their industrial applicability. They define RFMs as highly adaptable, data‑driven systems that must generalise across tasks, embodiments, and multimodal inputs, distinguishing them from single‑purpose models and highlighting Vision‑Language‑Action models as a prominent sub‑category. The survey maps the RFM landscape to industrial domains and use cases, focusing on collaborative robots (cobots), heterogeneous sensing/actuation, edge‑computing limits, and safety‑critical operation.
+A systematic review methodology assembles three corpora: a principal “main” corpus (81.2 % of 1 263 publications), an “implications” corpus (9.9 %), and a “further” supplementary set (8.9 %). Literature acquisition uses a modular Python pipeline (DB‑Search) that translates Academic Search Query Syntax into native database queries, merges metadata, removes duplicates, validates entries, and applies LLM‑based relevance filtering (GPT‑4o) with binary labels and confidence scores, followed by manual refinement. The principal RFM‑related corpus ultimately contains 1 025 unique, highly relevant works, including 341 control or integrated RFMs (324 for manipulation‑related domains) and various related, high‑level, benchmark, and survey articles. An industrial implication corpus is built from seven broad queries, yielding 125 manually reviewed articles that inform the synthesis of industrial requirements. Additional auxiliary searches contribute 113 publications on related topics such as cobots, hardware, sensors, and standards.
+The authors review the evolution of industrial robotics toward collaborative cobots, noting that traditional robots are high‑payload, high‑speed, and programmed for predefined functions, whereas cobots emphasize safety, flexibility, intuitive programming, and human‑robot collaboration. Cobots are deployed across manufacturing, quality inspection, logistics, healthcare, agriculture, retail, military, and other domains, driven by technological, organisational, and economic factors that favour adaptable, low‑cost automation for small‑batch, high‑mix production. Despite these advances, cobots still lack autonomous handling of complex, cognitive, or dexterous tasks and face challenges in real‑time hazard detection, continuous safe operation, and trustworthy interaction.
+Hardware considerations for industrial deployment include cobot capabilities (average 6 DOF, payload ≈ 8.6 kg, reach ≈ 970 mm, positioning accuracy ≈ 0.09 mm) and modest power consumption (mean 0.31 kW for 0.5–20 kg payload models), which support low‑power or mobile settings. Sensing hardware spans visual, range, dynamics, position, and specialised modalities, often fused to improve robustness and safety. End‑effectors are modular and sensor‑embedded. Edge computing requirements are addressed by reviewing industrial edge PCs (e.g., NVIDIA Jetson series), comparing performance, power, and cost to guide RFM selection under constrained compute budgets.
+From the industrial implication corpus, eleven recurring, domain‑agnostic requirements are identified: (1) adaptability and flexibility; (2) safety and compliance; (3) human‑robot interaction and collaboration; (4) robustness and reliability; (5) precision and accuracy; (6) real‑time performance; (7) cost‑effectiveness and integration; (8) explainability and trust; (9) sensor fusion and perception; (10) standardized benchmarking and evaluation; and (11) data requirements and efficiency. These are expanded into 47 detailed attributes (e.g., online adaptation, OOD robustness, security, multimodal I/O, fault tolerance, reasoning, memory), yielding 517 implication‑attribute cells. From these, a living catalogue of 149 criteria is constructed, covering model‑centric, ecosystem‑centric, and joint requirements such as adaptive behaviour, documentation, and structured logging.
+The authors evaluate 324 manipulation‑capable RFMs against the 149 criteria using an automated LLM‑based pipeline (GPT‑5.1) that generates binary fulfilment judgments, confidence scores, evidence flags, and rationales. Expert comparison on three blind‑rated papers shows high agreement (accuracy 0.966, κ 0.744) with a low false‑positive rate (1.9 %) but a higher false‑negative rate (22.6 %) due to a conservative marking policy. The evaluation yields overall maturity scores and implication‑wise profiles, summarising the strongest‑performing RFMs and analysing industrial applicability for the full corpus and a Top‑50 subset. Results indicate limited, uneven industrial maturity: even top models satisfy only a fraction of the criteria and exhibit narrow, implication‑specific strengths rather than broad coverage.
+Coverage patterns across the full corpus are temporally stable and concentrated on three implications: adaptability/flexibility (I1), benchmarking/evaluation (I10), and data requirements/usage (I11). These dominate both breadth (≈0.75–0.76 of “1+‑Coverage” in the full set, reaching 1.0 in the Top‑50) and depth (average criteria coverage ≤0.10 in the full set, ≤0.24 in the Top‑50). Safety/compliance (I2), human‑robot interaction/co‑robotics (I3), real‑time performance (I6), and cost‑effectiveness/integration (I7) remain consistently under‑addressed; breadth for these is low and depth stays ≤0.10 even in the Top‑50.
+The five highest‑rated RFMs (out of 324) are listed in Table 11. The best per‑implication proportional fulfilment observed is 0.44 for I1 by Gemini Robotics 1.5; this is the only value exceeding 0.4 (Table D5). Table 12 shows the highest scores per implication, with several implications sharing a top score of 0.11 for I6 (“Multiple”). Even the best per‑implication results are modest, indicating that current RFMs do not achieve integrated coverage across the full set of industrial implications.
+Overall, the best RFMs satisfy only about 10 % of the 149 criteria. Strengths lie in adaptability (I1), benchmarking/evaluation (I10), and data handling (I11). Persistent gaps are noted for safety/compliance (I2), HRI/HRC (I3), real‑time performance (I6), and integration/cost‑effectiveness (I7). The ten most frequently fulfilled criteria cluster in the three dominant implications (e.g., Multi‑Task Generalisation, Flexible Data Type Acceptance, Repeatability & Reproducibility), but explicit fulfilment levels are modest (e.g., 0.28 for Multi‑Task Generalisation). Gap analysis shows large discrepancies between evidence presence and actual fulfilment, with gap scores often >0.8.
+The authors conclude that advancing industry‑grade RFMs requires systematic integration of safety, real‑time feasibility, robust perception, interaction, and cost‑effective, auditable system integration, rather than isolated benchmark improvements. They acknowledge that the evaluation provides reliable lower‑bound maturity estimates suitable for corpus‑level analysis but advise caution when interpreting individual criterion judgments due to interpretive latitude and occasional disagreement. Closing the gaps in safety, real‑time performance, HRI/HRC, and integration is identified as the central agenda for achieving industry‑grade autonomous cobots.
+
+02 / Conversation
+
+Citation / 來源旁註
+想從哪個問題開始？
+
+提問後，回答與來源會並列呈現。點一下 Citation，即可核對原文。
+
+你的問題 Question
+
+回答以文件為依據；點 Citation 查看原文。
+
+提問 · Ask

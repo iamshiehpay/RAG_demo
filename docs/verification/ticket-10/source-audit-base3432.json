@@ -1,0 +1,1629 @@
+{
+  "lightrag": {
+    "pdf": "data/lightrag.pdf",
+    "sha256": "bd72eebf611df1366b251c16ce4eac7aac699e519783c586feb2c5c43899347a",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "LIGHTRAG: SIMPLE AND FAST RETRIEVAL-AUGMENTED GENERATION",
+        "pages": [
+          1,
+          1
+        ],
+        "appendix": false,
+        "source_tokens": 70,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-2",
+        "title": "ABSTRACT",
+        "pages": [
+          1,
+          1
+        ],
+        "appendix": false,
+        "source_tokens": 249,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-3",
+        "title": "1 INTRODUCTION",
+        "pages": [
+          1,
+          2
+        ],
+        "appendix": false,
+        "source_tokens": 1038,
+        "target": 156,
+        "chunks": 3,
+        "tables": []
+      },
+      {
+        "id": "section-4",
+        "title": "2 RETRIEVAL-AUGMENTED GENERATION",
+        "pages": [
+          2,
+          3
+        ],
+        "appendix": false,
+        "source_tokens": 501,
+        "target": 80,
+        "chunks": 2,
+        "tables": []
+      },
+      {
+        "id": "section-5",
+        "title": "3 THE LIGHTRAG ARCHITECTURE",
+        "pages": [
+          3,
+          3
+        ],
+        "appendix": false,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-6",
+        "title": "3.1 GRAPH-BASED TEXT INDEXING",
+        "pages": [
+          3,
+          4
+        ],
+        "appendix": false,
+        "source_tokens": 950,
+        "target": 142,
+        "chunks": 3,
+        "tables": []
+      },
+      {
+        "id": "section-7",
+        "title": "3.2 DUAL-LEVEL RETRIEVAL PARADIGM",
+        "pages": [
+          4,
+          5
+        ],
+        "appendix": false,
+        "source_tokens": 535,
+        "target": 80,
+        "chunks": 2,
+        "tables": []
+      },
+      {
+        "id": "section-8",
+        "title": "3.3 RETRIEVAL-AUGMENTED ANSWER GENERATION",
+        "pages": [
+          5,
+          5
+        ],
+        "appendix": false,
+        "source_tokens": 154,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-9",
+        "title": "3.4 COMPLEXITY ANALYSIS OF THE LIGHTRAG FRAMEWORK",
+        "pages": [
+          5,
+          5
+        ],
+        "appendix": false,
+        "source_tokens": 230,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-10",
+        "title": "4 EVALUATION",
+        "pages": [
+          5,
+          5
+        ],
+        "appendix": false,
+        "source_tokens": 119,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-11",
+        "title": "4.1 EXPERIMENTAL SETTINGS",
+        "pages": [
+          5,
+          6
+        ],
+        "appendix": false,
+        "source_tokens": 1102,
+        "target": 165,
+        "chunks": 3,
+        "tables": []
+      },
+      {
+        "id": "section-12",
+        "title": "4.2 COMPARISON OF LIGHTRAG WITH EXISTING RAG METHODS (RQ1)",
+        "pages": [
+          6,
+          7
+        ],
+        "appendix": false,
+        "source_tokens": 1845,
+        "target": 277,
+        "chunks": 3,
+        "tables": [
+          {
+            "label": "Table 1",
+            "pages": [
+              7,
+              7
+            ],
+            "reconstructed": true,
+            "rows": 16,
+            "raw_sha256": "a82986c1e7b2714ce5a0c4df5abb11a2bb4f4b6135c53446dd2e8b9502e500b5"
+          }
+        ]
+      },
+      {
+        "id": "section-13",
+        "title": "4.3 ABLATION STUDIES (RQ2)",
+        "pages": [
+          7,
+          8
+        ],
+        "appendix": false,
+        "source_tokens": 1870,
+        "target": 280,
+        "chunks": 3,
+        "tables": [
+          {
+            "label": "Table 2",
+            "pages": [
+              8,
+              8
+            ],
+            "reconstructed": true,
+            "rows": 16,
+            "raw_sha256": "8e850ac2c0e6243b874ec843ef69dc1c9e98c5f2ef9deb8589cb3106810512e2"
+          }
+        ]
+      },
+      {
+        "id": "section-14",
+        "title": "4.4 CASE STUDY (RQ3)",
+        "pages": [
+          8,
+          9
+        ],
+        "appendix": false,
+        "source_tokens": 1052,
+        "target": 158,
+        "chunks": 3,
+        "tables": [
+          {
+            "label": "Table 3",
+            "pages": [
+              9,
+              9
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "c2d5501d9ef94dba414b3978e099718510c662ea6793a3ecec26a6a1849e1659"
+          }
+        ]
+      },
+      {
+        "id": "section-15",
+        "title": "4.5 MODEL COST AND ADAPTABILITY ANALYSIS (RQ4)",
+        "pages": [
+          9,
+          10
+        ],
+        "appendix": false,
+        "source_tokens": 610,
+        "target": 92,
+        "chunks": 2,
+        "tables": [
+          {
+            "label": "Figure 2",
+            "pages": [
+              9,
+              9
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "bf39d009ffabdbb67a2c445b43c95b18ebba80bc499f278899c5fa6f434ed864"
+          }
+        ]
+      },
+      {
+        "id": "section-16",
+        "title": "5 RELATED WORK",
+        "pages": [
+          10,
+          10
+        ],
+        "appendix": false,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-17",
+        "title": "5.1 RETRIEVAL-AUGMENTED GENERATION WITH LLMS",
+        "pages": [
+          10,
+          10
+        ],
+        "appendix": false,
+        "source_tokens": 286,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-18",
+        "title": "5.2 LARGE LANGUAGE MODEL FOR GRAPHS",
+        "pages": [
+          10,
+          10
+        ],
+        "appendix": false,
+        "source_tokens": 257,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-19",
+        "title": "6 CONCLUSION",
+        "pages": [
+          10,
+          10
+        ],
+        "appendix": false,
+        "source_tokens": 149,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-20",
+        "title": "7 APPENDIX",
+        "pages": [
+          13,
+          13
+        ],
+        "appendix": true,
+        "source_tokens": 100,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-21",
+        "title": "Appendix \u2014 7.1 EXPERIMENTAL DATA DETAILS",
+        "pages": [
+          13,
+          13
+        ],
+        "appendix": true,
+        "source_tokens": 157,
+        "target": 80,
+        "chunks": 2,
+        "tables": [
+          {
+            "label": "Table 4",
+            "pages": [
+              13,
+              13
+            ],
+            "reconstructed": true,
+            "rows": 2,
+            "raw_sha256": "8a9a714c5d49c951cbe9eb882c0ea71db235e0b94eab06e0079cb467e027bc35"
+          }
+        ]
+      },
+      {
+        "id": "section-22",
+        "title": "Appendix \u2014 7.2 CASE EXAMPLE OF RETRIEVAL-AUGMENTED GENERATION IN LIGHTRAG",
+        "pages": [
+          13,
+          14
+        ],
+        "appendix": true,
+        "source_tokens": 120,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-23",
+        "title": "Appendix \u2014 7.3 OVERVIEW OF THE PROMPTS USED IN LIGHTRAG",
+        "pages": [
+          14,
+          14
+        ],
+        "appendix": true,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-24",
+        "title": "Appendix \u2014 7.3.1 PROMPTS FOR GRAPH GENERATION",
+        "pages": [
+          14,
+          14
+        ],
+        "appendix": true,
+        "source_tokens": 106,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-25",
+        "title": "Appendix \u2014 7.3.2 PROMPTS FOR QUERY GENERATION",
+        "pages": [
+          14,
+          14
+        ],
+        "appendix": true,
+        "source_tokens": 120,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-26",
+        "title": "Appendix \u2014 7.3.3 PROMPTS FOR KEYWORD EXTRACTION",
+        "pages": [
+          15,
+          15
+        ],
+        "appendix": true,
+        "source_tokens": 94,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-27",
+        "title": "Appendix \u2014 7.3.4 PROMPTS FOR RAG EVALUATION",
+        "pages": [
+          15,
+          16
+        ],
+        "appendix": true,
+        "source_tokens": 773,
+        "target": 116,
+        "chunks": 3,
+        "tables": [
+          {
+            "label": "Table 5",
+            "pages": [
+              16,
+              16
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "15ab8ab93f3f5a0fc4f665d9984aed57a65c626e8f7d6fb62be0ac987bafad7d"
+          }
+        ]
+      },
+      {
+        "id": "section-28",
+        "title": "Appendix \u2014 7.4 CASE STUDY: COMPARISON BETWEEN LIGHTRAG AND THE BASELINE NAIVERAG",
+        "pages": [
+          16,
+          16
+        ],
+        "appendix": true,
+        "source_tokens": 176,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      }
+    ],
+    "source_bearing_sections": 25,
+    "chunk_count": 43,
+    "target_total": 2746,
+    "all_chunk_pages_inside_own_section": true,
+    "table2": {
+      "text_sha256": "4936a2959b8f1b609cb4f2001793df3bd1301abe4c30659742abdf7c2ba6ef15",
+      "tokens": 1392,
+      "raw_tokens": 790,
+      "raw_sha256": "8e850ac2c0e6243b874ec843ef69dc1c9e98c5f2ef9deb8589cb3106810512e2",
+      "rows": [
+        [
+          "NaiveRAG / LightRAG",
+          "Comprehensiveness",
+          "32.4% / 67.6%",
+          "38.4% / 61.6%",
+          "16.4% / 83.6%",
+          "38.8% / 61.2%"
+        ],
+        [
+          "NaiveRAG / LightRAG",
+          "Diversity",
+          "23.6% / 76.4%",
+          "38.0% / 62.0%",
+          "13.6% / 86.4%",
+          "32.4% / 67.6%"
+        ],
+        [
+          "NaiveRAG / LightRAG",
+          "Empowerment",
+          "32.4% / 67.6%",
+          "38.8% / 61.2%",
+          "16.4% / 83.6%",
+          "42.8% / 57.2%"
+        ],
+        [
+          "NaiveRAG / LightRAG",
+          "Overall",
+          "32.4% / 67.6%",
+          "38.8% / 61.2%",
+          "15.2% / 84.8%",
+          "40.0% / 60.0%"
+        ],
+        [
+          "NaiveRAG / -High",
+          "Comprehensiveness",
+          "34.8% / 65.2%",
+          "42.8% / 57.2%",
+          "23.6% / 76.4%",
+          "40.4% / 59.6%"
+        ],
+        [
+          "NaiveRAG / -High",
+          "Diversity",
+          "27.2% / 72.8%",
+          "36.8% / 63.2%",
+          "16.8% / 83.2%",
+          "36.0% / 64.0%"
+        ],
+        [
+          "NaiveRAG / -High",
+          "Empowerment",
+          "36.0% / 64.0%",
+          "42.4% / 57.6%",
+          "22.8% / 77.2%",
+          "47.6% / 52.4%"
+        ],
+        [
+          "NaiveRAG / -High",
+          "Overall",
+          "35.2% / 64.8%",
+          "44.0% / 56.0%",
+          "22.0% / 78.0%",
+          "42.4% / 57.6%"
+        ],
+        [
+          "NaiveRAG / -Low",
+          "Comprehensiveness",
+          "36.0% / 64.0%",
+          "43.2% / 56.8%",
+          "19.2% / 80.8%",
+          "36.0% / 64.0%"
+        ],
+        [
+          "NaiveRAG / -Low",
+          "Diversity",
+          "28.0% / 72.0%",
+          "39.6% / 60.4%",
+          "13.6% / 86.4%",
+          "33.2% / 66.8%"
+        ],
+        [
+          "NaiveRAG / -Low",
+          "Empowerment",
+          "34.8% / 65.2%",
+          "42.8% / 57.2%",
+          "16.4% / 83.6%",
+          "35.2% / 64.8%"
+        ],
+        [
+          "NaiveRAG / -Low",
+          "Overall",
+          "34.8% / 65.2%",
+          "43.6% / 56.4%",
+          "18.8% / 81.2%",
+          "35.2% / 64.8%"
+        ],
+        [
+          "NaiveRAG / -Origin",
+          "Comprehensiveness",
+          "24.8% / 75.2%",
+          "39.2% / 60.8%",
+          "16.4% / 83.6%",
+          "44.4% / 55.6%"
+        ],
+        [
+          "NaiveRAG / -Origin",
+          "Diversity",
+          "26.4% / 73.6%",
+          "44.8% / 55.2%",
+          "14.4% / 85.6%",
+          "25.6% / 74.4%"
+        ],
+        [
+          "NaiveRAG / -Origin",
+          "Empowerment",
+          "32.0% / 68.0%",
+          "43.2% / 56.8%",
+          "17.2% / 82.8%",
+          "45.2% / 54.8%"
+        ],
+        [
+          "NaiveRAG / -Origin",
+          "Overall",
+          "25.6% / 74.4%",
+          "39.2% / 60.8%",
+          "15.6% / 84.4%",
+          "44.4% / 55.6%"
+        ]
+      ],
+      "section": "4.3 ABLATION STUDIES (RQ2)",
+      "pages": [
+        8,
+        8
+      ]
+    }
+  },
+  "second_document": {
+    "pdf": "data/industrial-robotics.pdf",
+    "sha256": "8ab9a63ca99b0b26432e7a4d6b4c2810d00b97a2df1791973fe2d7d321ede0b9",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Robotic Foundation Models for Industrial Control: A Comprehensive Survey and Readiness Assessment Framework",
+        "pages": [
+          1,
+          1
+        ],
+        "appendix": false,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-2",
+        "title": "David Kube1,2*, Simon Hadwiger1,2 and Tobias Meisen2",
+        "pages": [
+          1,
+          1
+        ],
+        "appendix": false,
+        "source_tokens": 25,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-3",
+        "title": "2Institute for Technologies and Management of Digital Transformation, Bergische",
+        "pages": [
+          1,
+          1
+        ],
+        "appendix": false,
+        "source_tokens": 360,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-4",
+        "title": "1 Introduction",
+        "pages": [
+          1,
+          4
+        ],
+        "appendix": false,
+        "source_tokens": 2175,
+        "target": 326,
+        "chunks": 6,
+        "tables": []
+      },
+      {
+        "id": "section-5",
+        "title": "2 Robotic Foundation Models",
+        "pages": [
+          4,
+          6
+        ],
+        "appendix": false,
+        "source_tokens": 2162,
+        "target": 324,
+        "chunks": 5,
+        "tables": []
+      },
+      {
+        "id": "section-6",
+        "title": "3 Review Methodology & Corpora Composition",
+        "pages": [
+          6,
+          7
+        ],
+        "appendix": false,
+        "source_tokens": 215,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-7",
+        "title": "3.1 Literature Acquisition Procedure",
+        "pages": [
+          7,
+          8
+        ],
+        "appendix": false,
+        "source_tokens": 1097,
+        "target": 165,
+        "chunks": 3,
+        "tables": []
+      },
+      {
+        "id": "section-8",
+        "title": "3.2 RFM-Related Corpora",
+        "pages": [
+          8,
+          10
+        ],
+        "appendix": false,
+        "source_tokens": 1456,
+        "target": 218,
+        "chunks": 4,
+        "tables": []
+      },
+      {
+        "id": "section-9",
+        "title": "3.3 Industrial Implication Corpus",
+        "pages": [
+          10,
+          11
+        ],
+        "appendix": false,
+        "source_tokens": 513,
+        "target": 80,
+        "chunks": 2,
+        "tables": []
+      },
+      {
+        "id": "section-10",
+        "title": "3.4 Further Corpora & Manual Searches",
+        "pages": [
+          11,
+          11
+        ],
+        "appendix": false,
+        "source_tokens": 87,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-11",
+        "title": "4 Related Works",
+        "pages": [
+          11,
+          13
+        ],
+        "appendix": false,
+        "source_tokens": 1786,
+        "target": 268,
+        "chunks": 6,
+        "tables": [
+          {
+            "label": "Table 1",
+            "pages": [
+              12,
+              12
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "c9ee8b90bfc567b9eb55d97e63e940e9ef8912151c423ad2904e7ccb1621a541"
+          },
+          {
+            "label": "Table 2",
+            "pages": [
+              12,
+              12
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "475a9bb12e76029937ec77fbcc8c425da9dd459ca115c5d201d13e2df60dab3a"
+          }
+        ]
+      },
+      {
+        "id": "section-12",
+        "title": "5 Rise of Cobots in Industry",
+        "pages": [
+          13,
+          13
+        ],
+        "appendix": false,
+        "source_tokens": 73,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-13",
+        "title": "5.1 Landscape of Industrial Robotics: Tradition & Transformation",
+        "pages": [
+          13,
+          14
+        ],
+        "appendix": false,
+        "source_tokens": 889,
+        "target": 133,
+        "chunks": 3,
+        "tables": [
+          {
+            "label": "Table 3",
+            "pages": [
+              13,
+              13
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "97d820b04fa8a1ae2fa426f7af13ee0526e3193ca03ee679f53579ff72e7a617"
+          }
+        ]
+      },
+      {
+        "id": "section-14",
+        "title": "5.2 Productive Cobot Applications & Domains",
+        "pages": [
+          14,
+          14
+        ],
+        "appendix": false,
+        "source_tokens": 340,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-15",
+        "title": "Material Handling, Logistics, and Mobile",
+        "pages": [
+          14,
+          14
+        ],
+        "appendix": false,
+        "source_tokens": 413,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-16",
+        "title": "5.3 Drivers of the Industrial Shift Toward Cobots",
+        "pages": [
+          14,
+          15
+        ],
+        "appendix": false,
+        "source_tokens": 858,
+        "target": 129,
+        "chunks": 3,
+        "tables": []
+      },
+      {
+        "id": "section-17",
+        "title": "5.4 Towards Intelligent & Collaborative Automation",
+        "pages": [
+          15,
+          16
+        ],
+        "appendix": false,
+        "source_tokens": 426,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-18",
+        "title": "6 Cobot & Compute Hardware",
+        "pages": [
+          16,
+          16
+        ],
+        "appendix": false,
+        "source_tokens": 314,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-19",
+        "title": "6.1 Cobot Capabilities & Power Consumption",
+        "pages": [
+          16,
+          17
+        ],
+        "appendix": false,
+        "source_tokens": 1057,
+        "target": 159,
+        "chunks": 5,
+        "tables": [
+          {
+            "label": "Table 4",
+            "pages": [
+              16,
+              16
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "fa3399d28a883cf291e677a167755a39d68b2b0ad8fa8360b2e400caa564e69f"
+          },
+          {
+            "label": "Table 5",
+            "pages": [
+              17,
+              17
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "da5f51ec2ba66e02a507dafa7b228cc93b35544d633a2acdb3402dc2eafcc3df"
+          }
+        ]
+      },
+      {
+        "id": "section-20",
+        "title": "6.2 Sensing & Manipulation Hardware",
+        "pages": [
+          17,
+          18
+        ],
+        "appendix": false,
+        "source_tokens": 684,
+        "target": 103,
+        "chunks": 2,
+        "tables": []
+      },
+      {
+        "id": "section-21",
+        "title": "6.3 Industrial Edge PCs",
+        "pages": [
+          18,
+          20
+        ],
+        "appendix": false,
+        "source_tokens": 2290,
+        "target": 344,
+        "chunks": 5,
+        "tables": [
+          {
+            "label": "Table 6",
+            "pages": [
+              19,
+              19
+            ],
+            "reconstructed": true,
+            "rows": 22,
+            "raw_sha256": "33f88abfb3a57afb960c24698455e77db2bc706ca52f8b918f26ec84b26866e6"
+          }
+        ]
+      },
+      {
+        "id": "section-22",
+        "title": "7 General & RFM-specific Industrial Implications",
+        "pages": [
+          20,
+          20
+        ],
+        "appendix": false,
+        "source_tokens": 263,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-23",
+        "title": "7.1 General Industrial Implications",
+        "pages": [
+          20,
+          20
+        ],
+        "appendix": false,
+        "source_tokens": 309,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-24",
+        "title": "Implication 1: Adaptability & Flexibility",
+        "pages": [
+          20,
+          21
+        ],
+        "appendix": false,
+        "source_tokens": 451,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-25",
+        "title": "Implication 2: Safety & Compliance",
+        "pages": [
+          21,
+          21
+        ],
+        "appendix": false,
+        "source_tokens": 407,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-26",
+        "title": "Implication 3: HRI & HRC",
+        "pages": [
+          21,
+          22
+        ],
+        "appendix": false,
+        "source_tokens": 410,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-27",
+        "title": "Implication 4: Robustness & Reliability",
+        "pages": [
+          22,
+          22
+        ],
+        "appendix": false,
+        "source_tokens": 292,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-28",
+        "title": "Implication 5: Precision & Accuracy",
+        "pages": [
+          22,
+          22
+        ],
+        "appendix": false,
+        "source_tokens": 271,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-29",
+        "title": "Implication 6: Real-Time Performance",
+        "pages": [
+          22,
+          23
+        ],
+        "appendix": false,
+        "source_tokens": 355,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-30",
+        "title": "Implication 7: Cost-Effectiveness & Inte-",
+        "pages": [
+          23,
+          23
+        ],
+        "appendix": false,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-31",
+        "title": "gration Capabilities",
+        "pages": [
+          23,
+          23
+        ],
+        "appendix": false,
+        "source_tokens": 349,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-32",
+        "title": "Implication 8: Explainability & Trust",
+        "pages": [
+          23,
+          23
+        ],
+        "appendix": false,
+        "source_tokens": 303,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-33",
+        "title": "Implication 9: Sensor Fusion & Perception",
+        "pages": [
+          23,
+          24
+        ],
+        "appendix": false,
+        "source_tokens": 351,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-34",
+        "title": "Implication 10: Standardised Benchmark-",
+        "pages": [
+          24,
+          24
+        ],
+        "appendix": false,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-35",
+        "title": "ing & Evaluation",
+        "pages": [
+          24,
+          24
+        ],
+        "appendix": false,
+        "source_tokens": 316,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-36",
+        "title": "Usage",
+        "pages": [
+          24,
+          25
+        ],
+        "appendix": false,
+        "source_tokens": 400,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-37",
+        "title": "assessment of RFMs",
+        "pages": [
+          25,
+          25
+        ],
+        "appendix": false,
+        "source_tokens": 146,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-38",
+        "title": "7.2 Attributes of Industry-Grade RFMs",
+        "pages": [
+          25,
+          26
+        ],
+        "appendix": false,
+        "source_tokens": 1085,
+        "target": 163,
+        "chunks": 4,
+        "tables": [
+          {
+            "label": "Table 7",
+            "pages": [
+              26,
+              26
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "f42a73be4601c9cd84fb3a01071714506e6a96ede37f44b4c9e708f41ec36dfb"
+          }
+        ]
+      },
+      {
+        "id": "section-39",
+        "title": "7.3 Evaluating Industrial Maturity:",
+        "pages": [
+          26,
+          26
+        ],
+        "appendix": false,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-40",
+        "title": "A Criteria Catalogue",
+        "pages": [
+          26,
+          26
+        ],
+        "appendix": false,
+        "source_tokens": 197,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-41",
+        "title": "149 criteria (C) \u2013 shown in the Appendix,",
+        "pages": [
+          26,
+          26
+        ],
+        "appendix": true,
+        "source_tokens": 52,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-42",
+        "title": "Appendix \u2014 Criteria scope: RFMs & their deployment",
+        "pages": [
+          26,
+          26
+        ],
+        "appendix": true,
+        "source_tokens": 0,
+        "target": 0,
+        "chunks": 0,
+        "tables": []
+      },
+      {
+        "id": "section-43",
+        "title": "Appendix \u2014 ecosystem",
+        "pages": [
+          26,
+          26
+        ],
+        "appendix": true,
+        "source_tokens": 156,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-44",
+        "title": "Appendix \u2014 Intentional redundancy across implications",
+        "pages": [
+          26,
+          27
+        ],
+        "appendix": true,
+        "source_tokens": 216,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-45",
+        "title": "Appendix \u2014 Key paradigms reflected in the catalogue",
+        "pages": [
+          27,
+          28
+        ],
+        "appendix": true,
+        "source_tokens": 1488,
+        "target": 223,
+        "chunks": 4,
+        "tables": []
+      },
+      {
+        "id": "section-46",
+        "title": "Appendix \u2014 8 RFM Overview & Evaluation",
+        "pages": [
+          28,
+          29
+        ],
+        "appendix": true,
+        "source_tokens": 284,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-47",
+        "title": "Appendix \u2014 8.1 Evaluation Procedure",
+        "pages": [
+          29,
+          29
+        ],
+        "appendix": true,
+        "source_tokens": 782,
+        "target": 117,
+        "chunks": 2,
+        "tables": []
+      },
+      {
+        "id": "section-48",
+        "title": "Appendix \u2014 Expert Agreement Comparison",
+        "pages": [
+          29,
+          30
+        ],
+        "appendix": true,
+        "source_tokens": 1123,
+        "target": 168,
+        "chunks": 4,
+        "tables": []
+      },
+      {
+        "id": "section-49",
+        "title": "Appendix \u2014 8.2 Highest Rated RFMs",
+        "pages": [
+          30,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 104,
+        "target": 80,
+        "chunks": 3,
+        "tables": [
+          {
+            "label": "Table 8",
+            "pages": [
+              31,
+              31
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "7019a4b8d7def4c80318fef0a061347d72ef183f44ae5c2f0a3dd10dc54c5227"
+          }
+        ]
+      },
+      {
+        "id": "section-50",
+        "title": "Appendix \u2014 8 I2",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-51",
+        "title": "Appendix \u2014 1 I3",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-52",
+        "title": "Appendix \u2014 1 I4",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-53",
+        "title": "Appendix \u2014 1 I5",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-54",
+        "title": "Appendix \u2014 0 I6",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-55",
+        "title": "Appendix \u2014 0 I7",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-56",
+        "title": "Appendix \u2014 0 I8",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-57",
+        "title": "Appendix \u2014 1 I9",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-58",
+        "title": "Appendix \u2014 2 I10",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-59",
+        "title": "Appendix \u2014 3 I11",
+        "pages": [
+          31,
+          31
+        ],
+        "appendix": true,
+        "source_tokens": 1,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-60",
+        "title": "Appendix \u2014 1 P",
+        "pages": [
+          31,
+          33
+        ],
+        "appendix": true,
+        "source_tokens": 2865,
+        "target": 430,
+        "chunks": 8,
+        "tables": [
+          {
+            "label": "Table 9",
+            "pages": [
+              31,
+              31
+            ],
+            "reconstructed": true,
+            "rows": 2,
+            "raw_sha256": "497138e7c6054826964a7bee70d3ef511b762e4cfe0f0ad9f73476408c240c7d"
+          },
+          {
+            "label": "Table 10",
+            "pages": [
+              31,
+              31
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "ecff32e1ab24d3dbd9241e4c56e53731d40b7483f16f0cc3feaa38844e34957d"
+          },
+          {
+            "label": "Table 11",
+            "pages": [
+              32,
+              32
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "a9305be228ab9190385ec755e486c1e06ab57f8b0fae0544663209ed4adcffcf"
+          },
+          {
+            "label": "Table 12",
+            "pages": [
+              33,
+              33
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "357269164f49c1fed7805e5a986d2e9afe0ebda14aa259c1dfe7a13197eb215c"
+          }
+        ]
+      },
+      {
+        "id": "section-61",
+        "title": "Appendix \u2014 8.3 Industrial Applicability Overview",
+        "pages": [
+          33,
+          34
+        ],
+        "appendix": true,
+        "source_tokens": 181,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-62",
+        "title": "Appendix \u2014 Temporal Stability Overview",
+        "pages": [
+          34,
+          34
+        ],
+        "appendix": true,
+        "source_tokens": 320,
+        "target": 80,
+        "chunks": 1,
+        "tables": []
+      },
+      {
+        "id": "section-63",
+        "title": "Appendix \u2014 Breadth vs. Depth Analysis",
+        "pages": [
+          34,
+          37
+        ],
+        "appendix": true,
+        "source_tokens": 2609,
+        "target": 391,
+        "chunks": 7,
+        "tables": [
+          {
+            "label": "Table 13",
+            "pages": [
+              35,
+              35
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "952e9e97c13ba5138368c9a111c3f9ef0b34f58ac7dd1005dfc413107c820efe"
+          },
+          {
+            "label": "Table 14",
+            "pages": [
+              36,
+              36
+            ],
+            "reconstructed": false,
+            "rows": 0,
+            "raw_sha256": "9fe508518a3a2b6abb5aef6b163b9665c2be660ed138e95254a6669c09f72bef"
+          },
+          {
+            "label": "Table 15",
+            "pages": [
+              36,
+              36
+            ],
+            "reconstructed": true,
+            "rows": 11,
+            "raw_sha256": "930ea14b7674dfdfb1de979c9327295afc4ce3bf6aa948e4e83e0260577cd330"
+          }
+        ]
+      },
+      {
+        "id": "section-64",
+        "title": "Appendix \u2014 9 Summary & Discussion",
+        "pages": [
+          37,
+          39
+        ],
+        "appendix": true,
+        "source_tokens": 1985,
+        "target": 298,
+        "chunks": 7,
+        "tables": []
+      }
+    ],
+    "source_bearing_sections": 59,
+    "chunk_count": 123,
+    "target_total": 7319,
+    "all_chunk_pages_inside_own_section": true
+  },
+  "D5": {
+    "rows": 0,
+    "numeric_cells": 0,
+    "independent_pdf_numeric_cells": 3888,
+    "all_numeric_values_preserved": false,
+    "first_two_rows": [],
+    "caveat": "Counter conservation plus spot-checked rows does not independently validate every association."
+  },
+  "Table9": [
+    {
+      "label": "Table 9",
+      "caption": "Table 9: LLM-expert agreement on criterion fulfillment. Reporting the number of N evaluations considered, the overall Accuracy (Acy), F1-score, Cohen\u2019s kappa agreement (\u03ba) and false positive/ negative rates (FPR/FNR).",
+      "page_start": 31,
+      "page_end": 31,
+      "paragraph_index": 1,
+      "headers": [
+        "Setting",
+        "N",
+        "Acy",
+        "F1",
+        "\u03ba",
+        "FPR/FNR"
+      ],
+      "rows": [
+        [
+          "All",
+          "447",
+          "0.966",
+          "0.762",
+          "0.744",
+          "1.9%/22.6%"
+        ],
+        [
+          "InfoFound",
+          "304",
+          "0.951",
+          "0.762",
+          "0.734",
+          "2.9%/22.6%"
+        ]
+      ],
+      "meaning": "",
+      "raw_text": "Setting N Acy F1 \u03ba FPR/FNR\nAll 447 0.966 0.762 0.744 1.9%/22.6%\nInfoFound 304 0.951 0.762 0.734 2.9%/22.6%",
+      "reconstructed": true
+    }
+  ]
+}

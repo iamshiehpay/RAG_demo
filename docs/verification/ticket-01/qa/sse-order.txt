@@ -1,0 +1,6 @@
+   1 event: plan
+   1 event: retrieval
+   1 event: citation_map
+ 241 event: delta
+   1 event: final
+   1 event: trace

@@ -1,0 +1,114 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - heading "Chat with Document" [level=1, ref=e5]
+      - paragraph
+        - StaticText "Ask a question. Follow the evidence back to your Document."
+    - region "Upload Document" [ref=e2]
+      - LabelText
+        - StaticText "PDF Document"
+      - button "PDF Document" [ref=e6]: No file chosen
+      - status
+        - paragraph
+          - StaticText "boundary.pdf · Ready"
+    - alert
+      - StaticText "This Document has no text layer; scanned PDFs are not supported."
+    - region "文件概覽" [ref=e3]
+      - heading "文件概覽" [level=2, ref=e7]
+      - StaticText "Document Overview: calibrated instruments measure seasonal conditions across the supplied Sections."
+    - region "Conversation" [ref=e4]
+      - article
+        - heading "Summarize the measurements, round 1." [level=2, ref=e10]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, 1 Calibration 0" [ref=e16]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1 1 Calibration 0" [ref=e17]
+            - StaticText "[S1] · p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+      - article
+        - heading "Summarize the measurements, round 2." [level=2, ref=e11]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, 1 Calibration 0" [ref=e18]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1 1 Calibration 0" [ref=e19]
+            - StaticText "[S1] · p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+      - article
+        - heading "Summarize the measurements, round 3." [level=2, ref=e12]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, 1 Calibration 0" [ref=e20]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1 1 Calibration 0" [ref=e21]
+            - StaticText "[S1] · p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+      - article
+        - heading "Summarize the measurements, round 4." [level=2, ref=e13]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, 1 Calibration 0" [ref=e22]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1 1 Calibration 0" [ref=e23]
+            - StaticText "[S1] · p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+      - article
+        - heading "Summarize the measurements, round 5." [level=2, ref=e14]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, 1 Calibration 0" [ref=e24]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1 1 Calibration 0" [ref=e25]
+            - StaticText "[S1] · p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+      - article
+        - heading "Summarize the measurements, round 6." [level=2, ref=e15]
+        - status
+          - StaticText "Answer complete"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, page 1, 1 Calibration 0" [ref=e26]
+            - StaticText "[S1]"
+        - complementary "Citation notes"
+          - button "[S1] · p.1 1 Calibration 0" [ref=e27]
+            - StaticText "[S1] · p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace · 2 LLM calls" [expanded=false]
+            - StaticText "Trace · 2 LLM calls"
+    - form
+      - LabelText
+        - StaticText "Question"
+      - textbox "Question" [ref=e8]
+      - button "Ask" [disabled, ref=e9]

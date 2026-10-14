@@ -1,0 +1,360 @@
+- generic [ref=e1] clickable [onclick]
+  - main
+    - sectionheader
+      - paragraph
+        - StaticText "Chat with Document"
+      - heading "與文件對話" [level=1, ref=e3]
+      - paragraph
+        - StaticText "讓每個回答，"
+        - LineBreak "\n"
+        - StaticText "都有出處可循。"
+    - complementary
+      - region "Upload Document" [ref=e4]
+        - paragraph
+          - StaticText "01 / Document"
+        - heading "閱讀的起點" [level=2, ref=e8]
+        - paragraph
+          - StaticText "上傳一份 PDF，從文件內容開始提問。"
+        - LabelText
+          - StaticText "選擇 PDF Document"
+        - button "選擇 PDF Document" [ref=e9]: No file chosen
+        - paragraph
+          - StaticText "支援有文字層的 PDF"
+        - status
+          - StaticText "ordinary.pdf · 完成"
+        - paragraph
+          - StaticText "18 Chunks · 可提問"
+      - region "Document Summary" [ref=e5] focusable [tabindex]
+        - paragraph
+          - StaticText "Document Summary"
+        - heading "文件概覽" [level=2, ref=e10]
+        - StaticText "Overview paragraph 1: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 2: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 3: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 4: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 5: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 6: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 7: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 8: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 9: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 10: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 11: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 12: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 13: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 14: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 15: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 16: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 17: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 18: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 19: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 20: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 21: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 22: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 23: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 24: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 25: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 26: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 27: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 28: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 29: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 30: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 31: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 32: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 33: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 34: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 35: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 36: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 37: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 38: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 39: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 40: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 41: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 42: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 43: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 44: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 45: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 46: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 47: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "Overview paragraph 48: calibrated instruments measure seasonal rainfall; supplied Section evidence remains available for source verification."
+        - StaticText "END_OF_DOCUMENT_OVERVIEW"
+    - region "Conversation" [ref=e2]
+      - paragraph
+        - StaticText "02 / Conversation"
+      - StaticText "Citation / 來源旁註"
+      - article
+        - paragraph
+          - StaticText "Question 01"
+        - heading "Summarize the measurements, round 1." [level=2, ref=e11]
+        - status
+          - list "回答階段"
+            - listitem [level=1]
+              - StaticText "判斷問題類型"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "檢索"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "思考中"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "回答中"
+          - StaticText "回答完成"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, p.1, 1 Calibration 0" [ref=e17]
+            - StaticText "[S1]"
+        - complementary "Citation margin notes"
+          - button "View S1, p.1, 1 Calibration 0" [ref=e18]
+            - StaticText "["
+            - StaticText "S1"
+            - StaticText "] · "
+            - StaticText "p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace 2 LLM calls · 0 Chunks" [expanded=false]
+            - StaticText "Trace 2 LLM calls · 0 Chunks"
+      - article
+        - paragraph
+          - StaticText "Question 02"
+        - heading "Summarize the measurements, round 2." [level=2, ref=e12]
+        - status
+          - list "回答階段"
+            - listitem [level=1]
+              - StaticText "判斷問題類型"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "檢索"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "思考中"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "回答中"
+          - StaticText "回答完成"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, p.1, 1 Calibration 0" [ref=e19]
+            - StaticText "[S1]"
+        - complementary "Citation margin notes"
+          - button "View S1, p.1, 1 Calibration 0" [ref=e20]
+            - StaticText "["
+            - StaticText "S1"
+            - StaticText "] · "
+            - StaticText "p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace 2 LLM calls · 0 Chunks" [expanded=false]
+            - StaticText "Trace 2 LLM calls · 0 Chunks"
+      - article
+        - paragraph
+          - StaticText "Question 03"
+        - heading "Summarize the measurements, round 3." [level=2, ref=e13]
+        - status
+          - list "回答階段"
+            - listitem [level=1]
+              - StaticText "判斷問題類型"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "檢索"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "思考中"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "回答中"
+          - StaticText "回答完成"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, p.1, 1 Calibration 0" [ref=e21]
+            - StaticText "[S1]"
+        - complementary "Citation margin notes"
+          - button "View S1, p.1, 1 Calibration 0" [ref=e22]
+            - StaticText "["
+            - StaticText "S1"
+            - StaticText "] · "
+            - StaticText "p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace 2 LLM calls · 0 Chunks" [expanded=false]
+            - StaticText "Trace 2 LLM calls · 0 Chunks"
+      - article
+        - paragraph
+          - StaticText "Question 04"
+        - heading "Summarize the measurements, round 4." [level=2, ref=e14]
+        - status
+          - list "回答階段"
+            - listitem [level=1]
+              - StaticText "判斷問題類型"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "檢索"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "思考中"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "回答中"
+          - StaticText "回答完成"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, p.1, 1 Calibration 0" [ref=e23]
+            - StaticText "[S1]"
+        - complementary "Citation margin notes"
+          - button "View S1, p.1, 1 Calibration 0" [ref=e24]
+            - StaticText "["
+            - StaticText "S1"
+            - StaticText "] · "
+            - StaticText "p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace 2 LLM calls · 0 Chunks" [expanded=false]
+            - StaticText "Trace 2 LLM calls · 0 Chunks"
+      - article
+        - paragraph
+          - StaticText "Question 05"
+        - heading "Summarize the measurements, round 5." [level=2, ref=e15]
+        - status
+          - list "回答階段"
+            - listitem [level=1]
+              - StaticText "判斷問題類型"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "檢索"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "思考中"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "回答中"
+          - StaticText "回答完成"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, p.1, 1 Calibration 0" [ref=e25]
+            - StaticText "[S1]"
+        - complementary "Citation margin notes"
+          - button "View S1, p.1, 1 Calibration 0" [ref=e26]
+            - StaticText "["
+            - StaticText "S1"
+            - StaticText "] · "
+            - StaticText "p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace 2 LLM calls · 0 Chunks" [expanded=false]
+            - StaticText "Trace 2 LLM calls · 0 Chunks"
+      - article
+        - paragraph
+          - StaticText "Question 06"
+        - heading "Summarize the measurements, round 6." [level=2, ref=e16]
+        - status
+          - list "回答階段"
+            - listitem [level=1]
+              - StaticText "判斷問題類型"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "檢索"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "思考中"
+            - listitem [level=1]
+              - StaticText "→"
+              - StaticText "回答中"
+          - StaticText "回答完成"
+        - generic
+          - StaticText "The supplied Document reports calibrated measurements. "
+          - button "View S1, p.1, 1 Calibration 0" [ref=e27]
+            - StaticText "[S1]"
+        - complementary "Citation margin notes"
+          - button "View S1, p.1, 1 Calibration 0" [ref=e28]
+            - StaticText "["
+            - StaticText "S1"
+            - StaticText "] · "
+            - StaticText "p.1"
+            - StaticText "1 Calibration 0"
+        - group
+          - DisclosureTriangle "Trace 2 LLM calls · 0 Chunks" [expanded=true]
+            - StaticText "Trace 2 LLM calls · 0 Chunks"
+          - DescriptionList
+            - term "Question Type"
+            - definition
+              - StaticText "Global"
+            - term "Standalone Question"
+            - definition
+              - StaticText "Summarize the measurements, round 6."
+            - term "Plan source"
+            - definition
+              - StaticText "router"
+          - paragraph
+            - StaticText "Invalid Citations: 0"
+          - paragraph
+            - StaticText "Chunks dropped because of Context Budget: 0"
+          - paragraph
+            - StaticText "Summary Tree level: section"
+          - region "LLM call 1" [ref=e29]
+            - heading "01 / router think=low" [level=4, ref=e31]
+              - StaticText "01"
+              - StaticText " / "
+              - StaticText "router"
+              - StaticText "think="
+              - StaticText "low"
+            - StaticText "Context Budget"
+            - StaticText "1,467"
+            - StaticText " / 10,000"
+            - meter "Context Budget: estimated prompt plus output reservation": 1467
+            - StaticText "估算 prompt "
+            - StaticText "867"
+            - StaticText "輸出預留 "
+            - StaticText "600"
+            - DescriptionList
+              - term "prompt_eval_count"
+              - definition
+                - StaticText "100"
+              - term "eval_count"
+              - definition
+                - StaticText "29"
+              - term "安全邊際 · Safety margin"
+              - definition
+                - StaticText "300"
+              - term "延遲 · Latency"
+              - definition
+                - StaticText "0.70 s"
+              - term "done_reason"
+              - definition
+                - StaticText "stop"
+          - region "LLM call 2" [ref=e30]
+            - heading "02 / answer think=medium" [level=4, ref=e32]
+              - StaticText "02"
+              - StaticText " / "
+              - StaticText "answer"
+              - StaticText "think="
+              - StaticText "medium"
+            - StaticText "Context Budget"
+            - StaticText "9,383"
+            - StaticText " / 10,000"
+            - meter "Context Budget: estimated prompt plus output reservation": 9383
+            - StaticText "估算 prompt "
+            - StaticText "6,383"
+            - StaticText "輸出預留 "
+            - StaticText "3,000"
+            - DescriptionList
+              - term "prompt_eval_count"
+              - definition
+                - StaticText "100"
+              - term "eval_count"
+              - definition
+                - StaticText "11"
+              - term "安全邊際 · Safety margin"
+              - definition
+                - StaticText "300"
+              - term "延遲 · Latency"
+              - definition
+                - StaticText "0.70 s"
+              - term "done_reason"
+              - definition
+                - StaticText "stop"
+    - form
+      - LabelText
+        - StaticText "你的問題 Question"
+      - textbox "你的問題 Question" [ref=e6]
+      - paragraph
+        - StaticText "回答以文件為依據；點 Citation 查看原文。"
+      - button "提問 · Ask" [disabled, ref=e7]

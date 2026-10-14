@@ -1,0 +1,33 @@
+event: stage
+data: {"type":"stage","stage":"parsing","completed":0,"total":1}
+
+event: stage
+data: {"type":"stage","stage":"chunking","completed":0,"total":1}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":0,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":8,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":16,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":24,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":32,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":40,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"embedding","completed":41,"total":41}
+
+event: stage
+data: {"type":"stage","stage":"complete","completed":1,"total":1}
+
+event: ready
+data: {"type":"ready","document_id":"1ad3ce9dc2194891bf03a4d7735777b6","name":"lightrag.pdf","chunk_count":41,"document_summary":null}
+

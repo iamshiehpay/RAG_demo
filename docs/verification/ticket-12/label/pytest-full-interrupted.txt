@@ -1,0 +1,4 @@
+cwd: /Users/shiehpay/Desktop/resume/rag/.worktrees/12-chat-layout
+HEAD: 119a352c8adf164f02dea41a4783e52edc0d3cf2
+src import: /Users/shiehpay/Desktop/resume/rag/.worktrees/12-chat-layout/src/chat_document/__init__.py
+cmd: PYTHONPATH=src:. .venv/bin/pytest -q

@@ -1,0 +1,19 @@
+{
+  "id": "0d82c6c8fad24c659246d0b89203d9fe-summary-section-1",
+  "kind": "section",
+  "section": "1 Results",
+  "page_start": 1,
+  "page_end": 1,
+  "text": "Table 7 reports the measured outcomes for three experimental conditions. In experiment 0 the observed accuracy was 0.25 % with a cost of 0.75. Experiment 1 achieved 1.25 % accuracy at a cost of 1.75. Experiment 2 yielded 2.25 % accuracy with a cost of 2.75. The table documents every measurement for these settings.",
+  "section_ids": [
+    "section-1"
+  ],
+  "section_titles": [
+    "1 Results"
+  ],
+  "chunk_ids": [
+    "0d82c6c8fad24c659246d0b89203d9fe:chunk-1",
+    "0d82c6c8fad24c659246d0b89203d9fe:chunk-2"
+  ],
+  "target_tokens": 80
+}

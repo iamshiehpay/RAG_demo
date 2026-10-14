@@ -1,0 +1,56 @@
+== 1440: shortcuts and composer ==
+PASS: all five LightRAG questions are shown and enabled when a Document is Ready
+PASS: one click sends exactly one ask with the exact text
+PASS: the typed draft is kept when a shortcut is used
+PASS: while generating, every shortcut, the textarea and 送出 are disabled
+PASS: keyboard focus stays on the activated shortcut while generating
+PASS: clicking disabled shortcuts while generating sends nothing
+PASS: after the answer is final the shortcuts are enabled again
+PASS: a real double click sends exactly one more ask
+PASS: three clicks in the same tick send exactly one ask
+PASS: Shift+Enter inserts a newline and sends nothing
+PASS: Enter sends the typed question through the same path (one ask)
+PASS: an error answer shows 重試 and the shortcuts are usable again
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/10-shortcuts-error-state-1440.png: No such file or directory (os error 2)
+== shortcuts: no Document, uploading, other Documents ==
+PASS: no Document: five shortcuts shown but disabled, composer disabled
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/08-shortcuts-disabled-no-document-1440.png: No such file or directory (os error 2)
+PASS: while the Document is processing the shortcuts stay disabled
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/09-shortcuts-disabled-uploading-1440.png: No such file or directory (os error 2)
+PASS: once Ready they are enabled
+PASS: another Document gets only the general question, no visible heading, neutral accessible name
+PASS: that general shortcut sends once
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/11-other-document-shortcuts-1440.png: No such file or directory (os error 2)
+== 390: overlay, focus, Escape ==
+PASS: 390: no separator, shortcut row scrolls inside itself, no page overflow
+PASS: 390: opening a Citation opens the source overlay and moves focus into it
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/05-source-overlay-390.png: No such file or directory (os error 2)
+PASS: 390: Escape closes the overlay and returns focus to the Citation
+PASS: keyboard focus on a Citation or shortcut shows a visible ring
+== D21: overview removed, uncertainty beside related source ==
+PASS: Ready @ 1440: overview, controls and embedded English warning absent
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/ready-1440.png: No such file or directory (os error 2)
+PASS: uncertain table @ 1440: exact Chinese warning beside raw citation source
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/uncertain-1440.png: No such file or directory (os error 2)
+FAIL: uncertain table @ 1440: retrieved source also keeps exact warning (got: false)
+PASS: reconstructed table @ 1440: grid retained, uncertainty note absent
+PASS: text source @ 1440: no table uncertainty warning
+PASS: Global @ 1440: summary citation and provenance retained
+frontend/review/followup.sh:199: no such file or directory: docs/verification/ticket-12/overview/run/checks/global-1440.json
+FAIL: D21 common assertions @ 1440
+PASS: Ready @ 920: overview, controls and embedded English warning absent
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/ready-920.png: No such file or directory (os error 2)
+PASS: uncertain table @ 920: exact Chinese warning beside raw citation source
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/uncertain-920.png: No such file or directory (os error 2)
+FAIL: uncertain table @ 920: retrieved source also keeps exact warning (got: false)
+PASS: reconstructed table @ 920: grid retained, uncertainty note absent
+PASS: text source @ 920: no table uncertainty warning
+PASS: Global @ 920: summary citation and provenance retained
+frontend/review/followup.sh:199: no such file or directory: docs/verification/ticket-12/overview/run/checks/global-920.json
+FAIL: D21 common assertions @ 920
+FAIL: Ready @ 390: overview, controls and embedded English warning absent (got: ✗ Evaluation error: TypeError: Cannot read properties of null (reading 'textContent')
+    at <anonymous>:1:174)
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/ready-390.png: No such file or directory (os error 2)
+PASS: uncertain table @ 390: exact Chinese warning beside raw citation source
+✗ Failed to save screenshot to docs/verification/ticket-12/overview/run/uncertain-390.png: No such file or directory (os error 2)
+FAIL: uncertain table @ 390: retrieved source also keeps exact warning (got: false)

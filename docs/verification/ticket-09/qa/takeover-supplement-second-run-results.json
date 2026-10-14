@@ -1,0 +1,14 @@
+[
+  {
+    "name": "processing reason accessible (corrected language assumption)",
+    "pass": true
+  },
+  {
+    "name": "modal cannot Tab to background page control",
+    "pass": true
+  },
+  {
+    "name": "focus returns after modal tab cycle",
+    "pass": true
+  }
+]

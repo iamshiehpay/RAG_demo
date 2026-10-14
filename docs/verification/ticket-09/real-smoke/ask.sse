@@ -1,0 +1,249 @@
+event: plan
+data: {"type":"plan","question_type":"Global","standalone_question":"請用繁體中文簡述這份文件的實驗測量結果，以條列列出實驗、準確率與成本，並附引用。","sub_queries":[],"plan_source":"router","fallback_reason":null,"rewrite_language_mismatch":false,"router_standalone_question":null}
+
+event: retrieval
+data: {"type":"retrieval","chunks":[],"dropped_chunk_count":0}
+
+event: citation_map
+data: {"type":"citation_map","citations":[{"id":"S1","source_id":"0d82c6c8fad24c659246d0b89203d9fe-summary-section-1","section":"1 Results","page_start":1,"page_end":1}]}
+
+event: thinking
+data: {"type":"thinking","text":"The"}
+
+event: thinking
+data: {"type":"thinking","text":" user asks: \"請用"}
+
+event: thinking
+data: {"type":"thinking","text":"繁體中文簡述這"}
+
+event: thinking
+data: {"type":"thinking","text":"份文件的實驗測"}
+
+event: thinking
+data: {"type":"thinking","text":"量結果，以條列"}
+
+event: thinking
+data: {"type":"thinking","text":"列出實驗、"}
+
+event: thinking
+data: {"type":"thinking","text":"準確率與成本"}
+
+event: thinking
+data: {"type":"thinking","text":"，並附引用。\""}
+
+event: thinking
+data: {"type":"thinking","text":" We"}
+
+event: thinking
+data: {"type":"thinking","text":" have"}
+
+event: thinking
+data: {"type":"thinking","text":" one"}
+
+event: thinking
+data: {"type":"thinking","text":" source S"}
+
+event: thinking
+data: {"type":"thinking","text":"1 that"}
+
+event: thinking
+data: {"type":"thinking","text":" contains"}
+
+event: thinking
+data: {"type":"thinking","text":" the results"}
+
+event: thinking
+data: {"type":"thinking","text":". We"}
+
+event: thinking
+data: {"type":"thinking","text":" need to list experiments"}
+
+event: thinking
+data: {"type":"thinking","text":", accuracy"}
+
+event: thinking
+data: {"type":"thinking","text":", cost."}
+
+event: thinking
+data: {"type":"thinking","text":" Use bullet"}
+
+event: thinking
+data: {"type":"thinking","text":" points. Provide citation"}
+
+event: thinking
+data: {"type":"thinking","text":" after"}
+
+event: thinking
+data: {"type":"thinking","text":" each claim"}
+
+event: thinking
+data: {"type":"thinking","text":". Must"}
+
+event: thinking
+data: {"type":"thinking","text":" attach"}
+
+event: thinking
+data: {"type":"thinking","text":" citation to every factual claim."}
+
+event: thinking
+data: {"type":"thinking","text":" So each"}
+
+event: thinking
+data: {"type":"thinking","text":" bullet line"}
+
+event: thinking
+data: {"type":"thinking","text":" should have ["}
+
+event: thinking
+data: {"type":"thinking","text":"S1]."}
+
+event: thinking
+data: {"type":"thinking","text":" Provide in"}
+
+event: thinking
+data: {"type":"thinking","text":" Traditional Chinese"}
+
+event: thinking
+data: {"type":"thinking","text":"."}
+
+event: thinking
+data: {"type":"thinking","text":" Let's"}
+
+event: thinking
+data: {"type":"thinking","text":" produce bullet"}
+
+event: thinking
+data: {"type":"thinking","text":" list:\n\n"}
+
+event: thinking
+data: {"type":"thinking","text":"-"}
+
+event: thinking
+data: {"type":"thinking","text":" 實驗0"}
+
+event: thinking
+data: {"type":"thinking","text":"："}
+
+event: thinking
+data: {"type":"thinking","text":"準"}
+
+event: thinking
+data: {"type":"thinking","text":"確率 0.25"}
+
+event: thinking
+data: {"type":"thinking","text":"%，"}
+
+event: thinking
+data: {"type":"thinking","text":"成本 0.75\n"}
+
+event: thinking
+data: {"type":"thinking","text":"- 實驗"}
+
+event: thinking
+data: {"type":"thinking","text":"1：準"}
+
+event: thinking
+data: {"type":"thinking","text":"確率 1.25"}
+
+event: thinking
+data: {"type":"thinking","text":"%，"}
+
+event: thinking
+data: {"type":"thinking","text":"成本 1.75"}
+
+event: thinking
+data: {"type":"thinking","text":"\n- 實驗"}
+
+event: thinking
+data: {"type":"thinking","text":"2：準確率 "}
+
+event: thinking
+data: {"type":"thinking","text":"2.25%，成本 "}
+
+event: thinking
+data: {"type":"thinking","text":"2.75\n\nAdd"}
+
+event: thinking
+data: {"type":"thinking","text":" citation after each bullet"}
+
+event: thinking
+data: {"type":"thinking","text":". Or"}
+
+event: thinking
+data: {"type":"thinking","text":" after"}
+
+event: thinking
+data: {"type":"thinking","text":" the"}
+
+event: thinking
+data: {"type":"thinking","text":" whole"}
+
+event: thinking
+data: {"type":"thinking","text":" list?"}
+
+event: thinking
+data: {"type":"thinking","text":" Each"}
+
+event: thinking
+data: {"type":"thinking","text":" factual"}
+
+event: thinking
+data: {"type":"thinking","text":" claim must have citation. So"}
+
+event: thinking
+data: {"type":"thinking","text":" each bullet includes"}
+
+event: thinking
+data: {"type":"thinking","text":" [S1]. Provide answer"}
+
+event: thinking
+data: {"type":"thinking","text":"."}
+
+event: delta
+data: {"type":"delta","text":"- 實驗 "}
+
+event: delta
+data: {"type":"delta","text":"0：準確率 "}
+
+event: delta
+data: {"type":"delta","text":"0.25 %，"}
+
+event: delta
+data: {"type":"delta","text":"成本 0.75　"}
+
+event: delta
+data: {"type":"delta","text":"[S1]  \n- 實"}
+
+event: delta
+data: {"type":"delta","text":"驗 1：準確"}
+
+event: delta
+data: {"type":"delta","text":"率 1.25 "}
+
+event: delta
+data: {"type":"delta","text":"%，成本 1.75"}
+
+event: delta
+data: {"type":"delta","text":"　[S1]  \n"}
+
+event: delta
+data: {"type":"delta","text":"- 實驗"}
+
+event: delta
+data: {"type":"delta","text":" 2：準確率"}
+
+event: delta
+data: {"type":"delta","text":" 2.25 %，"}
+
+event: delta
+data: {"type":"delta","text":"成本 2.75"}
+
+event: delta
+data: {"type":"delta","text":"　[S1]"}
+
+event: final
+data: {"type":"final","answer":"- 實驗 0：準確率 0.25 %，成本 0.75　[S1]  \n- 實驗 1：準確率 1.25 %，成本 1.75　[S1]  \n- 實驗 2：準確率 2.25 %，成本 2.75　[S1]","citations":[{"id":"S1","source_id":"0d82c6c8fad24c659246d0b89203d9fe-summary-section-1","section":"1 Results","page_start":1,"page_end":1}],"unverified":[]}
+
+event: trace
+data: {"type":"trace","calls":[{"call_type":"router","estimated_prompt_tokens":864,"prompt_eval_count":525,"eval_count":150,"think":"low","num_predict":600,"context_budget":10000,"safety_margin":300,"thinking":"We need to output JSON. The question asks to summarize experimental measurement results with list of experiment, accuracy, cost, with citations. That's a Global summary. So question_type \"Global\". standalone_question: need to rewrite fully: \"請用繁體中文簡述這份文件的實驗測量結果，以條列列出實驗、準確率與成本，並附引用。\" Already standalone. sub_queries: [].\n\nReturn JSON.","latency_ms":1512.2899999842048,"done_reason":"stop","discarded_fact_lines":0,"plan_source":"router","fallback_reason":null,"rewrite_language_mismatch":false,"router_standalone_question":null},{"call_type":"answer","estimated_prompt_tokens":892,"prompt_eval_count":667,"eval_count":275,"think":"medium","num_predict":3000,"context_budget":10000,"safety_margin":300,"thinking":"The user asks: \"請用繁體中文簡述這份文件的實驗測量結果，以條列列出實驗、準確率與成本，並附引用。\" We have one source S1 that contains the results. We need to list experiments, accuracy, cost. Use bullet points. Provide citation after each claim. Must attach citation to every factual claim. So each bullet line should have [S1]. Provide in Traditional Chinese. Let's produce bullet list:\n\n- 實驗0：準確率 0.25%，成本 0.75\n- 實驗1：準確率 1.25%，成本 1.75\n- 實驗2：準確率 2.25%，成本 2.75\n\nAdd citation after each bullet. Or after the whole list? Each factual claim must have citation. So each bullet includes [S1]. Provide answer.","latency_ms":1871.7611660249531,"done_reason":"stop","discarded_fact_lines":0,"plan_source":null,"fallback_reason":null,"rewrite_language_mismatch":false,"router_standalone_question":null}],"invalid_citation_count":0,"dropped_chunk_count":0,"summary_level":"section"}
+

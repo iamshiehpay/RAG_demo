@@ -1,0 +1,80 @@
+{
+  "cwd": "/Users/shiehpay/Desktop/resume/rag",
+  "head_before": "a5b70a0670259ee6f85a3fbe7f8d289639397eb7",
+  "python": "3.12.10 (main, May 17 2025, 13:40:56) [Clang 20.1.4 ]",
+  "python_executable": "/Users/shiehpay/Desktop/resume/rag/.lat/venvs/issue14-main/bin/python",
+  "platform": "macOS-26.2-arm64-arm-64bit",
+  "imports": {
+    "chat_document.application": "/Users/shiehpay/Desktop/resume/rag/src/chat_document/application.py",
+    "chat_document.ask_graph": "/Users/shiehpay/Desktop/resume/rag/src/chat_document/ask_graph.py",
+    "chat_document.answer_generator": "/Users/shiehpay/Desktop/resume/rag/src/chat_document/answer_generator.py"
+  },
+  "pdfs": [
+    {
+      "path": "/Users/shiehpay/Desktop/resume/rag/data/lightrag.pdf",
+      "bytes": 1123301,
+      "sha256": "bd72eebf611df1366b251c16ce4eac7aac699e519783c586feb2c5c43899347a"
+    },
+    {
+      "path": "/Users/shiehpay/Desktop/resume/rag/data/industrial-robotics.pdf",
+      "bytes": 2544601,
+      "sha256": "8ab9a63ca99b0b26432e7a4d6b4c2810d00b97a2df1791973fe2d7d321ede0b9"
+    }
+  ],
+  "packages": {
+    "chat-with-document": "0.1.0",
+    "langgraph": "1.2.15",
+    "langchain-core": "1.6.10",
+    "langgraph-checkpoint": "4.3.0",
+    "langgraph-prebuilt": "1.1.0",
+    "langgraph-sdk": "0.4.7",
+    "anyio": "4.15.1",
+    "fastapi": "0.143.0",
+    "starlette": "1.7.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.1",
+    "numpy": "2.5.4",
+    "tiktoken": "0.14.0",
+    "pymupdf": "1.28.2",
+    "pytest": "9.1.1",
+    "pytest-asyncio": "1.4.0"
+  },
+  "uv_version": "uv 0.7.2 (481d05d8d 2025-04-30)",
+  "uv_sync_command": "UV_PROJECT_ENVIRONMENT=/Users/shiehpay/Desktop/resume/rag/.lat/venvs/issue14-main UV_CACHE_DIR=/private/tmp/nova-graph-main-uv uv sync --frozen",
+  "uv_sync_exit_code": 0,
+  "pytest_command": [
+    "/Users/shiehpay/Desktop/resume/rag/.lat/venvs/issue14-main/bin/python",
+    "-m",
+    "pytest",
+    "--basetemp=/private/tmp/nova-graph-main-pytest",
+    "-q"
+  ],
+  "PYTHONPATH": "src:.",
+  "owned_resources": [
+    "/Users/shiehpay/Desktop/resume/rag/.lat/venvs/issue14-main",
+    "/private/tmp/nova-graph-main-uv",
+    "/private/tmp/nova-graph-main-pytest"
+  ],
+  "active_production_environment_unchanged": "/Users/shiehpay/Desktop/resume/rag/.venv",
+  "scope": "one ordinary Main suite; scripted LLM plus existing local embeddings; no cloud eval",
+  "pytest_exit_code": 0,
+  "elapsed_seconds": 274.8207692920696,
+  "head_after": "a5b70a0670259ee6f85a3fbe7f8d289639397eb7",
+  "head_unchanged": true,
+  "basetemp_cleanup_pending": false,
+  "basetemp_removed": "/private/tmp/nova-graph-main-pytest",
+  "retained_until_main_authorizes_cleanup": [],
+  "pytest_summary": "335 passed, 3 deselected, 5 warnings in 273.62s (0:04:33)",
+  "pytest_passed": 335,
+  "pytest_deselected": 3,
+  "pytest_skipped": 0,
+  "pytest_duration_seconds": 273.62,
+  "editable_distribution": {
+    "url": "file:///Users/shiehpay/Desktop/resume/rag",
+    "dir_info": {
+      "editable": true
+    }
+  },
+  "integration_environment_and_cache_removed": true,
+  "cleanup_release": "Main HCOM20212 after successful production sync/restart"
+}

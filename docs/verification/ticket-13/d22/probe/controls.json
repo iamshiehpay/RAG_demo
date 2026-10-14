@@ -1,0 +1,36 @@
+{
+  "qualified": {
+    "sources": {
+      "C1": {
+        "section": "Diagnostic synthetic methods",
+        "page_start": 1,
+        "page_end": 1,
+        "text": "Cedar uses an adaptive controller with a synchronized clock. The -Clock variant removes the synchronized clock while retaining the adaptive controller. We observed occasional timing jitter for Cedar when crowded channels delayed clock messages. We hypothesize that delayed clock messages may contribute to this jitter under those conditions; the experiment does not establish a sole cause."
+      },
+      "C2": {
+        "section": "Diagnostic synthetic comparator",
+        "page_start": 2,
+        "page_end": 2,
+        "text": "Birch is a different fixed-schedule method. Birch cannot adapt its schedule after initialization. This restriction is about Birch, not Cedar. Removing the clock in the -Clock variant reduced synchronization work but sometimes increased jitter; this does not show that Cedar cannot adapt."
+      }
+    },
+    "user_message": "Document excerpts (clearly labelled diagnostic synthetic sources, not a publication):\n[C1] Diagnostic synthetic methods (p.1)\nCedar uses an adaptive controller with a synchronized clock. The -Clock variant removes the synchronized clock while retaining the adaptive controller. We observed occasional timing jitter for Cedar when crowded channels delayed clock messages. We hypothesize that delayed clock messages may contribute to this jitter under those conditions; the experiment does not establish a sole cause.\n\n[C2] Diagnostic synthetic comparator (p.2)\nBirch is a different fixed-schedule method. Birch cannot adapt its schedule after initialization. This restriction is about Birch, not Cedar. Removing the clock in the -Clock variant reduced synchronization work but sometimes increased jitter; this does not show that Cedar cannot adapt.\n\nCurrent user question (language reference): 這份文件提到 Cedar 方法有哪些限制？\nPreserve the CURRENT USER QUESTION's Traditional/Simplified Chinese script; when ambiguous, use Traditional Chinese (繁體中文), even after English history."
+  },
+  "absent": {
+    "sources": {
+      "C1": {
+        "section": "Diagnostic synthetic methods",
+        "page_start": 1,
+        "page_end": 1,
+        "text": "Cedar uses an adaptive controller with a synchronized clock. The -Clock variant removes the synchronized clock while retaining the adaptive controller. We observed occasional timing jitter for Cedar when crowded channels delayed clock messages. We hypothesize that delayed clock messages may contribute to this jitter under those conditions; the experiment does not establish a sole cause."
+      },
+      "C2": {
+        "section": "Diagnostic synthetic comparator",
+        "page_start": 2,
+        "page_end": 2,
+        "text": "Birch is a different fixed-schedule method. Birch cannot adapt its schedule after initialization. This restriction is about Birch, not Cedar. Removing the clock in the -Clock variant reduced synchronization work but sometimes increased jitter; this does not show that Cedar cannot adapt."
+      }
+    },
+    "user_message": "Document excerpts (clearly labelled diagnostic synthetic sources, not a publication):\n[C1] Diagnostic synthetic methods (p.1)\nCedar uses an adaptive controller with a synchronized clock. The -Clock variant removes the synchronized clock while retaining the adaptive controller. We observed occasional timing jitter for Cedar when crowded channels delayed clock messages. We hypothesize that delayed clock messages may contribute to this jitter under those conditions; the experiment does not establish a sole cause.\n\n[C2] Diagnostic synthetic comparator (p.2)\nBirch is a different fixed-schedule method. Birch cannot adapt its schedule after initialization. This restriction is about Birch, not Cedar. Removing the clock in the -Clock variant reduced synchronization work but sometimes increased jitter; this does not show that Cedar cannot adapt.\n\nCurrent user question (language reference): Cedar 的授權條款是什麼？\nPreserve the CURRENT USER QUESTION's Traditional/Simplified Chinese script; when ambiguous, use Traditional Chinese (繁體中文), even after English history."
+  }
+}

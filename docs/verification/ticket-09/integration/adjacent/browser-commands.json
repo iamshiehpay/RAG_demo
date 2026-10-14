@@ -1,0 +1,1492 @@
+[
+  {
+    "args": [
+      "open",
+      "http://127.0.0.1:8190"
+    ],
+    "stdout": "✓ Chat with Document\n  http://127.0.0.1:8190/\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1440",
+      "900"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "network",
+      "route",
+      "https://**",
+      "--abort"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "reload"
+    ],
+    "stdout": "http://127.0.0.1:8190/\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--load",
+      "networkidle"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/01-empty.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/01-empty.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Review fixture installed; use normal upload and ask controls.\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "18 / 52"
+    ],
+    "stdout": "18 / 52\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: processing state disables questions\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/02-background-upload.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/02-background-upload.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: budget\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: budget"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "article:last-child .trace"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .trace').open"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/03-q3-trace-10k.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/03-q3-trace-10k.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "find",
+      "first",
+      "article:last-child .margin-citation",
+      "click"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "#source-title"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: source page range\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/04-source-range.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/04-source-range.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "press",
+      "Escape"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: Escape closes and restores focus\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1280",
+      "720"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1280,\n    720\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/05-q3-1280.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/05-q3-1280.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "390",
+      "844"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    390,\n    844\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/05-q3-390.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/05-q3-390.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "set",
+      "viewport",
+      "1440",
+      "900"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: unverified\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: unverified"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "article:last-child .trace"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .trace').open"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: two structured Unverified spans render\",\n    \"PASS: identical verified sentence remains unmarked with emoji prefix\",\n    \"PASS: Unverified labels have spacing on both sides\",\n    \"PASS: backend invalid Citation count retained\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-unverified.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-unverified.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: markdown\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: markdown"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "article:last-child .trace"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .trace').open"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: Markdown emphasis and table render\",\n    \"PASS: HTML and unsafe URL disabled\",\n    \"PASS: raw Markdown delimiters absent\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-markdown.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-markdown.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: no-thinking\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: no-thinking"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "article:last-child .trace"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .trace').open"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: no empty thinking disclosure\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-no-thinking.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-no-thinking.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: rejected\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: rejected"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: rejection offers editing rather than Retry\",\n    \"PASS: rejected input restored\",\n    \"PASS: rejection is not provisional\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-rejected.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-rejected.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: error\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: error"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "article:last-child .trace"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .trace').open"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: failure clears answer and offers Retry\",\n    \"PASS: failure is not styled provisional\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-error.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-error.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"q3\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .error-state button"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: latest turn Retry replaces failed turn\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: provisional\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: provisional"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!!document.querySelector('.stage-' + window.__t09.scenario.replace('provisional', 'answering'))"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: streaming answer visibly provisional\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-provisional.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-provisional.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: retry\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: retry"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!!document.querySelector('.stage-' + window.__t09.scenario.replace('provisional', 'answering'))"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: retry clears provisional answer\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-retry.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-retry.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"end\": 67,\n    \"start\": 55\n  },\n  {\n    \"end\": 91,\n    \"start\": 79\n  },\n  {\n    \"end\": 126,\n    \"start\": 115\n  },\n  {\n    \"end\": 146,\n    \"start\": 133\n  },\n  {\n    \"end\": 195,\n    \"start\": 175\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"Performance of ablated versions of LightRAG: custom\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "fill",
+      "#question",
+      "Performance of ablated versions of LightRAG: custom"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "button[type=submit]"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .question-heading')?.textContent === (window.__t09.scenario === 'rejected' ? '問題過長' : window.__t09.askedQuestion)"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "article:last-child .trace"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "false\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"interrupted\": false\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "click",
+      "article:last-child .trace > summary"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "document.querySelector('article:last-child .trace').open"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "{\n  \"checks\": [\n    \"PASS: 16px body text\",\n    \"PASS: Noto Serif TC family\",\n    \"PASS: bundled Noto font loaded\",\n    \"PASS: no page horizontal overflow\",\n    \"PASS: all font requests local\",\n    \"PASS: no decorative animation\",\n    \"PASS: Citation margin notes rendered\",\n    \"PASS: inline Citation buttons rendered\",\n    \"PASS: Citations in right margin\",\n    \"PASS: token meter has fixed 10K scale/tick\",\n    \"PASS: token bar width matches reserved Context Budget ratio\",\n    \"PASS: thinking collapsed by default\"\n  ],\n  \"fontBytes\": 163872,\n  \"viewport\": [\n    1440,\n    900\n  ]\n}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: structured spans annotate code, table, link, entity; ordinary Unverified link unchanged\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-markdown-spans.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/06-markdown-spans.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "9\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Scripted invalid PDF"
+    ],
+    "stdout": "Scripted invalid PDF\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: failed upload retains Document and turns\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "18 / 52"
+    ],
+    "stdout": "18 / 52\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: new upload progress precedes old Ready\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/07-replacing-document.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/07-replacing-document.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "null\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: ready resets conversation and input\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Reconnect upload progress"
+    ],
+    "stdout": "Reconnect upload progress\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/08-reconnect-progress.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/08-reconnect-progress.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "find",
+      "text",
+      "Reconnect upload progress",
+      "click"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--fn",
+      "!document.querySelector('#question').disabled"
+    ],
+    "stdout": "true\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"restart\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "upload",
+      "#document",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/data/lightrag.pdf"
+    ],
+    "stdout": "✓ Done\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "wait",
+      "--text",
+      "Choose the PDF again."
+    ],
+    "stdout": "Choose the PDF again.\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "\"PASS: restart offers selecting PDF again\"\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "screenshot",
+      "--full",
+      "/Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/09-restart-recovery.png"
+    ],
+    "stdout": "✓ Screenshot saved to /Users/shiehpay/Desktop/resume/rag/.worktrees/09-tufte-design/docs/verification/ticket-09/integration/adjacent/evidence/09-restart-recovery.png\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "eval",
+      "--stdin"
+    ],
+    "stdout": "[\n  {\n    \"completed\": 0,\n    \"stage\": \"parsing\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 0,\n    \"stage\": \"chunking\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 18,\n    \"stage\": \"embedding\",\n    \"total\": 52,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 1,\n    \"stage\": \"complete\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"chunk_count\": 52,\n    \"document_id\": \"review\",\n    \"document_summary\": \"設計稿示例：LightRAG 以 graph-based indexing 與 dual-level retrieval 回答文件問題，並討論增量更新、成本與實驗結果。此概覽為設計審閱用腳本，並非模型產生的結果。\",\n    \"name\": \"LightRAG.pdf · scripted review\",\n    \"type\": \"ready\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"### 消融結果：先確認比較基準\\n\\nTable 2 的數字是各變體**相對 NaiveRAG 的勝率**，不是變體之間直接對戰的勝率。以下比較同一資料集的 Overall 指標。[C1]\\n\\n- **Mix**：`-Low` 的 Overall 為 64.8%，高於完整版 LightRAG 的 60.0%。[C1]\\n- **Agriculture**：`-Origin` 的 Overall 為 74.4%，高於完整版的 67.6%。[C1]\\n\\n因此，完整版並非在所有資料集、所有指標上都最好。不同元件的效果需要依資料集與評估指標判讀。[C1]\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": []\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"router\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 1200,\n        \"eval_count\": 115,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 600,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 975,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"low\",\n        \"thinking\": \"Scripted review thinking: identify the comparison baseline, then compare Overall within each dataset.\"\n      },\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 6990,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 6765,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"Scripted review thinking: identify the comparison baseline, then compare Overall within each dataset.\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"😀 這個推論找不到有效來源。 [C1]\\n\\n這個推論找不到有效來源。 這個推論找不到有效來源。\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": [\n      {\n        \"end\": 33,\n        \"start\": 21\n      },\n      {\n        \"end\": 46,\n        \"start\": 34\n      }\n    ]\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 2,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"**Safe bold** and *safe emphasis*. [C1]\\n\\n<script>window.__unsafe = true</script>\\n\\n[unsafe](javascript:alert(1))\\n\\n| Dataset | Overall |\\n| --- | --- |\\n| Mix | 64.8% |\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": []\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"### 消融結果：先確認比較基準\\n\\nTable 2 的數字是各變體**相對 NaiveRAG 的勝率**，不是變體之間直接對戰的勝率。以下比較同一資料集的 Overall 指標。[C1]\\n\\n- **Mix**：`-Low` 的 Overall 為 64.8%，高於完整版 LightRAG 的 60.0%。[C1]\\n- **Agriculture**：`-Origin` 的 Overall 為 74.4%，高於完整版的 67.6%。[C1]\\n\\n因此，完整版並非在所有資料集、所有指標上都最好。不同元件的效果需要依資料集與評估指標判讀。[C1]\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": []\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"code\": \"question_too_long\",\n    \"message\": \"Scripted question too long; limit 1,000 tokens.\",\n    \"question_tokens\": 1001,\n    \"token_limit\": 1000,\n    \"type\": \"rejected\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"code\": \"answer_failed\",\n    \"message\": \"回答被截斷，重新產生仍未完成。請重試此問題。\",\n    \"type\": \"error\"\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"length\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      },\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"length\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"low\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"### 消融結果：先確認比較基準\\n\\nTable 2 的數字是各變體**相對 NaiveRAG 的勝率**，不是變體之間直接對戰的勝率。以下比較同一資料集的 Overall 指標。[C1]\\n\\n- **Mix**：`-Low` 的 Overall 為 64.8%，高於完整版 LightRAG 的 60.0%。[C1]\\n- **Agriculture**：`-Origin` 的 Overall 為 74.4%，高於完整版的 67.6%。[C1]\\n\\n因此，完整版並非在所有資料集、所有指標上都最好。不同元件的效果需要依資料集與評估指標判讀。[C1]\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": []\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"### 消融結果：先確認比較基準\\n\\nTable 2 的數字是各變體**相對 NaiveRAG 的勝率**，不是變體之間直接對戰的勝率。以下比較同一資料集的 Overall 指標。[C1]\\n\\n- **Mix**：`-Low` 的 Overall 為 64.8%，高於完整版 LightRAG 的 60.0%。[C1]\\n- **Agriculture**：`-Origin` 的 Overall 為 74.4%，高於完整版的 67.6%。[C1]\\n\\n因此，完整版並非在所有資料集、所有指標上都最好。不同元件的效果需要依資料集與評估指標判讀。[C1]\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": []\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"reason\": \"length\",\n    \"type\": \"retry\"\n  },\n  {\n    \"answer\": \"### 消融結果：先確認比較基準\\n\\nTable 2 的數字是各變體**相對 NaiveRAG 的勝率**，不是變體之間直接對戰的勝率。以下比較同一資料集的 Overall 指標。[C1]\\n\\n- **Mix**：`-Low` 的 Overall 為 64.8%，高於完整版 LightRAG 的 60.0%。[C1]\\n- **Agriculture**：`-Origin` 的 Overall 為 74.4%，高於完整版的 67.6%。[C1]\\n\\n因此，完整版並非在所有資料集、所有指標上都最好。不同元件的效果需要依資料集與評估指標判讀。[C1]\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": []\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 0,\n    \"type\": \"trace\"\n  },\n  {\n    \"fallback_reason\": \"missing_rewrite\",\n    \"plan_source\": \"fallback\",\n    \"question_type\": \"Lookup\",\n    \"rewrite_language_mismatch\": true,\n    \"router_standalone_question\": \"Scripted wrong-language rewrite\",\n    \"standalone_question\": \"Performance of ablated versions of LightRAG\",\n    \"sub_queries\": [],\n    \"type\": \"plan\"\n  },\n  {\n    \"chunks\": [\n      {\n        \"chunk\": {\n          \"id\": \"review-table2\",\n          \"order\": 1,\n          \"page_end\": 9,\n          \"page_start\": 8,\n          \"section\": \"4.3 Ablation Study\",\n          \"section_id\": \"review-4.3\",\n          \"text\": \"Table 2. Overall win rates of each variant against NaiveRAG.\\n\\nDataset       LightRAG     -Low     -Origin\\nMix              60.0       64.8       63.6\\nAgriculture      67.6       61.6       74.4\\n\\nThese are variant win rates against NaiveRAG, not direct pairwise comparisons between variants.\\n\\nReview fixture: this text is scripted for design approval, not extracted by the backend.\"\n        },\n        \"score\": 0.7218\n      }\n    ],\n    \"type\": \"retrieval\"\n  },\n  {\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"citation_map\"\n  },\n  {\n    \"text\": \"Review-only streamed thinking content.\",\n    \"type\": \"thinking\"\n  },\n  {\n    \"text\": \"Table 2 的比較基準是各變體相對 NaiveRAG 的勝率。[C1]\",\n    \"type\": \"delta\"\n  },\n  {\n    \"answer\": \"😀 Verified. [C1]\\n\\n| Claim | Evidence |\\n| --- | --- |\\n| table claim. | [C1] |\\n\\n`inline code.` More prose. [C1]\\n\\n```\\ncode block.\\n```\\n\\n[linked claim.](https://example.com) [C1]\\n\\nEscaped &amp; claim. [C1]\\n\\n[Unverified](#unverified)\",\n    \"citations\": [\n      {\n        \"id\": \"C1\",\n        \"page_end\": 9,\n        \"page_start\": 8,\n        \"section\": \"4.3 Ablation Study\",\n        \"source_id\": \"review-table2\"\n      }\n    ],\n    \"type\": \"final\",\n    \"unverified\": [\n      {\n        \"end\": 67,\n        \"start\": 55\n      },\n      {\n        \"end\": 91,\n        \"start\": 79\n      },\n      {\n        \"end\": 126,\n        \"start\": 115\n      },\n      {\n        \"end\": 146,\n        \"start\": 133\n      },\n      {\n        \"end\": 195,\n        \"start\": 175\n      }\n    ]\n  },\n  {\n    \"calls\": [\n      {\n        \"call_type\": \"answer\",\n        \"context_budget\": 10000,\n        \"discarded_fact_lines\": 0,\n        \"done_reason\": \"stop\",\n        \"estimated_prompt_tokens\": 2100,\n        \"eval_count\": 620,\n        \"fallback_reason\": null,\n        \"latency_ms\": 4200,\n        \"num_predict\": 3000,\n        \"plan_source\": null,\n        \"prompt_eval_count\": 1875,\n        \"rewrite_language_mismatch\": false,\n        \"router_standalone_question\": null,\n        \"safety_margin\": 300,\n        \"think\": \"medium\",\n        \"thinking\": \"\"\n      }\n    ],\n    \"invalid_citation_count\": 5,\n    \"type\": \"trace\"\n  },\n  {\n    \"completed\": 0,\n    \"stage\": \"parsing\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 0,\n    \"stage\": \"chunking\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 18,\n    \"stage\": \"embedding\",\n    \"total\": 52,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 1,\n    \"stage\": \"complete\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"chunk_count\": 52,\n    \"document_id\": \"review\",\n    \"document_summary\": \"設計稿示例：LightRAG 以 graph-based indexing 與 dual-level retrieval 回答文件問題，並討論增量更新、成本與實驗結果。此概覽為設計審閱用腳本，並非模型產生的結果。\",\n    \"name\": \"LightRAG.pdf · scripted review\",\n    \"type\": \"ready\"\n  },\n  {\n    \"completed\": 0,\n    \"stage\": \"parsing\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 0,\n    \"stage\": \"chunking\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 18,\n    \"stage\": \"embedding\",\n    \"total\": 52,\n    \"type\": \"stage\"\n  },\n  {\n    \"completed\": 1,\n    \"stage\": \"complete\",\n    \"total\": 1,\n    \"type\": \"stage\"\n  },\n  {\n    \"chunk_count\": 52,\n    \"document_id\": \"review\",\n    \"document_summary\": \"設計稿示例：LightRAG 以 graph-based indexing 與 dual-level retrieval 回答文件問題，並討論增量更新、成本與實驗結果。此概覽為設計審閱用腳本，並非模型產生的結果。\",\n    \"name\": \"LightRAG.pdf · scripted review\",\n    \"type\": \"ready\"\n  }\n]\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "console"
+    ],
+    "stdout": "",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "errors"
+    ],
+    "stdout": "",
+    "stderr": "",
+    "exit_code": 0
+  },
+  {
+    "args": [
+      "close"
+    ],
+    "stdout": "✓ Browser closed\n",
+    "stderr": "",
+    "exit_code": 0
+  }
+]

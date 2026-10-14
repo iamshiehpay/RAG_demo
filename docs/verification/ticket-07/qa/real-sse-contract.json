@@ -1,0 +1,36 @@
+{
+ "sequence_collapsed": [
+  "plan",
+  "retrieval",
+  "citation_map",
+  "thinking",
+  "delta",
+  "final",
+  "trace"
+ ],
+ "delta_concat_equals_final": true,
+ "final_answer": "GraphRAG’s retrieval phase is far more expensive than LightRAG’s. In the experiment on the legal dataset, GraphRAG creates 1,399 communities, of which 610 level‑2 communities are actually used for retrieval. Each community report averages 1,000 tokens, so the retrieval step consumes about 610 × 1,000 = 610,000 tokens, and it must traverse each community individually, resulting in **hundreds of API calls**[C4].  \n\nBy contrast, LightRAG’s retrieval mechanism needs **fewer than 100 tokens** for keyword generation and retrieval and completes the entire process with **a single API call**[C4].  ",
+ "unverified": [],
+ "invalid_citation_count": 0,
+ "calls": [
+  {
+   "call_type": "router",
+   "think": "low",
+   "estimated_prompt_tokens": 994,
+   "num_predict": 600,
+   "prompt_eval_count": 665,
+   "eval_count": 88,
+   "done_reason": "stop"
+  },
+  {
+   "call_type": "answer",
+   "think": "medium",
+   "estimated_prompt_tokens": 2107,
+   "num_predict": 3000,
+   "prompt_eval_count": 1882,
+   "eval_count": 313,
+   "done_reason": "stop"
+  }
+ ],
+ "thinking_events": 42
+}

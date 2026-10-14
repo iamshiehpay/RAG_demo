@@ -1,0 +1,8 @@
+from eval.golden_facts import LIGHTRAG_CASES
+q2 = next(c for c in LIGHTRAG_CASES if c.id == "Q2")
+forbidden = next(f for f in q2.facts if f.id == "not_all_datasets")
+for id in ["Q1", "Q1_ZH_THREE_SENTENCES"]:
+    case = next(c for c in LIGHTRAG_CASES if c.id == id)
+    facts = [f.requirement for f in case.facts if f.method == "forbidden"]
+    print(id, facts)
+    assert forbidden in case.facts, f"{id} lacks the GraphRAG all-datasets forbidden claim"
