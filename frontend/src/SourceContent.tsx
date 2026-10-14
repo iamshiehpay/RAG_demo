@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Chunk } from './events';
 
+export const UNCERTAIN_TABLE_WARNING = '此表格的行列結構辨識不完整，相關數字請核對原文。';
+
 /** Horizontal scroll box for tables; shows a visible hint whenever the content is wider than the box. */
 export function ScrollBox({ label, children }: { label: string; children: ReactNode }) {
   const box = useRef<HTMLDivElement>(null);
@@ -26,7 +28,7 @@ export function ScrollBox({ label, children }: { label: string; children: ReactN
 export function SourceContent({ source }: { source: Chunk }) {
   if (source.kind !== 'table') return <pre className="source-text">{source.text}</pre>;
   if (!source.table_reconstructed) return <>
-    <p className="table-limitation" role="note">結構未能可靠重建：以下是未整理的原始文字，欄與列的對應可能不準確，請對照原文。</p>
+    <p className="table-limitation" role="note">{UNCERTAIN_TABLE_WARNING}</p>
     <pre className="source-text">{source.text}</pre>
   </>;
   return <>

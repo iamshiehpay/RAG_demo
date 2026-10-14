@@ -39,6 +39,8 @@
   check(!document.querySelector('dialog') && !document.querySelector('.margin-citation'), 'no source dialog or margin notes');
   check(!document.querySelector('[role=log]') && [...document.querySelectorAll('.answer-text')].every(el => !el.closest('[aria-live=polite],[aria-live=assertive]')), 'streamed answer text is not a live region');
 
+  check(!document.querySelector(".document-overview, .overview-text") && !document.querySelector(".document-pane")?.textContent.includes("文件概覽"), "Document Overview block is absent, including its summary warnings");
+
   // Three columns
   const composer = rect('.composer');
   check(Math.abs(composer.bottom - innerHeight) < 2, 'input is pinned at the bottom of the middle column');

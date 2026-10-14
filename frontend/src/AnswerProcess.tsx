@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { LLMCallTrace, PlanEvent, RetrievedChunk } from './events';
 import { EMBEDDING_MODEL, LLM_MODEL } from './models';
 import { pageRange } from './Shared';
+import { UNCERTAIN_TABLE_WARNING } from './SourceContent';
 
 const BUDGET = 10000;
 const PREVIEW_CHUNKS = 3;
@@ -145,6 +146,7 @@ function FoundChunks({ chunks }: { chunks: RetrievedChunk[] }) {
     {shown.map(item => <details className="found-chunk" key={item.chunk.id}>
       <summary><span className="found-page">{pageRange(item.chunk)}</span><span className="found-section">{item.chunk.section}</span>
         <span className="found-score tabular">{item.score.toFixed(3)}</span></summary>
+      {item.chunk.kind === 'table' && !item.chunk.table_reconstructed && <p className="table-limitation" role="note">{UNCERTAIN_TABLE_WARNING}</p>}
       <pre>{item.chunk.text}</pre>
     </details>)}
     {sorted.length > PREVIEW_CHUNKS && <button className="link-button" aria-expanded={all} onClick={() => setAll(value => !value)}>

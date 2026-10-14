@@ -5,11 +5,13 @@
 BASE=${1:?base url}; SESSION=${2:-nova-uifix}
 AB() { agent-browser --session "$SESSION" "$@"; }
 DIR=${0:A:h}; FAILS=0
-OUT=${3:-$DIR/../../docs/verification/ticket-12/followup}; mkdir -p $OUT/checks
+OUT=${3:-$DIR/../../docs/verification/ticket-12/followup}; OUT=${OUT:A}; mkdir -p $OUT/checks
 cd $DIR/..
 # ONLY='tight unmount' runs just those sections (names: drag unmount shortcuts drag920 narrow tight checks)
 want() { [[ -z "$ONLY" || " $ONLY " == *" $1 "* ]]; }
-FRAME=$(mktemp -t followup-frame).png
+FRAME_BASE=$(mktemp -t followup-frame)
+FRAME=$FRAME_BASE.png
+trap 'rm -f "$FRAME" "$FRAME_BASE"' EXIT
 # A headless page only re-evaluates media queries when a frame is produced; force one after a viewport change.
 frame() { AB screenshot "$FRAME" >/dev/null; sleep .3; }
 pass() { echo "PASS: $1"; }
@@ -169,6 +171,38 @@ if want tight; then
 echo "== tight list inline spaces =="
 boot 1440 900; ask tightlist "tight list"
 run "tight list items keep their inline spaces in the rendered text" 'JSON.stringify([...document.querySelectorAll(".turn:last-child .answer-text li")].map(li => li.textContent)) === JSON.stringify(["see this and that now C1","run npm i now","A B","link x here","中文 粗體 文字","引用 C1 之後","two alpha beta gamma"])'
+fi
+if want overview; then
+echo "== D21: overview removed, uncertainty beside related source =="
+for W in 1440 920 390; do
+  H=900; [[ $W == 390 ]] && H=844; [[ $W == 920 ]] && H=800
+  boot $W $H
+  run "Ready @ $W: overview, controls and embedded English warning absent" '!document.querySelector(".document-overview, .overview-text") && !document.body.innerText.includes("English extraction warning") && !document.querySelector(".document-pane")?.textContent.includes("文件概覽") && document.querySelectorAll(".shortcut").length === 5 && !document.querySelector("#question").disabled'
+  AB screenshot "$OUT/ready-$W.png" >/dev/null
+  ask uncertain-table "uncertain source"
+  AB click '.turn:last-child .inline-citation' >/dev/null
+  AB wait --fn '!!document.querySelector(".pane-right .table-limitation")' >/dev/null
+  run "uncertain table @ $W: exact Chinese warning beside raw citation source" 'document.querySelector(".pane-right .table-limitation").textContent === "此表格的行列結構辨識不完整，相關數字請核對原文。" && document.querySelector(".pane-right .source-text").textContent === "Review raw table text: alpha 12 beta 34" && !document.querySelector(".pane-right .source-table")'
+  AB screenshot "$OUT/uncertain-$W.png" >/dev/null
+  AB eval 'document.querySelector(".turn:last-child .answer-process").open = true; document.querySelector(".turn:last-child .found-chunk").open = true' >/dev/null
+  run "uncertain table @ $W: retrieved source also keeps exact warning" '[...document.querySelectorAll(".turn:last-child .table-limitation")].some(el => el.textContent === "此表格的行列結構辨識不完整，相關數字請核對原文。")'
+  [[ $W == 390 ]] && AB press Escape >/dev/null
+  ask compare "reconstructed source"
+  AB eval 'document.querySelectorAll(".turn:last-child .inline-citation")[1].click()' >/dev/null
+  AB wait --fn '!!document.querySelector(".pane-right .source-table")' >/dev/null
+  run "reconstructed table @ $W: grid retained, uncertainty note absent" '!!document.querySelector(".pane-right .source-table") && !document.querySelector(".pane-right .table-limitation")'
+  [[ $W == 390 ]] && AB press Escape >/dev/null
+  ask q3 "text source"
+  AB click '.turn:last-child .inline-citation' >/dev/null
+  AB wait --fn 'document.querySelector(".pane-right .source-text")?.textContent.includes("Review fixture")' >/dev/null
+  run "text source @ $W: no table uncertainty warning" '!document.querySelector(".pane-right .table-limitation")'
+  [[ $W == 390 ]] && AB press Escape >/dev/null
+  ask global "summary provenance"
+  AB click '.turn:last-child .inline-citation' >/dev/null
+  AB wait --fn '!!document.querySelector(".pane-right .covered-sections")' >/dev/null
+  run "Global @ $W: summary citation and provenance retained" 'document.querySelector(".pane-right .source-text").textContent.includes("Review fixture summary") && !document.querySelector(".document-overview")'
+  AB eval --stdin < review/checks.js > "$OUT/checks/global-$W.json" && pass "D21 common assertions @ $W" || fail "D21 common assertions @ $W"
+done
 fi
 if want checks; then
 echo "== checks.js across widths and scenarios =="

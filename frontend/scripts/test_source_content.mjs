@@ -18,7 +18,7 @@ const source = {
 };
 const uncertain = renderToStaticMarkup(createElement(exports.SourceContent, { source }));
 assert.match(uncertain, /role="note"/);
-assert.match(uncertain, /結構未能可靠重建/);
+assert.match(uncertain, /此表格的行列結構辨識不完整，相關數字請核對原文。/);
 assert.match(uncertain, /raw &lt;cell&gt; 12/);
 assert.doesNotMatch(uncertain, /<table/);
 const grid = renderToStaticMarkup(createElement(exports.SourceContent, {

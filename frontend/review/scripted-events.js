@@ -1,7 +1,7 @@
 /* Review-only network fixture: inject with agent-browser eval --stdin.
    Not imported by production. Every answer/summary here is scripted evidence.
    Set window.__t09.scenario before pressing 送出. Scenarios:
-   q3 (default) | compare | widetable | global | fallback | provisional | retry | error | unverified | markdown | budget | missing-source
+   q3 (default) | uncertain-table | compare | widetable | global | fallback | provisional | retry | error | unverified | markdown | budget | missing-source
    | spacing | tightlist (synthetic Markdown structure fixtures, not model output)
    | replay-cost | replay-q3  (D16 follow-up: REPLAY of stored real model output pasted by the user in
      /private/tmp/rag-20261014-ui-feedback.md items 6 and 8, rebuilt into Markdown. Not a fresh model run.)
@@ -20,6 +20,7 @@
     table_label: 'Table 1', table_caption: 'Table 1. Win rates of GraphRAG against LightRAG.', table_reconstructed: true,
     table_meaning: '每格是 GraphRAG 勝率 / LightRAG 勝率（%）。', table_headers: ['Dataset', 'GraphRAG', 'LightRAG'],
     table_rows: [['Agriculture', '45.2', '54.8'], ['CS', '48.0', '52.0'], ['Legal', '47.2', '52.8'], ['Mix (Overall)', '50.4', '49.6']] };
+  const uncertainChunk = { ...tableChunk, id: 'review-uncertain', table_reconstructed: false, text: 'Review raw table text: alpha 12 beta 34', table_headers: [], table_rows: [] };
   const wideCols = ['Dataset', 'Comprehensiveness', 'Diversity', 'Empowerment', 'Overall', 'Win rate 11.1', 'Win rate 22.2', 'Win rate 33.3', 'Delta -0.4', 'Cost 610.5'];
   const wideChunk = { ...tableChunk, id: 'review-wide', section: '4.4 Wide table', page_start: 9, page_end: 9, table_label: 'Table 9',
     table_caption: 'Table 9. A ten-column table used to check horizontal scrolling and number wrapping.',
@@ -56,12 +57,12 @@
       emit({ type: 'stage', stage: 'embedding', completed: 18, total: 52 });
       if (window.__t09.uploadHold) await pause();
       emit({ type: 'ready', document_id: 'review', name: window.__t09.documentName, chunk_count: 52,
-        document_summary: '設計稿示例：LightRAG 以 graph-based indexing 與 dual-level retrieval 回答文件問題，並討論增量更新、成本與實驗結果。此概覽為設計審閱用腳本，並非模型產生的結果。第二段用來讓概覽超過可見行數，測試「展開全文概覽」：實驗在多個資料集上與 NaiveRAG、GraphRAG 比較，並以消融實驗檢視各元件的貢獻。' });
+        document_summary: 'English extraction warning: table structure could not be reliably reconstructed. 設計稿示例：LightRAG 以 graph-based indexing 與 dual-level retrieval 回答文件問題，並討論增量更新、成本與實驗結果。此概覽為設計審閱用腳本，並非模型產生的結果。第二段用來讓概覽超過可見行數，測試「展開全文概覽」：實驗在多個資料集上與 NaiveRAG、GraphRAG 比較，並以消融實驗檢視各元件的貢獻。' });
     });
     if (String(url).startsWith('/api/sources/')) {
       if (window.__t09.scenario === 'missing-source') return new Response('{}', { status: 404 });
       const id = decodeURIComponent(String(url).slice('/api/sources/'.length));
-      return Response.json(id === summary.id ? summary : id === tableChunk.id ? tableChunk : id === wideChunk.id ? wideChunk : chunk);
+      return Response.json(id === uncertainChunk.id ? uncertainChunk : id === summary.id ? summary : id === tableChunk.id ? tableChunk : id === wideChunk.id ? wideChunk : chunk);
     }
     if (url === '/api/ask') return response(async emit => {
       const scenario = window.__t09.scenario;
@@ -71,13 +72,13 @@
       const replayMap = [{ id: 'C4', source_id: tableChunk.id, section: tableChunk.section, page_start: 7, page_end: 7 },
         { id: 'C8', source_id: chunk.id, section: chunk.section, page_start: 8, page_end: 8 },
         { id: 'C9', source_id: chunk.id, section: chunk.section, page_start: 9, page_end: 9 }];
-      const mapped = scenario.startsWith('replay-') ? replayMap : scenario === 'widetable' ? [{ id: 'C1', source_id: wideChunk.id, section: wideChunk.section, page_start: 9, page_end: 9 }] : globalQ ? [{ id: 'S1', source_id: summary.id, section: summary.section, page_start: 3, page_end: 6 }]
+      const mapped = scenario === 'uncertain-table' ? [{ id: 'C1', source_id: uncertainChunk.id, section: uncertainChunk.section, page_start: 7, page_end: 7 }] : scenario.startsWith('replay-') ? replayMap : scenario === 'widetable' ? [{ id: 'C1', source_id: wideChunk.id, section: wideChunk.section, page_start: 9, page_end: 9 }] : globalQ ? [{ id: 'S1', source_id: summary.id, section: summary.section, page_start: 3, page_end: 6 }]
         : compare ? [...citations, { id: 'C2', source_id: tableChunk.id, section: tableChunk.section, page_start: 7, page_end: 7 }] : citations;
       emit(plan(globalQ ? { question_type: 'Global', standalone_question: '請摘要這份文件' }
         : compare ? { question_type: 'Synthesis', standalone_question: 'LightRAG 和 GraphRAG 的差異是什麼？',
           sub_queries: ['GraphRAG 的檢索成本', 'LightRAG 的檢索成本'] }
         : scenario === 'fallback' ? { plan_source: 'fallback', fallback_reason: 'invalid_json' } : {}));
-      const found = globalQ ? [] : compare
+      const found = scenario === 'uncertain-table' ? [{ chunk: uncertainChunk, score: .7412 }] : globalQ ? [] : compare
         ? [{ chunk: tableChunk, score: .7412 }, { chunk, score: .7218 }, ...[3, 4, 5, 6, 7].map(n => ({ chunk: { ...chunk, id: `review-extra-${n}`, section: `5.${n} Extra section`, page_start: n + 8, page_end: n + 8 }, score: .7 - n / 100 }))]
         : [{ chunk, score: .7218 }];
       emit({ type: 'retrieval', chunks: found, dropped_chunk_count: compare ? 1 : 0 });
