@@ -34,6 +34,8 @@
 - 設計決策寫入 [設計規格](docs/design.md)，難逆轉的架構決策寫 `docs/adr/`；不要再把完整規格或實驗數據堆回本檔。
 - AI 建議被實測推翻、AI 錯誤被修正或使用者改變方向時，追加 `docs/ai-log.md`；里程碑完成後 commit。
 
+驗證產物依 [放置與保留規則](docs/development.md#驗證產物放哪裡) 處理：暫存輸出不提交；回歸案例進 tests，精選模型評估進 eval/results，完成結論更新 docs/validation.md。不要為每輪驗證新增報告目錄。
+
 ## 保留與交付
 
 - 使用者於 2026-10-14 核准精簡主分支：正式程式位於 `app/`；保留 `frontend/dist/`、必要測試、`eval/results/` 最終報告及精選 AI 協作證據。歷史 issue、spikes、逐輪驗證已存入 [歸檔標籤](docs/history.md)，不重建 archive 目錄。

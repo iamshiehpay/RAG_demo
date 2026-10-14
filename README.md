@@ -76,7 +76,7 @@ bash scripts/fetch_data.sh
 | 路徑 | 用途 |
 |---|---|
 | `app/` | 正式 Python 程式；API、上傳、PDF 處理、檢索、摘要與問答 |
-| `frontend/src/` | React/TypeScript 介面與 Noto Serif TC 字型分片 |
+| `frontend/src/` | React/TypeScript 介面與 Noto Serif TC Regular 字型 |
 | `frontend/dist/` | 已編譯網頁與字型；刻意提交，讓執行者不必安裝 Node.js |
 | `frontend/scripts/` | 來源文字與表格呈現測試；前端設定位於 `frontend/` 根目錄 |
 | `tests/unit/`、`tests/integration/` | 離線邏輯測試、需本地 embedding 的整合測試 |
@@ -91,7 +91,7 @@ bash scripts/fetch_data.sh
 | `data/`、`.cache/` | 下載的 PDF、處理快取；不提交 |
 | `.venv/`、`frontend/node_modules/` | 本機依賴；不提交 |
 
-後端各模組的責任與兩條執行路徑見 [程式導覽](docs/development.md#程式導覽)。原始碼與前端 build 都需要保留；字型分片是實際資產。過時的 issue、spikes、中間報告與截圖已移至 Git 歷史，不另建立 archive 目錄。
+後端各模組的責任與兩條執行路徑見 [程式導覽](docs/development.md#程式導覽)。原始碼與前端 build 都需要保留；本地字型保留動態文件內容需要的字元。過時的 issue、spikes、中間報告與截圖已移至 Git 歷史，不另建立 archive 目錄。
 
 ## 評估結果與已知限制
 
