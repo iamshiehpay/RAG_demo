@@ -1,0 +1,22 @@
+{
+  "removed_owned_temp_directories": [
+    "/private/tmp/rag-ticket14-baseline",
+    "/private/tmp/rag-ticket14-baseline-source",
+    "/private/tmp/rag-ticket14-clean-env",
+    "/private/tmp/rag-ticket14-full",
+    "/private/tmp/rag-ticket14-full-final",
+    "/private/tmp/rag-ticket14-full-final-frozen",
+    "/private/tmp/rag-ticket14-full-readiness",
+    "/private/tmp/rag-ticket14-graph",
+    "/private/tmp/rag-ticket14-readiness-green",
+    "/private/tmp/rag-ticket14-targeted",
+    "/private/tmp/rag-ticket14-uv"
+  ],
+  "retained": [
+    "worktree .venv for integration/reproduction",
+    "ignored readonly-copied data PDFs",
+    "raw review/temp evidence files pending integration"
+  ],
+  "active_owned_service_ports": [],
+  "active_owned_provider_or_graph_tasks": []
+}

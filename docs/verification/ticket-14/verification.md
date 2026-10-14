@@ -215,7 +215,7 @@ replacement Document and verifies all final Citation sources resolve to it.
 
 Targeted actual-graph public lifecycle/failure/HTTP/ingestion-job tests:
 **59 passed**, 5 existing PyMuPDF warnings, 23.39s (`readiness-green.txt`).
-Ruff passes on all changed production/tests; final whole suite runs against
+Ruff passes on all changed production/tests; final whole suite ran against
 `source-freeze-readiness.json` before scoped fresh two-axis review from d455f50.
 
 Narrow-screen browser behavior remains deferred and unresolved, not verified
@@ -241,3 +241,48 @@ the original candidate's 333-case run as final corrected-source suite evidence.
 The processing fingerprint remains
 `ingest-v2-fabcd278cc5f6bbe34a64a8699925398e3bee6d9a9a275d0c0179b3430b971b8`;
 readiness changes do not affect ingestion or trigger another cache invalidation.
+
+
+## Final scoped independent review
+
+Corrected source candidate `24fba2647c1b159049bf015bf63ca21a089cbcb6` was
+reviewed by fresh verified Luna max/Fast contexts against d455f50 only.
+
+### Standards
+
+No documented-standard breaches. One minor stale prospective tense in this report
+was corrected from “runs” to “ran” in the evidence-only tail. One non-blocking
+judgment call notes workflow access to `Application._active_upload`; a future
+Application-owned readiness snapshot may be useful if rules grow. No additional
+abstraction or source correction is warranted for this bounded change. Raw report:
+`review/standards-24fba26.md`.
+
+### Spec
+
+No findings. The original P2 readiness race is corrected and the public Lookup /
+Global rejection-and-recovery regressions cover the changed behavior. Raw report:
+`review/spec-24fba26.md`.
+
+Totals: Standards one minor documentation note (fixed) and one non-blocking smell
+judgment; no hard breach. Spec zero findings. No new tests/provider calls were
+run by either scoped reviewer. The final evidence-only commit leaves every
+reviewed production/test/dependency byte unchanged; Main integration, ordinary
+suite and deployment remain Main-owned follow-up.
+
+## Handoff and resources
+
+Main read all four complete original/correction reports and accepted the scoped
+review on 2026-10-14 (no blocking findings; private-state judgment retained).
+The final tail saves reports, fixes the stale tense and records cleanup only.
+Production, tests, dependency lock and frontend bytes remain exactly those of
+reviewed source `24fba2647c1b159049bf015bf63ca21a089cbcb6`; no further test or
+provider run is needed for the evidence-only tail.
+
+Owned smoke port 8340 is stopped; no detached provider/graph/upload tasks remain.
+Completed owned reviewers silo/lulu/mako/life were stopped after preserved reports
+were read. Obsolete named pytest basetemps, baseline source archive, private uv
+cache and clean-install environment were removed (`resources.json`). Worktree
+`.venv` and ignored copied PDF fixtures remain for integration/reproduction until
+Main passes integration; Main's daemon, ports 8101/8201 and active environment
+were never mutated. Raw temp review/evidence files remain available until Main
+finishes integration. No merge, push, Main tests or deployment was performed here.
