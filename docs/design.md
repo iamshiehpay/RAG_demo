@@ -10,7 +10,7 @@
 
 | 項目 | 決定 | 原因 |
 |---|---|---|
-| LLM | `gpt-oss:120b-cloud`，透過本機 Ollama daemon 的原生 `/api/chat` | PEGAAI 內部用同一個模型；本機已登入 Ollama，不需要 API key；原生 API 才能控制 `think` 和拿到 token 計數 |
+| LLM | `gpt-oss:120b-cloud`，透過本機 Ollama daemon 的原生 `/api/chat` | 本機已登入 Ollama，不需要 API key；原生 API 才能控制 `think` 和拿到 token 計數 |
 | Tokenizer | tiktoken `o200k_harmony` | 跟 gpt-oss 一致 |
 | Embedding | 本地 Ollama 的 `bge-m3` | bake-off 中 MRR 最高（見下方早期實測）；跑在本地，避開「embedding 算不算用 API 解析文件」的灰色地帶；不需要 PyTorch；中文問題能檢索到英文內文 |
 | 檢索 | 以 dense（bge-m3）為主；BM25 是否加入，由 eval 結果決定 | 等權重的 RRF hybrid 實測反而讓 MRR 下降，因為 BM25 對中文問題無效 |

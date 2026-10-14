@@ -1,6 +1,6 @@
 # AGENTS.md
 
-本機 Chat-with-Document 面試作業：上傳一份有文字層的 PDF，以文件內容回答並提供 Citation 與 Trace。使用與安裝見 [README](README.md)；領域用語以 [CONTEXT.md](CONTEXT.md) 為準。
+本機 Chat-with-Document 網站：上傳一份有文字層的 PDF，以文件內容回答並提供 Citation 與 Trace。使用與安裝見 [README](README.md)；領域用語以 [CONTEXT.md](CONTEXT.md) 為準。
 
 ## 不可破壞的限制
 
