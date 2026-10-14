@@ -1,0 +1,9 @@
+# condition-54 — semantic evidence recovery PASS; exact-quotation fidelity FAIL
+
+C5-only neutral inventory recovers the missing caveat: “Additionally, the original text often **contains irrelevant information that can introduce noise** in the response.” It preserves original text subject, often frequency, irrelevant-information condition and can possibility. Row 4 also correctly identifies original text removal and separately includes authors' graph-extraction attribution. Low-/high-level/full-system subjects remain distinct; no table annotation remains in this condition to misattribute. Correct recovery is diagnostic, not an A9 final-answer PASS.
+
+Under the preregistered exact-quote requirement the ledger is not fully verified: supporting quotes insert Markdown emphasis and change ASCII hyphens to U+2011; several other quoted spans use ellipses. The noise sentence's words are recoverable by stripping emphasis, but it is not a byte-verbatim quote as recorded. Record semantic recovery separately from strict ledger fidelity; do not turn the format discrepancy into evidence that the noise claim was missed.
+
+Independent invariants: source map contains only C5; entire C5 object equals frozen baseline C5; neutral system message equals condition-63. Removed C1/C2/C3/C4/C6/C7 change source composition and length. Relative to condition-63's missing caveat, this supports a context-dependent recovery observation under this task. It cannot isolate which added source, position, total length, stochastic output or selection effect caused the difference. It does not prove broad full-context interference or establish an effective retrieval change. Original Global/history cause remains unknown.
+
+stop; estimated prompt 1010 + reserved output 3000 = 4010; actual prompt 785/output 2047. One capture; no reliability estimate. No candidate readiness or product quality assurance inferred from the minimized context.
