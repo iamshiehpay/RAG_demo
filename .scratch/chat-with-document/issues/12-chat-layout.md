@@ -1,6 +1,6 @@
 # #12 對話排版與中文回答過程
 
-Status: ready-for-agent
+Status: ready-for-human
 
 ## Parent
 
@@ -41,3 +41,22 @@ D12限定例外：levi負責設計／實作協調，程式由Sonnet5.5 high suba
 ## Integration progress
 
 候選af6b9f3已ff-only整合；reviewed production1c274e4不變。完整兩輪Review、實作路徑與Main核對見[review.md](../../../docs/verification/ticket-12/review.md)。前端型別／build／source／event契約、36次UI劇本、真實模型smoke及6項HTTP測試已核對；Main完整測試接續執行，D09新版人工介面驗收尚未執行，不先關票。
+
+Main完整測試：abd7fc7上327PASS、3eval deselected、zeroSKIP、252.49s、exit0；新assets由8101正常提供。詳見[integration.md](../../../docs/verification/ticket-12/integration.md)。D1–D7人工QA已放行，等待使用者結果；尚未標done。
+
+## 2026-10-14 人工回饋：UI 後續修正（D16）
+
+原abd7fc7整合／327PASS證據保留。本輪重新開啟受影響介面項目，沿用本票清單，不把原版人工回饋當成新版全PASS。真人原文與來源見D16（msg_01a1379a；快捷題選擇msg_01a1379c）。
+
+- [ ] 來源收合欄可讀；桌面可拖曳調整來源面板寬度，文字隨宽度重排。保留鍵盤可操作、可見焦點、窄螢幕來源開關／Escape／焦點恢復；不讓對話或來源撐破畫面。
+- [ ] 整理輸入框層次、留白與送出按鈕，保持既有米白、Noto Serif TC、少裝飾及底部固定；IME、送出／產生中／錯誤狀態不回歸。
+- [ ] 輸入框下方五個可點即送出的快捷題：三個題目原文（Summary this document.／Compare LightRAG with GraphRAG.／Performance of ablated versions of LightRAG.），以及「這篇論文有什麼限制？」與「LightRAG 在 HotpotQA 上的分數是多少？」。只在Document Ready且未產生回答時可送出；一次點擊只送一次；與手動提問共用流程。其他Document不能默默顯示為其量身打造的LightRAG問題，使用明確範例標示或合適的文件限定展示。
+- [ ] 移除指定兩句可見文字與回答中的裝飾底線，Citation保持可辨認且可點、鍵盤焦點可見、Unverified語意保留；無障礙表單label保留但不必可見。
+- [ ] 修正heading／paragraph／list間距及句內Citation排版，重播使用者所貼GraphRAG／LightRAG成本與更新段落、長Q3列表與表格；不重寫回答事實或掩蓋原始錯誤。
+- [ ] 本輪必要前端／HTTP檢查、dist重建、獨立Review與整合後完整測試通過；補充原D1–D7人工清單的受影響情境供使用者再驗。
+
+依賴：Mainabd7fc7。與#13獨立，不能混入其未驗證backend；此輪純呈現／互動，可用保存的真實輸出做渲染回歸，明記重播不是新模型驗證。無新的provider呼叫，429阻塞不以改模型／帳號／額度繞過。第1/7/8項只討論，未授權prompt或文件外回答政策修改。
+
+### D16修正版整合結果
+
+ac1be36（production9a0715e）已ff-only整合；fresh兩軸限定Review APPROVE、最終browser75PASS／0FAIL。Main同版本完整測試327PASS／3eval deselected／zeroSKIP／265.71s／exit0，來源與前端保持已審版本。首頁、JS、CSS與本地字型HTTP200。詳見[followup integration](../../../docs/verification/ticket-12/followup/integration.md)。D8–D11已放行，由使用者重新整理8101操作；未回報前不勾人工驗收或標done。暫留乾淨worktree供這次人工複驗，其他自有測試暫存清理，協作角色收尾。

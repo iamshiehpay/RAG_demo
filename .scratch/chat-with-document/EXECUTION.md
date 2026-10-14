@@ -35,9 +35,9 @@ Status: in-progress
 | 07 | 失敗處理與串流狀態 | 01（實際排在 06 之後：共用提問流程） | W3 | Gateway 重試、Citation Validator、錯誤事件、前端暫定／重試／錯誤狀態 | done（9538b88；Review APPROVE；QA 16 PASS）|
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | done（ca66429＋#09整合3432aa09；Review APPROVE；QA265tests／R01–R06複驗PASS；品質仍#11）|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | done（3bb0c64／Main7cf9185；限定Review兩軸PASS／整合316PASS／獨立QA功能PASS；N3品質FAIL與已知限制按D05/D06保留） |
-| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL，D14待決） |
-| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | in progress（af6b9f3已整合；D13/D15已直接核准，完整測試／新版人工QA接續） |
-| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | in progress（D14 B；soho實作actualGPT6.1 high已核對，provider等#12suite） |
+| 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL；D14 B交#13有界修正） |
+| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（ac1be36已ff-only整合；修正版browser75PASS／fresh雙軸APPROVE；Main整合327PASS／zeroSKIP，HTTP200，人工D8–D11已放行待回覆） |
+| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | needs-info（最終9715538／production4e647b0：347PASS、130真實呼叫守10K；fresh兩軸Review仍有語意／Citation FAIL，D18待處置；未合併） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -49,7 +49,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷作為已知限制整合；D09真人回報其餘正常、Q3短表格可接受；A9限制題已補充「回答找不到文件」，正做有界分類。D11/D12已核准今晚由levi協調#12前端改版，nova負責整合；D13僅Reviewer模型替代待確認；D14是A9兩項新觀察的處置，未答前不新增後端品質修正。
+D01–D17皆已取得對應真人答覆。D18待答：#13有界修正與必要Review修正已完成，最終9715538仍有來源支持失敗，選擇暫不採用候選或明確接受列明缺陷後合併。D10 A不涵蓋新增錯誤。#12已整合並完成驗證，D8–D11已放行待人工操作。#13服務已恢復且130次實測完成；保留昨夜429，當前阻塞是驗收處置，不是服務或再次實作許可。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -299,3 +299,17 @@ D10 A 已直接核對真人選擇，允許本候選明列 Citation 支持缺陷�
 - D14 B真人「好，改」（msg_01a135cc／15:06:09Z）已直接核對preceding單一提案，核准一輪有界A9修正與回歸／真實模型／獨立Review；#13建票，不改消融、不寫死答案、不擴大調參。D13仍pending，不由本次答覆推定Reviewer替代同意。
 
 - #12 D13/D15真人已直接核對，Main讀完整兩輪Review／paths並核對actualSonnet5.5high、Opus5.5medium及parentauto。af6b9f3已公告後ff-only整合、production與已審1c274e4不變；Main文件與A9診斷隨此checkpoint保存，接續一次Main完整suite及D09新版人工QA。#13freshsoho actual01a135d1-74a6 GPT6.1high/wswrite/onrequest已核對並放行local工作，provider暫候。
+
+- #12 Main單次整合fullsuite327PASS／3eval deselected／zeroSKIP／252.49s／exit0已核對，Mainimports／設定／兩PDF正確；未重跑eval。8101新前端assets200、既有server保留；D1–D7已放行使用者，#12ready-for-human。soho已解除providerhold，接續#13boundedlive驗證／兩份新快取；A9尚未宣稱修好。
+
+- #13固定候選eac9b07（sourceb236b10，baseMainabd7fc7）已核對clean／完整335PASS、3eval deselected、zeroSKIP；兩次fresh上傳均429，沒有Ready、新快取或新回答，實際語意／快取驗證仍blocked。唯一同source恢復已用完，provider停止。freshsoho-review-zeno/mima actualGPT6-solhigh/wswrite/onrequest兩軸已Main直接核對並放行完整#13diff審查；不宣稱smokePASS或提前合併。
+
+- #13最終交接cd3c8aa已Main核對clean／abd7fc7祖先／相對已審eac9b07僅四份文件；完整Standards與Spec均無actionable code findings，兩軸各8targetedPASS。完整335PASS證據沿用同source。429阻擋的A9／無關支持與缺失題／兩份新快取維持NOT_EXECUTED，未合併、不宣稱已修好；原FAIL及原因UNPROVEN保留。soho與worktree保留供服務恢復後接續，子Reviewer已停止，8330無listener。
+
+- D16新版人工回饋已直接核對msg_01a1379a及快捷題選擇msg_01a1379c，#12重開有界UI2–6；第1/7/8由原root對话討論，不先改prompt／文件外回答政策。原levi背景session idle、HCOMinactive，一次resume因背景session已運作而失敗；保留原使用者session，續接協調context使用同設定並開fresh實作／Review children。#13cd3c8aa仍獨立429blocked。
+
+- D17直接真人核准文件限定政策＋自適應回答結構（msg_01a137a1）已核對完整precedingproposal；扩充未合併#13由soho順序接續，舊cd3c8aa Review／335PASS保留，新delta需fresh scopedReview／真实模型。有界provider確認不假定隔夜恢復；#12獨立進行。概覽警告中文化未核准，不混入。
+
+- D17 c3b47fb已Main核對完整345PASS、一次preflight及5個完整Application答案／來源、兩份新快取；129calls最高9873/10K，1個摘要length丟棄後既有重試完成。完整獨立Review仍指出A9未支持的完整方法限制、Q2未逐項引用／未揭露不確定表格、Q3整張抄表未比較reference例外。Main放行D17必要的一輪通用指令呈現／回答契約修正，非新檢索／Overview調參；保留rawFAIL，新source必須fresh scopedReview與final boundedlive。前端f8abe50完整327PASS、browser65/0，兩軸Opus5.5medium actual已核對，Review進行中。
+
+- #12 D16修正版ac1be36已ff-only整合；Main直接核對完整327PASS／3eval deselected／zeroSKIP／265.71s／exit0，Python與imports均Main工作區，兩份固定PDF存在，設定與58005fcc快取版本不變。fresh雙軸Review、75項browser結果已核對。原8101已無listener，Main以原已合併後端重新啟動，首頁／JS／CSS／字型HTTP200；D8–D11正式放行人工驗收，不標PASS。#13候選9715538未合併、D18仍待答；不追加品質迴圈。
