@@ -32,4 +32,4 @@ git show archive/before-main-cleanup-20261014:eval/reports/issue11-correction/co
 
 `git ls-tree -r --name-only archive/before-main-cleanup-20261014` 可列出全部歷史檔案。需要完整獨立副本時可對該標籤使用 `git archive`。主分支的移除不會抹除 Git 歷史，也沒有清空 `.cache/`、下載 PDF 或既有 worktree。
 
-zip 不含 Git 歷史；完整證據需要 repository 與此標籤。遠端為 `git@github.com:iamshiehpay/RAG_demo.git`；完整交付需連同上述 annotated tag 推送。GitHub 歷史連結需要此私人 repository 的存取權。
+zip 不含 Git 歷史；完整證據需要 repository 與此標籤。遠端為 `git@github.com:iamshiehpay/RAG_demo.git`；2026-10-14 已推送精簡提交 `6727af2` 至 `main`，並推送上述 annotated tag，遠端 SHA 已核對。後續交付也須保留此標籤。GitHub 歷史連結需要此私人 repository 的存取權。

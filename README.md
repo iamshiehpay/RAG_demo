@@ -85,7 +85,7 @@ bash scripts/fetch_data.sh
 | `eval/results/` | 精選最終評估，含原始回答、事件與逐項分數 |
 | `scripts/` | `fetch_data.sh` 下載 PDF；`generate_event_types.py` 同步前後端事件型別 |
 | `docs/` | 設計、開發指南、AI 協作、ADR、最新驗證摘要與歷史索引 |
-| `.scratch/chat-with-document/` | 已完成的 PRD、tickets 與執行紀錄 |
+| `.scratch/chat-with-document/` | PRD、tickets、測試清單與執行紀錄；歷史狀態以各檔內容為準 |
 | `pyproject.toml`、`uv.lock` | Python 套件、測試設定與鎖定依賴 |
 | `conftest.py` | pytest 分層標記與評估選項註冊 |
 | `AGENTS.md`、`CLAUDE.md`、`CONTEXT.md` | Agent 工作規則、共用入口與領域術語 |
