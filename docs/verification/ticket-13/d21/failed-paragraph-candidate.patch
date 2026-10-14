@@ -1,0 +1,86 @@
+diff --git a/src/chat_document/answer_generator.py b/src/chat_document/answer_generator.py
+index 3fdeb5d..ec94677 100644
+--- a/src/chat_document/answer_generator.py
++++ b/src/chat_document/answer_generator.py
+@@ -10,6 +10,21 @@ from .policy import FIXED_REFUSALS
+ from .tables import LIMITATION
+ 
+ 
++def chunk_evidence_units(chunks: list[Chunk], citations: list[Citation]) -> list[str]:
++    """Expose prose paragraphs independently without changing source identity or text."""
++    units = []
++    for chunk, citation in zip(chunks, citations, strict=True):
++        paragraphs = (
++            [chunk.text] if chunk.kind == "table" else re.split(r"\n[ \t]*\n", chunk.text)
++        )
++        units.extend(
++            f"[{citation.id}] {chunk.section} (p.{chunk.page_start})\n{paragraph}"
++            for paragraph in paragraphs
++            if paragraph
++        )
++    return units
++
++
+ def source_system_prompt(sources: Literal["chunk", "summary"]) -> str:
+     prefix = "S" if sources == "summary" else "C"
+     return f"""Answer only from the supplied Document excerpts. Do not use outside knowledge.
+@@ -110,10 +125,7 @@ class AnswerGenerator:
+         sources: Literal["chunk", "summary"] = "chunk",
+     ) -> AsyncIterator[DeltaEvent | RetryEvent | ThinkingEvent | TraceEvent]:
+         if context is None:
+-            context = "\n\n".join(
+-                f"[{citation.id}] {chunk.context}"
+-                for chunk, citation in zip(chunks, citations, strict=True)
+-            )
++            context = "\n\n".join(chunk_evidence_units(chunks, citations))
+         messages = answer_messages(
+             standalone_question, context, current_question=current_question, sources=sources
+         )
+diff --git a/src/chat_document/context_packer.py b/src/chat_document/context_packer.py
+index 6748140..33906d0 100644
+--- a/src/chat_document/context_packer.py
++++ b/src/chat_document/context_packer.py
+@@ -2,7 +2,7 @@
+ 
+ import re
+ 
+-from .answer_generator import answer_messages
++from .answer_generator import answer_messages, chunk_evidence_units
+ from .citation import CitationText, citation_map
+ from .events import DeltaEvent, PlanEvent, RetrievalEvent, TraceEvent
+ from .index import Index
+@@ -75,10 +75,7 @@ class ContextPacker:
+         self, question: str, chunks: list[Chunk], *, current_question: str | None = None
+     ) -> bool:
+         ordered = sorted(chunks, key=lambda chunk: chunk.order)
+-        context = "\n\n".join(
+-            f"[{citation.id}] {chunk.context}"
+-            for chunk, citation in zip(ordered, citation_map(ordered), strict=True)
+-        )
++        context = "\n\n".join(chunk_evidence_units(ordered, citation_map(ordered)))
+         return count_tokens(context) <= CONTEXT_EVIDENCE_TOKEN_LIMIT and (
+             message_tokens(answer_messages(question, context, current_question=current_question))
+             <= BUDGET_TABLE["answer"].prompt_limit
+@@ -132,8 +129,9 @@ class ContextPacker:
+                         if chunk_id not in unique:
+                             unique[chunk_id] = scores[chunk_id]
+                             candidates.append(scores[chunk_id])
++        candidate_chunks = [item.chunk for item in candidates]
+         context = "\n\n".join(
+-            f"[C{i}] {item.chunk.context}" for i, item in enumerate(candidates, 1)
++            chunk_evidence_units(candidate_chunks, citation_map(candidate_chunks))
+         )
+         dropped = 0
+         if plan.question_type == "Lookup" or count_tokens(context) <= CONTEXT_EVIDENCE_TOKEN_LIMIT:
+@@ -164,10 +162,7 @@ class ContextPacker:
+         current_question: str | None = None,
+     ) -> str:
+         question = plan.standalone_question
+-        units = [
+-            f"[{citation.id}] {chunk.context}"
+-            for chunk, citation in zip(chunks, citations, strict=True)
+-        ]
++        units = chunk_evidence_units(chunks, citations)
+         context = "\n\n".join(units)
+         answer_limit = BUDGET_TABLE["answer"].prompt_limit
+         if (
