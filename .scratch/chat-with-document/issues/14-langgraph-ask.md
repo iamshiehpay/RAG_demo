@@ -1,6 +1,6 @@
 # #14 LangGraph提問流程編排
 
-Status: ready-for-agent
+Status: ready-for-human
 
 ## Scope
 
@@ -16,7 +16,7 @@ D24使用者已確認直接遷移，不做比較prototype。基準Main5f5e35f；
 - [x] 歷史只在成功後追加，顯式history不污染內建history；預檢問題長度、未Ready／不存在Document、並發_asking、取消與所有stage-specific錯誤／finally cleanup保持。
 - [x] 依官方LangGraph文件選定兼容Python3.12的版本，更新pyproject與uv.lock，從乾淨依賴安裝可啟動；不使用其LLM/loader/retriever wrappers，不改上傳核心或任意快取政策。
 - [x] 既有回歸及必要public-seam測試、一次完整普通suite通過；含真正執行graph的取消/錯誤/SSE分支覆蓋。以真實gpt-oss/bge做小型公開上傳／提問smoke；標明劇本與真實證據，不重跑N3調參。
-- [ ] 完整diff由獨立gpt-6-luna max/Fast兩軸Review，actual設定可核對；必要修正後fresh scoped複審。Main整合後完整suite、在原8101提供新版，保留全部既有已知FAIL。
+- [x] 完整diff由獨立gpt-6-luna max/Fast兩軸Review，actual設定可核對；必要修正後fresh scoped複審。Main整合後完整suite、在原8101提供新版，保留全部既有已知FAIL。
 
 ## Ownership / verification
 
@@ -28,4 +28,4 @@ D24使用者已確認直接遷移，不做比較prototype。基準Main5f5e35f；
 
 初版d455f50完成333項測試；Luna max/Fast雙軸審查指出換文件完成與graph validate的就緒競態。修正版24fba26以同步snapshot修正，公開Lookup／Global回歸原版2PASS、初版2RED，修正後targeted59PASS、完整335PASS／3eval deselected／zeroSKIP。Fresh限定Standards與Spec均無阻擋finding；非阻擋的私有欄位耦合觀察保留。完整報告見[驗證](../../../docs/verification/ticket-14/verification.md)與其review目錄。
 
-兩次小型真實上傳／三種提問共20次呼叫均stop、10K內；最後取消／就緒修正使用真正graph的確定性回歸，沒有把較早的smoke說成最終source實測。prompt／模型／前端與原有品質FAIL保持。Main整合／完整測試／8101更新仍待完成，最終網站操作依D09由使用者執行。
+兩次小型真實上傳／三種提問共20次呼叫均stop、10K內；最後取消／就緒修正使用真正graph的確定性回歸，沒有把較早的smoke說成最終source實測。prompt／模型／前端與原有品質FAIL保持。Main a5b70a0整合後335PASS／exit0，正式依賴已更新，8101由新PID3808提供；首頁／assets／字型及公開預檢通過。最終網站操作依D09由使用者執行，F1–F3已放行但尚未執行。詳見[整合報告](../../../docs/verification/ticket-14/integration.md)。

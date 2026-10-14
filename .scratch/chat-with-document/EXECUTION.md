@@ -38,7 +38,7 @@ Status: in-progress
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL；D14 B交#13有界修正） |
 | 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（D21已審7d3794a整合；Main fd1034f完整327PASS、8101提供新UI；D9／D12–D14待人工，既有窄螢幕停滯FAIL保留） |
 | 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | wontfix（D23使用者核准本輪凍結目前後端、A9保留已知缺陷；D21/D22證據與舊9715538未採用狀態保留） |
-| 14 | LangGraph提問流程 | 現有Main5f5e35f | W8 | application/newgraph/tests/deps/README；Main獨占規範與tracker | in progress（已審24fba26；335PASS，真實smoke與最終修正版本明列；Luna max/Fast初審＋限定複審完成，已ff整合64b4f3d，待Main完整測試／更新8101） |
+| 14 | LangGraph提問流程 | 現有Main5f5e35f | W8 | application/newgraph/tests/deps/README；Main獨占規範與tracker | ready-for-human（已審24fba26，Main a5b70a0整合335PASS／exit0；Luna max/Fast双軸完成，8101已更新；F1–F3放行、待使用者操作） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -50,7 +50,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9列已知缺陷，停止本輪修復；D18結束為舊9715538保留不採用，不接受其中新增錯誤。快捷題已換成資料集題並重新產生dist，本次tests／live／browser／HTTP／Review均依使用者明確要求不執行，由使用者操作。D22窄螢幕問題先擱置，歷史FAIL保留。D24已核准LangGraph僅遷移提問流程，#14執行中；本次正常回歸／真實smoke／獨立Review及整合驗證照常。
+D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9列已知缺陷，停止本輪修復；D18結束為舊9715538保留不採用，不接受其中新增錯誤。快捷題已換成資料集題並重新產生dist，本次tests／live／browser／HTTP／Review均依使用者明確要求不執行，由使用者操作。D22窄螢幕問題先擱置，歷史FAIL保留。D24已核准LangGraph僅遷移提問流程；#14實作、Review、整合測試與8101部署完成，F1–F3待使用者操作。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -334,3 +334,7 @@ D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9
 - #14固定候選d455f50完成333確定性測試，20次小型真實smoke守10K（最後取消修正另有確定性證據，來源版本明列）。兩個獨立actual Luna max/Fast Review已完整讀取：Standards無finding；Spec指出graph延後validate可能在換文件完成後使用先前snapshot。Main放行同一實作者做最小request-start readiness修正與公開回歸；新候選需fresh限定雙軸複審，尚未合併或更新8101。
 
 - #14已公告後ff-only整合64b4f3d（source24fba26）；Main从Git核對四份文件尾提交、clean、產品／tests／deps與已審版本相同，完整335PASS與四份Review均已讀。AGENTS受限LangGraph例外、ADR、Issue14、ai-log與人工F表隨本次checkpoint保存；接續隔離Main環境的一次完整suite，既有8101暫不更動。
+
+- #14整合驗證完成：Main a5b70a0完整335PASS／3eval deselected／zeroSKIP／273.62s／exit0，獨立環境與Main imports已核對。正式.venv按lock更新，原8101服務以PID3808重啟；首頁／JS／CSS／CJK字型HTTP200且與local assets相同，空問題公開SSE預檢正常、0模型呼叫。F1–F3人工情境放行但不宣稱已PASS；A9與其他既有品質／窄螢幕限制保持。
+
+- #14收尾完成：335PASS與8101部署證據已保存；本票全部角色停止、指定暫存清理、已合併worktree與分支安全移除。Main正式環境／PDF／cache／服務及其他保留worktrees不動。最終人工F1–F3維持NOT_EXECUTED，不新增模型呼叫或品質結論。
