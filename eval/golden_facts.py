@@ -4,7 +4,7 @@ Numbers use judge checks with model/variant, dataset, metric, value and directio
 Source locations are requirements context, not substring acceptance criteria.
 """
 
-from chat_document.policy import FIXED_REFUSALS
+from app.policy import FIXED_REFUSALS
 
 from .models import EvaluationCase, GoldenFact, NumericBinding
 
@@ -300,7 +300,7 @@ LIGHTRAG_CASES += (
 
 
 def router_cases() -> tuple[EvaluationCase, ...]:
-    from chat_document.router_regression import CASES, FOLLOW_UP_STANDALONE_TERMS
+    from eval.router_cases import CASES, FOLLOW_UP_STANDALONE_TERMS
 
     return tuple(
         EvaluationCase(

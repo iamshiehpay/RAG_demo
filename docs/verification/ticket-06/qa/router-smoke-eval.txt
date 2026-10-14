@@ -1,4 +1,0 @@
-Router smoke report: /Users/shiehpay/Desktop/resume/rag/eval/reports/router-smoke-20261012T165103285734Z.json
-{'canonical': {'correct': 12, 'total': 12, 'fallbacks': 0, 'rewrite_failures': 0}, 'held_out': {'correct': 8, 'total': 8, 'fallbacks': 0, 'rewrite_failures': 0}}
-.
-1 passed in 20.24s

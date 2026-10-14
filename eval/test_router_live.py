@@ -6,11 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.llm_adapter import OllamaLLM
-from chat_document.llm_gateway import LLMGateway
-from chat_document.models import ConversationTurn
-from chat_document.router import SYSTEM_PROMPT, Router
-from chat_document.router_regression import CASES
+from app.llm_adapter import OllamaLLM
+from app.llm_gateway import LLMGateway
+from app.models import ConversationTurn
+from app.router import SYSTEM_PROMPT, Router
+from eval.router_cases import CASES
 from eval.router_checks import assess_rewrite
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,10 +50,6 @@ REFERENTS = {
     "H07": (("Boreal",), ("calibrat", "校準", "校正", "標定")),
     "H08": (("solar",), ("wind",), ("compar", "versus", "vs", "differ")),
 }
-
-
-
-
 
 
 class RecordingOllama(OllamaLLM):

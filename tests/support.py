@@ -3,8 +3,8 @@ import json
 import numpy as np
 import pymupdf
 
-from chat_document.llm_adapter import ScriptedLLM
-from chat_document.tokens import count_tokens
+from app.tokens import count_tokens
+from eval.fakes import ScriptedLLM
 
 
 def summary_response(label="Scripted Section Summary"):

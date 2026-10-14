@@ -5,10 +5,11 @@ import json
 import pymupdf
 import pytest
 
-from chat_document.application import Application
-from chat_document.llm_adapter import LLMFrame, ScriptedLLM
-from chat_document.llm_gateway import LLMGateway
-from chat_document.tokens import count_tokens
+from app.application import Application
+from app.llm_adapter import LLMFrame
+from app.llm_gateway import LLMGateway
+from app.tokens import count_tokens
+from eval.fakes import ScriptedLLM
 from tests.support import DeterministicEmbedder, SummaryScriptedLLM, summary_response
 
 
@@ -103,10 +104,6 @@ async def test_table_summary_selects_original_spans_or_fails_closed(malformed):
         assert "span_ids" not in node.text and "INVENTED_NOTE" not in node.text
         assert node.chunk_ids == [c.id for c in app.document.chunks]
     assert all(c.estimated_prompt_tokens + c.num_predict <= 10000 for c in llm.calls)
-
-
-
-
 
 
 async def test_numbered_document_keeps_front_matter_and_emphasis_out_of_summary_boundaries():
@@ -237,8 +234,6 @@ async def test_summary_length_correction_uses_original_source_not_the_failed_dra
     assert [e async for e in app.upload_document(content, "measurements.pdf")][-1].type == "ready"
     corrective = llm.calls[1].messages[-1]["content"]
     assert "SOURCE_TRUTH" in corrective and "UNSUPPORTED_DRAFT" not in corrective
-
-
 
 
 @pytest.mark.parametrize("succeeds", [True, False])

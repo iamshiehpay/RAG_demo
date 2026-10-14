@@ -1,6 +1,0 @@
-{
-  "provenance": "deterministic one-shot existing CitationText on captured live content frames; no provider, no full Application/public path",
-  "raw_answer": "文件中提到 Cedar 方法在以下情況下會受到限制：\n\n- 當通道擁擠導致時鐘訊息延遲時，Cedar 會出現偶發的時間抖動；研究者推測延遲的時鐘訊息可能是造成此抖動的因素之一，但實驗並未證實這是唯一原因【C1】。",
-  "normalized_answer": "文件中提到 Cedar 方法在以下情況下會受到限制：\n\n- 當通道擁擠導致時鐘訊息延遲時，Cedar 會出現偶發的時間抖動；研究者推測延遲的時鐘訊息可能是造成此抖動的因素之一，但實驗並未證實這是唯一原因[C1]。",
-  "valid_citation_bracket_normalized": true
-}

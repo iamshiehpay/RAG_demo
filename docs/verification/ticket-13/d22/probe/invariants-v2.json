@@ -1,9 +1,0 @@
-{
-  "full_user_message_exact_calls_1_2_3": true,
-  "full_sources_exact_calls_1_2_3": true,
-  "options_exact_all": true,
-  "baseline_system_exact_controls": true,
-  "same_synthetic_sources": true,
-  "neutral_instruction_exact": true,
-  "completed_new_calls": 5
-}

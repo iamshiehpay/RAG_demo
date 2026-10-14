@@ -1,7 +1,7 @@
 import json
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
+from app.application import Application
+from app.embedder import OllamaEmbedder
 from eval.models import EvaluationCase, GoldenFact
 from eval.report import write_report
 from eval.runner import RecordingGateway, run_evaluation
@@ -56,7 +56,7 @@ async def test_operations_report_all_calls_and_three_run_fact_rates(tmp_path):
 
 
 async def test_failed_ask_records_failed_call_without_judging_provisional_answer(tmp_path):
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     path = tmp_path / "document.pdf"
     path.write_bytes(text_pdf())
@@ -101,12 +101,12 @@ async def test_upload_error_still_reports_every_expected_fact(tmp_path):
 
 
 async def test_ask_latency_excludes_judge_latency(tmp_path, monkeypatch):
-    import chat_document.llm_gateway
+    import app.llm_gateway
     import eval.runner
 
     clock = [0.0]
     monkeypatch.setattr(eval.runner, "perf_counter", lambda: clock[0])
-    monkeypatch.setattr(chat_document.llm_gateway, "perf_counter", lambda: clock[0])
+    monkeypatch.setattr(app.llm_gateway, "perf_counter", lambda: clock[0])
 
     class TimedLLM(ScriptedLLM):
         async def stream(self, request):
@@ -152,8 +152,8 @@ async def test_q3_requires_a_used_citation_to_a_table_source(tmp_path):
 
 
 async def test_canonical_router_cases_convert_history_and_isolate_independent_questions(tmp_path):
-    from chat_document.router_regression import CASES
     from eval.golden_facts import router_cases
+    from eval.router_cases import CASES
 
     cases = router_cases()
     assert len(cases) == 12

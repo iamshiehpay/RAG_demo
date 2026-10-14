@@ -1,8 +1,8 @@
 import json
 
-from chat_document.llm_adapter import ScriptedLLM
-from chat_document.llm_gateway import LLMGateway
+from app.llm_gateway import LLMGateway
 from eval.checks import check_fact
+from eval.fakes import ScriptedLLM
 from eval.models import GoldenFact
 
 
@@ -66,7 +66,7 @@ async def test_forbidden_check_distinguishes_assertion_from_explicit_negation():
 
 
 async def test_bad_judge_output_and_truncation_fail_closed_even_for_forbidden():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     fact = GoldenFact("bad", "forbidden", "An unsupported claim.")
     llm = ScriptedLLM(
@@ -113,7 +113,7 @@ async def test_fixed_refusal_does_not_accept_extra_invented_content():
 
 
 async def test_judge_evaluates_answer_properties_without_requiring_self_description():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     class PropertyJudge:
         async def stream(self, request):
@@ -217,7 +217,7 @@ async def test_numeric_percentages_accept_omitted_zero_decimal():
 
 
 async def test_fixed_refusals_pass_without_judge_calls_and_accept_one_final_period():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     for expected, answer in (
         ("文件中未提及", "文件中未提及。"),

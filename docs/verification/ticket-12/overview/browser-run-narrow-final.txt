@@ -1,9 +1,0 @@
-== D21: overview removed, uncertainty beside related source ==
-PASS: Ready @ 390: overview, controls and embedded English warning absent
-PASS: uncertain table @ 390: exact Chinese warning beside raw citation source
-PASS: uncertain table @ 390: retrieved source also keeps exact warning
-PASS: reconstructed table @ 390: grid retained, uncertainty note absent
-PASS: text source @ 390: no table uncertainty warning
-PASS: Global @ 390: summary citation and provenance retained
-PASS: D21 common assertions @ 390
-FAILS=0

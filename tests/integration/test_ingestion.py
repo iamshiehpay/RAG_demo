@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
-from chat_document.tokens import count_tokens
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
+from app.tokens import count_tokens
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 from tests.support import (
     cjk_layout_pdf,
@@ -158,7 +158,7 @@ async def test_long_paragraph_overlap_starts_on_a_complete_word():
 
 @pytest.mark.parametrize("target", [35, 60])
 async def test_configured_chunk_size_packs_whole_paragraphs_without_overlap(target):
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     llm = ScriptedLLM([router_script(question="Introduction"), "Evidence [C1]."])
     app = Application(
@@ -331,7 +331,7 @@ async def test_configured_target_also_bounds_virtual_sections():
 
 
 async def test_settings_from_env_control_real_and_virtual_chunk_bounds(monkeypatch):
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     monkeypatch.setenv("CHUNK_TOKEN_TARGET", "80")
     settings = RetrievalSettings.from_env()
@@ -654,8 +654,6 @@ async def test_cjk_full_final_lines_use_the_actual_column_or_text_width(two_colu
         assert app.document.chunks[0].text == "\n\n".join(texts)
     finally:
         await app.close()
-
-
 
 
 async def test_uploaded_oversized_paragraph_keeps_decimals_and_abbreviations():

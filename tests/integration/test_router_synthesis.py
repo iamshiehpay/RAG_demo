@@ -1,8 +1,8 @@
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 from tests.support import router_script, text_pdf
 
@@ -44,7 +44,7 @@ async def test_malformed_router_json_falls_back_to_lookup_with_original_question
 
 
 async def test_too_long_question_has_explicit_rejection_event_and_zero_calls():
-    from chat_document.events import EVENT_ADAPTER
+    from app.events import EVENT_ADAPTER
 
     llm = ScriptedLLM([])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -61,8 +61,8 @@ async def test_too_long_question_has_explicit_rejection_event_and_zero_calls():
 
 
 async def test_router_history_keeps_only_two_rounds_each_at_most_500_tokens():
-    from chat_document.models import ConversationTurn
-    from chat_document.tokens import count_tokens
+    from app.models import ConversationTurn
+    from app.tokens import count_tokens
 
     history = [
         ConversationTurn(question=f"Round {i} " + "q " * 280, answer=f"Answer {i} " + "a " * 800)
@@ -85,7 +85,7 @@ async def test_router_history_keeps_only_two_rounds_each_at_most_500_tokens():
 async def test_q2_sub_queries_cover_cost_and_incremental_update_in_document_order():
     from pathlib import Path
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     llm = ScriptedLLM(
         [
@@ -175,8 +175,8 @@ async def test_oversized_synthesis_extracts_facts_and_keeps_original_citation_so
     import re
     from pathlib import Path
 
-    from chat_document.settings import RetrievalSettings
-    from chat_document.tokens import count_tokens
+    from app.settings import RetrievalSettings
+    from app.tokens import count_tokens
 
     class ExtractionScript(ScriptedLLM):
         def __init__(self):
@@ -239,8 +239,8 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
 
     import pymupdf
 
-    from chat_document.settings import RetrievalSettings
-    from chat_document.tokens import count_tokens
+    from app.settings import RetrievalSettings
+    from app.tokens import count_tokens
     from tests.support import paragraph_pdf
 
     class ExtractionScript(ScriptedLLM):
@@ -300,7 +300,7 @@ async def test_extracted_facts_are_reduced_again_when_they_still_do_not_fit():
 async def test_configurable_top_k_counts_and_global_uses_summary_tree():
     from pathlib import Path
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     question = "LightRAG retrieval costs"
     llm = ScriptedLLM(
@@ -402,7 +402,7 @@ async def test_query_embedding_failure_does_not_start_answer_generation():
 async def test_extraction_losing_citation_ids_fails_without_final_answer():
     from pathlib import Path
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     class UncitedExtractionScript(ScriptedLLM):
         async def ask_stream(self, request):
@@ -430,8 +430,6 @@ async def test_extraction_losing_citation_ids_fails_without_final_answer():
     assert all(c.call_type == "fact_extraction" for c in events[-2].calls[1:])
     assert len(llm.ask_calls) == len(events[-2].calls)
     assert all(c.discarded_fact_lines == 1 for c in events[-2].calls[1:])
-
-
 
 
 @pytest.mark.parametrize(
@@ -463,7 +461,7 @@ async def test_schema_valid_router_plan_preserves_follow_up_rewrite(
 async def test_extraction_normalizes_citations_discards_headings_and_filters_sentinel():
     from pathlib import Path
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     class NormalizationScript(ScriptedLLM):
         batches = 0
@@ -509,7 +507,7 @@ async def test_extraction_normalizes_citations_discards_headings_and_filters_sen
 async def test_lookup_with_large_top_k_fits_without_extraction():
     from pathlib import Path
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     llm = ScriptedLLM([router_script("Lookup", "retrieval cost"), "Supported [C1]."])
     app = Application(
@@ -526,7 +524,7 @@ async def test_lookup_with_large_top_k_fits_without_extraction():
 
 
 async def test_truncated_router_falls_back_but_retains_its_failed_trace():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     llm = ScriptedLLM(
         [
@@ -547,7 +545,7 @@ async def test_truncated_router_falls_back_but_retains_its_failed_trace():
 
 
 async def test_explicit_history_does_not_modify_session_history():
-    from chat_document.models import ConversationTurn
+    from app.models import ConversationTurn
 
     llm = ScriptedLLM([router_script(), "Session [C1].", router_script(), "Evaluation [C1]."])
     app = Application(OllamaEmbedder(), LLMGateway(llm))
@@ -567,8 +565,8 @@ async def test_explicit_history_does_not_modify_session_history():
 
 
 async def test_scripted_llm_honors_output_reservation_including_thinking():
-    from chat_document.llm_adapter import LLMFrame
-    from chat_document.tokens import count_tokens
+    from app.llm_adapter import LLMFrame
+    from app.tokens import count_tokens
 
     llm = ScriptedLLM(
         [

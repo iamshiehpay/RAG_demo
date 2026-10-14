@@ -4,11 +4,11 @@ import asyncio
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.ingestion import UploadBusy
-from chat_document.llm_adapter import LLMFrame
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.ingestion import UploadBusy
+from app.llm_adapter import LLMFrame
+from app.llm_gateway import LLMGateway
 from tests.support import SummaryScriptedLLM, text_pdf
 
 
@@ -84,7 +84,7 @@ async def test_close_paused_delta_closes_provider_before_returning_without_histo
 
 
 async def test_http_disconnect_cancels_pending_native_answer_without_detached_work():
-    from chat_document.api import create_app
+    from app.api import create_app
 
     closed = asyncio.Event()
     first_delta = asyncio.Event()

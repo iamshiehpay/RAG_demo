@@ -3,13 +3,13 @@ import json
 import numpy as np
 import pytest
 
-from chat_document.answer_generator import answer_messages
-from chat_document.application import Application
-from chat_document.context_packer import ContextPacker
-from chat_document.llm_gateway import LLMGateway
-from chat_document.models import Chunk, ConversationTurn
-from chat_document.router import Router
-from chat_document.settings import RetrievalSettings
+from app.answer_generator import answer_messages
+from app.application import Application
+from app.context_packer import ContextPacker
+from app.llm_gateway import LLMGateway
+from app.models import Chunk, ConversationTurn
+from app.router import Router
+from app.settings import RetrievalSettings
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 from tests.support import text_pdf
 

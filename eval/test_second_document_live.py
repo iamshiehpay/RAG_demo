@@ -12,12 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.cache import PIPELINE_VERSION, ProcessingCache
-from chat_document.embedder import OllamaEmbedder
-from chat_document.events import DeltaEvent
-from chat_document.llm_adapter import OllamaLLM
-from chat_document.tokens import count_tokens
+from app.application import Application
+from app.cache import PIPELINE_VERSION, ProcessingCache
+from app.embedder import OllamaEmbedder
+from app.events import DeltaEvent
+from app.llm_adapter import OllamaLLM
+from app.tokens import count_tokens
 
 from .provenance import repository_state
 from .report import write_report

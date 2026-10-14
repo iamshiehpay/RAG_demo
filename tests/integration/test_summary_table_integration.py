@@ -5,13 +5,13 @@ import json
 import pymupdf
 import pytest
 
-from chat_document.application import Application
-from chat_document.cache import ProcessingCache
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
-from chat_document.llm_gateway import LLMGateway
-from chat_document.tables import LIMITATION
-from chat_document.tokens import count_tokens
+from app.application import Application
+from app.cache import ProcessingCache
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
+from app.tables import LIMITATION
+from app.tokens import count_tokens
+from eval.fakes import ScriptedLLM
 from tests.support import DeterministicEmbedder, SummaryScriptedLLM, selection_response
 
 

@@ -19,10 +19,10 @@
 |---|---|
 | 修改解析、表格、切塊、摘要、檢索、引用、budget、重試或快取 | [設計規格](docs/design.md) 的對應章節；數值實作見 `policy.py`、`settings.py`、`llm_gateway.py` |
 | 修改提問編排、取消與串流生命週期 | [LangGraph ADR](docs/adr/2026-10-14-langgraph-ask.md) 及 `tests/integration/test_ask_stream_lifecycle.py` |
-| 修改前端 | 先載入 `web-design-engineer` skill，再讀 [設計基準](frontend/review/DESIGN.md) 與 [前端開發](docs/development.md#前端開發)；修改後 build 並提交 `frontend/dist/` |
+| 修改前端 | 先載入 `web-design-engineer` skill，再讀 [設計基準](docs/frontend.md) 與 [前端開發](docs/development.md#前端開發)；修改後 build 並提交 `frontend/dist/` |
 | 修改測試、prompt 或評估 | [開發與評估指南](docs/development.md)、[eval 說明](eval/README.md)；Golden Facts 以 `eval/golden_facts.py`、`eval/second_document.py` 為準 |
 | 準備交付或清理檔案 | [README 的檔案用途與保留原則](README.md#資料夾與檔案用途)、[交付](docs/development.md#交付) |
-| 管理工作項目、術語或架構決策 | [issue tracker](docs/agents/issue-tracker.md)、[triage labels](docs/agents/triage-labels.md)、[domain docs](docs/agents/domain.md) |
+| 術語、架構決策或歷史證據 | [CONTEXT.md](CONTEXT.md)、`docs/adr/`、[歷史索引](docs/history.md) |
 
 ## 修改與驗證
 
@@ -36,6 +36,7 @@
 
 ## 保留與交付
 
-- 保留並提交 `frontend/dist/`、`spikes/`（含 `out/`）、`eval/reports/`、規格、題目筆記與 AI 協作證據；不能以「網站未載入」為由刪除。
+- 使用者於 2026-10-14 核准精簡主分支：正式程式位於 `app/`；保留 `frontend/dist/`、必要測試、`eval/results/` 最終報告及精選 AI 協作證據。歷史 issue、spikes、逐輪驗證已存入 [歸檔標籤](docs/history.md)，不重建 archive 目錄。
+- 新實驗輸出寫入已忽略的 `eval/reports/`；只將有持續價值的最終證據納入版本庫。
 - 不提交公司內部 PDF、`data/*.pdf`、安裝環境與快取。測試 PDF 用 `scripts/fetch_data.sh` 下載固定版本。
 - 用私人 repository 與 zip 交付；邀請協作者、寄信等外部動作仍依使用者授權執行。

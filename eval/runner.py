@@ -10,9 +10,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
 
-from chat_document.application import Application
-from chat_document.cache import PIPELINE_VERSION
-from chat_document.events import (
+from app.application import Application
+from app.cache import PIPELINE_VERSION
+from app.events import (
     DeltaEvent,
     ErrorEvent,
     FinalEvent,
@@ -20,8 +20,8 @@ from chat_document.events import (
     ReadyEvent,
     TraceEvent,
 )
-from chat_document.llm_gateway import LLMGateway
-from chat_document.models import Chunk, LLMCallTrace
+from app.llm_gateway import LLMGateway
+from app.models import Chunk, LLMCallTrace
 
 from .checks import check_fact, has_term, normalize
 from .models import EvaluationCase, FactResult
@@ -263,7 +263,7 @@ async def run_evaluation(
                 else:
                     kwargs = {}
                     if history_supported:
-                        from chat_document.models import ConversationTurn
+                        from app.models import ConversationTurn
 
                         kwargs["history"] = [
                             ConversationTurn(

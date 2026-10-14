@@ -2,7 +2,7 @@
 
 import asyncio
 
-from chat_document.embedder import OllamaEmbedder
+from app.embedder import OllamaEmbedder
 
 
 class RecordingEmbedder(OllamaEmbedder):

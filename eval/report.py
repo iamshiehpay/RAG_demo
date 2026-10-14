@@ -5,7 +5,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from chat_document.models import LLMCallTrace
+from app.models import LLMCallTrace
 
 from .runner import EvaluationReport
 

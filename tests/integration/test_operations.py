@@ -2,11 +2,11 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
-from chat_document.policy import CONTEXT_BUDGET, QUESTION_TOKEN_LIMIT, SAFETY_MARGIN
-from chat_document.tokens import count_tokens
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
+from app.policy import CONTEXT_BUDGET, QUESTION_TOKEN_LIMIT, SAFETY_MARGIN
+from app.tokens import count_tokens
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 
 
@@ -103,7 +103,7 @@ async def test_questions_over_1000_tokens_never_call_llm():
 
 
 async def test_truncated_answer_never_becomes_final():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
     from tests.support import text_pdf
 
     llm = ScriptedLLM(
@@ -124,7 +124,7 @@ async def test_truncated_answer_never_becomes_final():
 
 
 async def test_citation_markers_split_across_stream_frames_remain_clickable():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
     from tests.support import text_pdf
 
     llm = ScriptedLLM(
@@ -149,7 +149,7 @@ async def test_citation_markers_split_across_stream_frames_remain_clickable():
 
 
 async def test_interrupted_llm_stream_emits_error_and_failed_call_trace():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
     from tests.support import text_pdf
 
     llm = ScriptedLLM(["not JSON", [LLMFrame(content="Unfinished answer [C1]")]])

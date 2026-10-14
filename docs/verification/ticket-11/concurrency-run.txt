@@ -1,4 +1,0 @@
-concurrency=1: 8/8 succeeded; wall=128.84s
-concurrency=2: 8/8 succeeded; wall=44.73s
-concurrency=4: 8/8 succeeded; wall=23.26s
-concurrency=8: 8/8 succeeded; wall=8.20s

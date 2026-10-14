@@ -1,4 +1,7 @@
+"""Focused regressions grouped by feature; helpers remain outside test modules."""
+
 from eval.models import FactResult
+from eval.provenance import repository_state
 from eval.report import write_report
 from eval.runner import EvaluationReport, QuestionRun
 
@@ -40,3 +43,7 @@ def test_budget_failure_has_a_distinct_status_in_report(tmp_path):
     write_report(report, tmp_path / "report.md")
     assert "Result: HARNESS_BUG" in (tmp_path / "report.md").read_text()
     assert "| HARNESS_BUG |" in (tmp_path / "report.md").read_text()
+
+
+def test_zip_without_git_metadata_has_unknown_provenance(tmp_path):
+    assert repository_state(tmp_path) == ("unknown", "unknown")

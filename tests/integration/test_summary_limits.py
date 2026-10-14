@@ -11,9 +11,9 @@ import json
 import numpy as np
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
 from tests.support import SummaryScriptedLLM, summary_response, text_pdf
 
 
@@ -106,7 +106,7 @@ async def test_global_non_rag_document_uses_generic_whole_document_prompt():
 
 
 async def test_supported_long_global_question_uses_upload_built_group_and_short_uses_sections():
-    from chat_document.llm_adapter import ScriptedLLM
+    from eval.fakes import ScriptedLLM
     from tests.support import summary_pdf
 
     class SummaryResponses(ScriptedLLM):
@@ -142,8 +142,8 @@ async def test_supported_long_global_question_uses_upload_built_group_and_short_
     uploaded = [e async for e in app.upload_document(summary_pdf(18), "rainfall.pdf")]
     assert uploaded[-1].type == "ready"
     tree = app.document.summary_tree
-    from chat_document.summary_context import summary_context
-    from chat_document.tokens import count_tokens
+    from app.summary_context import summary_context
+    from app.tokens import count_tokens
 
     assert 5000 < count_tokens(summary_context(tree.section_summaries)) < 6000
     short = [e async for e in app.ask("Summarize.", history=[])]
@@ -167,7 +167,7 @@ async def test_supported_long_global_question_uses_upload_built_group_and_short_
 
 
 async def test_summary_progress_advances_during_group_and_document_calls():
-    from chat_document.llm_adapter import ScriptedLLM
+    from eval.fakes import ScriptedLLM
     from tests.support import summary_pdf
 
     class ProgressLLM(ScriptedLLM):
@@ -203,7 +203,7 @@ async def test_summary_progress_advances_during_group_and_document_calls():
 
 
 async def test_each_oversized_section_part_and_merge_retains_section_title():
-    from chat_document.llm_adapter import ScriptedLLM
+    from eval.fakes import ScriptedLLM
     from tests.support import summary_pdf
 
     llm = ScriptedLLM(
@@ -230,7 +230,7 @@ async def test_each_oversized_section_part_and_merge_retains_section_title():
 async def test_adapter_and_answer_prompt_semantics_invalidate_upload_cache(tmp_path, monkeypatch):
     from pathlib import Path
 
-    from chat_document.cache import ProcessingCache, _pipeline_version
+    from app.cache import ProcessingCache, _pipeline_version
 
     llm = SummaryScriptedLLM([])
     content = text_pdf()
@@ -269,7 +269,7 @@ async def test_adapter_and_answer_prompt_semantics_invalidate_upload_cache(tmp_p
 async def test_oversized_section_recursively_merges_multiple_rounds_with_provenance():
     import pymupdf
 
-    from chat_document.llm_adapter import ScriptedLLM
+    from eval.fakes import ScriptedLLM
 
     with pymupdf.open() as pdf:
         for index in range(32):
@@ -322,7 +322,7 @@ async def test_oversized_section_recursively_merges_multiple_rounds_with_provena
 
 
 async def test_multiple_group_levels_preserve_all_original_sources():
-    from chat_document.llm_adapter import ScriptedLLM
+    from eval.fakes import ScriptedLLM
     from tests.support import summary_pdf
 
     class MultiLevelLLM(ScriptedLLM):
@@ -362,7 +362,7 @@ async def test_inflight_section_siblings_cancel_and_replacement_is_transactional
 ):
     import asyncio
 
-    from chat_document.cache import ProcessingCache
+    from app.cache import ProcessingCache
     from tests.support import summary_pdf
 
     class HeldFailureLLM(SummaryScriptedLLM):
@@ -434,8 +434,9 @@ async def test_nonreducing_external_summary_response_fails_without_partial_publi
     """
     import pymupdf
 
-    from chat_document.cache import ProcessingCache
-    from chat_document.llm_adapter import LLMFrame, ScriptedLLM
+    from app.cache import ProcessingCache
+    from app.llm_adapter import LLMFrame
+    from eval.fakes import ScriptedLLM
     from tests.support import summary_pdf
 
     if oversized_section:

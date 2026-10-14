@@ -9,10 +9,10 @@ import httpx
 import pymupdf
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
-from chat_document.settings import RetrievalSettings
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
+from app.settings import RetrievalSettings
 from eval.models import EvaluationCase, GoldenFact
 from eval.runner import RecordingGateway, run_evaluation
 from tests.support import SummaryScriptedLLM, text_pdf
@@ -190,9 +190,9 @@ async def test_eval_retains_original_public_citation_map_and_final_events(tmp_pa
 
 
 async def test_controlled_retrieval_replay_uses_public_events_and_no_summary_calls(tmp_path):
-    from chat_document.cache import ProcessingCache
-    from chat_document.events import PlanEvent
-    from scripts.tune import RetrievalReplayAdapter, public_retrieval
+    from app.cache import ProcessingCache
+    from app.events import PlanEvent
+    from eval.tune import RetrievalReplayAdapter, public_retrieval
 
     content = text_pdf("The inspection campaign records 37 validated samples.")
     cache = ProcessingCache(tmp_path / "cache")

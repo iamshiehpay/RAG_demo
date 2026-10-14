@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from chat_document.llm_adapter import ScriptedLLM
-from chat_document.llm_gateway import LLMGateway
+from app.llm_gateway import LLMGateway
 from eval.checks import check_fact
+from eval.fakes import ScriptedLLM
 from eval.models import GoldenFact, NumericBinding
 
 FACT = GoldenFact(

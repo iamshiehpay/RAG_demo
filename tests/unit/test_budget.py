@@ -1,12 +1,12 @@
-from chat_document.llm_gateway import LLMGateway
-from chat_document.tokens import count_tokens
+from app.llm_gateway import LLMGateway
+from app.tokens import count_tokens
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 
 
 async def test_real_10k_budget_rejects_prompt_one_token_over_answer_cap():
     import pytest
 
-    from chat_document.llm_gateway import BUDGET_TABLE, BudgetExceeded
+    from app.llm_gateway import BUDGET_TABLE, BudgetExceeded
 
     llm = ScriptedLLM(["Must not run"])
     gateway = LLMGateway(llm)

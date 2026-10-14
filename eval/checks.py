@@ -4,9 +4,9 @@ import json
 import re
 import unicodedata
 
-from chat_document.events import DeltaEvent
-from chat_document.llm_gateway import BudgetExceeded, LLMGateway
-from chat_document.policy import FIXED_REFUSALS
+from app.events import DeltaEvent
+from app.llm_gateway import BudgetExceeded, LLMGateway
+from app.policy import FIXED_REFUSALS
 
 from .models import FactResult, GoldenFact, NumericBinding
 

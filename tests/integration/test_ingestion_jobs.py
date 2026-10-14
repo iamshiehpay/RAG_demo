@@ -3,10 +3,10 @@ import asyncio
 import httpx
 import pytest
 
-from chat_document.application import Application
-from chat_document.cache import ProcessingCache
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.cache import ProcessingCache
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
 from tests.integration.support import RecordingEmbedder
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 from tests.support import paragraph_pdf, structured_pdf, text_pdf
@@ -84,7 +84,7 @@ async def test_pipeline_version_and_content_changes_reprocess_the_document(tmp_p
 
 
 async def test_effective_chunk_target_invalidates_cache_and_preserves_section_metadata(tmp_path):
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     content = structured_pdf()
     cache = ProcessingCache(tmp_path)

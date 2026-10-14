@@ -1,6 +1,0 @@
-{
-  "source_sha": "cb4f1c9a164a40243a38358e59f2ed5c126bcf7c",
-  "fixture": "tests/integration/test_tables.py::authored_table_pdf() (unchanged)",
-  "content_sha256": "3ac69fdcb17aedf15e9fb1d6698becb729ee8f3c0471ff313a1b2e794a153225",
-  "runtime_file": "/private/tmp/nova-i09-real-smoke-input.pdf"
-}

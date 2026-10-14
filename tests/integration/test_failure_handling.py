@@ -1,10 +1,10 @@
 import httpx
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import LLMFrame
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_adapter import LLMFrame
+from app.llm_gateway import LLMGateway
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 from tests.support import paragraph_pdf, text_pdf
 
@@ -205,7 +205,7 @@ async def test_synthesis_extraction_range_uses_each_batch_citation_map():
     import json
     import re
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
     from tests.support import paragraph_pdf
 
     class RangeExtractionLLM(ScriptedLLM):
@@ -294,10 +294,8 @@ async def test_transport_failure_stops_downstream_work_and_same_question_can_ret
     assert next(e for e in recovered if e.type == "final").answer == "Recovered [C1]."
 
 
-
-
 async def test_comma_and_line_suffixed_citations_normalize_across_frames():
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     llm = ScriptedLLM(
         [
@@ -325,7 +323,7 @@ async def test_comma_and_line_suffixed_citations_normalize_across_frames():
 
 @pytest.mark.parametrize("over_budget_second_call", [False, True])
 async def test_ask_accumulates_traces_from_every_gateway_call(over_budget_second_call):
-    from chat_document.llm_gateway import BUDGET_TABLE
+    from app.llm_gateway import BUDGET_TABLE
     from tests.support import text_pdf
 
     class TwoCallGateway(LLMGateway):
@@ -378,8 +376,8 @@ async def test_terminal_llm_frame_closes_adapter_before_ask_finishes():
 
 
 async def test_real_10k_prompt_cap_failure_is_an_application_error_without_final():
-    from chat_document.llm_gateway import BUDGET_TABLE
-    from chat_document.policy import CONTEXT_BUDGET
+    from app.llm_gateway import BUDGET_TABLE
+    from app.policy import CONTEXT_BUDGET
     from tests.support import text_pdf
 
     class OversizedPromptGateway(LLMGateway):

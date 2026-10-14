@@ -2,7 +2,7 @@
 
 這份文件承接原 AGENTS.md 的詳細設計規則，供修改對應功能時查閱；常駐限制仍見 [AGENTS.md](../AGENTS.md)，術語見 [CONTEXT.md](../CONTEXT.md)。路徑寫在行內程式碼時，以 repository 根目錄為起點。
 
-規格描述預期行為，**不代表所有模型回答都已達標**。未附引用的句子目前不自動標記，A9 的限制題仍是已知缺陷。正式數值由 [policy.py](../src/chat_document/policy.py)、[settings.py](../src/chat_document/settings.py) 與 [llm_gateway.py](../src/chat_document/llm_gateway.py) 實作；變更決策時同步更新相關文件與測試。
+規格描述預期行為，**不代表所有模型回答都已達標**。未附引用的句子目前不自動標記，A9 的限制題仍是已知缺陷。正式數值由 [policy.py](../app/policy.py)、[settings.py](../app/settings.py) 與 [llm_gateway.py](../app/llm_gateway.py) 實作；變更決策時同步更新相關文件與測試。
 
 提問編排已改用 LangGraph，僅限 request-scoped StateGraph，不增加 checkpoint persistence、agent loop 或框架檢索器。責任與取消契約見 [LangGraph ADR](adr/2026-10-14-langgraph-ask.md)。
 
@@ -15,7 +15,7 @@
 | Embedding | 本地 Ollama 的 `bge-m3` | bake-off 中 MRR 最高（見下方早期實測）；跑在本地，避開「embedding 算不算用 API 解析文件」的灰色地帶；不需要 PyTorch；中文問題能檢索到英文內文 |
 | 檢索 | 以 dense（bge-m3）為主；BM25 是否加入，由 eval 結果決定 | 等權重的 RRF hybrid 實測反而讓 MRR 下降，因為 BM25 對中文問題無效 |
 | Summary | 上傳時就建好 Summary Tree；Global 問題依其中一層產生回答，細節見下方的「摘要規則」 | Q1 必須涵蓋全文 |
-| 問題分流 | 用一次 LLM 呼叫（router）同時產出三樣東西：Question Type（Global / Synthesis / Lookup）、Standalone Question、Sub-queries（只有 Synthesis 需要）。Router 用 `think="low"`；prompt 規定「不確定是 Lookup 還是 Synthesis 時，選 Synthesis」；JSON 輸出壞掉時退回 Lookup。早期 12 題已整理為 `src/chat_document/router_regression.py` 的回歸資料 | 關鍵字規則判斷不了換句話說的問句（例如「這篇在講什麼？」）；把追問改寫合併在同一次呼叫，多輪對話不必多花一次呼叫；`low` 最快、token 用量最穩定，而把 Lookup 誤判成 Synthesis 只是多檢索一些，反方向誤判則會漏掉散在其他 Section 的內容 |
+| 問題分流 | 用一次 LLM 呼叫（router）同時產出三樣東西：Question Type（Global / Synthesis / Lookup）、Standalone Question、Sub-queries（只有 Synthesis 需要）。Router 用 `think="low"`；prompt 規定「不確定是 Lookup 還是 Synthesis 時，選 Synthesis」；JSON 輸出壞掉時退回 Lookup。早期 12 題已整理為 `app/router_regression.py` 的回歸資料 | 關鍵字規則判斷不了換句話說的問句（例如「這篇在講什麼？」）；把追問改寫合併在同一次呼叫，多輪對話不必多花一次呼叫；`low` 最快、token 用量最穩定，而把 Lookup 誤判成 Synthesis 只是多檢索一些，反方向誤判則會漏掉散在其他 Section 的內容 |
 | 後端 / 前端 | Python + FastAPI；前端用 React + Vite + TypeScript。build 好的 `frontend/dist/` 一起 commit，由 FastAPI 直接提供；開發時由 Vite 開發伺服器把 `/api` 轉送給 FastAPI。設計前先載入 `web-design-engineer` skill | React 的元件寫法讓多狀態的介面（串流、引用、Trace、上傳進度）比較好維護，AI 寫 React 也最熟練；TypeScript 能抓出前後端資料格式對不上的問題。commit `dist/` 是為了讓評審只裝 Python 就能跑，**所以前端改完要重新 build** |
 | 視覺設計 | `web-design-engineer` skill 的 `tufte-dataink` recipe：三欄可收合：句中引用編號，點了在右欄顯示原文；Trace 用迷你長條顯示每次 LLM 呼叫的 token 用量，以 10K 為滿格。因為要分享螢幕 demo，內文放大到 15～16px；中文字型用 Noto Serif TC，字型檔放進 repo；互動只保留功能必要的部分，不加裝飾性動畫 | 這個產品的核心是「拿得出證據的回答」，Tufte 的風格就是為了呈現證據而設計；而且跟常見的深色 AI 聊天介面有明顯區隔。這個 recipe 本身不建議用在互動介面，所以把互動壓到最少 |
 | 串流 | 回答用 SSE 串流，依序顯示：判斷問題類型 → 檢索 → 思考中 → 回答逐字出現。開始產生回答前，先傳「編號 → 頁碼與 Section」對照表，讓 `[C3]` 能即時變成可點的引用；回答結束後再送出驗證過的引用清單。模型的思考內容放在「回答過程」的技術細節（開發用）裡，預設收合 | 不串流的話，每個問題要對著空白畫面等 5～10 秒 |
@@ -32,7 +32,7 @@
 6. 移除 References；附錄保留，並標示為 Appendix。
 7. 檢索時，視需要帶出相鄰的 Chunk，以及和 Table Chunk 互相連結的段落。前後文靠這一步補足，所以段落之間不需要重疊。
 
-500 tokens 是 #11 以真實處理／Router 的 256 / 500 / 800 與 top-k／加權 BM25 比較後選定的值。dense、Lookup 5／Synthesis 3／Sub-query 2 在此設定下涵蓋 Table 2、成本與增量更新，三個目標來源在該實驗的回傳結果中排名第一；這不是完整索引的 MRR，也不是回答品質證明。修正版方法與限制見 [評估結論](../eval/reports/issue11-correction/conclusions.md)；`eval/reports/issue11/` 保留為歷史證據。回答 medium 保留 3,000、summary concurrency=4；low/medium 的 N=1 比較使用 800-token dense，僅作探索觀察，不是最終設定的顯著性證明。最終 N=3 使用選定的 500-token dense。
+500 tokens 是 #11 以真實處理／Router 的 256 / 500 / 800 與 top-k／加權 BM25 比較後選定的值。dense、Lookup 5／Synthesis 3／Sub-query 2 在此設定下涵蓋 Table 2、成本與增量更新，三個目標來源在該實驗的回傳結果中排名第一；這不是完整索引的 MRR，也不是回答品質證明。修正版方法與限制見 [評估結論](../eval/results/README.md)；舊報告保存在 [歸檔標籤](history.md)。回答 medium 保留 3,000、summary concurrency=4；low/medium 的 N=1 比較使用 800-token dense，僅作探索觀察，不是最終設定的顯著性證明。最終 N=3 使用選定的 500-token dense。
 
 不用固定長度加重疊，原因有兩個：
 
@@ -76,7 +76,7 @@ Global 問題一樣要呼叫 LLM 產生回答（`medium`），依據是「放得
 
 - **上傳後立刻回應，處理在背景進行。** 用 SSE 即時推送目前階段（解析 → 切塊 → embedding → 摘要 n/N → 完成），全部完成後才開放提問。處理時間取決於文件長度、模型服務與快取，不保證固定秒數。
 - **Embedding 每批 8 個 Chunk**，每批完成後推送已完成的 Chunk 數 n/N；全部完成後才發布 Document。
-- **Section Summary 平行產生**，同時呼叫數預設 4，可以調整。並行實測見 `eval/reports/issue11/concurrency.json`；測過的並行數不等於服務的固定上限。
+- **Section Summary 平行產生**，同時呼叫數預設 4，可以調整。並行實測位於歸檔標籤的 `eval/reports/issue11/concurrency.json`；測過的並行數不等於服務的固定上限。
 - **處理結果依檔案內容的雜湊值存到 `.cache/`**，內容包括 Chunk、embedding、Summary Tree。快取的鍵值同時包含「處理流程的版本」，所以改了切塊或摘要規則之後，舊快取會自動失效。同一份檔案重新上傳時直接取用快取。
 - **只快取上傳時的處理結果，不快取回答。** 調整 prompt 和 think 等級時，要看到每次真實的回答。
 
@@ -129,7 +129,7 @@ Budget guard 只負責攔截超額。把內容安排到放得下，是上游的�
 
 ## 早期實測與設計依據
 
-以下保留開發時的觀測與腳本，條件與樣本數都只適用於當次實驗，不視為服務永久保證。腳本在根目錄 `spikes/`、原始輸出在 `spikes/out/`；較新的整合與評估證據由 [開發指南](development.md) 導覽。若實測推翻設計假設，須修正假設並記錄證據。
+以下保留開發時的觀測與腳本，條件與樣本數都只適用於當次實驗，不視為服務永久保證。腳本與原始輸出已歸檔於 `spikes/`、`spikes/out/`，查詢方式見 [歷史索引](history.md)；較新的整合與評估證據由 [開發指南](development.md) 導覽。若實測推翻設計假設，須修正假設並記錄證據。
 
 - **Ollama Cloud 會忽略 `num_ctx`。** 送 4K tokens 的 prompt、設 `num_ctx=1024`，結果 4,083 tokens 全部照收。10K 限制只能靠我們的程式守住。
 - **`num_predict` 包含思考過程。** 設 `think="high"`、`num_predict=200`，200 tokens 全被思考用掉，content 是空的，`done_reason="length"`。預設改用 `think="low"`；只要 `done_reason="length"`，就視為失敗（見「失敗處理與串流狀態」）。
@@ -178,7 +178,7 @@ Budget guard 只負責攔截超額。把內容安排到放得下，是上游的�
   - 每次跑完，把報告寫到 `eval/reports/`，內容包含每條 fact 是否通過、每次呼叫的 token 用量和延遲。預設每題跑 1 次，可以用參數改成跑 3 次，看通過率。
   - 交付的驗收報告每題跑 3 次，列出每條 fact 的通過率與失敗原因；forbidden 類錯誤結論列為已知缺陷，不阻擋交付。品質調整有時間上限，到時就照實報告當下結果。
 
-以下是驗收意圖摘要；完整案例與實際檢查定義以 [golden_facts.py](../eval/golden_facts.py)、[second_document.py](../eval/second_document.py) 為準。設計要求不等同於全部已通過；原始通過率及已知判定限制見 [評估結論](../eval/reports/issue11-correction/conclusions.md)。
+以下是驗收意圖摘要；完整案例與實際檢查定義以 [golden_facts.py](../eval/golden_facts.py)、[second_document.py](../eval/second_document.py) 為準。設計要求不等同於全部已通過；原始通過率及已知判定限制見 [評估結論](../eval/results/README.md)。
 
 - **Q1** 摘要要涵蓋：問題動機、graph-based indexing、dual-level retrieval、增量更新、實驗設定與結果、結論。
 - **Q2** 比較要涵蓋：檢索方式（GraphRAG 用 community 遍歷，LightRAG 用 dual-level keyword）、成本（GraphRAG 檢索約 610×1,000 tokens，LightRAG < 100 tokens 且只需 1 次 API call）、增量更新（GraphRAG 要重建 community）、Table 1 的勝率、Table 3 的 case study。

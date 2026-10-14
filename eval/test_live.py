@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import OllamaLLM
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_adapter import OllamaLLM
 
 from .checks import check_fact
 from .golden_facts import LIGHTRAG_CASES, NOT_ALL_BEST, router_cases
@@ -42,7 +42,7 @@ async def test_golden_facts_live(pytestconfig):
             "LLM": "gpt-oss:120b-cloud",
             "Embedder": "bge-m3",
             "Execution": "Application.upload_document / Application.ask; Gateway judge calls",
-            "Router case source": "chat_document.router_regression.CASES (#06 canonical 12 cases)",
+            "Router case source": "eval.router_cases.CASES (#06 canonical 12 cases)",
         },
         progress=print,
     )

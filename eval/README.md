@@ -1,108 +1,64 @@
-# Golden Facts evaluation
+# 回答品質評估
 
-中文操作入口見 [開發與評估指南](../docs/development.md)。較新的 N=3 評估與失敗分析見 [issue11-correction 結論](reports/issue11-correction/conclusions.md)；下方 baseline 名稱描述各開發階段，不代表目前所有程式版本都已重新評估。
+這裡量測真實模型回答，與 `tests/` 的程式回歸分開。入口統一使用 pytest；需要本地 Ollama、bge-m3、雲端模型權限，以及 `bash scripts/fetch_data.sh` 下載的文件。
 
-Run the application operations and Judge with local Ollama (`bge-m3`) and
-`gpt-oss:120b-cloud`:
-
-```sh
-uv run pytest eval -m eval -s
-```
-
-This uploads `data/lightrag.pdf` and asks Q1–Q3, a three-sentence Chinese Global summary, a Chinese cost question, a
-Synthesis limitations question, three unanswerable questions and the 12 Router
-regression questions. Reports go to `eval/reports/` before asserting the Golden
-Facts result. Default `uv run pytest` collects only `tests/unit/`; use `uv run pytest tests eval` for all non-cloud regressions.
-Two real-Judge semantic probes are reported separately and never affect the
-Golden Facts PASS/FAIL or its per-fact rates.
+## 怎麼跑
 
 ```sh
-uv run pytest eval -m eval -s --eval-repeats 3
-uv run pytest eval -m eval -s --eval-cases Q3 --eval-label ablation-experiment
+# LightRAG 的 Q1–Q3，每題三次
+uv run --frozen pytest eval -m eval -s --eval-cases Q1,Q2,Q3 --eval-repeats 3
+
+# 第二份長文件：數字題與摘要題
+uv run --frozen pytest eval -m eval -s --eval-cases SECOND_NUMBER,SECOND_SUMMARY --eval-repeats 3
+
+# Router 的既有與泛化題
+uv run --frozen pytest eval/test_router_live.py -m eval -s
 ```
 
-Options: `--eval-document PATH`, `--eval-report PATH`, `--eval-label NAME`,
-`--eval-cases Q1,Q2,Q3`, `--eval-repeats N` (positive integer, default 1).
-`--eval-record-only` saves failures without requiring all facts to pass; the
-report still says FAIL. It does not certify answer quality.
+不指定 `--eval-cases` 時，`pytest eval -m eval` 執行全部三個 live 入口。預設 `pytest` 只跑離線 unit；不會默默呼叫雲端。
 
-```sh
-uv run pytest eval -m eval -s --eval-record-only --eval-label router-provenance \
-  --eval-report eval/reports/router-provenance-baseline.md
-```
-
-The integrated harness uses #06's canonical `router_regression.CASES` directly,
-converts role/content pairs to `ConversationTurn` history, and supplies empty
-history for independent questions. Evaluation history does not change session
-history. Global uses the best-fitting complete Summary Tree level and performs no Chunk retrieval.
-Select `--eval-cases Q1,Q1_ZH_THREE_SENTENCES` for summary coverage, language and format. Git provenance falls back to `unknown` for zip
-delivery. Historical Lookup-only reports describe the earlier #01 application.
-
-Classification passes only for `PlanEvent.plan_source="router"` and the expected
-Question Type. A fallback Lookup never earns a classification pass; its fact row
-shows `FALLBACK`, and each run records `fallback_reason`. Missing provenance fails
-closed. Follow-up checks replace the old “history accepted” check: the Standalone
-Question must differ from the input and resolve the canonical referents/context.
-`rewrite_language_mismatch=True` fails the follow-up rewrite check, even when
-the visible question contains the expected terms. Reports show the flag and
-`router_standalone_question` so the raw mismatched rewrite remains reviewable.
-`router_regression.FOLLOW_UP_STANDALONE_TERMS` defines case 11's LightRAG retrieval
-cost and case 12's LightRAG/GraphRAG comparison. Report headers state this policy.
-
-`GoldenFact` rejects numeric `contains` definitions. Term matching normalizes
-Unicode hyphens, whitespace, full-width characters and percent spacing. Judge
-excerpts must occur in the answer after normalizing typographic hyphens and
-whitespace (including markdown hard breaks, U+202F and NBSP); words, case,
-punctuation and Citation markers remain required. Invented text still fails.
-Numeric facts require model/variant, dataset, metric and value context plus
-variant/value association in the same clause/row or corresponding table column.
-Full `LightRAG` does not match `LightRAG-High`. The Judge checks meaning and
-comparison direction. Variant anchors accept standalone `-Low`/`-Origin`,
-compound `LightRAG-Low` (including Unicode hyphens), and spaced `LightRAG Low`
-or `LightRAG -Low`. Integer percentages may omit `.0` (`60%` equals `60.0%`).
-Table 1 is checked separately for each dataset. Q3 requires a used Citation
-resolving to the matching Table Chunk when `kind="table"` / `table_label`
-metadata is available. Until #03 supplies that metadata, it falls back to a
-Chunk on p.8 or containing `Table 2`; this fallback does not prove table structure.
-
-The COST fact fails closed on shorthand or omitted terminology: its excerpt must
-include the numeric anchor `610` (as in `610 × 1,000` or `610,000`) and literal
-`API`. Equivalent `610k`/`61萬` or “one call”/“一次呼叫” without `API` currently
-fail the deterministic anchors even if the Judge recognizes the correct meaning.
-
-Forbidden claims fail only when asserted; negations and quotations of the wrong
-claim do not count. Judge JSON, transport or truncation failures fail closed.
-BudgetExceeded is labeled `HARNESS_BUG` (an upstream arrangement bug), separate
-from ordinary answer-quality failure. Fixed refusals are checked deterministically
-against `policy.FIXED_REFUSALS`, tolerating one final period/。 and rejecting extra
-content. They never call a Judge.
-
-`RecordingGateway` captures all LLM traces, including ingestion, Router, retries,
-answers and Judges. Reports include estimated/actual prompt tokens, eval_count,
-output reservation, Context Budget, think, latency and done_reason for every call.
-Each question separately reports ask latency (embedding/LLM/application), Judge
-call latency and total evaluation latency. Only final events supply answers;
-provisional text from failed operations is never judged.
-
-For #10, define `EvaluationCase`/`GoldenFact` values and call
-`run_evaluation(application, gateway, document_path, cases, repeats=N)`, then
-`write_report(report, path)`. Share the `RecordingGateway` between the application
-and Judge so all calls are accounted for.
-
-## Report provenance
-
-`router-provenance-baseline.md` is the historical #06 baseline for Q1–Q3 and the 12
-canonical Router cases, collected after review request #1785 and integration
-of #06's provenance/parser fix from committed source with clean provenance. Every earlier
-report below is **superseded** and preserved only as measurement/history evidence:
-
-| Report | Why superseded |
+| 選項 | 用途 |
 |---|---|
-| lookup-skeleton-initial.md | Language/refusal properties were treated as self-asserted facts. |
-| lookup-skeleton-property-intermediate.md | Judge lacked the exact expected refusal sentence. |
-| lookup-skeleton-refusal-intermediate.md | Judge falsely treated an exact refusal as a forbidden assertion. |
-| lookup-skeleton-prereview.md | Pre-review whitespace check, overly broad Table 1 fact and other findings. |
-| lookup-skeleton-baseline.md | Clean post-#1370 Lookup-only measurement; predates compound-variant fix and #06 integration. |
-| router-integrated-baseline.md | Pre-provenance #06 measurement incorrectly credited fallback Lookup and only checked history acceptance. |
-| lookup-q3-n3.md | N=3 evidence at the original harness checkpoint; includes one failed truncated Judge call. |
-| refusal-checker-probe.md | Older successful real refusal probe; refusals now use deterministic checks. |
+| `--eval-cases` | 逗號分隔的 case ID；未知 ID 直接報錯 |
+| `--eval-repeats` | 每題次數，預設 1 |
+| `--eval-document` | 第一份評估 PDF 的替代路徑；第二文件入口仍使用固定版本 |
+| `--eval-report` | 輸出報告路徑；同時跑多個入口時勿共用這個選項，以免覆寫 |
+| `--eval-label` | 實驗名稱 |
+| `--eval-record-only` | 功能失敗仍保存報告、不以 assert 阻止測量；報告中的 FAIL 不改判 |
+
+新結果預設寫到已忽略的 `eval/reports/`，確認有保留價值後再挑選到 `eval/results/`。不要覆寫既有最終報告。
+
+## 檔案分工
+
+| 檔案 | 功能 |
+|---|---|
+| `golden_facts.py`、`second_document.py`、`router_cases.py` | 評估問題、Golden Facts 與 Router 回歸題 |
+| `models.py`、`checks.py`、`router_checks.py` | 評分資料、Judge／逐字證據／數字關聯／繁簡檢查 |
+| `runner.py` | 上傳、提問、評分及逐次 LLM Trace；共用 `run_evaluation()` |
+| `report.py`、`provenance.py` | 報告格式與 Git 來源版本；zip 無 Git 時標 unknown |
+| `test_live.py`、`test_second_document_live.py`、`test_router_live.py` | 三個明確選用的真實模型入口 |
+| `pytest_plugin.py` | CLI 選項與案例篩選 |
+| `tune.py` | 共用的檢索參數、回答 think 與最終評估比較 |
+| `fakes.py` | 非產品用的劇本模型，供 tests 與受控檢索實驗使用 |
+| `results/` | 精選最後測量及失敗分析；[先讀摘要](results/README.md) |
+
+## 評分契約與限制
+
+- `contains` 只查專有名詞，不能拿來檢查數字；統一連字號與空白後比對。
+- `judge` 必須摘錄回答中實際存在的證據。數字另核對變體、資料集、指標、數值及關聯；無逐字證據不給分。
+- `forbidden` 只將明確斷言錯誤結論判為失敗，否定或引用不算。固定拒答用確定性檢查，不呼叫 Judge。
+- Router 只有 `plan_source=router` 才能通過；fallback Lookup 不算分類成功。追問須改寫並解決指涉。
+- 只評估成功 FinalEvent，截斷的暫定內容不評分。token、延遲、重試與 Judge 呼叫都保留。
+- 功能通過與 Golden Facts 品質分開報告。Judge 仍可能因非逐字摘錄或嚴格數字綁定而誤判；人工比對不覆寫原始分數。
+- 成本題的確定性 anchors 仍要求 `610` 與 `API`；`610k`、`61萬` 或只寫「一次呼叫」可能被判失敗。
+
+## 調參（按需）
+
+```sh
+uv run --frozen python -m eval.tune retrieval --output eval/reports/experiment
+uv run --frozen python -m eval.tune retrieval-controlled --output eval/reports/experiment
+uv run --frozen python -m eval.tune answers --output eval/reports/experiment
+uv run --frozen python -m eval.tune final --output eval/reports/experiment
+```
+
+為每次實驗使用新的目錄；controlled 階段讀取同目錄 retrieval 階段記錄的 Router 計畫與相容的真實摘要快取。檢索重播的答案是替身，回傳結果排名不代表真實回答品質；answers／final 才呼叫真實模型。歷史並行量測與單次表格實驗已歸檔，不維護第二套入口。

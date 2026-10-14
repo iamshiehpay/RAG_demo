@@ -20,3 +20,6 @@ frontend/node_modules/
 
 # Local delivery archives (keep frontend/dist tracked)
 /dist/
+
+# New experiment output; curate final evidence under eval/results/
+/eval/reports/

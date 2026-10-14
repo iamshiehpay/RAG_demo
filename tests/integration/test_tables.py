@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
 from tests.support import SummaryScriptedLLM as ScriptedLLM
 
 # Transcribed from the fixed LightRAG Table 2, in printed row/column order.
@@ -164,7 +164,7 @@ async def test_uncertain_table_retains_source_text_and_answer_limitation_rule():
 
 
 async def test_large_table_splits_only_between_rows_and_repeats_caption_and_headers():
-    from chat_document.tokens import count_tokens
+    from app.tokens import count_tokens
 
     app = Application(OllamaEmbedder(), LLMGateway(ScriptedLLM([])))
     events = [
@@ -187,8 +187,8 @@ async def test_large_table_splits_only_between_rows_and_repeats_caption_and_head
 
 
 async def test_q3_prompt_includes_table2_and_linked_ablation_discussion_in_document_order():
-    from chat_document.settings import RetrievalSettings
-    from chat_document.tokens import count_tokens
+    from app.settings import RetrievalSettings
+    from app.tokens import count_tokens
 
     llm = ScriptedLLM(["not JSON", "The comparisons use NaiveRAG. [C1]"])
     app = Application(OllamaEmbedder(), LLMGateway(llm), settings=RetrievalSettings(lookup_top_k=1))
@@ -221,7 +221,7 @@ async def test_q3_prompt_includes_table2_and_linked_ablation_discussion_in_docum
 
 
 async def test_lookup_budget_drops_are_counted_in_retrieval_and_trace():
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
 
     llm = ScriptedLLM(["not JSON", "Supported evidence [C1]."])
     app = Application(
@@ -241,7 +241,7 @@ async def test_lookup_budget_drops_are_counted_in_retrieval_and_trace():
 async def test_synthesis_small_evidence_budget_drops_are_counted():
     import pymupdf
 
-    from chat_document.settings import RetrievalSettings
+    from app.settings import RetrievalSettings
     from tests.support import router_script
 
     with pymupdf.open() as pdf:
@@ -404,7 +404,7 @@ async def test_math_italic_artifact_is_cleaned_in_table_cells_without_changing_i
 async def test_oversized_unreconstructed_physical_line_is_split_without_losing_text():
     import pymupdf
 
-    from chat_document.tokens import count_tokens
+    from app.tokens import count_tokens
 
     raw_line = "123456789 " * 1100
     with pymupdf.open() as pdf:
@@ -444,7 +444,7 @@ async def test_virtual_sections_keep_duplicate_labels_attached_to_their_own_sour
 
 
 async def test_table_and_embedder_source_changes_invalidate_upload_cache(tmp_path, monkeypatch):
-    from chat_document.cache import ProcessingCache, _pipeline_version
+    from app.cache import ProcessingCache, _pipeline_version
 
     data = layout_pdf("centred")
     initial_version = _pipeline_version()
@@ -464,7 +464,7 @@ async def test_table_and_embedder_source_changes_invalidate_upload_cache(tmp_pat
 
             def changed_source(path, module=module):
                 source = read_bytes(path)
-                if path.name == module and path.parent.name == "chat_document":
+                if path.name == module and path.parent.name == "app":
                     source += b"\n# changed processing source\n"
                 return source
 

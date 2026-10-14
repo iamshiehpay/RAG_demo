@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from chat_document.events import EVENT_ADAPTER
+from app.events import EVENT_ADAPTER
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "frontend" / "src" / "events.ts"

@@ -7,8 +7,8 @@ these tests prove source parsing/provenance, never generated-summary acceptance.
 import pymupdf
 import pytest
 
-from chat_document.application import Application
-from chat_document.llm_gateway import LLMGateway
+from app.application import Application
+from app.llm_gateway import LLMGateway
 from tests.support import DeterministicEmbedder, SummaryScriptedLLM
 
 
@@ -93,8 +93,6 @@ async def test_numeric_cell_before_next_table_row_cannot_open_a_section():
     assert table.table_rows == [["I1", "3", "8"], ["I2", "1", "1"], ["I3", "2", "3"]]
 
 
-
-
 async def test_letter_prefixed_appendix_table_is_typed_and_keeps_uncertain_numeric_rows():
     with pymupdf.open() as pdf:
         page = pdf.new_page()
@@ -176,10 +174,6 @@ async def test_continued_column_table_does_not_absorb_neighboring_body_prose():
     assert any(c.kind == "table" and "beta" in c.text for c in app.document.chunks)
 
 
-
-
-
-
 @pytest.mark.parametrize("fragmented_edges", [False, True])
 async def test_captioned_single_cell_box_keeps_raw_text_and_excludes_outside_prose(
     fragmented_edges,
@@ -213,8 +207,6 @@ async def test_captioned_single_cell_box_keeps_raw_text_and_excludes_outside_pro
     assert any(c.kind == "text" and "OUTSIDE_BODY" in c.text for c in app.document.chunks)
 
 
-
-
 @pytest.mark.parametrize("missing_cell", [False, True])
 async def test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores(missing_cell):
     with pymupdf.open() as pdf:
@@ -243,8 +235,6 @@ async def test_reference_table_keeps_wrapped_model_version_out_of_numeric_scores
             ["[11]", "Alpha 1.7", "0.25", "17"],
             ["[12]", "Beta", "0.32", "19"],
         ]
-
-
 
 
 @pytest.mark.parametrize("inline", [False, True])

@@ -3,12 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from chat_document.application import Application
-from chat_document.cache import ProcessingCache
-from chat_document.embedder import OllamaEmbedder
-from chat_document.llm_adapter import ScriptedLLM
-from chat_document.llm_gateway import LLMGateway
-from chat_document.tokens import count_tokens
+from app.application import Application
+from app.cache import ProcessingCache
+from app.embedder import OllamaEmbedder
+from app.llm_gateway import LLMGateway
+from app.tokens import count_tokens
+from eval.fakes import ScriptedLLM
 from tests.support import structured_pdf, summary_pdf, summary_response
 
 
@@ -233,7 +233,7 @@ async def test_section_summary_length_target_covers_minimum_proportional_and_max
 
 
 async def test_failed_summary_replacement_keeps_previous_document_and_no_partial_cache(tmp_path):
-    from chat_document.llm_adapter import LLMFrame
+    from app.llm_adapter import LLMFrame
 
     llm = ScriptedLLM(
         [

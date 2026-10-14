@@ -6,15 +6,7 @@
 
 > 功能與回答品質分開驗證：網站可正常操作，不代表所有回答都完整或正確；已知失敗與實測結果保留在評估報告中。
 
-## 交付內容與建議閱讀順序
-
-先看本頁啟動網站，再看 [AI 協作摘要](docs/ai-collaboration.md)，其中整理三個可追溯的決策、修正與驗證案例。
-
-- **`chat-with-document.zip`**：程式碼、前端 build、測試、使用文件與精選證據；可直接依下方步驟啟動。
-- **`chat-with-document-evidence.zip`**：其餘歷史實驗、截圖與原始紀錄；執行網站不需要。兩包解壓到同一父目錄，可合併成完整資料夾。
-- **完整 Git repository**：保留全部變更歷史。zip 內的 `CHANGELOG.txt` 與 `RELEASE.json` 提供 commit 和逐檔雜湊，方便核對交付版本。
-
-建立交付包的方式見 [開發指南](docs/development.md#交付)。
+先依本頁啟動網站，再閱讀 [AI 協作摘要](docs/ai-collaboration.md) 與 [評估結果](eval/results/README.md)。主分支只保留持續使用的程式、測試與文件；完整開發歷史由 [Git 歸檔標籤](docs/history.md) 保存。
 
 ## 快速啟動
 
@@ -31,7 +23,7 @@ ollama pull bge-m3
 python3 --version
 python3 -m venv .venv
 .venv/bin/python -m pip install -e .
-.venv/bin/python -m uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8101
+.venv/bin/python -m uvicorn app.api:create_app --factory --host 127.0.0.1 --port 8101
 ```
 
 開啟 **http://127.0.0.1:8101**。Windows 請把 `.venv/bin/python` 換成 `.venv\Scripts\python.exe`。
@@ -39,7 +31,7 @@ python3 -m venv .venv
 若已安裝 [uv](https://docs.astral.sh/uv/)，可改用鎖定依賴的啟動方式：
 
 ```sh
-uv run --frozen --no-dev uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8101
+uv run --frozen --no-dev uvicorn app.api:create_app --factory --host 127.0.0.1 --port 8101
 ```
 
 - 執行網站**不需要 Node.js 或自行編譯前端**；FastAPI 直接提供已提交的 `frontend/dist/`。
@@ -81,89 +73,33 @@ bash scripts/fetch_data.sh
 
 ## 資料夾與檔案用途
 
-本 repository 同時保存「可執行網站」和「專案的開發、評估證據」。以下的「執行需要」指從完整 checkout 啟動網站，並不代表其他檔案可以從版本庫刪除。
-
-| 路徑 | 功能 | 執行需要？ |
-|---|---|---|
-| `src/chat_document/` | Python 後端、文件處理、檢索、摘要、模型呼叫與問答流程 | 是 |
-| `frontend/dist/` | 已編譯的網頁、CSS 與字型，FastAPI 直接提供 | 是；刻意提交的 build 產物 |
-| `frontend/src/` | React/TypeScript 介面原始碼 | 執行已編譯版本不需；修改介面需要 |
-| `frontend/src/fonts/` | Noto Serif TC 字型分片、CSS 與授權 | 重建前端需要；大量檔案是字型分片 |
-| `frontend/package.json`、`package-lock.json`、`vite.config.ts`、`tsconfig.json`、`index.html` | 前端依賴、建置設定及入口 | 前端開發與 build 需要 |
-| `frontend/scripts/` | 來源內容呈現的測試腳本 | 開發驗證用 |
-| `frontend/review/` | 設計基準、瀏覽器驗證腳本與截圖證據 | 開發與交付證據 |
-| `tests/unit/` | 不依賴 Ollama 的邏輯、解析與替身測試；預設 pytest 只跑這裡 | 日常快速驗證 |
-| `tests/integration/` | 上傳、檢索、摘要、HTTP、串流與失敗處理；使用本地 embedding、替身 LLM | 明確指定目錄執行；需 Ollama |
-| `tests/support.py`、`tests/data/` | 共用合成 PDF、替身與逐字 Router 回應；測試不互相 import | 開發驗證用 |
-| `eval/` | Golden Facts、Judge、Router 與回答的真實模型評估入口 | 額外執行，會呼叫雲端模型 |
-| `eval/reports/` | 原始評估結果、調參比較、通過率與失敗分析 | 交付證據，保留 |
-| `scripts/` | 下載文件、同步事件型別、調參與量測工具 | 按需使用，見下表 |
-| `spikes/`、`spikes/out/` | 早期 PDF、模型與 embedding 可行性實驗及原始輸出 | 歷史實驗證據，保留 |
-| `docs/` | 詳細設計、開發指南、ADR、AI 協作紀錄與驗證證據 | 維護與交付文件 |
-| `docs/qa/`、`docs/verification/` | 各階段驗證報告、測試輔助程式、截圖及事件紀錄 | 歷史驗證證據；不是正式伺服器入口 |
-| `.scratch/chat-with-document/` | PRD、issues 與執行紀錄 | 已追蹤的需求與工作紀錄；不是可隨手清空的暫存 |
-| `pyproject.toml`、`uv.lock` | Python 套件設定與鎖定依賴 | 是；`uv.lock` 用於可重現安裝 |
-| `conftest.py` | 註冊 pytest 的評估選項與測試設定 | 測試用 |
-| `AGENTS.md`、`CLAUDE.md` | Agent 工作限制與入口；CLAUDE 引用 AGENTS | AI 協作指引 |
-| `CONTEXT.md` | Document、Chunk、Citation 等領域術語 | 維護用，避免用詞分歧 |
-| `題目：讓 AI 跟文件對話（Chat with Document）.md`、`簡報素材.md` | 作業需求筆記與簡報素材 | 交付準備與背景證據 |
-| `data/` | 自行下載的測試 PDF | 使用測試文件時需要；PDF 不提交 |
-| `.cache/` | 文件解析、Chunk、向量與 Summary Tree 快取 | 自動建立；刪除會重跑文件處理 |
-| `.venv/`、`frontend/node_modules/` | 本機安裝的 Python、前端依賴 | 可重新安裝；不隨 zip 交付 |
-| `__pycache__/`、`.pytest_cache/`、`.ruff_cache/` | Python、pytest、ruff 的可再生快取 | 不隨 zip 交付 |
-| `dist/` | 本地交付 zip 輸出目錄（與 `frontend/dist/` 不同） | 不提交版本庫 |
-| `.lat/`、`.worktrees/` | 本機協作狀態與隔離工作區 | 不隨 zip 交付；清理前確認沒有未提交工作 |
-
-### 後端主要檔案
-
-| 檔案（位於 `src/chat_document/`） | 負責的功能 |
+| 路徑 | 用途 |
 |---|---|
-| `api.py` | FastAPI 路由、SSE 傳輸與前端靜態檔案 |
-| `application.py`、`ingestion.py` | 活動 Document、上傳處理與背景工作生命週期 |
-| `ask_graph.py` | LangGraph 提問流程：驗證 → 分流 → 準備證據 → 回答 → 定稿 |
-| `pdf_parser.py`、`tables.py`、`chunker.py` | PDF 版面與 Section 解析、表格重建、按章節切 Chunk |
-| `embedder.py`、`index.py` | 本地 embedding、dense/BM25 檢索、表格連結與相鄰 Chunk |
-| `router.py`、`context_packer.py` | 問題分流、追問改寫、Sub-query、證據容量與分批抽取 |
-| `summary_tree.py`、`summary_context.py`、`summary_selection.py` | 建立摘要樹、挑選放得下的完整摘要層、表格密集摘要的原文片段選取 |
-| `answer_generator.py`、`citation.py` | 回答串流、長度失敗重試、引用編號驗證與來源對應 |
-| `llm_adapter.py`、`llm_gateway.py`、`tokens.py` | 原生 Ollama 呼叫、共用 budget guard、token 計數；adapter 也含測試替身 |
-| `models.py`、`events.py` | 領域資料模型與前後端共用事件契約 |
-| `cache.py`、`policy.py`、`settings.py` | 文件處理快取、共用數值規則、可調參數 |
-| `router_regression.py` | Router 回歸題庫，供測試與評估共用；正式提問流程不載入 |
+| `app/` | 正式 Python 程式；API、上傳、PDF 處理、檢索、摘要與問答 |
+| `frontend/src/` | React/TypeScript 介面與 Noto Serif TC 字型分片 |
+| `frontend/dist/` | 已編譯網頁與字型；刻意提交，讓執行者不必安裝 Node.js |
+| `frontend/scripts/` | 來源文字與表格呈現測試；前端設定位於 `frontend/` 根目錄 |
+| `tests/unit/`、`tests/integration/` | 離線邏輯測試、需本地 embedding 的整合測試 |
+| `tests/support.py`、`tests/data/` | 共用合成 PDF、測試 helper 與必要回歸 fixture |
+| `eval/` | Golden Facts、Judge、真實模型評估、調參；[執行方式](eval/README.md) |
+| `eval/results/` | 精選最終評估，含原始回答、事件與逐項分數 |
+| `scripts/` | `fetch_data.sh` 下載 PDF；`generate_event_types.py` 同步前後端事件型別 |
+| `docs/` | 設計、開發指南、AI 協作、架構決策與歷史查詢方式 |
+| `pyproject.toml`、`uv.lock` | Python 套件、測試設定與鎖定依賴 |
+| `conftest.py` | pytest 分層標記與評估選項註冊 |
+| `AGENTS.md`、`CLAUDE.md`、`CONTEXT.md` | Agent 工作規則、共用入口與領域術語 |
+| `data/`、`.cache/` | 下載的 PDF、處理快取；不提交 |
+| `.venv/`、`frontend/node_modules/` | 本機依賴；不提交 |
 
-### 前端主要檔案
-
-| 檔案（位於 `frontend/src/`） | 負責的功能 |
-|---|---|
-| `main.tsx`、`App.tsx` | React 入口、頁面組合與上傳/對話狀態 |
-| `DocumentPane.tsx`、`Composer.tsx`、`Shortcuts.tsx` | 文件操作、問題輸入與範例問題 |
-| `Answer.tsx`、`SourcePane.tsx`、`SourceContent.tsx` | 回答 Markdown、可點 Citation、來源文字與表格 |
-| `AnswerProcess.tsx` | 處理階段、檢索與模型 token Trace |
-| `sse.ts`、`events.ts`、`models.ts` | 串流解析、由後端產生的事件型別及前端資料型別 |
-| `Shared.tsx`、`styles.css` | 共用介面元件與版面樣式 |
-
-### 工具腳本
-
-| 檔案（位於 `scripts/`） | 功能 |
-|---|---|
-| `fetch_data.sh` | 下載固定版本 PDF 並驗證雜湊 |
-| `generate_event_types.py` | 由後端事件模型產生或檢查 `frontend/src/events.ts` |
-| `tune.py` | 檢索參數比較、回答比較與最終多次評估 |
-| `measure_summary_concurrency.py` | 量測摘要呼叫的並行能力與延遲 |
-| `measure_table_reading.py` | 量測表格閱讀與回答表現 |
-| `package_release.py` | 從 Git HEAD 產生程式包與補充證據包，不讀取未提交內容 |
-
-**整理原則：** 可再生的安裝環境與快取不放進交付 zip；正式原始碼、前端 dist、測試與實驗證據保留。`frontend/src/` 與 `frontend/dist/` 分別是原始碼及可執行產物，不是應刪除的重複；`spikes/` 也不能直接當作死碼。若要精簡正式程式，應另外確認 import、入口與回歸覆蓋，再逐項調整。
+後端各模組的責任與兩條執行路徑見 [程式導覽](docs/development.md#程式導覽)。原始碼與前端 build 都需要保留；字型分片是實際資產。過時的 issue、spikes、中間報告與截圖已移至 Git 歷史，不另建立 archive 目錄。
 
 ## 評估結果與已知限制
 
-- [修正版評估結論](eval/reports/issue11-correction/conclusions.md)：N=3 原始通過率、方法限制與失敗分析；先前 `issue11/` 報告仍保留為歷史。
-- [LangGraph 整合驗證](docs/verification/ticket-14/integration.md)：該版本 335 項測試通過、3 項 live eval 未執行；這是當次整合證據，不是每次文件修改後重新跑的結果。
-- [A9 診斷結果](docs/verification/ticket-13/d22/probe/final-report.md)：限制題仍可能拒答或漏答；本輪未修復。
+[最終評估摘要](eval/results/README.md) 保留 N=3 的原始通過率、回答錯誤與 Judge 限制；這些是當時版本的測量，本次結構重構沒有重新評分。功能回歸另見 [驗證摘要](docs/validation.md)。
 
-目前仍可能漏掉重點、缺少逐論點引用、讀錯比較方向，或未完全遵循繁簡中文。Judge 與數字判定也可能誤判，原始分數和人工比對分開保存。混合字型標題與無法可靠重建的表格仍有解析限制，不能把「編號有效」等同「論點有完整根據」。
+目前仍可能漏答、缺少逐論點引用、讀錯比較方向或未完全遵循繁簡中文。A9 限制題的拒答／漏答仍列為已知缺陷。Judge 也可能誤判；不能把「引用編號有效」等同「論點有完整根據」。
 
-範圍為本機單文件、文字 PDF；不支援 OCR、Docker、雲端部署或對話歷史摘要。LangGraph 僅做提問編排，PDF 解析、切塊與檢索仍自行實作，未啟用 checkpoint persistence 或自主 agent loop。
+範圍為本機單文件、文字 PDF，不支援 OCR、多使用者或對話歷史持久化。LangGraph 僅做提問編排，PDF 解析、切塊與檢索自行實作，未啟用 checkpoint persistence。
 
 ## 繼續開發
 
