@@ -319,3 +319,7 @@ D01–D17與D19–D21均有對應真人答覆。D21本輪角色皆GPT6.1 medium�
 - D21介面7d3794a已ff-only整合，兩軸GPT6.1 medium限定Review零finding。Main讀完整報告／來源diff／桌面與窄螢幕圖片，獨立新舊版均發生來源Escape後Chromium停滯，保留FAIL與D14人工情境，不當成本delta回歸或全UI通過。A9純證據b0b7710一併保存，14calls最高7741，沒有任何實驗產品改動。Main完整測試接續；尚不宣告最終人工QA完成。
 
 - D21整合驗證完成：Main fd1034f，完整327PASS／3eval deselected／zeroSKIP／269.93s／exit0。Main完整核對log、正確Python/import及固定PDF；原8101提供同版index／JS／CSS／字型HTTP200，沒有重啟後端。D9、D12–D14人工複驗放行，A9與窄螢幕既有FAIL仍保留。自有測試目錄與程序清理，角色收尾，worktree因明列未完人工／A9追查保留。
+
+- D22真人已直接核對（msg_01a13850，02:48:51Z）：要求快速並行驗證A9主體／原文觀察／限定條件，先忽略窄螢幕。新gina真實實驗與muko獨立判讀，actualGPT6.1 medium/wswrite/onrequest已Main核對並放行；最多8次產品模型呼叫，來源／順序／題目／設定凍結，不改產品或部署。既有D21FAIL保留。
+
+- D22診斷完成：1f0fd2d純證據已核對並整合，7次新gpt-oss呼叫均stop、零retry，最高預估7262／provider6610。完整／局部的中立抽取與原回答對照、支持／缺失控制均由獨立muko按原文判讀；局部抽取語意恢復不等於回答正確。沒有通過完整抽取的候選門檻，沒有產品改動／部署。結果見ticket-13/d22/probe/final-report.md與assessment/report.md。窄螢幕依真人D22先擱置；A9仍未解。兩個角色工作結束、無自有服務／暫存，原worktree與快取由Main保管。
