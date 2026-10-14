@@ -106,4 +106,4 @@ Application 與 eval 共用 `RetrievalSettings`；固定上限見 `app/policy.py
 git archive --format=zip --prefix=chat-with-document/ --output=../chat-with-document.zip HEAD
 ```
 
-只包含已提交內容，不含 `.git`、安裝環境、PDF 或本地快取。README、原始碼、前端 build、必要測試、最終結果與 AI 協作摘要都在主分支；完整歷史查詢方式見 [history.md](history.md)。交付完整 repository 時也要帶上歸檔標籤。這些命令不會寄信或邀請協作者。
+只包含已提交內容，不含 `.git`、安裝環境、PDF 或本地快取。README、原始碼、前端 build、必要測試、最終結果與 AI log 都在主分支；完整歷史查詢方式見 [history.md](history.md)。交付完整 repository 時也要帶上歸檔標籤。這些命令不會寄信或邀請協作者。

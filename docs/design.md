@@ -1,10 +1,10 @@
 # 設計規格與實測依據
 
-這份文件承接原 AGENTS.md 的詳細設計規則，供修改對應功能時查閱；常駐限制仍見 [AGENTS.md](../AGENTS.md)，術語見 [CONTEXT.md](../CONTEXT.md)。路徑寫在行內程式碼時，以 repository 根目錄為起點。
+這份文件記錄處理規則，供修改對應功能時查閱。路徑寫在行內程式碼時，以 repository 根目錄為起點。
 
 規格描述預期行為，**不代表所有模型回答都已達標**。未附引用的句子目前不自動標記，A9 的限制題仍是已知缺陷。正式數值由 [policy.py](../app/policy.py)、[settings.py](../app/settings.py) 與 [llm_gateway.py](../app/llm_gateway.py) 實作；變更決策時同步更新相關文件與測試。
 
-提問編排已改用 LangGraph，僅限 request-scoped StateGraph，不增加 checkpoint persistence、agent loop 或框架檢索器。責任與取消契約見 [LangGraph ADR](adr/2026-10-14-langgraph-ask.md)。
+提問編排已改用 LangGraph，僅限 request-scoped StateGraph，不增加 checkpoint persistence、agent loop 或框架檢索器。執行路徑見 [開發指南](development.md#程式導覽)，取消與文件替換行為由 `tests/integration/test_ask_stream_lifecycle.py` 驗證。
 
 ## 已定決策
 

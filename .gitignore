@@ -1,3 +1,9 @@
+# Local-only project guidance
+/AGENTS.md
+/CONTEXT.md
+/docs/adr/2026-10-14-langgraph-ask.md
+/docs/ai-collaboration.md
+
 # Company-internal slides — never commit
 AI_Engineer_Job_intro_assignment_v4.pdf
 
