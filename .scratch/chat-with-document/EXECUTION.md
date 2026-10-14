@@ -2,7 +2,7 @@
 
 Status: in-progress
 
-依據：`PRD.md`（ready-for-agent）、`issues/01`～`13`、`AGENTS.md`（數值的唯一來源）、`CONTEXT.md`（術語）。
+依據：`PRD.md`（ready-for-agent）、`issues/01`～`14`、`AGENTS.md`（數值的唯一來源）、`CONTEXT.md`（術語）。
 需求與 Spec 已由使用者確認，本輪略過討論與重寫 Spec，只依既有 issues 推進。
 
 **現行驗收／流程：D05（2026-10-13 15:43 真人核准，Main直接核對原對話）。** #10品質調整到17:45；#11調參＋最終eval時限為18:33:01–21:33:01（已正式開工）。Q1–Q3與第二份文件每題N=3、報告每fact通過率與失敗原因，含forbidden的品質缺陷不阻擋交付。10K、Citation、固定拒答、確定性測試、獨立Review維持。剩餘QA只在#10合併後及交付前；改查commit與測試，不逐檔byte/hash比對；新證據保留結論與最終run，既有歷史保留。下方歷史嚴格品質gate／每trial保存／byte比對要求均以D05覆蓋。
@@ -16,7 +16,7 @@ Status: in-progress
 |---|---|
 | Orchestrator | Codex `gpt-6-astra` high（HCOM `nova`）；本 session turn_context 已核對 workspace-write / on-request |
 | Implementer | D21現行：Codex `gpt-6.1-sol` medium，透過HCOM、workspace-write/on-request；歷史各票保留原設定 |
-| Reviewer | D21現行：Codex `gpt-6.1-sol` medium，獨立context，workspace-write/on-request；禁止Claude，歷史Review保留原設定 |
+| Reviewer | D24現行：Codex `gpt-6-luna` max／Fast（service tier priority），獨立context，workspace-write/on-request；啟動後核對actual，禁止Claude |
 | QA | D09現行：最終網站驗收由使用者依清單操作；不另派Codex QA |
 
 整合分支：`main`。每票在 `.worktrees/<NN>-<slug>/`、分支 `lat/<NN>-<slug>` 開發；合併前 rebase 到最新 `main`，以 `--ff-only` 合併。
@@ -38,6 +38,7 @@ Status: in-progress
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL；D14 B交#13有界修正） |
 | 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（D21已審7d3794a整合；Main fd1034f完整327PASS、8101提供新UI；D9／D12–D14待人工，既有窄螢幕停滯FAIL保留） |
 | 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | wontfix（D23使用者核准本輪凍結目前後端、A9保留已知缺陷；D21/D22證據與舊9715538未採用狀態保留） |
+| 14 | LangGraph提問流程 | 現有Main5f5e35f | W8 | application/newgraph/tests/deps/README；Main獨占規範與tracker | in progress（已審24fba26；335PASS，真實smoke與最終修正版本明列；Luna max/Fast初審＋限定複審完成，已ff整合64b4f3d，待Main完整測試／更新8101） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -49,7 +50,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9列已知缺陷，停止本輪修復；D18結束為舊9715538保留不採用，不接受其中新增錯誤。快捷題已換成資料集題並重新產生dist，本次tests／live／browser／HTTP／Review均依使用者明確要求不執行，由使用者操作。D22窄螢幕問題先擱置，歷史FAIL保留。LangGraph只進入討論，未核准引入或重構。
+D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9列已知缺陷，停止本輪修復；D18結束為舊9715538保留不採用，不接受其中新增錯誤。快捷題已換成資料集題並重新產生dist，本次tests／live／browser／HTTP／Review均依使用者明確要求不執行，由使用者操作。D22窄螢幕問題先擱置，歷史FAIL保留。D24已核准LangGraph僅遷移提問流程，#14執行中；本次正常回歸／真實smoke／獨立Review及整合驗證照常。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -327,3 +328,9 @@ D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9
 - D23真人msg_01a13862明確核准最小快捷題替換，並說「不用驗證，我自己驗證」。委派已核對GPT6.1 medium rose，只改Shortcuts與Vite重建dist；tests／live／browser／HTTP／獨立Review／整合suite本次明確不執行，不再套舊流程攔阻。A9凍結列已知缺陷，#13本輪wontfix；D18結束為舊候選不採用。LangGraph只討論，尚未引入或實作。
 
 - D23最小修改完成：rose將快捷題改成「這篇論文使用哪些資料集進行實驗？」；Vite build成功（690ms），重建dist。Main本機缺react-markdown，依原lockfile npm ci恢復依賴後完成artifact生成，沒有依賴檔改動。所有驗證按真人要求NOT_EXECUTED，不宣稱新題回答或引用PASS；既有服務讀取更新的dist，未做HTTP／瀏覽器檢查。
+
+- D24：真人msg_01a13877（03:32:23Z）核准直接LangGraph ask編排遷移，不做prototype。已建#14與隔離worktree，mira實作／rumi查官方API，兩個actualGPT6.1 medium/wswrite/onrequest直接核對，沿用既有流程map。Reviewer改gpt-6-luna max/Fast；本機modelscache確認max與priority→Fast，actual待各Review啟動核對。上傳／parser／chunking／retrieval／prompt／model／guard／frontend保留；D23免驗證僅快捷題，不覆蓋本次回歸/smoke/Review/整合。
+
+- #14固定候選d455f50完成333確定性測試，20次小型真實smoke守10K（最後取消修正另有確定性證據，來源版本明列）。兩個獨立actual Luna max/Fast Review已完整讀取：Standards無finding；Spec指出graph延後validate可能在換文件完成後使用先前snapshot。Main放行同一實作者做最小request-start readiness修正與公開回歸；新候選需fresh限定雙軸複審，尚未合併或更新8101。
+
+- #14已公告後ff-only整合64b4f3d（source24fba26）；Main从Git核對四份文件尾提交、clean、產品／tests／deps與已審版本相同，完整335PASS與四份Review均已讀。AGENTS受限LangGraph例外、ADR、Issue14、ai-log與人工F表隨本次checkpoint保存；接續隔離Main環境的一次完整suite，既有8101暫不更動。

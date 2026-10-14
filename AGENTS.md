@@ -15,7 +15,7 @@
 
 ## 硬限制
 
-1. **LLM 只做 text→text。** PDF 解析、切塊、檢索都用基礎函式庫自己寫（PyMuPDF、tiktoken、numpy、BM25）。這三件事正是題目要考的，所以不引入 LangChain、LlamaIndex 或 LightRAG 套件。
+1. **LLM 只做 text→text。** PDF 解析、切塊、檢索都用基礎函式庫自己寫（PyMuPDF、tiktoken、numpy、BM25）。這三件事正是題目要考的，所以不使用 LangChain、LlamaIndex 或 LightRAG 套件代替它們。2026-10-14 已核准 LangGraph 僅編排提問流程（含必要轉依賴）；仍沿用原生 Ollama 與同一 LLMGateway，不使用框架的 loader、retriever 或 LLM wrapper。範圍見 `docs/adr/2026-10-14-langgraph-ask.md`。
 2. **每次 LLM 呼叫都要守住 Context Budget：`prompt tokens + num_predict ≤ 10,000`。** gpt-oss 的思考過程也算在 `num_predict` 裡。所有呼叫都經過同一個 budget guard，超過就 raise，不靜默截斷。
 3. **回答要有根據。** 每個論點都附 Citation（Section + 頁碼）；文件裡沒有的內容，回答「文件中未提及」。
 
