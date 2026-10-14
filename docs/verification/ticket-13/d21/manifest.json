@@ -1,6 +1,9 @@
 {
   "baseline": "58586f786bc507c1b8e1d933974e1e4eb7c46bf6",
-  "status": "diagnosis; repair unproven; source restored",
+  "status": "final evidence-only diagnosis; A9 unresolved; product source restored",
+  "actual_provider_calls": 14,
+  "max_estimated_reserved_tokens": 7741,
+  "max_reported_used_tokens": 5017,
   "files": [
     {
       "path": "docs/verification/ticket-13/d21/assessment.md",
@@ -26,6 +29,11 @@
       "path": "docs/verification/ticket-13/d21/feedback.py",
       "sha256": "cbeb7f5db450a7c1941ba57a3e6780f790ce5eb99c194c051deb293c6e6f203c",
       "bytes": 8691
+    },
+    {
+      "path": "docs/verification/ticket-13/d21/final-report.md",
+      "sha256": "fcf9ae314b9334c2e415e4db11470749550e3a09891425dee41b88255f6b61d3",
+      "bytes": 5197
     },
     {
       "path": "docs/verification/ticket-13/d21/history-counterfactual.json",
