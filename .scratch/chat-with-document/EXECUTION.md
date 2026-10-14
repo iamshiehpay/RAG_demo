@@ -36,8 +36,8 @@ Status: in-progress
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | done（ca66429＋#09整合3432aa09；Review APPROVE；QA265tests／R01–R06複驗PASS；品質仍#11）|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | done（3bb0c64／Main7cf9185；限定Review兩軸PASS／整合316PASS／獨立QA功能PASS；N3品質FAIL與已知限制按D05/D06保留） |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL；D14 B交#13有界修正） |
-| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（ac1be36已ff-only整合；修正版browser75PASS／fresh雙軸APPROVE；Main整合327PASS／zeroSKIP，HTTP200，人工D8–D11已放行待回覆） |
-| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | needs-info（最終9715538／production4e647b0：347PASS、130真實呼叫守10K；fresh兩軸Review仍有語意／Citation FAIL，D18待處置；未合併） |
+| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | in progress（D21已審7d3794a整合；概覽／標題移除與來源中文提示，接續Main完整測試；既有窄螢幕停滯保留FAIL） |
+| 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | ready-for-agent（D21純診斷b0b7710：14次真實呼叫未建立修復；產品保持58586f7，原FAIL與舊9715538未採用狀態保留） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -49,7 +49,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D01–D17皆已取得對應真人答覆。D18待答：#13有界修正與必要Review修正已完成，最終9715538仍有來源支持失敗，選擇暫不採用候選或明確接受列明缺陷後合併。D10 A不涵蓋新增錯誤。#12已整合並完成驗證，D8–D11已放行待人工操作。#13服務已恢復且130次實測完成；保留昨夜429，當前阻塞是驗收處置，不是服務或再次實作許可。
+D01–D17與D19–D21均有對應真人答覆。D21核准概覽移除、相關來源中文提示及GPT6.1 medium完成A9修正；目前新實作與獨立Review統一GPT6.1 medium，禁止Claude，D20不再阻擋。D18僅保留舊9715538候選採用／缺陷豁免待決，不阻擋D21新修正；不得重問舊A/B來攔住已核准工作。#12先前D16已整合，新增D21候選1c364b8完整327PASS，Standards通過，Spec正在分類390px來源關閉後的同頁操作停滯，尚未部署。#13新隔離分支已重現Synthesis與固定拒答，相關作者段落確實在來源內；原Global歷史原因仍未知。失敗prompt探查保留且已還原source，獨立唯讀診斷接續；沒有把非拒答或有效Citation ID當成語意通過。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -313,3 +313,7 @@ D01–D17皆已取得對應真人答覆。D18待答：#13有界修正與必要Re
 - D17 c3b47fb已Main核對完整345PASS、一次preflight及5個完整Application答案／來源、兩份新快取；129calls最高9873/10K，1個摘要length丟棄後既有重試完成。完整獨立Review仍指出A9未支持的完整方法限制、Q2未逐項引用／未揭露不確定表格、Q3整張抄表未比較reference例外。Main放行D17必要的一輪通用指令呈現／回答契約修正，非新檢索／Overview調參；保留rawFAIL，新source必須fresh scopedReview與final boundedlive。前端f8abe50完整327PASS、browser65/0，兩軸Opus5.5medium actual已核對，Review進行中。
 
 - #12 D16修正版ac1be36已ff-only整合；Main直接核對完整327PASS／3eval deselected／zeroSKIP／265.71s／exit0，Python與imports均Main工作區，兩份固定PDF存在，設定與58005fcc快取版本不變。fresh雙軸Review、75項browser結果已核對。原8101已無listener，Main以原已合併後端重新啟動，首頁／JS／CSS／字型HTTP200；D8–D11正式放行人工驗收，不標PASS。#13候選9715538未合併、D18仍待答；不追加品質迴圈。
+
+- D21直接核對真人與原提案，已解除全GPTmedium角色待決；kune原前端實際提交8e15852移除Overview／label、相關來源中文警告，fresh兩軸GPTmedium runtime已核對。gera新隔離13-a9-routing actualGPT6.1medium/wswrite/onrequest已核對並正式放行，舊soho已停止且9715538原樣保留；前後端分離所有權，UI優先整合，沒有再要求使用者確認。
+
+- D21介面7d3794a已ff-only整合，兩軸GPT6.1 medium限定Review零finding。Main讀完整報告／來源diff／桌面與窄螢幕圖片，獨立新舊版均發生來源Escape後Chromium停滯，保留FAIL與D14人工情境，不當成本delta回歸或全UI通過。A9純證據b0b7710一併保存，14calls最高7741，沒有任何實驗產品改動。Main完整測試接續；尚不宣告最終人工QA完成。

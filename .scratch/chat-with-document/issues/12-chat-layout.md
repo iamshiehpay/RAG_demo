@@ -1,6 +1,6 @@
 # #12 對話排版與中文回答過程
 
-Status: ready-for-human
+Status: ready-for-agent
 
 ## Parent
 
@@ -60,3 +60,27 @@ Main完整測試：abd7fc7上327PASS、3eval deselected、zeroSKIP、252.49s、e
 ### D16修正版整合結果
 
 ac1be36（production9a0715e）已ff-only整合；fresh兩軸限定Review APPROVE、最終browser75PASS／0FAIL。Main同版本完整測試327PASS／3eval deselected／zeroSKIP／265.71s／exit0，來源與前端保持已審版本。首頁、JS、CSS與本地字型HTTP200。詳見[followup integration](../../../docs/verification/ticket-12/followup/integration.md)。D8–D11已放行，由使用者重新整理8101操作；未回報前不勾人工驗收或標done。暫留乾淨worktree供這次人工複驗，其他自有測試暫存清理，協作角色收尾。
+
+### 2026-10-14 09:24 單一標題調整
+
+真人msg_01a13802要求移除「LightRAG 論文範例問題」可見標題，保留五個快捷題與無障礙群組名稱、送出／停用／焦點／其他文件過濾。沿用原前端所有權，以58586f7為基準、fresh Sonnet5.5 high實作及fresh Opus5.5 medium限定Review，build與必要檢查後整合。此要求不授權#13合併或後端品質新迴圈。
+
+D19（09:30，真人msg_01a13808）指定暫停原Claude UI實作者、改派gpt-6.1-sol medium。Main已核對新角色實際medium／workspace-write／on-request，接管既有修改而不丟棄成果。獨立Opus5.5 medium限定Review要求不變；原已開始的單次測試只完成現有驗證，不再讓舊角色新增修改。
+
+### Claude暫停後的固定候選
+
+真人09:38明確要求暫時不呼叫任何Claude模型（msg_01a1380f，Main直接核對）。兩個新Opus Reviewer在sourceReview前已停止。GPT接管後固定08d86f6（source119a352），完整327PASS／3eval deselected／zeroSKIP／279.91s，build相同且原38項browser結果適用；中斷的原測試不算PASS。D20待選擇將Review改回GPT6-sol high或暫緩，尚未合併；Main網站仍58586f7。
+
+### D21 已核准的概覽移除與來源中文提示
+
+真人msg_01a1381c（2026-10-14T01:52:10Z）核准移除整個可見Document Summary／文件概覽和英文警告；後端Summary Tree、Global回答與上傳摘要進度保留。Ready後仍提供快捷題與輸入框。相關不可靠Table Chunk的來源呈現（Citation及回答過程的檢索來源）顯示「此表格的行列結構辨識不完整，相關數字請核對原文。」可靠表格、一般文字及Summary不得誤加警告。
+
+- [ ] 整個可見文件概覽及快捷題可見標題移除，桌面／窄螢幕與Ready／處理中狀態正確；五題、鍵盤與其他文件篩選保留。
+- [ ] 相關來源的不可靠表格顯示核准中文提示；保留原始內容、Citation與實際限制，沒有全域警告或後端摘要變更。
+- [ ] 必要渲染／型別／事件／build、最終完整測試與fresh獨立GPT6.1 medium Review通過，再由Main整合驗證實際8101。
+
+D20已由「目前都先指派 gpt 6.1 sol medium 改，先不呼叫 claude」明確解決：全新實作與Review皆GPT6.1 medium、不同context；不再等待Claude替代選項。kune原worktree接續。UI不等A9後端調查；尚未部署不稱已完成。
+
+### D21介面整合
+
+7d3794a（已審code/test1c364b8、product8e15852）已ff-only整合。獨立Standards與Spec對D21呈現變更零finding，Main核對來源diff與圖片。390px連續兩種來源後Escape的瀏覽器停滯在新舊版本都重現，仍保留未解FAIL；沒有宣稱全部行動操作通過。接續Main一次完整測試及D9／D12–D14人工操作。A9後端未修复，不影響此UI變更範圍，亦不被豁免。

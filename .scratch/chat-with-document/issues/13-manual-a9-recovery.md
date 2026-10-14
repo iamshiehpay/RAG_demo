@@ -1,6 +1,6 @@
 # #13 來源警告、限制題與通用回答結構
 
-Status: needs-info
+Status: ready-for-agent
 
 ## Parent
 
@@ -58,3 +58,13 @@ c3b47fb完整345PASS；預檢＋既定五題與三份處理共129次真實呼叫
 最終9715538（已審79507a9、production4e647b0）已固定，Main核對clean及文件尾提交。347完整測試PASS、130真實呼叫守10K、兩份示範文件新快取與重傳完成。fresh獨立兩軸Review無新程式finding，仍有A9/Q3錯誤變體定義與來源範圍、Q3錯誤全面最佳結論／整表抄寫、作者推測被強化、Q2引用／涵蓋不足；正面警告揭露未被本輪實際引用觸發。支持／缺失題各PASS一次。
 
 完整原始結果與四份Review在候選worktree `docs/verification/ticket-13/d17/correction/`。不追加品質迴圈，不自動套用D10的舊版例外。D18待真人决定先只合併介面並保留後端候選，或接受明列限制後整合候選；未答前不合併#13。#12與其驗證不受阻。
+
+### D21 新授權：從實際服務版本修正A9
+
+真人msg_01a1381c重申限制題Global／Section固定拒答，要求完成修正，並指定目前全部GPT6.1 medium、禁用Claude。舊9715538的缺陷豁免仍未核准；保留原樣、不直接合併。新context gera從已部署58586f7建立lat/13-a9-routing，負責A9分類／history／所提供來源／回答支持的泛用診斷與必要修正，保留原始FAIL與未證實因果。
+
+先建立實際模型可判定的回饋，比較無歷史与合理追問歷史、保存實際Router和所用Summary／Chunks，不用劇本分類冒充模型重現。不寫死題目／論文／Golden Facts，不變更模型、10K、文件限定或無效ID政策；必要回歸、真實A9及無關支持／缺失題、fresh獨立GPT6.1 medium Review後才整合。#12可先交付，不等本票。D18只保留舊候選採用待決，不阻擋D21明確重新核准的修正。
+
+### D21 有界診斷結果：尚未修復
+
+最終純證據b0b7710，產品src/tests與部署基準58586f7相同。14次真實呼叫均守10K（最高預估7741），Synthesis路徑取得p8作者警語後仍拒答；非拒答探查另有範圍／變體誤述，不能當修復。獨立段落呈現假說經受控實測仍固定拒答，失敗patch原樣保留。原Global／Section原因仍未知。沒有合格產品候選，沒有做無意義的fresh上傳／fullsuite／正式產品Review，沒有放寬驗收。完整[診斷與失敗證據](../../../docs/verification/ticket-13/d21/final-report.md)隨前端整合保存；A9與D17未完成要求保持開啟。
