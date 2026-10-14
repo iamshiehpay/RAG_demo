@@ -31,4 +31,4 @@ Status: done
 
 ## Comments
 
-- 2026-10-13 nova：完成 #04。原實作 cf9c904 已整合於 4eee3d2；獨立 Review APPROVE（既有 .lat/briefs/t04-rereview-report.md）。獨立 QA nova-qa04-kilo（GPT6.1 medium，workspace-write/on-request）在整合後 d56e092 程式碼完成 5/5 AC PASS：focused 23 passed、full 192 passed/2 deselected，真 bge-m3、真實瀏覽器進度／停用狀態／快取／錯誤恢復與文件切換驗證。Main 查證 cd3e303 與 d56e092 的 src/frontend/tests/config 無差異。完整證據：[QA supplement](../../../docs/verification/ticket-04/qa/takeover-report.md)。#05 摘要／概覽相關共同驗收留在 #05，#09 定稿後上傳介面仍須回歸。
+- 2026-10-13 nova：完成 #04。原實作 cf9c904 已整合於 4eee3d2；獨立 Review APPROVE（既有 .lat/briefs/t04-rereview-report.md）。獨立 QA nova-qa04-kilo（GPT6.1 medium，workspace-write/on-request）在整合後 d56e092 程式碼完成 5/5 AC PASS：focused 23 passed、full 192 passed/2 deselected，真 bge-m3、真實瀏覽器進度／停用狀態／快取／錯誤恢復與文件切換驗證。Main 查證 cd3e303 與 d56e092 的 src/frontend/tests/config 無差異。完整證據：[QA supplement](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-04/qa/takeover-report.md)。#05 摘要／概覽相關共同驗收留在 #05，#09 定稿後上傳介面仍須回歸。

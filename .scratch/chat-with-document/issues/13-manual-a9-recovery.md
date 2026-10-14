@@ -26,7 +26,7 @@ Status: wontfix
 
 ## Evidence
 
-[有界診斷報告](../../../docs/verification/ticket-11/manual-a9/report.md)。真人核准：原Main native msg_01a135cc-b284-7333-9fd9-d4266343c55a（2026-10-13T15:06:09Z），對應D14 B提案。原拒答與警告誤歸因均保留FAIL，修正前未宣稱原因已找到。
+[有界診斷報告](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-11/manual-a9/report.md)。真人核准：原Main native msg_01a135cc-b284-7333-9fd9-d4266343c55a（2026-10-13T15:06:09Z），對應D14 B提案。原拒答與警告誤歸因均保留FAIL，修正前未宣稱原因已找到。
 
 ## Current candidate and blocker
 
@@ -67,7 +67,7 @@ c3b47fb完整345PASS；預檢＋既定五題與三份處理共129次真實呼叫
 
 ### D21 有界診斷結果：尚未修復
 
-最終純證據b0b7710，產品src/tests與部署基準58586f7相同。14次真實呼叫均守10K（最高預估7741），Synthesis路徑取得p8作者警語後仍拒答；非拒答探查另有範圍／變體誤述，不能當修復。獨立段落呈現假說經受控實測仍固定拒答，失敗patch原樣保留。原Global／Section原因仍未知。沒有合格產品候選，沒有做無意義的fresh上傳／fullsuite／正式產品Review，沒有放寬驗收。完整[診斷與失敗證據](../../../docs/verification/ticket-13/d21/final-report.md)隨前端整合保存；A9與D17未完成要求保持開啟。
+最終純證據b0b7710，產品src/tests與部署基準58586f7相同。14次真實呼叫均守10K（最高預估7741），Synthesis路徑取得p8作者警語後仍拒答；非拒答探查另有範圍／變體誤述，不能當修復。獨立段落呈現假說經受控實測仍固定拒答，失敗patch原樣保留。原Global／Section原因仍未知。沒有合格產品候選，沒有做無意義的fresh上傳／fullsuite／正式產品Review，沒有放寬驗收。完整[診斷與失敗證據](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-13/d21/final-report.md)隨前端整合保存；A9與D17未完成要求保持開啟。
 
 ### D22 快速驗證（2026-10-14）
 

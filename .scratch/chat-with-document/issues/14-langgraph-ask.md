@@ -26,6 +26,6 @@ D24使用者已確認直接遷移，不做比較prototype。基準Main5f5e35f；
 
 ## Reviewed candidate
 
-初版d455f50完成333項測試；Luna max/Fast雙軸審查指出換文件完成與graph validate的就緒競態。修正版24fba26以同步snapshot修正，公開Lookup／Global回歸原版2PASS、初版2RED，修正後targeted59PASS、完整335PASS／3eval deselected／zeroSKIP。Fresh限定Standards與Spec均無阻擋finding；非阻擋的私有欄位耦合觀察保留。完整報告見[驗證](../../../docs/verification/ticket-14/verification.md)與其review目錄。
+初版d455f50完成333項測試；Luna max/Fast雙軸審查指出換文件完成與graph validate的就緒競態。修正版24fba26以同步snapshot修正，公開Lookup／Global回歸原版2PASS、初版2RED，修正後targeted59PASS、完整335PASS／3eval deselected／zeroSKIP。Fresh限定Standards與Spec均無阻擋finding；非阻擋的私有欄位耦合觀察保留。完整報告見[驗證](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-14/verification.md)與其review目錄。
 
-兩次小型真實上傳／三種提問共20次呼叫均stop、10K內；最後取消／就緒修正使用真正graph的確定性回歸，沒有把較早的smoke說成最終source實測。prompt／模型／前端與原有品質FAIL保持。Main a5b70a0整合後335PASS／exit0，正式依賴已更新，8101由新PID3808提供；首頁／assets／字型及公開預檢通過。最終網站操作依D09由使用者執行，F1–F3已放行但尚未執行。詳見[整合報告](../../../docs/verification/ticket-14/integration.md)。
+兩次小型真實上傳／三種提問共20次呼叫均stop、10K內；最後取消／就緒修正使用真正graph的確定性回歸，沒有把較早的smoke說成最終source實測。prompt／模型／前端與原有品質FAIL保持。Main a5b70a0整合後335PASS／exit0，正式依賴已更新，8101由新PID3808提供；首頁／assets／字型及公開預檢通過。最終網站操作依D09由使用者執行，F1–F3已放行但尚未執行。詳見[整合報告](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-14/integration.md)。

@@ -1,3 +1,0 @@
-event: error
-data: {"type":"error","code":"document_not_ready","message":"Wait until Document processing is complete before asking."}
-

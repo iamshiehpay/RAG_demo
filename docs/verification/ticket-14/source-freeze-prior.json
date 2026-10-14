@@ -1,8 +1,0 @@
-{
-  "src/chat_document/application.py": "8cbd4f2989a404f38f6f67b4b66fb9c7f6490c1d0876d47e56b3de1f5807e8bc",
-  "src/chat_document/ask_graph.py": "cc898939ae8a5e772d1beec936f929522e29c451617f0da288ddfaf6bd177929",
-  "src/chat_document/answer_generator.py": "8f639e39b5e14c11f584f652d9c51533aca71e35e0f00820e4f8232eccde602a",
-  "tests/integration/test_ask_stream_lifecycle.py": "434a4597bce5d26bb2ba2faa03a7aef2fcde3b4e07cac1cb29d1927d749243cb",
-  "pyproject.toml": "ac645e9894b48e54b8ddcca83e4399777f74a77c90b884f591a2fc815c0daa53",
-  "uv.lock": "3facb26d72e5c5e3a61fce3e4f1479e8d3b24857791120c03043e33a09b44bf3"
-}

@@ -306,7 +306,7 @@ failure and integrated pass are recorded under ticket-03/post-issue02.
 - **A fixture assumption was mistaken for a source-kind expectation:** Long scripted summaries made the real backend correctly select a Group level while a browser check expected Section. Separate short and long documents now exercise both routes; the failed ledger is preserved and production routing was not changed to fit the test.
 - **Final model-output rendering needed real evidence:** The new pre-review self-check applies to the Markdown/Citation/Unicode consumer as well as the model-output producer. Independent review identified that post-annotation checks were scripted; one real gpt-oss browser smoke is required on the final renderer. Its output only proves the formats actually observed, and does not replace the final Issue11 Golden Facts gate or deterministic rare-marker regressions.
 
-- **Observed real final-renderer smoke:** On frozen `cb4f1c9a164a40243a38358e59f2ed5c126bcf7c`, actual bge-m3/OllamaLLM produced a completed Traditional Chinese three-item Markdown list with three `[S1]` Citations, U+202F/U+3000 spacing, working Section source and actual Trace. All four real gpt-oss calls ended `stop`; maximum estimated prompt plus reservation was 3,892/10,000 (actual prompt plus reservation 3,667). No Unverified or CR/CRLF was emitted, so their rare-case coverage remains deterministic. [Real smoke evidence](verification/ticket-09/real-smoke/REPORT.md). Independent real LightRAG Q3/QA09 and semantic/N=3 Issue11 gates remain open.
+- **Observed real final-renderer smoke:** On frozen `cb4f1c9a164a40243a38358e59f2ed5c126bcf7c`, actual bge-m3/OllamaLLM produced a completed Traditional Chinese three-item Markdown list with three `[S1]` Citations, U+202F/U+3000 spacing, working Section source and actual Trace. All four real gpt-oss calls ended `stop`; maximum estimated prompt plus reservation was 3,892/10,000 (actual prompt plus reservation 3,667). No Unverified or CR/CRLF was emitted, so their rare-case coverage remains deterministic. [Real smoke evidence](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-09/real-smoke/REPORT.md). Independent real LightRAG Q3/QA09 and semantic/N=3 Issue11 gates remain open.
 
 ## 2026-10-13 — Issue10: typography/table assumptions failed on the second Document
 
@@ -470,3 +470,10 @@ D21進一步核准整段可見概覽移除、相關來源中文警告，後端�
 - **人改變保留範圍**：要求將 docs、ticket 紀錄恢復在工作目錄中；ADR 原本就有保留。
 - **處理**：由歸檔標籤恢復 1,452 個缺少的 docs 檔案及 19 個工作項目檔案，並補回完整舊 AI log。現行設計與開發指南保留新版；不回退 app、前端或精簡後的字型。
 - **驗證**：恢復檔案與歸檔內容逐位元核對，沒有變更執行程式；8101 網站維持關閉。app 的進一步精簡僅提出建議，尚未實作。
+
+
+## 2026-10-14：確認文件精簡範圍並交付 GitHub
+
+- **人確認保留範圍**：討論後保留 PRD、全部 tickets、測試清單、EXECUTION、ADR、完整 AI log、現行指南與精選結果；移除工作目錄中的逐輪 verification／QA 產物。
+- **修正說明**：QA 不專指網頁驗證；ticket-08 即包含評分器與真實模型檢查，ticket-04 同時涵蓋快取、HTTP／SSE 與瀏覽器。
+- **處理**：1,449 個待移除檔案均與既有歸檔標籤逐位元一致；證據連結改至固定 GitHub commit，保留需求與驗收內容。正式程式、前端與最終評估未修改。使用者指定私人遠端 `iamshiehpay/RAG_demo`，推送 main 與歸檔標籤。

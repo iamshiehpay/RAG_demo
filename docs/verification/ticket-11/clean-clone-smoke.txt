@@ -1,9 +1,0 @@
-Clean local clone checkpoint:25afd0bc49512028b64ce09753d986b784184e02
-Python-only README path:python -m venv .venv; .venv/bin/python -m pip install -e .; .venv/bin/python -m uvicorn chat_document.api:create_app --factory --host127.0.0.1 --port8321
-Port8321 is the reserved smoke port substitution for README8101. No Node install/build; committedfrontenddist.
-Root200, title= Chat with Document
-Asset200 /assets/index-BwNgBchD.js 405008
-Asset200 /assets/index-DRyMGEGM.css 126765
-Localfont200 noto-serif-tc-24-400-normal-ry8PYrP2.woff2
-PASS: cleanPythoncheckout serves committedwebsite. No cloudcalls/upload/browserQA asserted.
-Owned8321servercleanedPID 64768 exit -15

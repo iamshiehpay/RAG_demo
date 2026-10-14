@@ -37,12 +37,12 @@ Status: ready-for-human
 
 ## 整合與最終人工驗收
 
-已審 source `f089cae`／文件證據尾提交 `50eab20`，依 D10 A 接受明列逐項 Citation 支持限制並保留 FAIL；D09 由使用者依 [人工清單](../../../docs/verification/final-acceptance/manual-qa-checklist.md) 操作。
+已審 source `f089cae`／文件證據尾提交 `50eab20`，依 D10 A 接受明列逐項 Citation 支持限制並保留 FAIL；D09 由使用者依 [人工清單](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/final-acceptance/manual-qa-checklist.md) 操作。
 
 - 實驗／最終結果：`eval/reports/issue11-correction/`；27實際回答，raw品質FAIL保留，272呼叫均≤10K，正式Router/Answer無截斷。
 - 完整初審及限定複審：`docs/verification/ticket-11/review-0c320a8.md`、`review-f089cae.md`。
 - 修正後327確定性測試PASS；乾淨Python clone、前端build與兩份current pipeline快取證據已核對。
-- 主工作區 `db64d84` 整合驗證：327 passed、3 eval deselected、zero skipped，263.68s；兩份current pipeline快取公開上傳皆Ready，0 LLM／0 embedding calls。詳見 [integration.md](../../../docs/verification/ticket-11/integration.md)。
+- 主工作區 `db64d84` 整合驗證：327 passed、3 eval deselected、zero skipped，263.68s；兩份current pipeline快取公開上傳皆Ready，0 LLM／0 embedding calls。詳見 [integration.md](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-11/integration.md)。
 - 最終人工QA：使用者確認Q3找到正確表格、接受簡短回答，其餘測試正常；A9已確認固定拒答；原文p.8有支持內容，保留FAIL且原因UNPROVEN。獨立重跑另見系統警告誤歸因，D14待真人處置，尚未done。原始回饋與判定邊界已寫入人工清單；不重新調Q3、不把原N3 FAIL改判。
 
-- A9有界診斷：[report.md](../../../docs/verification/ticket-11/manual-a9/report.md)。沒有產品修改；D14兩項明列失敗待決，不以HTTP成功或有效Citation ID取代語意根據驗收。
+- A9有界診斷：[report.md](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-11/manual-a9/report.md)。沒有產品修改；D14兩項明列失敗待決，不以HTTP成功或有效Citation ID取代語意根據驗收。

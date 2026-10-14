@@ -1,8 +1,0 @@
-{
-  "live_and_full_test_source_revision": "aa5085918a8ff24fab22fc4c0ec845e6f83128da",
-  "final_base": "d371b79e000a63cec14ac26b4aecc63ea25af8dc",
-  "validated_rebased_source_revision": "308b4cd2aa12f1967dc6d167f1a7a32521889e16",
-  "source_test_frontend_script_eval_config_file_count": 83,
-  "sha256": "7df37061067367896a06e31109ab1be9939a0926259522682084b884132c89c5",
-  "byte_identical": true
-}

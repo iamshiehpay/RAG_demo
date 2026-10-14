@@ -1,9 +1,0 @@
-{
-  "phase": "before",
-  "commands": 88,
-  "failures": [
-    "long-overview-composer",
-    "overview-internal-scroll"
-  ],
-  "measurements": 6
-}

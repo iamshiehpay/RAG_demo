@@ -1,1 +1,0 @@
-PASS: 79 captured scripted events validate against backend EVENT_ADAPTER.

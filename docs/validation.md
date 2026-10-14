@@ -2,6 +2,15 @@
 
 本檔維護目前交付變更的精簡結論，先前完整內容由 Git 保存；產物放置方式見 [開發指南](development.md#驗證產物放哪裡)。
 
+## 2026-10-14：精簡文件與 GitHub 交付
+
+來源基準：`490ab63`。使用者確認後，移除 `docs/verification/`、`docs/qa/` 共 1,449 個逐輪產物；移除前全部與 `archive/before-main-cleanup-20261014` 逐位元核對一致。docs 保留 11 個必要文件，`.scratch/chat-with-document/` 保留 19 個規劃與工作項目檔案。
+
+- 需求與驗收敘述不變；歷史證據連結改為 GitHub 固定 commit，共 46 個連結的目標逐項核對存在於歸檔。
+- 保留 Markdown 的本地檔案連結與 `git diff --check` 核對通過。
+- 正式程式、前端、測試、依賴與最終評估未變更；不重跑程式測試或模型評估，既有 342 PASS 基準見下方。
+- 使用者指定的 `iamshiehpay/RAG_demo` 已確認為私人 repository；交付 main 與歸檔標籤，完整證據查閱方式見 [歷史索引](history.md)。
+
 ## 2026-10-14：app 小幅精簡
 
 來源基準：`2ace181`。移除未使用的 `Index.build` 和 `Application.chunk_token_target` 重複欄位；建構參數仍會更新共用 settings。四種錯誤分支共用一次 Trace 輸出，保留錯誤分類、訊息、Trace → Error 順序與取消清理。程式淨減 15 行；設定與 Ollama 模組尚未合併。
@@ -10,13 +19,7 @@
 - `.venv/bin/ruff check app/application.py app/index.py`、`git diff --check`：通過。
 - 使用既有回歸測試；沒有改動 prompt 或模型輸出格式，未執行雲端評估與瀏覽器 QA。
 
-`qa/` 與 `verification/` 的歷史用途差異已補入開發指南；歷史文件與工作項目均保留。8101 網站保持關閉。本次由同一 agent 修改與驗證。
-
-## 2026-10-14：復原文件
-
-由 `archive/before-main-cleanup-20261014` 恢復 1,452 個 docs 檔案及 19 個工作項目，逐檔與歸檔內容核對一致；完整舊 AI log 亦補回並保留新紀錄。ADR 一直保留，現行設計與開發指南未回退。歷史報告／腳本保留當時路徑與環境假設；來源說明見 [history.md](history.md)。
-
-沒有修改 app、前端、模型或依賴，不重跑程式測試。8101 網站維持關閉。
+此版本曾保留全部歷史文件與工作項目；後續核准的精簡範圍見本檔最新紀錄。8101 網站保持關閉。本次由同一 agent 修改與驗證。
 
 ## 2026-10-14：字型整併與驗證產物規則
 

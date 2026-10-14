@@ -1,8 +1,0 @@
-127.0.0.1 - - [13/Oct/2026 12:00:32] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [13/Oct/2026 12:00:32] "GET /entry.css HTTP/1.1" 200 -
-127.0.0.1 - - [13/Oct/2026 12:00:32] "GET /entry.js HTTP/1.1" 200 -
-127.0.0.1 - - [13/Oct/2026 12:00:32] "GET /noto-serif-tc-latin-400-normal-SDQ4MNSL.woff2 HTTP/1.1" 200 -
-127.0.0.1 - - [13/Oct/2026 12:00:32] code 404, message File not found
-127.0.0.1 - - [13/Oct/2026 12:00:32] "GET /favicon.ico HTTP/1.1" 404 -
-127.0.0.1 - - [13/Oct/2026 12:00:51] "GET /noto-serif-tc-123-400-normal-YMEY5VAP.woff2 HTTP/1.1" 200 -
-127.0.0.1 - - [13/Oct/2026 12:00:51] "GET /noto-serif-tc-119-400-normal-PO2BIY5V.woff2 HTTP/1.1" 200 -

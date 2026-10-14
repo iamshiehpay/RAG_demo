@@ -55,7 +55,7 @@ uv run --frozen python -m scripts.generate_event_types --check
 
 ## 驗證產物放哪裡
 
-歷史目錄中的 `qa/` 偏向瀏覽器操作、視覺與使用流程驗收；`verification/` 偏向規格、測試、模型呼叫與 token／SSE 等技術證據。當時兩者有重疊，並不是嚴格分類；新產物統一依下表放置。
+歷史 `verification/ticket-*` 收錄各工作項目的實作、審查與驗收證據；其中 `qa/` 包含瀏覽器、後端、HTTP／SSE、評分器與真實模型檢查，不專指網頁驗證。完整內容由 [歸檔標籤](history.md) 保存；新產物統一依下表放置。
 
 | 內容 | 位置 | 保留規則 |
 |---|---|---|
@@ -66,7 +66,7 @@ uv run --frozen python -m scripts.generate_event_types --check
 | 本次完成工作的驗證結論 | `docs/validation.md` | 維護精簡摘要：範圍、命令、結果、限制與來源版本；舊版本交給 Git |
 | 人改變方向、AI 建議被推翻或錯誤被修正 | `docs/ai-log.md` | 寫決策與原因，連到 commit／測試；不複製整份測試輸出 |
 
-主分支不再為每次修正建立 `red/green/final/review` 報告目錄。同一結果由一處保存，其他文件連結即可。既有 docs 歷史證據與工作項目已依使用者要求復原；保留它們。未來新產物依上表挑選，不再擴增逐輪報告；完整當時版本另有 Git 標籤。
+主分支不再為每次修正建立 `red/green/final/review` 報告目錄。同一結果由一處保存，其他文件連結即可。PRD、tickets、原始測試清單與執行紀錄保留在 `.scratch/`；逐輪 docs 驗證產物移至 Git 歷史查閱。未來新產物依上表挑選，不再擴增逐輪報告。
 
 ## 前端開發
 
@@ -100,7 +100,7 @@ Application 與 eval 共用 `RetrievalSettings`；固定上限見 `app/policy.py
 
 ## 交付
 
-主分支包含正式程式與依要求復原的歷史文件。若要完整交付目前內容，提交後可使用 Git 內建功能：
+主分支包含正式程式、規劃與必要文件；逐輪驗證證據由歸檔標籤保存。若要完整交付目前內容，提交後可使用 Git 內建功能：
 
 ```sh
 git archive --format=zip --prefix=chat-with-document/ --output=../chat-with-document.zip HEAD

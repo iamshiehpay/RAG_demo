@@ -1,8 +1,8 @@
 # 歷史與證據索引
 
-使用者於 2026-10-14 要求復原 docs 與 ticket 紀錄：`docs/verification/`、`docs/qa/`、`docs/agents/`、`.scratch/chat-with-document/` 及完整 AI log 已恢復到主分支。ADR 從未移除；現行設計、開發指南與精選入口保留新版。
+主分支保留開發規劃（`.scratch/chat-with-document/`）、設計與 ADR、維護指南、完整 AI log、精選評估與最新驗證摘要。使用者於 2026-10-14 核准從工作目錄移除 `docs/verification/` 和 `docs/qa/` 的 1,449 個逐輪產物；移除前逐檔核對，內容與下列歸檔標籤完全一致。
 
-歷史報告與診斷腳本保留當時內容，可能引用舊程式路徑、未復原的實驗輸出或當時環境；不作為目前版本的啟動入口。需要完整當時環境時，使用下列標籤。2026-10-14 整理前的全部內容仍保存在 Git annotated tag：
+歷史報告與診斷腳本保留當時路徑及環境假設，不作為目前啟動入口。AI log、EXECUTION 與 ticket 中的純文字舊路徑也以歸檔版本為準；可點擊的驗證證據連結已改為 GitHub 固定 commit。2026-10-14 整理前完整版本：
 
 ```text
 archive/before-main-cleanup-20261014
@@ -32,4 +32,4 @@ git show archive/before-main-cleanup-20261014:eval/reports/issue11-correction/co
 
 `git ls-tree -r --name-only archive/before-main-cleanup-20261014` 可列出全部歷史檔案。需要完整獨立副本時可對該標籤使用 `git archive`。主分支的移除不會抹除 Git 歷史，也沒有清空 `.cache/`、下載 PDF 或既有 worktree。
 
-zip 不含 Git 歷史；完整證據需要 repository 與此標籤。設定遠端後，請連同 annotated tag 推送；目前是否已推送以實際 Git 狀態為準。
+zip 不含 Git 歷史；完整證據需要 repository 與此標籤。遠端為 `git@github.com:iamshiehpay/RAG_demo.git`；完整交付需連同上述 annotated tag 推送。GitHub 歷史連結需要此私人 repository 的存取權。

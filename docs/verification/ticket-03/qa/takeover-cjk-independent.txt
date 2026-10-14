@@ -1,1 +1,0 @@
-PASS: independent measured single/two-column CJK preservation and cross-page paragraph/table provenance

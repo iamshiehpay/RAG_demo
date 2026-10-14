@@ -1,4 +1,0 @@
-README.md
-docs/ai-log.md
-src/chat_document/summary_tree.py
-tests/integration/test_summary_table_integration.py

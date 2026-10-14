@@ -1,7 +1,0 @@
-All checks passed!
-65 files already formatted
-Backend and frontend event types match.
-
-> chat-with-document-frontend@0.1.0 typecheck
-> tsc --noEmit
-

@@ -40,9 +40,9 @@ D12限定例外：levi負責設計／實作協調，程式由Sonnet5.5 high suba
 
 ## Integration progress
 
-候選af6b9f3已ff-only整合；reviewed production1c274e4不變。完整兩輪Review、實作路徑與Main核對見[review.md](../../../docs/verification/ticket-12/review.md)。前端型別／build／source／event契約、36次UI劇本、真實模型smoke及6項HTTP測試已核對；Main完整測試接續執行，D09新版人工介面驗收尚未執行，不先關票。
+候選af6b9f3已ff-only整合；reviewed production1c274e4不變。完整兩輪Review、實作路徑與Main核對見[review.md](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-12/review.md)。前端型別／build／source／event契約、36次UI劇本、真實模型smoke及6項HTTP測試已核對；Main完整測試接續執行，D09新版人工介面驗收尚未執行，不先關票。
 
-Main完整測試：abd7fc7上327PASS、3eval deselected、zeroSKIP、252.49s、exit0；新assets由8101正常提供。詳見[integration.md](../../../docs/verification/ticket-12/integration.md)。D1–D7人工QA已放行，等待使用者結果；尚未標done。
+Main完整測試：abd7fc7上327PASS、3eval deselected、zeroSKIP、252.49s、exit0；新assets由8101正常提供。詳見[integration.md](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-12/integration.md)。D1–D7人工QA已放行，等待使用者結果；尚未標done。
 
 ## 2026-10-14 人工回饋：UI 後續修正（D16）
 
@@ -59,7 +59,7 @@ Main完整測試：abd7fc7上327PASS、3eval deselected、zeroSKIP、252.49s、e
 
 ### D16修正版整合結果
 
-ac1be36（production9a0715e）已ff-only整合；fresh兩軸限定Review APPROVE、最終browser75PASS／0FAIL。Main同版本完整測試327PASS／3eval deselected／zeroSKIP／265.71s／exit0，來源與前端保持已審版本。首頁、JS、CSS與本地字型HTTP200。詳見[followup integration](../../../docs/verification/ticket-12/followup/integration.md)。D8–D11已放行，由使用者重新整理8101操作；未回報前不勾人工驗收或標done。暫留乾淨worktree供這次人工複驗，其他自有測試暫存清理，協作角色收尾。
+ac1be36（production9a0715e）已ff-only整合；fresh兩軸限定Review APPROVE、最終browser75PASS／0FAIL。Main同版本完整測試327PASS／3eval deselected／zeroSKIP／265.71s／exit0，來源與前端保持已審版本。首頁、JS、CSS與本地字型HTTP200。詳見[followup integration](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-12/followup/integration.md)。D8–D11已放行，由使用者重新整理8101操作；未回報前不勾人工驗收或標done。暫留乾淨worktree供這次人工複驗，其他自有測試暫存清理，協作角色收尾。
 
 ### 2026-10-14 09:24 單一標題調整
 
@@ -85,7 +85,7 @@ D20已由「目前都先指派 gpt 6.1 sol medium 改，先不呼叫 claude」�
 
 7d3794a（已審code/test1c364b8、product8e15852）已ff-only整合。獨立Standards與Spec對D21呈現變更零finding，Main核對來源diff與圖片。390px連續兩種來源後Escape的瀏覽器停滯在新舊版本都重現，仍保留未解FAIL；沒有宣稱全部行動操作通過。接續Main一次完整測試及D9／D12–D14人工操作。A9後端未修复，不影響此UI變更範圍，亦不被豁免。
 
-Main fd1034f整合完整327PASS／3eval deselected／zeroSKIP／269.93s／exit0；8101所有新靜態檔HTTP200且與dist相同。詳見[整合證據](../../../docs/verification/ticket-12/overview/integration.md)。新UI已提供，待D9／D12–D14人工結果；A9未修復與窄螢幕基準FAIL不改判。
+Main fd1034f整合完整327PASS／3eval deselected／zeroSKIP／269.93s／exit0；8101所有新靜態檔HTTP200且與dist相同。詳見[整合證據](https://github.com/iamshiehpay/RAG_demo/blob/906044d0736ebf294e9c84ed452aa2e06c841ad4/docs/verification/ticket-12/overview/integration.md)。新UI已提供，待D9／D12–D14人工結果；A9未修復與窄螢幕基準FAIL不改判。
 
 ### D23 單一快捷題替換完成
 

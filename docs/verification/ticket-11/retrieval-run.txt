@@ -1,1 +1,0 @@
-Selected: {'lookup_top_k': 5, 'synthesis_top_k': 3, 'sub_query_top_k': 2, 'chunk_token_target': 800, 'answer_think': 'medium', 'bm25_weight': 0.0, 'summary_concurrency': 4}
