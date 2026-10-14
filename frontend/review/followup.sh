@@ -175,32 +175,35 @@ fi
 if want overview; then
 echo "== D21: overview removed, uncertainty beside related source =="
 for W in 1440 920 390; do
+  [[ -n "$OVERVIEW_WIDTH" && $W != $OVERVIEW_WIDTH ]] && continue
   H=900; [[ $W == 390 ]] && H=844; [[ $W == 920 ]] && H=800
   boot $W $H
   run "Ready @ $W: overview, controls and embedded English warning absent" '!document.querySelector(".document-overview, .overview-text") && !document.body.innerText.includes("English extraction warning") && !document.querySelector(".document-pane")?.textContent.includes("文件概覽") && document.querySelectorAll(".shortcut").length === 5 && !document.querySelector("#question").disabled'
   AB screenshot "$OUT/ready-$W.png" >/dev/null
   ask uncertain-table "uncertain source"
   AB click '.turn:last-child .inline-citation' >/dev/null
-  AB wait --fn '!!document.querySelector(".pane-right .table-limitation")' >/dev/null
+  frame
   run "uncertain table @ $W: exact Chinese warning beside raw citation source" 'document.querySelector(".pane-right .table-limitation").textContent === "此表格的行列結構辨識不完整，相關數字請核對原文。" && document.querySelector(".pane-right .source-text").textContent === "Review raw table text: alpha 12 beta 34" && !document.querySelector(".pane-right .source-table")'
   AB screenshot "$OUT/uncertain-$W.png" >/dev/null
   AB eval 'document.querySelector(".turn:last-child .answer-process").open = true; document.querySelector(".turn:last-child .found-chunk").open = true' >/dev/null
   run "uncertain table @ $W: retrieved source also keeps exact warning" '[...document.querySelectorAll(".turn:last-child .table-limitation")].some(el => el.textContent === "此表格的行列結構辨識不完整，相關數字請核對原文。")'
-  [[ $W == 390 ]] && AB press Escape >/dev/null
+  boot $W $H
   ask compare "reconstructed source"
   AB eval 'document.querySelectorAll(".turn:last-child .inline-citation")[1].click()' >/dev/null
-  AB wait --fn '!!document.querySelector(".pane-right .source-table")' >/dev/null
+  frame
   run "reconstructed table @ $W: grid retained, uncertainty note absent" '!!document.querySelector(".pane-right .source-table") && !document.querySelector(".pane-right .table-limitation")'
-  [[ $W == 390 ]] && AB press Escape >/dev/null
+  boot $W $H
   ask q3 "text source"
   AB click '.turn:last-child .inline-citation' >/dev/null
-  AB wait --fn 'document.querySelector(".pane-right .source-text")?.textContent.includes("Review fixture")' >/dev/null
+  frame
   run "text source @ $W: no table uncertainty warning" '!document.querySelector(".pane-right .table-limitation")'
-  [[ $W == 390 ]] && AB press Escape >/dev/null
+  boot $W $H
   ask global "summary provenance"
   AB click '.turn:last-child .inline-citation' >/dev/null
-  AB wait --fn '!!document.querySelector(".pane-right .covered-sections")' >/dev/null
+  frame
   run "Global @ $W: summary citation and provenance retained" 'document.querySelector(".pane-right .source-text").textContent.includes("Review fixture summary") && !document.querySelector(".document-overview")'
+  [[ $W == 390 ]] && AB press Escape >/dev/null
+  frame
   AB eval --stdin < review/checks.js > "$OUT/checks/global-$W.json" && pass "D21 common assertions @ $W" || fail "D21 common assertions @ $W"
 done
 fi
