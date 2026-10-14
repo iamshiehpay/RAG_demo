@@ -40,10 +40,6 @@ class Index:
             scores += idf * counts * (BM25_K1 + 1) / (counts + normalizer)
         return scores
 
-    @classmethod
-    async def build(cls, chunks: list[Chunk], embedder: Embedder) -> "Index":
-        return cls(chunks, await embedder.embed([chunk.context for chunk in chunks]), embedder)
-
     async def retrieve(self, standalone_question: str, top_k: int = 5) -> list[RetrievedChunk]:
         query = (await self.embedder.embed([standalone_question]))[0]
         scores = self.vectors @ query

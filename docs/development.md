@@ -55,6 +55,8 @@ uv run --frozen python -m scripts.generate_event_types --check
 
 ## 驗證產物放哪裡
 
+歷史目錄中的 `qa/` 偏向瀏覽器操作、視覺與使用流程驗收；`verification/` 偏向規格、測試、模型呼叫與 token／SSE 等技術證據。當時兩者有重疊，並不是嚴格分類；新產物統一依下表放置。
+
 | 內容 | 位置 | 保留規則 |
 |---|---|---|
 | 一般測試結果 | 終端；需要保存時用 `.cache/verification/` | 不提交逐次 stdout、截圖或中間 JSON；確認結論後可刪除 |

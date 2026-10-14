@@ -56,7 +56,6 @@ class Application:
         if summary_concurrency is not None:
             settings = settings.model_copy(update={"summary_concurrency": summary_concurrency})
         self.settings = settings
-        self.chunk_token_target = settings.chunk_token_target
         self.embedder = embedder
         self.cache = cache
         self.answer_generator = AnswerGenerator(gateway, think=settings.answer_think)
@@ -179,38 +178,28 @@ class Application:
             async with aclosing(workflow.stream()) as events:
                 async for event in events:
                     yield event
-        except BudgetExceeded as exc:
+        except Exception as exc:
+            if isinstance(exc, BudgetExceeded):
+                error = ErrorEvent(code="budget_exceeded", message=str(exc))
+            elif isinstance(exc, httpx.HTTPError):
+                error = ErrorEvent(
+                    code=f"{workflow.stage}_failed",
+                    message=http_failure_message(workflow.stage, exc),
+                )
+            elif isinstance(exc, ValueError):
+                error = ErrorEvent(
+                    code=f"{workflow.stage}_failed",
+                    message=f"{workflow.stage.replace('_', ' ').capitalize()} failed: {exc}",
+                )
+            else:
+                logger.exception("Unexpected answer failure")
+                error = ErrorEvent(
+                    code="answer_failed", message="Unexpected answer failure. Please retry."
+                )
             if workflow.calls:
                 yield TraceEvent(
                     calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
                 )
-            yield ErrorEvent(code="budget_exceeded", message=str(exc))
-        except httpx.HTTPError as exc:
-            if workflow.calls:
-                yield TraceEvent(
-                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
-                )
-            yield ErrorEvent(
-                code=f"{workflow.stage}_failed",
-                message=http_failure_message(workflow.stage, exc),
-            )
-        except ValueError as exc:
-            if workflow.calls:
-                yield TraceEvent(
-                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
-                )
-            yield ErrorEvent(
-                code=f"{workflow.stage}_failed",
-                message=f"{workflow.stage.replace('_', ' ').capitalize()} failed: {exc}",
-            )
-        except Exception:
-            logger.exception("Unexpected answer failure")
-            if workflow.calls:
-                yield TraceEvent(
-                    calls=workflow.calls, dropped_chunk_count=workflow.dropped_chunk_count
-                )
-            yield ErrorEvent(
-                code="answer_failed", message="Unexpected answer failure. Please retry."
-            )
+            yield error
         finally:
             self._asking -= 1
