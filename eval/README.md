@@ -1,5 +1,7 @@
 # Golden Facts evaluation
 
+中文操作入口見 [開發與評估指南](../docs/development.md)。較新的 N=3 評估與失敗分析見 [issue11-correction 結論](reports/issue11-correction/conclusions.md)；下方 baseline 名稱描述各開發階段，不代表目前所有程式版本都已重新評估。
+
 Run the application operations and Judge with local Ollama (`bge-m3`) and
 `gpt-oss:120b-cloud`:
 
@@ -89,7 +91,7 @@ and Judge so all calls are accounted for.
 
 ## Report provenance
 
-`router-provenance-baseline.md` is the current baseline for Q1–Q3 and the 12
+`router-provenance-baseline.md` is the historical #06 baseline for Q1–Q3 and the 12
 canonical Router cases, collected after review request #1785 and integration
 of #06's provenance/parser fix from committed source with clean provenance. Every earlier
 report below is **superseded** and preserved only as measurement/history evidence:

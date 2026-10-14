@@ -28,7 +28,7 @@ _Avoid_：passage、node、segment
 把相鄰的幾個 Section Summary 合併成的摘要。只有長文件需要，用來讓 Summary Tree 的某一層放得進 Context Budget。
 
 **Document Summary**：
-Summary Tree 的最頂層，是全文摘要。上傳完成後，會在介面上顯示為文件概覽。
+Summary Tree 的最頂層，是全文摘要。上傳時仍建立；目前介面已移除上傳完成後直接顯示的文件概覽區塊。
 
 **Summary Tree**：
 由 Section Summary 往上合併而成的階層：Section Summary → Group Summary（視需要，可以有多層）→ Document Summary。

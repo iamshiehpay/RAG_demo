@@ -2,7 +2,7 @@
 
 Status: in-progress
 
-依據：`PRD.md`（ready-for-agent）、`issues/01`～`14`、`AGENTS.md`（數值的唯一來源）、`CONTEXT.md`（術語）。
+依據：`PRD.md`（ready-for-agent）、`issues/01`～`15`、`AGENTS.md`（工作限制與設計文件入口）、`CONTEXT.md`（術語）。
 需求與 Spec 已由使用者確認，本輪略過討論與重寫 Spec，只依既有 issues 推進。
 
 **現行驗收／流程：D05（2026-10-13 15:43 真人核准，Main直接核對原對話）。** #10品質調整到17:45；#11調參＋最終eval時限為18:33:01–21:33:01（已正式開工）。Q1–Q3與第二份文件每題N=3、報告每fact通過率與失敗原因，含forbidden的品質缺陷不阻擋交付。10K、Citation、固定拒答、確定性測試、獨立Review維持。剩餘QA只在#10合併後及交付前；改查commit與測試，不逐檔byte/hash比對；新證據保留結論與最終run，既有歷史保留。下方歷史嚴格品質gate／每trial保存／byte比對要求均以D05覆蓋。
@@ -39,6 +39,7 @@ Status: in-progress
 | 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（D21已審7d3794a整合；Main fd1034f完整327PASS、8101提供新UI；D9／D12–D14待人工，既有窄螢幕停滯FAIL保留） |
 | 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | wontfix（D23使用者核准本輪凍結目前後端、A9保留已知缺陷；D21/D22證據與舊9715538未採用狀態保留） |
 | 14 | LangGraph提問流程 | 現有Main5f5e35f | W8 | application/newgraph/tests/deps/README；Main獨占規範與tracker | ready-for-human（已審24fba26，Main a5b70a0整合335PASS／exit0；Luna max/Fast双軸完成，8101已更新；F1–F3放行、待使用者操作） |
+| 15 | 開發指引與中文README | Main52e18c9 | W9 | AGENTS/README/按需docs；Main獨占tracker | ready-for-human（使用者取消agent委派，主對話自行完成中文README／AGENTS與用途盤點；只驗證文件、不刪程式） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
 
@@ -338,3 +339,7 @@ D01–D23的現行處置均已由真人答覆。D23凍結目前部署後端、A9
 - #14整合驗證完成：Main a5b70a0完整335PASS／3eval deselected／zeroSKIP／273.62s／exit0，獨立環境與Main imports已核對。正式.venv按lock更新，原8101服務以PID3808重啟；首頁／JS／CSS／CJK字型HTTP200且與local assets相同，空問題公開SSE預檢正常、0模型呼叫。F1–F3人工情境放行但不宣稱已PASS；A9與其他既有品質／窄螢幕限制保持。
 
 - #14收尾完成：335PASS與8101部署證據已保存；本票全部角色停止、指定暫存清理、已合併worktree與分支安全移除。Main正式環境／PDF／cache／服務及其他保留worktrees不動。最終人工F1–F3維持NOT_EXECUTED，不新增模型呼叫或品質結論。
+
+- D25真人msg_01a1390e已直接核對並讀完指定文章；#15以52e18c9隔離worktree整理AGENTS／中文README，盤點用途但不刪檔。文件專用驗證，不改行為、快取、服務，不重跑LLM或完整suite；既有人工QA狀態保持。
+
+- #15後續真人指示取消agent委派，改由主對話自行修改。完成中文README與檔案用途表，AGENTS詳細規則分流至docs/design.md、docs/development.md。Streamlit僅討論，不遷移；不刪程式、不跑LLM或完整suite，採文件專用檢查。
