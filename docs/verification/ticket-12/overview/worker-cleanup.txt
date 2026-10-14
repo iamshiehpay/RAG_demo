@@ -1,0 +1,3 @@
+[{'pid': 89029, 'cmd': '/Users/shiehpay/Desktop/resume/rag/.worktrees/12-chat-layout/.venv/bin/python .venv/bin/uvicorn chat_document.api:create_app --factory --host 127.0.0.1 --port 8121', 'action': 'SIGTERM'}]
+Worker browser nova-label closed normally. Explicit custom pytest directories already removed. Baseline export removal follows after server shutdown. Unknown/predecessor temps preserved.
+Baseline listener verified PID54726 Python -m http.server8122 with exact owned export path; SIGTERM sent. Exact owned baseline export /private/tmp/nova-label-kune-d21-baseline removed.
