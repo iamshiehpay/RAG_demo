@@ -1,0 +1,72 @@
+== 1440: separator, drag, keyboard ==
+PASS: source pane open with separator and in-bounds width
+PASS: dragging left by 100px widens the pane by 100px (was 400, now 500)
+PASS: dragging right by 60px narrows it by 60px (now 440)
+PASS: no stuck drag state after pointer up
+PASS: extreme drag left clamps to aria-valuemax
+PASS: extreme drag right clamps to aria-valuemin
+PASS: dragging flag is set during the drag
+PASS: releasing far outside the separator ends the drag
+PASS: moving after that release does not resize
+PASS: pointercancel ends the drag
+PASS: moves after pointercancel do not resize
+PASS: Home goes to the minimum
+PASS: ArrowLeft widens by 16 (from 260)
+PASS: ArrowRight narrows by 16
+PASS: End goes to the maximum and stays in bounds
+PASS: ArrowLeft at the maximum does not exceed it
+PASS: ArrowRight at the minimum does not go below it
+PASS: separator shows a visible focus ring from the keyboard
+PASS: shrinking the window re-clamps the pane (max is now 382)
+PASS: growing the window again stays in bounds
+PASS: collapsing the document column keeps the pane in bounds
+PASS: expanding it again keeps the pane in bounds
+PASS: collapsed source rail is 64px wide with a readable label
+PASS: re-expanding the source pane restores a bounded separator
+PASS: an absurd stored width is clamped on load
+== 1440: shortcuts and composer ==
+PASS: all five LightRAG questions are shown and enabled when a Document is Ready
+PASS: one click sends exactly one ask with the exact text
+PASS: the typed draft is kept when a shortcut is used
+PASS: while generating, every shortcut, the textarea and 送出 are disabled
+PASS: clicking disabled shortcuts while generating sends nothing
+PASS: after the answer is final the shortcuts are enabled again
+PASS: a real double click sends exactly one more ask
+PASS: three clicks in the same tick send exactly one ask
+PASS: Shift+Enter inserts a newline and sends nothing
+PASS: Enter sends the typed question through the same path (one ask)
+PASS: an error answer shows 重試 and the shortcuts are usable again
+== shortcuts: no Document, uploading, other Documents ==
+PASS: no Document: five shortcuts shown but disabled, composer disabled
+PASS: while the Document is processing the shortcuts stay disabled
+PASS: once Ready they are enabled
+PASS: another Document gets only the general question under a neutral label
+PASS: that general shortcut sends once
+== 920: separator ==
+PASS: 920: separator present and in bounds (max 302)
+PASS: 920: dragging far left clamps and keeps the conversation >= 360
+== 390: overlay, focus, Escape ==
+PASS: 390: no separator, shortcut row scrolls inside itself, no page overflow
+PASS: 390: opening a Citation opens the source overlay and moves focus into it
+PASS: 390: Escape closes the overlay and returns focus to the Citation
+PASS: keyboard focus on a Citation or shortcut shows a visible ring
+== checks.js across widths and scenarios ==
+PASS: checks.js replay-cost @ 1440 (52 assertions)
+PASS: checks.js replay-q3 @ 1440 (71 assertions)
+PASS: checks.js spacing @ 1440 (87 assertions)
+PASS: checks.js compare @ 1440 (101 assertions)
+PASS: checks.js unverified @ 1440 (98 assertions)
+PASS: checks.js error @ 1440 (96 assertions)
+PASS: checks.js replay-cost @ 920 (52 assertions)
+PASS: checks.js replay-q3 @ 920 (71 assertions)
+PASS: checks.js spacing @ 920 (87 assertions)
+PASS: checks.js compare @ 920 (101 assertions)
+PASS: checks.js unverified @ 920 (98 assertions)
+PASS: checks.js error @ 920 (96 assertions)
+PASS: checks.js replay-cost @ 390 (48 assertions)
+PASS: checks.js replay-q3 @ 390 (67 assertions)
+PASS: checks.js spacing @ 390 (83 assertions)
+PASS: checks.js compare @ 390 (97 assertions)
+PASS: checks.js unverified @ 390 (94 assertions)
+PASS: checks.js error @ 390 (92 assertions)
+FAILS=0
