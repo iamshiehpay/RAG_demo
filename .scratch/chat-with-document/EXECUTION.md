@@ -15,9 +15,9 @@ Status: in-progress
 | 角色 | 設定 |
 |---|---|
 | Orchestrator | Codex `gpt-6-astra` high（HCOM `nova`）；本 session turn_context 已核對 workspace-write / on-request |
-| Implementer | Codex `gpt-6.1-sol`、`model_reasoning_effort=high`，透過 HCOM；每票新 context，依 /implement |
-| Reviewer | Codex `gpt-6-sol` high，獨立 context，workspace-write / on-request；依使用者 D04 改派，啟動後核對 |
-| QA | Codex `gpt-6.1-sol` medium，獨立 context，workspace-write / on-request；啟動後核對 |
+| Implementer | D21現行：Codex `gpt-6.1-sol` medium，透過HCOM、workspace-write/on-request；歷史各票保留原設定 |
+| Reviewer | D21現行：Codex `gpt-6.1-sol` medium，獨立context，workspace-write/on-request；禁止Claude，歷史Review保留原設定 |
+| QA | D09現行：最終網站驗收由使用者依清單操作；不另派Codex QA |
 
 整合分支：`main`。每票在 `.worktrees/<NN>-<slug>/`、分支 `lat/<NN>-<slug>` 開發；合併前 rebase 到最新 `main`，以 `--ff-only` 合併。
 
@@ -36,7 +36,7 @@ Status: in-progress
 | 05 | Summary Tree 與 Global（Q1） | 02、04、06 | W4 | Summary Tree Builder、Global 路徑、文件概覽、`[S#]` | done（ca66429＋#09整合3432aa09；Review APPROVE；QA265tests／R01–R06複驗PASS；品質仍#11）|
 | 10 | 第二份文件 | 03、05、08 | W5 | 下載腳本、Golden Facts、泛化修正、ai-log | done（3bb0c64／Main7cf9185；限定Review兩軸PASS／整合316PASS／獨立QA功能PASS；N3品質FAIL與已知限制按D05/D06保留） |
 | 11 | 調參與最終驗收 | 全部 | W6 | eval 實驗、AGENTS.md 設定、README、最終 build | ready-for-human（Main db64d84；已審 f089cae＋D10 A限制；整合327PASS、兩份快取0-call Ready；D09回報其餘正常／Q3已接受，A9拒答／警告誤歸因FAIL；D14 B交#13有界修正） |
-| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | in progress（D21已審7d3794a整合；概覽／標題移除與來源中文提示，接續Main完整測試；既有窄螢幕停滯保留FAIL） |
+| 12 | 對話排版與中文回答過程 | #11已整合基準 | W7 | 前端／dist／前端驗證；不改後端與事件 | ready-for-human（D21已審7d3794a整合；Main fd1034f完整327PASS、8101提供新UI；D9／D12–D14待人工，既有窄螢幕停滯FAIL保留） |
 | 13 | 人工A9最小修正 | #11已整合基準 | W7 | backend最小修正／tests／證據；不改前端與事件 | ready-for-agent（D21純診斷b0b7710：14次真實呼叫未建立修復；產品保持58586f7，原FAIL與舊9715538未採用狀態保留） |
 
 共用檔案依序修改：同一波內，後合併的票先 rebase 到已整合的 `main` 再送最終審查。
@@ -49,7 +49,7 @@ Status: in-progress
 
 ## 待使用者決策
 
-D01–D17與D19–D21均有對應真人答覆。D21核准概覽移除、相關來源中文提示及GPT6.1 medium完成A9修正；目前新實作與獨立Review統一GPT6.1 medium，禁止Claude，D20不再阻擋。D18僅保留舊9715538候選採用／缺陷豁免待決，不阻擋D21新修正；不得重問舊A/B來攔住已核准工作。#12先前D16已整合，新增D21候選1c364b8完整327PASS，Standards通過，Spec正在分類390px來源關閉後的同頁操作停滯，尚未部署。#13新隔離分支已重現Synthesis與固定拒答，相關作者段落確實在來源內；原Global歷史原因仍未知。失敗prompt探查保留且已還原source，獨立唯讀診斷接續；沒有把非拒答或有效Citation ID當成語意通過。
+D01–D17與D19–D21均有對應真人答覆。D21本輪角色皆GPT6.1 medium，沒有新Claude呼叫，D20已解除。D18僅保留舊9715538候選採用／缺陷豁免待決，沒有被D21自動接受。新D21介面已整合到Main fd1034f並由8101提供；單次Main完整測試327PASS／3eval deselected／zeroSKIP／exit0，269.93s。A9有界診斷已完成14次真實呼叫但未建立修復，失敗實驗已撤回產品程式，純證據保留於ticket-13/d21/。原Global原因仍未知，來源齊備的Synthesis拒答可重現；新舊UI皆有獨立Chromium窄螢幕停滯，人工D14待驗。不宣稱全部驗收通過。
 
 - D02 已由使用者在新 Main session 直接核准「同意，照此方向定稿」；紀錄於 `.lat/decisions/D02-tufte-draft-direction.md`。
 
@@ -317,3 +317,5 @@ D01–D17與D19–D21均有對應真人答覆。D21核准概覽移除、相關�
 - D21直接核對真人與原提案，已解除全GPTmedium角色待決；kune原前端實際提交8e15852移除Overview／label、相關來源中文警告，fresh兩軸GPTmedium runtime已核對。gera新隔離13-a9-routing actualGPT6.1medium/wswrite/onrequest已核對並正式放行，舊soho已停止且9715538原樣保留；前後端分離所有權，UI優先整合，沒有再要求使用者確認。
 
 - D21介面7d3794a已ff-only整合，兩軸GPT6.1 medium限定Review零finding。Main讀完整報告／來源diff／桌面與窄螢幕圖片，獨立新舊版均發生來源Escape後Chromium停滯，保留FAIL與D14人工情境，不當成本delta回歸或全UI通過。A9純證據b0b7710一併保存，14calls最高7741，沒有任何實驗產品改動。Main完整測試接續；尚不宣告最終人工QA完成。
+
+- D21整合驗證完成：Main fd1034f，完整327PASS／3eval deselected／zeroSKIP／269.93s／exit0。Main完整核對log、正確Python/import及固定PDF；原8101提供同版index／JS／CSS／字型HTTP200，沒有重啟後端。D9、D12–D14人工複驗放行，A9與窄螢幕既有FAIL仍保留。自有測試目錄與程序清理，角色收尾，worktree因明列未完人工／A9追查保留。

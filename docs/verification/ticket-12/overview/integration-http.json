@@ -1,0 +1,30 @@
+{
+  "main_sha": "fd1034f",
+  "reviewed_ui": "7d3794a",
+  "base_url": "http://127.0.0.1:8101",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "matches_dist": true
+    },
+    {
+      "path": "/assets/index-CDC2lj04.js",
+      "status": 200,
+      "sha256": "37265e86d848c9a5db6961d0466bd728123156f17682cab707ae9bf127db4424",
+      "matches_dist": true
+    },
+    {
+      "path": "/assets/index-Dl-lNm7q.css",
+      "status": 200,
+      "sha256": "34e133f6c729a102151051ebb579db33a06047bd9476a3fef56424ea0372e715",
+      "matches_dist": true
+    },
+    {
+      "path": "/assets/noto-serif-tc-0-400-normal-D2OLrOIM.woff2",
+      "status": 200,
+      "bytes": 17152
+    }
+  ],
+  "limits": "HTTP/static identity only; user manual UI QA remains pending; A9 backend unchanged."
+}

@@ -1,6 +1,6 @@
 # #12 對話排版與中文回答過程
 
-Status: ready-for-agent
+Status: ready-for-human
 
 ## Parent
 
@@ -84,3 +84,5 @@ D20已由「目前都先指派 gpt 6.1 sol medium 改，先不呼叫 claude」�
 ### D21介面整合
 
 7d3794a（已審code/test1c364b8、product8e15852）已ff-only整合。獨立Standards與Spec對D21呈現變更零finding，Main核對來源diff與圖片。390px連續兩種來源後Escape的瀏覽器停滯在新舊版本都重現，仍保留未解FAIL；沒有宣稱全部行動操作通過。接續Main一次完整測試及D9／D12–D14人工操作。A9後端未修复，不影響此UI變更範圍，亦不被豁免。
+
+Main fd1034f整合完整327PASS／3eval deselected／zeroSKIP／269.93s／exit0；8101所有新靜態檔HTTP200且與dist相同。詳見[整合證據](../../../docs/verification/ticket-12/overview/integration.md)。新UI已提供，待D9／D12–D14人工結果；A9未修復與窄螢幕基準FAIL不改判。
