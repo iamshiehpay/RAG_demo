@@ -2,11 +2,11 @@
 
 本檔維護目前交付變更的精簡結論，先前完整內容由 Git 保存；產物放置方式見 [開發指南](development.md#驗證產物放哪裡)。
 
-## 2026-10-14：四份文件改為僅限本機
+## 2026-10-15：恢復追蹤 AGENTS 與 CONTEXT
 
-來源基準：`ecc5de4`。AGENTS.md、CONTEXT.md、LangGraph ADR 與 AI 協作摘要停止 Git 追蹤，保留本機檔案並加入忽略規則。README 與現行指南移除對這些檔案的必要連結；舊歷史敘述保留。
+來源基準：`9cff029`。依使用者指示恢復追蹤 AGENTS.md、CONTEXT.md，移除其忽略規則並同步文件入口；LangGraph ADR 與 AI 協作摘要維持僅限本機。CONTEXT 內容保持不變，AGENTS 更新交付範圍及相關導航。
 
-核對四份本機檔案內容不變、Git index 已移除它們、精確忽略規則有效；以 Git index 檔案清單檢查交付文件的本地連結，並執行 `git diff --check`。此次只改文件與追蹤範圍，未重跑程式測試。GitHub 舊 commit 仍含這四份文件，未改寫歷史。
+以 Git index 檔案清單核對交付 Markdown 的本地連結、兩份文件已追蹤及另外兩份仍未追蹤；`git diff --check` 通過。僅文件與追蹤規則變更，未重跑程式測試。
 
 ## 2026-10-14：精簡文件與 GitHub 交付
 

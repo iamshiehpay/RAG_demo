@@ -34,4 +34,4 @@ git show archive/before-main-cleanup-20261014:eval/reports/issue11-correction/co
 
 zip 不含 Git 歷史；完整證據需要 repository 與此標籤。遠端為 `git@github.com:iamshiehpay/RAG_demo.git`；2026-10-14 已推送精簡提交 `6727af2` 至 `main`，並推送上述 annotated tag，遠端 SHA 已核對。後續交付也須保留此標籤。GitHub 歷史連結需要此私人 repository 的存取權。
 
-`AGENTS.md`、`CONTEXT.md`、`docs/adr/2026-10-14-langgraph-ask.md` 與 `docs/ai-collaboration.md` 後續改為僅保留本機，不包含於最新版原始碼或 zip。先前已推送的歷史 commit 仍含這些檔案；本次未改寫 Git 歷史。
+2026-10-15 依使用者指示恢復追蹤 `AGENTS.md`、`CONTEXT.md`。`docs/adr/2026-10-14-langgraph-ask.md` 與 `docs/ai-collaboration.md` 維持僅保留本機，不包含於最新版原始碼或 zip。先前已推送的歷史 commit 仍含這些檔案；本次未改寫 Git 歷史。

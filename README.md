@@ -88,6 +88,7 @@ bash scripts/fetch_data.sh
 | `.scratch/chat-with-document/` | PRD、tickets、測試清單與執行紀錄；歷史狀態以各檔內容為準 |
 | `pyproject.toml`、`uv.lock` | Python 套件、測試設定與鎖定依賴 |
 | `conftest.py` | pytest 分層標記與評估選項註冊 |
+| `AGENTS.md`、`CONTEXT.md` | Agent 共用工作規則與領域術語 |
 | `data/`、`.cache/` | 下載的 PDF、處理快取；不提交 |
 | `.venv/`、`frontend/node_modules/` | 本機依賴；不提交 |
 
@@ -105,3 +106,5 @@ bash scripts/fetch_data.sh
 
 - [開發指南](docs/development.md)：測試、前端 build、環境參數、評估與交付。
 - [設計規格與實測依據](docs/design.md)：切塊、摘要、檢索、Citation、Context Budget 與重試規則。
+
+- [領域術語](CONTEXT.md)、[Agent 工作規則](AGENTS.md)。
